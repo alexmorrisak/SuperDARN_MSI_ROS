@@ -20,7 +20,7 @@
 #include <unistd.h>
 #include <fcntl.h>
 #include <zlib.h>
-#include "cdf.h"
+#include "/home/alex/cdf35_0-dist/src/include/cdf.h"
 #include "rtypes.h"
 #include "option.h"
 #include "dmap.h"

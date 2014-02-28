@@ -39,7 +39,7 @@
 /* #undef FC_DUMMY_MAIN_EQ_F77 */
 
 /* C compiler name and flags */
-#define FFTW_CC "gcc -std=gnu99 -O3 -fomit-frame-pointer -malign-double -fstrict-aliasing -ffast-math -march=pentium3"
+#define FFTW_CC "gcc -std=gnu99 -O3 -fomit-frame-pointer -malign-double -fstrict-aliasing -ffast-math -march=native"
 
 /* Define to enable extra FFTW debugging code. */
 /* #undef FFTW_DEBUG */
@@ -82,7 +82,7 @@
 /* #undef HAVE_CELL */
 
 /* Define to 1 if you have the `clock_gettime' function. */
-#define HAVE_CLOCK_GETTIME 1
+/* #undef HAVE_CLOCK_GETTIME */
 
 /* Define to 1 if you have the `cosl' function. */
 #define HAVE_COSL 1
@@ -100,7 +100,7 @@
 
 /* Define to 1 if you have the declaration of `memalign', and to 0 if you
    don't. */
-#define HAVE_DECL_MEMALIGN 1
+#define HAVE_DECL_MEMALIGN 0
 
 /* Define to 1 if you have the declaration of `posix_memalign', and to 0 if
    you don't. */
@@ -141,7 +141,7 @@
 #define HAVE_ISNAN 1
 
 /* Define to 1 if you have the <libintl.h> header file. */
-/* #undef HAVE_LIBINTL_H */
+#define HAVE_LIBINTL_H 1
 
 /* Define to 1 if you have the `m' library (-lm). */
 #define HAVE_LIBM 1
@@ -228,7 +228,7 @@
 #define HAVE_STRING_H 1
 
 /* Define to 1 if you have the `sysctl' function. */
-/* #undef HAVE_SYSCTL */
+#define HAVE_SYSCTL 1
 
 /* Define to 1 if you have the <sys/stat.h> header file. */
 #define HAVE_SYS_STAT_H 1
