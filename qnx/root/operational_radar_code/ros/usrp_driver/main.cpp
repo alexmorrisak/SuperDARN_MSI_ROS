@@ -18,6 +18,9 @@
 #include <iostream>
 #include <complex>
 #include <cstdlib>
+#include <sys/mman.h>
+#include <fcntl.h>
+#include <exception>
 
 //Added by Alex for usrp
 #include <uhd/usrp/multi_usrp.hpp>
@@ -30,7 +33,7 @@
 #include <boost/format.hpp>
 
 //Added by Alex for signal processing
-//#include <alex_filters.hpp>
+#include <alex_custom.hpp>
 
 #ifdef __cplusplus
 	extern "C" {
@@ -50,13 +53,22 @@
 #define MAX_TSG 16
 #define	MAX_TIME_SEQ_LEN 1048576
 #define MAX_PULSES 100
+#define MAX_INPUTS 2
+#define MAX_CARDS 1
+#define MAIN_INPUT 0
+#define BACK_INPUT 1 
+#define IMAGING 0 
+#define MAX_SAMPLES 262144 
+#define MIMO 0
+#define NUNITS 1
+
 
 dictionary *Site_INI;
-int sock,msgsock;
-int verbose=10;
+int sock=0,msgsock=0;
+extern int verbose=0;
 int configured=1;
 int		writingFIFO=0, dma_count=0, under_flag=0,empty_flag=0,IRQ, intid;
-int		max_seq_count, xfercount, totransfer;
+int		max_seq_count=0, xfercount=0, totransfer=0;
 uintptr_t	mmap_io_ptr_dio;
 unsigned int	virtual_addr[1], physical_addr[1];
 struct sigevent interruptevent;
@@ -65,20 +77,8 @@ int tr_event=0, scope_event=0;
 pthread_t int_thread;
 void graceful_cleanup(int signum)
 {
-  int temp;
   char path[256];
   sprintf(path, "%s", "rostiming");
-
-//#ifdef __QNX__
-//  // disable interrupts
-//  temp=in32( mmap_io_ptr_dio+0x0c);
-//  out32(mmap_io_ptr_dio+0x0c, temp & 0xffffff00);
-//  //clear interrupt status
-//  temp=in32(mmap_io_ptr_dio+0x0c);
-//  temp|=0x04;
-//  out32(mmap_io_ptr_dio+0x0c, temp);
-////  InterruptDetach(intid);
-//#endif
   close(msgsock);
   close(sock);
   std::cout << "Unlinking Unix Socket: " << path << "\n";
@@ -87,8 +87,7 @@ void graceful_cleanup(int signum)
   exit(0);
 }
 
-//const struct sigevent* isr_handler(void *arg, int id){
-//	int temp;
+const struct sigevent* isr_handler(void *arg, int id){
 //#ifdef __QNX__
 	//if interrupt created by timing card, then clear it
 //	temp=in32(mmap_io_ptr_dio+0x0c);
@@ -101,100 +100,44 @@ void graceful_cleanup(int signum)
 //		return(NULL);
 //	}
 //#else
-//		return(NULL);
+		return(NULL);
 //#endif	
-//}
-
-//void * int_handler(void *arg){
-//  int temp;
-//  unsigned long elapsed;
-//  struct timeval t0,t1,t2,t3,t4,t5,t6;
-////#ifdef __QNX__
-////        setprio(0,20);
-////        memset(&interruptevent,0,sizeof(interruptevent));
-////        interruptevent.sigev_notify=SIGEV_INTR;
-////        ThreadCtl(_NTO_TCTL_IO, NULL);
-////        intid=InterruptAttach(IRQ, isr_handler, NULL, NULL, NULL);
-//        while(1){
-//              if(writingFIFO) {
-////                printf("Waiting for DMA transfer to complete\n");
-//                if(xfercount<max_seq_count){
-////                  InterruptWait(NULL,NULL);
-//                  setprio(0,100);
-//                  while(! (in32(mmap_io_ptr_dio+0x0c) & 0x04)) usleep(10);
-//                  //clear interrupt flag
-//                  temp=in32(mmap_io_ptr_dio+0x0c);
-//                  temp|=0x04;
-//                  out32(mmap_io_ptr_dio+0x0c, temp);
-//                  setprio(0,20);
-//                  if( (max_seq_count-xfercount) > FIFOLVL ){
-//                        totransfer=FIFOLVL;
-//                  }
-//                  else{
-//                        totransfer=max_seq_count-xfercount;
-//                  }
-//                  if(xfercount<max_seq_count){
-////                      printf("DMA transfer\n"); 
-//                      //usleep(100000); 
-//	              empty_flag=in32(mmap_io_ptr_dio+0x04) & 0x1000 ; 
-//	              under_flag=in32(mmap_io_ptr_dio+0x04) & 0x400 ; 
-//                      xfercount+=totransfer;
-//                      dma_count++; 
-//                  }
-//                  if(xfercount>=max_seq_count) {
-////                    printf("END DMA transfers 1\n");
-//                    writingFIFO=0;
-//                  }
-//                  if (empty_flag || under_flag) {
-//                    std::cout << "DMA Error\n";
-//                    writingFIFO=0;
-//                  }
-//                } else {
-////                  printf("END DMA transfers 2\n");
-//                  writingFIFO=0;
-//                }
-//              } else {
-//                usleep(100);
-//              }
-//        }
-//#endif
-//        pthread_exit(NULL);
-//}
-int filter(std::vector<std::complex<float> >& signal, const std::vector<std::complex<float> >& taps){
-        std::vector<std::complex<float> > output;
-        std::complex<float>  temp;
-        int i,j;
-	output.clear();
-
-        for (i=0; i<taps.size(); i++){
-                temp = std::complex<float>(0,0);
-                for(j=0; j<(i+1); j++){
-                        temp += signal[i+j] * taps[taps.size()-j];
-                }
-                output.push_back(temp);
-        }
-
-        for (i=0; i<(signal.size()-taps.size()); i++){
-                temp = std::complex<float>(0,0);
-                for(j=0; j<taps.size(); j++){
-                        temp += signal[i+j] * taps[j];
-                }
-                output.push_back(temp);
-        }
-
-        for (i=0; i<signal.size(); i++){
-                signal[i] = output[i] / std::complex<float> (30,0);
-        }
-        return 1;
 }
 
+/***********************************************************************
+ * transmit_worker function
+ * A function to be used as a boost::thread_group thread for transmitting
+ **********************************************************************/
+void transmit_worker(
+    uhd::tx_streamer::sptr tx_stream,
+    std::vector<std::complex<short> *> pulse_sequences,
+    int sequence_length,
+    uhd::time_spec_t start_time
+){
+    //setup the metadata flags to send this single burst of data
+    uhd::tx_metadata_t md;
+    md.start_of_burst = true;
+    md.end_of_burst   = true;
+    md.has_time_spec  = true;
+    md.time_spec = start_time;
 
+    //Now go for it!
+    tx_stream->send(pulse_sequences,sequence_length, md);
+}
+
+float alpha = 0;
+int rx_thread_status=0;
+int rx_clrfreq_rval=0;
+int usable_bandwidth,N,start,end;
+double search_bandwidth,unusable_sideband;
+double *pwr=NULL,*pwr2=NULL;
 int main(){
     // DECLARE AND INITIALIZE ANY NECESSARY VARIABLES
         int     maxclients=MAX_RADARS*MAX_CHANNELS+1;
         struct  ControlPRM  clients[maxclients],client ;
         struct  TSGbuf *pulseseqs[MAX_RADARS][MAX_CHANNELS][MAX_SEQS];
-        struct  TSGprm *tsgparams[MAX_RADARS][MAX_CHANNELS][MAX_SEQS];
+        struct  CLRFreqPRM clrfreq_parameters;
+        //struct  TSGprm *tsgparams[MAX_RADARS][MAX_CHANNELS][MAX_SEQS];
 	unsigned int	*seq_buf[MAX_RADARS][MAX_CHANNELS];
         int seq_count[MAX_RADARS][MAX_CHANNELS];
         int old_pulse_index[MAX_RADARS][MAX_CHANNELS];
@@ -204,26 +147,30 @@ int main(){
         int new_seq_id=-1;
 	int old_beam=-1;
 	int new_beam=-1;
-        struct TRTimes bad_transmit_times, bad_transmit_temp;
-        unsigned int bad_transmit_counter=0;
+	int nave=0;
+	int center=0;
+	int usable_bandwidth=0;
+        struct TRTimes bad_transmit_times;
 
+	unsigned int *shared_main_addresses[MAX_RADARS][MAX_CHANNELS][MAX_INPUTS]; //Only a single channel buffer for now.. (AFM 10 March 2014)
+	unsigned int *shared_back_addresses[MAX_RADARS][MAX_CHANNELS][MAX_INPUTS]; 
+	
+	//uint64_t main_address=0,back_address=0;
+	char shm_device[80];
+	int shm_fd=0;
 
 	// socket and message passing variables
-	int	data;
 	char	datacode;
 	int	rval;
         fd_set rfds,efds;
 
 	// counter and temporary variables
-	int	i,j,k,r,c,buf,index,offset_pad;
+	int	i,j,r,c,buf,index,offset_pad;
 	int	dds_offset,rx_offset,tx_offset;
         int     scope_start,dds_trigger,rx_trigger;
-	int 	temp;
-	int	tempint;
-	char	tempchar;
-	int	status,dead_flag,step;
+	int	step;
 	int	tempcode;
-        struct timeval t0,t1,t2,t3,t4,t5,t6;
+        struct timeval t0,t6;
         unsigned long elapsed;
 
 	// function specific message variables
@@ -231,42 +178,34 @@ int main(){
         struct  DriverMsg msg;
 
 	// timing related variables
-        struct timeval tv;
-	struct	timespec	start, stop, sleep, now;
-	float	ftime;
-	int	clockresolution;
-	time_t	tod;
+	struct	timespec cpu_start, cpu_stop;
+
+	// usrp-timing related variables
+	uhd::time_spec_t get_data_t0;
+	uhd::time_spec_t get_data_t1;
 
 	// usrp-related variables
 	typedef std::complex<int16_t> sc16;
-	std::vector<std::complex<float> > usrp_complex_buf;
-	std::vector<std::complex<float> > usrp_complex_buf1;
-	std::vector<sc16> usrp_buf(4*MAX_TIME_SEQ_LEN);
-	std::vector<sc16> usrp_buf1(4*MAX_TIME_SEQ_LEN);
-	std::vector<sc16 *> buffs(1, &usrp_buf.front());
-	std::vector<std::complex<float> > filter_table (30, std::complex<float> (0,0));
-	//std::comstd::complex<float> filter_table[60] = std::complex<float>(1,0);
-	int ifilter = 0;
-	int filter_table_len = 30;
-	buffs.push_back(&usrp_buf1.front());
-	std::vector<int16_t> usrp_real;
-	std::vector<int16_t> usrp_imag;
-	float td, pd, pdreal, pdimag;
+	typedef std::complex<float> fc32;
+	const int filter_table_len = 30;
+	std::vector<fc32> filter_table(filter_table_len, std::complex<float>(1./filter_table_len,0));
+	std::vector<std::vector<fc32> > tx_float_vecs;
+	std::vector<std::vector<sc16> > tx_short_vecs;
+	std::vector<sc16 *> tx_vec_ptrs;
+	std::vector<std::vector<sc16> > rx_short_vecs;
+	std::vector<std::vector<sc16> *> rx_vec_ptrs;
+	//std::vector<sc16 > *rx_vec_ptrs;
 
-	//variables to be set by po
-	std::string args, ant, subdev, ref, otw;
-	size_t spb;
-	double rate, freq, gain, wave_freq, bw;
-	float ampl;
+	float td,pd;
+	std::vector<fc32> pdvec;
 
-	// Here are the hard-wired values, NOT set by the po...:
-	args = "addr0=192.168.10.2, addr1=192.168.10.3";
+	//variables to be used as arguments to setup the usrp device(s)
+	std::string args, subdev;
+	//args = "addr0=192.168.10.2, addr1=192.168.10.3";
+	args = "addr0=192.168.10.2";
 	subdev = "A:A";
-	ref = "internal";
-	otw = "sc16";
 
-	// Set the center frequency
-	freq = 10750000;
+	clock_gettime(CLOCK_REALTIME, &cpu_start);
 
 	//create a usrp device
 	std::cout << std::endl;
@@ -274,71 +213,96 @@ int main(){
 	uhd::usrp::multi_usrp::sptr usrp = uhd::usrp::multi_usrp::make(args);
 
 	//Lock mboard clocks
-	//usrp->set_clock_source("internal", 0); //master
-	std::cout << "hello 1" << std::endl;
-	UHD_ASSERT_THROW(usrp->get_num_mboards() == 2);
+	std::cout << usrp->get_num_mboards() << std::endl;
+	UHD_ASSERT_THROW(usrp->get_num_mboards() == NUNITS);
 	
-	uhd::time_spec_t time0 = usrp->get_time_now(0);
-	uhd::time_spec_t time1 = usrp->get_time_now(1);
-	std::cout << boost::format("Time 0: %d") % time0.get_real_secs() << std::endl;
-	std::cout << boost::format("Time 1: %d") % time1.get_real_secs() << std::endl;
-	
-	//make mboard 1 a slave over the MIMO Cable
-	usrp->set_clock_source("mimo", 1);
-	usrp->set_time_source("mimo", 1);
-	
-	//set time on the master (mboard 0)
-	usrp->set_time_now(uhd::time_spec_t(0.0), 0);
-	
-	//sleep a bit while the slave locks its time to the master
-	boost::this_thread::sleep(boost::posix_time::milliseconds(100));
-	//t0 = usrp->get_time_now(0);
-	//t1 = usrp->get_time_now(1);
-	//std::cout << boost::format("Time 0: %d") % t0.get_real_secs() << std::endl;
-	//std::cout << boost::format("Time 1: %d") % t1.get_real_secs() << std::endl;
-
-	//Set clock reference
-	//usrp->set_clock_source(ref);
+	if (NUNITS==1){
+		std::cout << "using single usrp unit..\n";
+		usrp->set_clock_source("internal");
+		usrp->set_time_now(uhd::time_spec_t(0.0));
+	}
+	else{
+		if (MIMO==1){
+			std::cout << "Using MIMO configuration.. The cable is plugged in right?!!\n";
+			//make mboard 1 a slave over the MIMO Cable
+			usrp->set_clock_source("mimo", 1);
+			usrp->set_time_source("mimo", 1);
+			
+			//set time on the master (mboard 0)
+			usrp->set_time_now(uhd::time_spec_t(0.0), 0);
+			
+			//sleep a bit while the slave locks its time to the master
+			boost::this_thread::sleep(boost::posix_time::milliseconds(100));
+		}
+			if (MIMO==0){
+			std::cout << "Using external clock reference..\n";
+			usrp->set_clock_source("external", 0);
+			usrp->set_clock_source("external", 1);
+			
+			//set time on the master (mboard 0)
+			usrp->set_time_next_pps(uhd::time_spec_t(0.0), 0);
+			usrp->set_time_next_pps(uhd::time_spec_t(0.0), 1);
+			
+			//sleep a bit while the slave locks its time to the master
+			boost::this_thread::sleep(boost::posix_time::milliseconds(1100));
+		}
+	}
 
 	//Specify daughterboard routing
 	usrp->set_tx_subdev_spec(subdev);
 
-	//Set sample rate
-	std::cout << boost::format("Setting TX Rate: %f kHz...") % (1e3/(STATE_TIME)) << std::endl;
+	//Set Tx sample rate
+	std::cout << boost::format("Setting TX Rate: %f kHz...") % (1e3/STATE_TIME) << std::endl;
 	usrp->set_tx_rate(1e6 / STATE_TIME);
 	std::cout << boost::format("Actual TX Rate: %f kHz...") % (usrp->get_tx_rate()/1e3) << std::endl << std::endl;
-
+	//Set Rx sample rate
+	std::cout << boost::format("Setting RX Rate: %f kHz...") % (1e3/STATE_TIME) << std::endl;
+	//usrp->set_rx_rate(1e6 / STATE_TIME);
+	usrp->set_rx_rate(10e6);
+	std::cout << boost::format("Actual RX Rate: %f kHz...") % (usrp->get_rx_rate()/1e3) << std::endl << std::endl;
 
 	//create a transmit streamer
 	//linearly map channels (index0 = channel0, index1 = channel1, ...)
-	uhd::stream_args_t stream_args("sc16", otw);
-	for (size_t chan = 0; chan < usrp->get_tx_num_channels(); chan++)
-	    stream_args.channels.push_back(chan); //linear mapping
-	uhd::tx_streamer::sptr tx_stream = usrp->get_tx_stream(stream_args);
+	uhd::stream_args_t tx_stream_args("sc16", "sc16");
+	for (size_t tx_chan = 0; tx_chan < usrp->get_tx_num_channels(); tx_chan++)
+	    tx_stream_args.channels.push_back(tx_chan); //linear mapping
+	uhd::tx_streamer::sptr tx_stream = usrp->get_tx_stream(tx_stream_args);
 
-	//Initialize motherboard clock to arbitrary time
-	//std::cout << boost::format("Setting device timestamp to 0...") << std::endl;
-	//usrp->set_time_now(uhd::time_spec_t(0.0));
+	//create a receive streamer
+	//linearly map channels (index0 = channel0, index1 = channel1, ...)
+	uhd::stream_args_t rx_stream_args("fc64", "sc16"); //use doubles for receiving
+	for (size_t rx_chan = 0; rx_chan < usrp->get_rx_num_channels(); rx_chan++){
+	    std::cout << "rx channel: " << rx_chan << std::endl;
+	    rx_stream_args.channels.push_back(rx_chan); //linear mapping
+	}
+	uhd::rx_streamer::sptr rx_stream = usrp->get_rx_stream(rx_stream_args);
 
 	std::cout << boost::format("Using Device: %s") % usrp->get_pp_string() << std::endl;
 
-//#ifdef __QNX__
-//	struct	 _clockperiod 	new, old;
-//
-//#endif
-	// pci, io, and memory variables
-	// Vestigial variables from timing driver; probably unnecessary for usrp
-	unsigned int	*mmap_io_ptr;
-	int		pci_handle;
-	int		pci_device=0;
+	for(r=0;r<MAX_RADARS;r++){
+              for(c=0;c<MAX_CHANNELS;c++){
+                  sprintf(shm_device,"/receiver_main_%d_%d_%d",r,c,0);
+                  shm_unlink(shm_device);
+                  shm_fd=shm_open(shm_device,O_RDWR|O_CREAT,S_IRUSR | S_IWUSR);
+		  int rval = ftruncate(shm_fd,MAX_SAMPLES*4);
+		  if (rval==-1) std::cerr << "ftruncate error!!\n";
+                  shared_main_addresses[r][c][0]=(uint *)mmap(0,MAX_SAMPLES*4,PROT_READ|PROT_WRITE,MAP_SHARED,shm_fd,0);
+                  close(shm_fd);
+                  sprintf(shm_device,"/receiver_back_%d_%d_%d",r,c,0);
+                  shm_unlink(shm_device);
+                  shm_fd=shm_open(shm_device,O_RDWR|O_CREAT,S_IRUSR | S_IWUSR);
+                  rval = ftruncate(shm_fd, MAX_SAMPLES*4);
+		  if (rval==-1) std::cerr << "ftruncate error!!\n";
+                  shared_back_addresses[r][c][0]=(uint *)mmap(0,MAX_SAMPLES*4,PROT_READ|PROT_WRITE,MAP_SHARED,shm_fd,0);
+                  close(shm_fd);
+                  for (i=0;i<MAX_SAMPLES;i++) {
+                    shared_main_addresses[r][c][0][i]=i;
+                    shared_back_addresses[r][c][0][i]=i;
+                  }
+              }
+            }
 
-// PCI-7300A variables
-	int		pci_handle_dio, IRQ_dio, mmap_io_dio;
-        
-//	int		 pseq[7]={0, 3, 4, 6}, scope_sync[16384], TR[16384], TX[16384], TX_array[16384], 
-//                         trigger[16384], FIFOlevel[16384];
-//	int		 tau=2400, tperiod=1, tlength=300, time_array[10], intt=200, loopcount=0, fifocnt=0;
-        int delay_count;
+
         unsigned long counter;
 
         signal(SIGINT, graceful_cleanup);
@@ -353,13 +317,13 @@ int main(){
         tx_offset=iniparser_getint(Site_INI,"timing:tx_offset",TX_OFFSET);
         dds_offset=iniparser_getint(Site_INI,"timing:dds_trigger_offset",DDS_OFFSET);
         rx_offset=iniparser_getint(Site_INI,"timing:rx_trigger_offset",RX_OFFSET);
-        if (verbose > -1 ) std::cerr << "DDS Offset: " << dds_offset << " RX Offset: " << rx_offset << "\n";
+        if (verbose > 1 ) std::cout << "Tx Offset: " << tx_offset <<
+		"DDS Offset: " << dds_offset << " RX Offset: " << rx_offset << "\n";
 
         max_seq_count=0;
 	if (verbose > 1) std::cout << "Zeroing arrays\n";
-
 	for (r=0;r<MAX_RADARS;r++){
-	  for (c=0;c<MAX_CHANNELS;c++){
+	  for (int c=0;c<MAX_CHANNELS;c++){
 	    if (verbose > 1) std::cout << r << " " << c << "\n";
 	    for (i=0;i<MAX_SEQS;i++) pulseseqs[r][c][i]=NULL;
             ready_index[r][c]=-1; 
@@ -371,47 +335,10 @@ int main(){
         bad_transmit_times.start_usec=(uint32_t*) malloc(sizeof(unsigned int)*MAX_PULSES);
         bad_transmit_times.duration_usec=(uint32_t*) malloc(sizeof(unsigned int)*MAX_PULSES);
 
-	for (i=0; i<filter_table_len; i++){
-		filter_table[i] = pow(2.7183, -(0.5)*pow(((float)i-(filter_table_len-1)/2)/filter_table_len/0.25,2));
-	}
-       
-//#ifdef __QNX__
-//    // SET THE SYSTEM CLOCK RESOLUTION AND GET THE START TIME OF THIS PROCESS 
-//	// set the system clock resolution to 10 us
-//	new.nsec=10000;
-//	new.fract=0;
-//	temp=ClockPeriod(CLOCK_REALTIME,&new,0,0);
-//	if(temp==-1) 	perror("Unable to change system clock resolution");
-//	temp=ClockPeriod(CLOCK_REALTIME,0,&old,0);
-//	if(temp==-1) 	perror("Unable to read sytem time");
-//	clockresolution=old.nsec;
-//    /* OPEN THE PLX 9080 AND GET LOCAL BASE ADDRESSES */
-//	clock_gettime(CLOCK_REALTIME, &start);
-//	IRQ=IRQ_dio;
-//	std::cout << "PLX9080 configuration IRQ: " << IRQ << "\n";
-//	clock_gettime(CLOCK_REALTIME, &stop);
-//	if(temp==-1) {
-//	 std::cerr << "PLX9080 configuration failed\n";
-//         configured=0;
-//        }
-//	std::cerr << " EXECUTION TIME: " << stop.tv_nsec-start.tv_nsec << " nsec\n";
-//    /* CREATE DMA BUFFERS FOR ALL RECIEVER CHANNELS */
-//	clock_gettime(CLOCK_REALTIME, &start);
-//#endif
-
-//#ifdef __QNX__
-//	temp=_create_DMA_buff(&virtual_addr[0], &physical_addr[0], 4*MAX_TIME_SEQ_LEN);
-//	master_buf=(unsigned int*)virtual_addr[0];
-//	if (temp==-1){
-//	  std::cerr << "ERROR MAKING DMA BUFFERS!\n";
-//        }
-//#else
         master_buf=(unsigned int*) malloc(4*MAX_TIME_SEQ_LEN);
-//#endif
 
-	clock_gettime(CLOCK_REALTIME, &stop);
-	if (temp == 1)	std::cerr << "DMA buffers created sucessfully!\n";
-	std::cerr << " EXECUTION TIME: " << stop.tv_nsec-start.tv_nsec << " nsec\n";
+	clock_gettime(CLOCK_REALTIME, &cpu_stop);
+	if(verbose>1)std::cout << "Elapsed setup time: " << 1e-9*(cpu_stop.tv_nsec-cpu_start.tv_nsec) << " sec\n";
 
     // OPEN TCP SOCKET AND START ACCEPTING CONNECTIONS 
 	//printf("timing host port: %i \n", TIMING_HOST_PORT);
@@ -420,6 +347,15 @@ int main(){
 	//printf("Done binding socket: %i \n", sock);
         //sock=server_unixsocket("/tmp/rostiming",0);
 	listen(sock, 5);
+	uhd::time_spec_t tstart;
+	//std::vector<boost::thread *> receive_threads;
+	boost::thread_group receive_threads;
+	receive_threads.join_all();
+	int32_t rx_status_flag;
+	int32_t frame_offset;
+	int32_t dma_buffer;
+	int32_t nrx_samples;
+	int32_t shm_memory;
 	while(1){
                 rval=1;
 		//printf("sock: %i \n", sock);
@@ -437,8 +373,8 @@ int main(){
                   FD_ZERO(&efds);
                   FD_SET(msgsock, &efds);  //Add msgsock to the exception watch
                   /* Wait up to five seconds. */
-                  tv.tv_sec = 5;
-                  tv.tv_usec = 0;
+                  //tv.tv_sec = 5;
+                  //tv.tv_usec = 0;
 		  if (verbose > 1) std::cout << msgsock << " Entering Select\n";
                   rval = select(msgsock+1, &rfds, NULL, &efds, NULL);
                   //rval = select(msgsock+1, &rfds, NULL, &efds, &tv); //Actually implement the timeout (AFM)
@@ -479,9 +415,11 @@ int main(){
 		        if (verbose > 1) std::cout << "Requested index: " << r << " " << c << " " << index << "\n";
 		        if (verbose > 1) std::cout << "Attempting Free on pulseseq: " << pulseseqs[r][c][index];
                         if (pulseseqs[r][c][index]!=NULL) {
-                          if (pulseseqs[r][c][index]->rep!=NULL)  free(pulseseqs[r][c][index]->rep);
-                          if (pulseseqs[r][c][index]->code!=NULL) free(pulseseqs[r][c][index]->code);
-                          free(pulseseqs[r][c][index]);
+                          if (pulseseqs[r][c][index]->rep!=NULL)  
+				{free(pulseseqs[r][c][index]->rep);pulseseqs[r][c][index]->rep=NULL;}
+                          if (pulseseqs[r][c][index]->code!=NULL) 
+				{free(pulseseqs[r][c][index]->code);pulseseqs[r][c][index]->code=NULL;}
+                          free(pulseseqs[r][c][index]);pulseseqs[r][c][index]=NULL;
                         }
 		        if (verbose > 1) std::cout << "Done Free - Attempting Malloc\n";	
                         pulseseqs[r][c][index]=(TSGbuf*) malloc(sizeof(struct TSGbuf));
@@ -501,6 +439,7 @@ int main(){
                         new_seq_id=-1;
                         rval=send_data(msgsock, &msg, sizeof(struct DriverMsg));
                         break;
+
 		      case TIMING_CtrlProg_END:
 		        if (verbose > 0) std::cout << "\nA client is done\n";	
                         msg.status=0;
@@ -514,6 +453,12 @@ int main(){
 		        rval=recv_data(msgsock,&client,sizeof(struct ControlPRM));
                         r=client.radar-1; 
                         c=client.channel-1; 
+			//alpha = 32*(9.86/(2e-8*client.trise)) / (0.8328*usrp->get_rx_rate());
+			//std::cout << "alpha: " << alpha << std::endl;
+			//for (i=0; i<filter_table_len; i++){
+			//	filter_table[i] = pow(alpha/3.14,0.5)*pow(2.7183, 
+			//		-1*(alpha)*pow((((float)i-(filter_table_len-1)/2)/filter_table_len),2))/filter_table_len;
+			//}
                         if ((ready_index[r][c]>=0) && (ready_index[r][c] <maxclients) ) {
                           clients[ready_index[r][c]]=client;
                         } else {
@@ -525,20 +470,18 @@ int main(){
 					" Beamnum: " << client.tbeam << " Status: " << msg.status << "\n";
 
 			// Calculate frequency-dependent phase shift based on time-delay
-			td = 10 * (16/2-client.tbeam);
-			pd = fmod((td*freq*1e-9), 1.0) * 6.28;
-			pdreal = cos(pd);
-			pdimag = sin(pd);
-			std::cout << "Time delay: " << td << " ns.  Phase delay: " << 360*pd/6.28 << " degrees.\n";
-			std::cout << "Multiplication factor: " << pdreal << " + j*" << pdimag << std::endl;
-			std::cout << "Transmit frequency: " << client.tfreq << std::endl;
-			std::cout << "Trise: " << client.trise << std::endl;
+			pdvec.clear();
+			for(unsigned int i=0;i<usrp->get_tx_num_channels();i++){
+				td = i * 10 * (16/2-client.tbeam); // 10 ns per antenna per beam..
+				pd = fmod((td*client.tfreq*1e-6), 1.0) * 6.28;
+				pdvec.push_back(std::complex<float>(cos(pd),sin(pd)));
+			}
 
                         index=client.current_pulseseq_index; 
                         if (index!=old_pulse_index[r][c]) {
                         //if (1==1) {
-			  if (verbose > -1) std::cerr << "Need to unpack pulseseq " << r << " " << c << " " << index << "\n";
-			  if (verbose > -1) std::cerr << "Pulseseq length: " << pulseseqs[r][c][index]->len << "\n";
+			  if (verbose > -1) std::cout << "Need to unpack pulseseq " << r << " " << c << " " << index << "\n";
+			  if (verbose > -1) std::cout << "Pulseseq length: " << pulseseqs[r][c][index]->len << "\n";
 			// unpack the timing sequence
 			  seq_count[r][c]=0;
                           step=(int)((double)pulseseqs[r][c][index]->step/(double)STATE_TIME+0.5);
@@ -546,11 +489,11 @@ int main(){
                         //If DDS or RX Offset is negative pad the seq_buf iwith the maximum negative offset
                           offset_pad=(int)((double)MIN(dds_offset,rx_offset)/((double)STATE_TIME+0.5))-2;
 			  if (verbose > -1) std::cout << "offset pad: " << offset_pad << "\n";	
-                          for(i=0;i>offset_pad;i--) {
+                          for(int i=0;i>offset_pad;i--) {
                             seq_buf[r][c][seq_count[r][c]]=0;
                             seq_count[r][c]++;
                           }
-			  for(i=0;i<pulseseqs[r][c][index]->len;i++){
+			  for(int i=0;i<pulseseqs[r][c][index]->len;i++){
 			    tempcode=_decodestate(r,c,(pulseseqs[r][c][index]->code)[i]);	
 			    for( j=0;j<step*(pulseseqs[r][c][index]->rep)[i];j++){
 			      seq_buf[r][c][seq_count[r][c]]=tempcode;
@@ -576,7 +519,7 @@ int main(){
 					 " Num clients: " << numclients << "\n";	
                           new_seq_id=-1;
 			  new_beam=client.tbeam;
-	                  for( i=0; i<numclients; i++) {
+	                  for(int i=0; i<numclients; i++){
                             r=clients[i].radar-1;
                             c=clients[i].channel-1;
                             new_seq_id+=r*1000 +
@@ -586,186 +529,189 @@ int main(){
                           }
                           if (verbose > 1) std::cout << "Timing Driver: " << new_seq_id << " " << old_seq_id << "\n";
 
-                          if (new_seq_id!=old_seq_id | new_beam != old_beam) { 
-			    if (new_seq_id != old_seq_id) usrp_complex_buf.clear();
-			    //Set the center frequency
-			    for(size_t chan = 0; chan < usrp->get_tx_num_channels(); chan++) {
-			            std::cout << boost::format("Setting TX Freq: %f MHz...") % (freq/1e6) << std::endl;
-			            usrp->set_tx_freq(1000*client.tfreq, chan);
-			            std::cout << boost::format("Actual TX Freq: %f MHz...") % (usrp->get_tx_freq(chan)/1e6) << std::endl << std::endl;
-			    }
-                          //if () { 
-                            if (verbose > -1) std::cout << "Calculating Master sequence " << old_seq_id << " " << new_seq_id << "\n";
-                        //if (1==1) { 
-                            max_seq_count=0;
-                            for (i=0;i<numclients;i++) {
-                              r=clients[i].radar-1;
-                              c=clients[i].channel-1;
-                              if (seq_count[r][c]>=max_seq_count) max_seq_count=seq_count[r][c];
-		              if (verbose > 1) std::cout << "Max Seq length: " << max_seq_count << "\n";
-                              counter=0;
-			      if (verbose > 1) std::cout << "Merging Client Seq " <<  i << 
-						"into Master Seq " << r << " " << c << 
-						"length: " << seq_count[r][c] << "\n";
-                              if (i==0) {
-				for (j=0;j<seq_count[r][c];j++) {
-                                  master_buf[j]=seq_buf[r][c][j];
-				  }
-                                  counter++;
+                          if ((new_seq_id!=old_seq_id) | (new_beam != old_beam)) { 
+			    if (new_seq_id!=old_seq_id){
+			    	//Set the rx center frequency
+			    	for(size_t chan = 0; chan < usrp->get_tx_num_channels(); chan++) {
+			    	        usrp->set_rx_freq(1000*client.tfreq, chan);
+			    	        if(verbose>1)
+						std::cout << boost::format("RX freq set to: %f MHz...") % 
+								(usrp->get_rx_freq(chan)/1e6) << 
+								std::endl << std::endl;
+			    	}
+			    	//Set the tx center frequency
+			    	for(size_t chan = 0; chan < usrp->get_tx_num_channels(); chan++) {
+			    	        usrp->set_tx_freq(1000*client.tfreq, chan);
+			    	        if(verbose>1)
+						std::cout << boost::format("TX freq set to: %f MHz...") % 
+								(usrp->get_tx_freq(chan)/1e6) << 
+								std::endl << std::endl;
+			    	}
+                            	if (verbose > -1) std::cout << "Calculating Master sequence " << old_seq_id << " " << new_seq_id << "\n";
+                            	max_seq_count=0;
+			    	  printf("numclients: %i\n",numclients);
+
+                            	for (int i=0;i<numclients;i++) {
+                            	  r=clients[i].radar-1;
+                            	  c=clients[i].channel-1;
+                            	  if (seq_count[r][c]>=max_seq_count) max_seq_count=seq_count[r][c];
+		            	  if (verbose > 1) std::cout << "Max Seq length: " << max_seq_count << "\n";
+                            	  counter=0;
+			    	  if (verbose > 1) std::cout << "Merging Client Seq " <<  i << 
+			    	    		"into Master Seq " << r << " " << c << 
+			    	    		"length: " << seq_count[r][c] << "\n";
+                            	  if (i==0) {
+			    	    for (j=0;j<seq_count[r][c];j++) {
+                            	      master_buf[j]=seq_buf[r][c][j];
+			    	      }
+                            	      counter++;
+                            	  }
+                            	  else {
+			    	    for (j=0;j<seq_count[r][c];j++) {
+			    	      master_buf[j]|=seq_buf[r][c][j];
+			    	      }
+			    	      counter++;
+			    	  }
+                            	  
+                            	  if (verbose > 1 ) std::cout << "Total Tr: " << counter << "\n";
+			          // add the FIFO level bits
+                                  bad_transmit_times.length=0;
+                                  tr_event=0; 
+                                  scope_event=0; 
+                                  scope_start=-1;
+                                  dds_trigger=0;
+                                  rx_trigger=0;
+	                          //if (verbose > 1) std::cout << "Fifo stamping Master Seq using FIFOLVL " << FIFOLVL << "\n";
+
+			          for(int i=0;i<max_seq_count;i++){
+                                    if ((master_buf[i] & 0x02)==0x02) {
+                                      /* JDS: use tx as AM gate for mimic recv sample for external freq gen */
+                                      //if(tx_offset > 0) {
+                                      //  temp=tx_offset/STATE_TIME;
+                                      //  master_buf[i+temp]|= 0x04 ; 
+                                      //}
+                                      if (tr_event==0) { 
+                                        if (verbose > 1 ) std::cout << "Master TR sample start: " << i << " " << master_buf[i] << "\n";
+                                        bad_transmit_times.length++;
+                                        if(bad_transmit_times.length > 0){ 
+                                          if(bad_transmit_times.length < MAX_PULSES) { 
+                                            (bad_transmit_times.start_usec)[bad_transmit_times.length-1]=i*STATE_TIME;
+                                            (bad_transmit_times.duration_usec)[bad_transmit_times.length-1]=STATE_TIME;
+                                          } else {
+                                            std::cout << "Too many transmit pulses\n";
+                                          } 
+                                        }
+                                      } else {
+                                          (bad_transmit_times.duration_usec)[bad_transmit_times.length-1]+=STATE_TIME;
+                                      }
+                                      tr_event=1;
+                                    } else {
+                                      if(tr_event==1) 
+                                        if (verbose > 1 ) std::cout << "Master TR sample end: " << i << " " << master_buf[i] << "\n";
+                                      tr_event=0;
+                                    }
+                                    if ((master_buf[i] & 0x01)==0x01) {
+                                      if (scope_event==0) { 
+                                        if (verbose > 1 ) std::cout << "Scope Sync sample start: " << i << " " << master_buf[i] << "\n";
+                                        scope_start=i;
+                                      }
+                                      scope_event=1;
+                                    } else {
+                                      if (scope_event==1) 
+                                        if (verbose > 1 ) std::cout << "Scope Sync sample end: " << i << " " << master_buf[i] << "\n";
+                                      scope_event=0;
+                                    }
+                                  }
+                                  if (scope_start>-1) { 
+                                    //dds_trigger=scope_start+(int)((double)dds_offset/((double)STATE_TIME+0.5));
+                                    //rx_trigger=scope_start+(int)((double)rx_offset/((double)STATE_TIME+0.5));
+                                    //if (verbose > 1 ) {
+                                    //  std::cout << "---> Scope Sync in Master " << max_seq_count << " at " << scope_start << "\n";
+                                    //  std::cout << "---> DDS Trigger in Master " << max_seq_count << " at " << dds_trigger << "\n"; 
+                                    //  std::cout << "---> Rx Trigger in Master " << max_seq_count << " at " << rx_trigger << "\n"; 
+                                    //} 
+                                  } else {
+                                    //if (verbose > 1 ) std::cout << "XXX> Scope Sync not in Master " << max_seq_count << "\n";
+                                    //dds_trigger=0;
+                                    //rx_trigger=0;
+                                  }
+                                  if((dds_trigger>=0) && (dds_trigger<max_seq_count)) {
+                                    //master_buf[dds_trigger]|=0x4000;                            
+                                  }
+                                  if((rx_trigger>=0) && (rx_trigger<max_seq_count)) {
+                                    //master_buf[rx_trigger]|=0x8000;                            
+                                  }
                               }
-                              else {
-				for (j=0;j<seq_count[r][c];j++) {
-				  master_buf[j]|=seq_buf[r][c][j];
-				  }
-				  counter++;
-			      }
-                              
-                              if (verbose > 1 ) std::cout << "Total Tr: " << counter << "\n";
+                            
+	                      if (verbose > 1) std::cout << "seq length: " << max_seq_count << " state step: " <<
+			    			STATE_TIME*1e-6 << " time: " << (STATE_TIME*1E-6*max_seq_count) << "\n";
+
+			      if (verbose > 1) std::cout << "Max Seq Count: " << max_seq_count << "\n";
+                              if (verbose > 1) std::cout << "END FIFO Stamps\n";
+			    	}
 			    }
 
+			    if (new_beam != old_beam) {
+			    	tx_float_vecs.clear();
+				for(unsigned int i=0;i<usrp->get_tx_num_channels();i++)
+					tx_float_vecs.push_back(std::vector<fc32>(max_seq_count,0));
 
-			    if (new_seq_id != old_seq_id) {
-			    	usrp_complex_buf.clear();
-			    	usrp_complex_buf1.clear();
-			    	usrp_real.resize(max_seq_count);
-			    	usrp_imag.resize(max_seq_count);
-			    	usrp_complex_buf.resize(max_seq_count);
-			    	usrp_complex_buf1.resize(max_seq_count);
-			    	usrp_buf.resize(max_seq_count);
-			    	usrp_buf1.resize(max_seq_count);
+				tx_short_vecs.clear();
+				for(unsigned int i=0;i<usrp->get_tx_num_channels();i++)
+			    		tx_short_vecs.push_back(std::vector<sc16 >(max_seq_count,0));
+
 			    	// Do a second-stage decode.. Put the tr and sync logic bits into the LSB's of
 			    	// of the real and imaginary components
-			    	// [TODO] this logic should probably be in the first decodestate() function
-			    	for (j=0;j<max_seq_count;j++){
-			    	    usrp_real[j] = (0x0001 & (master_buf[j] >> 16));
-			    	    usrp_imag[j] = (0x0001 & (master_buf[j]));
-			    	}
+			    	// [TODO] this logic could probably be in the first decodestate() function
+				for (unsigned int i=0;i<usrp->get_tx_num_channels();i++){
+			    		for (j=0;j<max_seq_count;j++){
+			    		    tx_short_vecs[i][j] = sc16((0x0001 & (master_buf[j] >> 16)),
+						(0x0001 & master_buf[j]));
+			    		}
+				}
 
 			    	// Build the complex-float-valued vector of baseband rf values
-			    	// [TODO] this should be some kind of lookup table
-			    	// i.e. if the tx bit is on, then look up the next value in the filtered-wave table
-			    	// and for imaging configuration multiply by some phase shift.  
 			    	// For imaging configuration, the output should
-			    	// be a two-dimensional vector of values,i.e usrp_buf[16][master_buf_len]
+			    	// be a two-dimensional vector of values,i.e tx_float_vecs[16][master_buf_len]
+				//int txon_flag = 0;
 			    	for (j=0;j<max_seq_count;j++){
 			    	      if ((master_buf[j] & 0x00020000) == 0x00020000){
-			    	    	//usrp_complex_buf[j] = filter_table[ifilter] * (std::complex<float>(1,0));
-			    	    	//usrp_complex_buf1[j] = filter_table[ifilter] * std::complex<float>(pdreal,pdimag) * (std::complex<float>(1,0));
-			    	    	usrp_complex_buf[j] = (std::complex<float>(1,0));
-			    	    	//usrp_complex_buf1[j] = std::complex<float>(pdreal,pdimag) * (std::complex<float>(1,0));
-			    	    	//if (ifilter >= filter_table_len) ifilter %= filter_table_len;
+					//if (txon_flag == 0){
+			    	    	tx_float_vecs[0][j] = (std::complex<float>(1,0));
 			    	      }
+			    	      if ((master_buf[j] & 0x00040000) == 0x00040000){
+				    //if (((master_buf[j] & 0x00020000) == 0x00000000) && (txon_flag==1)){
+				    //    txon_flag=0;
+			    	    	tx_float_vecs[0][j] = (std::complex<float>(-1,0));
+				      }
 			    	}
-			    	int filtrval;
-			    	filter(usrp_complex_buf, filter_table);
-			    }
-			    for (j=0;j<max_seq_count;j++){
-			          if (usrp_complex_buf[j] != std::complex<float>(0,0)){
-			        	usrp_complex_buf1[j] = std::complex<float>(pdreal,pdimag) * usrp_complex_buf[j];
-			          }
-			    }
+			    	_convolve(tx_float_vecs[0], filter_table);
+			    
+			        for(unsigned int ant=1;ant<usrp->get_tx_num_channels();ant++){
+			        	for (j=0;j<max_seq_count;j++){
+			        	      if (tx_float_vecs[0][j] != std::complex<float>(0,0)){
+			        	    		tx_float_vecs[ant][j] = pdvec[ant] * tx_float_vecs[0][j];
+			        	      }
+			        	}
+			        }
 
-			    // Merge the logic bits with the baseband rf complex values
-			    // The output needs to be sc16 type to preserve the bit information
-			    int16_t tempreal, tempimag;
-			    std::complex<float> chan0temp, chan1temp;
-			    for (j=0;j<max_seq_count;j++){
-			          chan0temp = usrp_complex_buf[j] * std::complex<float>(0.95*pow(2,14),0);
-			          chan1temp = usrp_complex_buf1[j] * std::complex<float>(0.95*pow(2,14),0);
+			        // Merge the logic bits with the baseband rf complex values
+			        // The output needs to be sc16 type to preserve the tr and sync logic bits
+			        std::complex<float> fc32temp;
+			        for (unsigned int i=0;i<usrp->get_tx_num_channels(); i++){
+			        	for (j=0;j<max_seq_count;j++){
+			        	      fc32temp = tx_float_vecs[i][j] * std::complex<float>(0.95*pow(2,15),0);
+			        	      tx_short_vecs[i][j] = sc16(
+						tx_short_vecs[i][j].real() | ((int16_t) fc32temp.real() & 0xfffe),
+			        	      	tx_short_vecs[i][j].imag() | ((int16_t) fc32temp.imag() & 0xfffe));
+			        	}
+			        }
 
-				  tempreal = usrp_real[j] | (((int16_t) chan0temp.real()) & 0xfffe);
-				  tempimag = usrp_imag[j] | (((int16_t) chan0temp.imag()) & 0xfffe);
-				  usrp_buf[j] = std::complex<int16_t>(tempreal, tempimag);
+			        tx_vec_ptrs.clear();
+			        for(unsigned int i=0;i<usrp->get_tx_num_channels();i++)
+			        	tx_vec_ptrs.push_back(&tx_short_vecs[i].front());
 
-				  tempreal = (int16_t) chan1temp.real();
-				  tempimag = (int16_t) chan1temp.imag();
-				  usrp_buf1[j] = std::complex<int16_t>(tempreal, tempimag);
-			    }
-
-			    //std::cout << "sizeof usrp_buf:" << usrp_buf.size() << "\n";
-
-			    // add the FIFO level bits
-                            bad_transmit_times.length=0;
-                            tr_event=0; 
-                            scope_event=0; 
-                            scope_start=-1;
-                            dds_trigger=0;
-                            rx_trigger=0;
-	                    //if (verbose > 1) std::cout << "Fifo stamping Master Seq using FIFOLVL " << FIFOLVL << "\n";
-
-			    for(i=0;i<max_seq_count;i++){
-                              //if( ( i!=0 ) && ( i <= (max_seq_count-FIFOLVL) ) ) {
-                                //if( ((i%FIFOLVL)==0) ) {
-				//  for(j=0;j<FIFOWIDTH;j++){
-                            	//	master_buf[i+j]|=0x80;
-				//  }
-                                //}
-                              //}
-                              if ((master_buf[i] & 0x02)==0x02) {
-                                /* JDS: use tx as AM gate for mimic recv sample for external freq gen */
-                                //if(tx_offset > 0) {
-                                //  temp=tx_offset/STATE_TIME;
-                                //  master_buf[i+temp]|= 0x04 ; 
-                                //}
-                                if (tr_event==0) { 
-                                  if (verbose > 1 ) std::cout << "Master TR sample start: " << i << " " << master_buf[i] << "\n";
-                                  bad_transmit_times.length++;
-                                  if(bad_transmit_times.length > 0){ 
-                                    if(bad_transmit_times.length < MAX_PULSES) { 
-                                      (bad_transmit_times.start_usec)[bad_transmit_times.length-1]=i*STATE_TIME;
-                                      (bad_transmit_times.duration_usec)[bad_transmit_times.length-1]=STATE_TIME;
-                                    } else {
-                                      std::cout << "Too many transmit pulses\n";
-                                    } 
-                                  }
-                                } else {
-                                    (bad_transmit_times.duration_usec)[bad_transmit_times.length-1]+=STATE_TIME;
-                                }
-                                tr_event=1;
-                              } else {
-                                if(tr_event==1) 
-                                  if (verbose > 1 ) std::cout << "Master TR sample end: " << i << " " << master_buf[i] << "\n";
-                                tr_event=0;
-                              }
-                              if ((master_buf[i] & 0x01)==0x01) {
-                                if (scope_event==0) { 
-                                  if (verbose > 1 ) std::cout << "Scope Sync sample start: " << i << " " << master_buf[i] << "\n";
-                                  scope_start=i;
-                                }
-                                scope_event=1;
-                              } else {
-                                if (scope_event==1) 
-                                  if (verbose > 1 ) std::cout << "Scope Sync sample end: " << i << " " << master_buf[i] << "\n";
-                                scope_event=0;
-                              }
-                            }
-                            if (scope_start>-1) { 
-                              //dds_trigger=scope_start+(int)((double)dds_offset/((double)STATE_TIME+0.5));
-                              //rx_trigger=scope_start+(int)((double)rx_offset/((double)STATE_TIME+0.5));
-                              //if (verbose > 1 ) {
-                              //  std::cout << "---> Scope Sync in Master " << max_seq_count << " at " << scope_start << "\n";
-                              //  std::cout << "---> DDS Trigger in Master " << max_seq_count << " at " << dds_trigger << "\n"; 
-                              //  std::cout << "---> Rx Trigger in Master " << max_seq_count << " at " << rx_trigger << "\n"; 
-                              //} 
-                            } else {
-                              //if (verbose > 1 ) std::cout << "XXX> Scope Sync not in Master " << max_seq_count << "\n";
-                              //dds_trigger=0;
-                              //rx_trigger=0;
-                            }
-                            if((dds_trigger>=0) && (dds_trigger<max_seq_count)) {
-                              //master_buf[dds_trigger]|=0x4000;                            
-                            }
-                            if((rx_trigger>=0) && (rx_trigger<max_seq_count)) {
-                              //master_buf[rx_trigger]|=0x8000;                            
-                            }
-                          }
-                        
-
-	                  if (verbose > 1) std::cout << "seq length: " << max_seq_count << " state step: " <<
-						STATE_TIME*1e-6 << " time: " << (STATE_TIME*1E-6*max_seq_count) << "\n";
-
-			  if (verbose > 1) std::cout << "Max Seq Count: " << max_seq_count << "\n";
-                          if (verbose > 1) std::cout << "END FIFO Stamps\n";
+			}
 
                         if (new_seq_id < 0 ) {
                           old_seq_id=-10;
@@ -794,39 +740,57 @@ int main(){
 
 		      case TIMING_TRIGGER:
 
-			if (verbose > 1 ) std::cout << "Setup Timing Card trigger\n";	
+			if (verbose > 1 ) std::cout << "Setup for trigger\n";	
+			if (verbose > 1) std::cout << "Pdvec: " << pdvec[0] << " " << pdvec[1] << std::endl;
                         msg.status=0;
-			if (verbose > 1) std::cout << "Read msg struct from tcp socket!\n";	
 
                         if(configured) {
+			  uhd::time_spec_t start_time = usrp->get_time_now() + 0.02;
+			  tstart = usrp->get_time_now();
 
-			//std::cout << ("Here is the head of the master buffer:\n");
-			//std::cout << "Length: " << MAX_TIME_SEQ_LEN << "\n";
-			//for (i=0; i < max_seq_count; i++){
-			//	if(master_buf[i] != 0) {
-			//		std::cout << i << "\t";
-			//		std::cout << usrp_buf[i] << " " << usrp_buf[i] << std::endl;
-			//	}
-			//};
+			  //First wait for any existing receiver threads..
+			  if (verbose > 1) std::cout << "Waiting on thread.." << std::endl;
+			  receive_threads.join_all();
+			  
+		       	  //Adjust the number of samples to receive to account for sample rate conversion
+			  if (verbose > 2){
+			  	int usrp_rate = (int) (usrp->get_rx_rate());
+			  	int oversamplerate = usrp_rate/client.baseband_samplerate;
+			  	std::cout << "client baseband sample rate: " << client.baseband_samplerate << std::endl;;
+			  	std::cout << "Usrp sample rate: " << usrp_rate << std::endl;;
+			  	std::cout << "Oversample rate: " << oversamplerate << std::endl;;
+			  }
 
-			//setup the metadata flags
-			uhd::tx_metadata_t md;
-			md.start_of_burst = true;
-			md.end_of_burst   = false;
-			md.has_time_spec  = true;
-			time0 = usrp->get_time_now(0);
-			md.time_spec = uhd::time_spec_t(time0 + 0.001);
-			
-			tx_stream->send(buffs, max_seq_count, md);
-        		//md.start_of_burst = false;
-        		//md.has_time_spec = false;
-			//md.end_of_burst = true;
-			//tx_stream->send("", 0, md);
+			  rx_short_vecs.clear();
+			  for(size_t i=0;i<usrp->get_rx_num_channels();i++)
+			  	rx_short_vecs.push_back(std::vector<sc16>(2*client.number_of_samples));
+
+			  rx_vec_ptrs.clear();
+			  for(size_t i=0;i<usrp->get_rx_num_channels();i++)
+			  	rx_vec_ptrs.push_back(&rx_short_vecs[i]);
+			  
+			  //Start the receive stream thread
+			  if(verbose>1) std::cout << "About to start rx thread..\n";
+			  rx_thread_status=0;
+			  gettimeofday(&t0,NULL);
+		       	  receive_threads.create_thread(boost::bind(recv_to_buffer,
+			  	usrp,
+			  	rx_stream,
+			  	rx_vec_ptrs,
+			  	client.number_of_samples,
+				usrp->get_rx_rate(),
+			  	(float)client.baseband_samplerate,
+			  	start_time,
+			  	&rx_thread_status));
+
+			  //uhd::time_spec_t now_time = usrp->get_time_now();
+
+			  //call function to start tx stream simultaneously with rx stream
+			  //std::cout << "time: " << now_time.get_real_secs() <<
+				//" start time: " << start_time.get_real_secs() << std::endl;
+		       	  transmit_worker(tx_stream, tx_vec_ptrs, max_seq_count, start_time);
                         }
 
-                        gettimeofday(&t1,NULL);
-			if (verbose > 1 ) std::cout << " Trigger Time: " << t1.tv_sec << " " << t1.tv_usec << "\n";
-			if (verbose > 1 ) std::cout << "End Timing Card trigger\n";
                         rval=send_data(msgsock, &msg, sizeof(struct DriverMsg));
 
                         break;
@@ -835,59 +799,22 @@ int main(){
                         if (verbose > 1 ) std::cout << "Setup Timing Card GPS trigger\n";
                         msg.status=0;
                         if (verbose > 1) std::cout << "Read msg struct from tcp socket!\n";
-
-                        if(configured) {
-//#ifdef __QNX__
-//                          //clear interrupt status
-//                          temp=in32(mmap_io_ptr_dio+0x0c);
-//                          temp|=0x04;
-//                          out32(mmap_io_ptr_dio+0x0c, temp);
-//                          writingFIFO=1;
-//                          //enable outputs and wait for external trigger
-//                          out32(mmap_io_ptr_dio+0x04,0x0161);
-//#endif
-                        }                   
                         if (verbose > 1 ) std::cout << "End Timing Card GPS trigger\n";
                         rval=send_data(msgsock, &msg, sizeof(struct DriverMsg));
                         break;
+
 		      case TIMING_WAIT:
+			if(verbose > 1) std::cout << "USRP_TCP_DRIVER_WAIT: Waiting on receiver thread.." << std::endl;
+			receive_threads.join_all();
+
 			if (verbose > 1 ) std::cout << "Timing Card: Wait\n";	
                         msg.status=0;
 			if (verbose > 1) std::cout << "Read msg struct from tcp socket!\n";	
-                        dead_flag=0;
-                        if(configured) {
-//#ifdef __QNX__
-//			  if (verbose > 1 ) std::cout << "Timing Card: Wait : Inside configured\n";	
-//                          delay_count=0;
-//                          gettimeofday(&t0,NULL);
-//	                  while(writingFIFO==1 && dead_flag==0) {
-//                            gettimeofday(&t1,NULL);
-//                            delay(1); //wait to finish writing FIFO
-//                            delay_count++;
-//                            if((t1.tv_sec-t0.tv_sec) > 1) dead_flag=1;
-//                          }
-//                          if (delay_count > 0) if (verbose > -1) std::cout << "writingFIFO wait " << delay_count << " ms\n";
-//                          if(dead_flag==0) { 
-//			    while( ( in32(mmap_io_ptr_dio+0x04) & 0x00001000 ) != 0x00001000) delay(1); //wait for FIFO empty 
-//                          } else {
-//                            msg.status+=-1;
-//                            //printf("Wait timeout!!!!!! %d\n",dma_count);
-//                          } 
-//
-//  			  //disable outputs, wait for trigger, terminations off
-//	               	  out32(mmap_io_ptr_dio+0x04, 0x00000041); 
-//
-//                          if(xfercount<max_seq_count) {
-//                            gettimeofday(&t0,NULL);
-//                            msg.status+=-2;
-//                            printf("Wait:  %8d %8d FIFO Underflow 0x%x Empty: 0x%x time :: sec: %8d usec:%8d\n",xfercount,max_seq_count,under_flag,empty_flag,t0.tv_sec,t0.tv_usec);
-//                          }
-//	                  out32(mmap_io_ptr_dio+0x04, 0x00000641); //clear fifo, and clear under-run status bit
-//#endif
-                        }
+                        //dead_flag=0;
                         if (verbose > 1)  std::cout << "Ending Wait \n";
                         rval=send_data(msgsock, &msg, sizeof(struct DriverMsg));
 			break;
+
 		      case TIMING_POSTTRIGGER:
                         numclients=0;
                         for (r=0;r<MAX_RADARS;r++){
@@ -897,6 +824,170 @@ int main(){
                         }
                         rval=send_data(msgsock, &msg, sizeof(struct DriverMsg));
                         break;
+
+		      case RECV_GET_DATA:
+			if (verbose>1) std::cout << "RECV_GET_DATA: Waiting on receiver thread.." << std::endl;
+			receive_threads.join_all();
+			gettimeofday(&t6,NULL);
+                        elapsed=(t6.tv_sec-t0.tv_sec)*1E6;
+                        elapsed+=(t6.tv_usec-t0.tv_usec);
+			if (verbose>1)std::cout << "Rx thread elapsed: " << 
+				elapsed << " usec" << std::endl;
+			rx_status_flag=0;
+			if (rx_thread_status==-1){
+				std::cerr << "Error, bad status from Rx thread!!\n";
+				rx_status_flag=-1;
+			}
+			if (rx_thread_status==0) printf("Status okay!!\n");
+			std::cout << "Client asking for rx samples (Radar,Channel): " <<
+				client.radar << " " << client.channel << std::endl;
+			get_data_t0 = usrp->get_time_now();
+			r = client.radar-1; c = client.channel-1;
+
+		        rval=recv_data(msgsock,&client,sizeof(struct ControlPRM));
+                        rval=send_data(msgsock,&rx_status_flag, sizeof(int));
+
+			if(rx_status_flag == 0){
+			  std::cout << "Repackaging RX data.." << std::endl;
+			  for(int i=0; i < client.number_of_samples; i++){
+			  	// Assuming i-phase component comes first ..?
+			  	shared_main_addresses[r][c][0][i] = 
+					( ((int32_t) rx_short_vecs[0][i].real() << 16) & 0xffff0000)| 
+					( (int32_t) rx_short_vecs[0][i].imag() & 0x0000ffff);
+				// Use the same data for front and back array for now
+			  	shared_back_addresses[r][c][0][i] = 
+					( ((int32_t) rx_short_vecs[0][i].real() << 16) & 0xffff0000 ) | 
+					( (int32_t) rx_short_vecs[0][i].imag() & 0x0000ffff);
+
+				//std::cout << "Rx: " << rx_short_vecs[0][i] << "\t";
+			        //printf("%i %x\t",i,shared_main_addresses[r][c][0][i]);
+			        //printf("(%hi,",((shared_main_addresses[r][c][0][i] >> 16) & 0x0000ffff));
+			        //printf("%hi)\n",(shared_main_addresses[r][c][0][i] & 0x0000ffff));
+			  }
+			  
+			  r=client.radar-1;
+			  c=client.channel-1;
+                          if(verbose > 1 ){
+			  	std::cout << "Radar: " << client.radar << 
+			         		"\tChannel: " << client.channel << std::endl;
+			  	std::cout << "r: " << r << "\tc: " << c << std::endl;
+			  }
+			  shm_memory=1; // Flag used to indicate to client if shared memory (mmap()) is used. 1 for yes.
+			  rval=send_data(msgsock,&shm_memory,sizeof(shm_memory));
+			  frame_offset=0;  // The GC316 cards normally produce rx data w/ a header of length 2 samples. 0 for usrp.
+			  rval=send_data(msgsock,&frame_offset,sizeof(frame_offset));
+			  dma_buffer=0; // Flag used to indicate to client if DMA tranfer is used. 1 for yes.
+			  rval=send_data(msgsock,&dma_buffer,sizeof(dma_buffer));
+			  nrx_samples=client.number_of_samples;
+			  rval=send_data(msgsock,&nrx_samples,sizeof(nrx_samples));
+			  
+			  if(IMAGING==0){
+                          	if(verbose > 1 ) std::cout << "Sending shared addresses..: " << 
+			  		shared_main_addresses[r][c][0] << "\t" << shared_back_addresses[r][c][0] << std::endl;
+			  	
+			  	rval=send_data(msgsock,&shared_main_addresses[r][c][0],sizeof(unsigned int));
+			  	rval=send_data(msgsock,&shared_back_addresses[r][c][0],sizeof(unsigned int));
+			  }
+			  if (verbose>1)std::cout << "Send data to client successful" << std::endl;
+			  msg.status = rx_status_flag;
+			  rval=send_data(msgsock,&msg,sizeof(DriverMsg));
+			}
+			get_data_t1 = usrp->get_time_now();
+			if(verbose>1)std::cout << "Ending RECV_GET_DATA. Elapsed time: " << 
+				get_data_t1.get_real_secs() - get_data_t0.get_real_secs() << std::endl;
+			break;
+
+		      case RECV_CLRFREQ:
+			if(verbose > 1) std::cout << "Doing clear frequency search!!!" << std::endl;
+			rval=recv_data(msgsock,&clrfreq_parameters,sizeof(struct CLRFreqPRM));
+			rval=recv_data(msgsock,&client,sizeof(struct ControlPRM));
+			if (verbose) printf("Doing clear frequency search for radar %d, channel %d\n",client.radar-1,client.channel-1);
+			nave=0;
+			usable_bandwidth=clrfreq_parameters.end-clrfreq_parameters.start;
+			center=(clrfreq_parameters.start+clrfreq_parameters.end)/2;
+			if(verbose > -1 ){
+				printf("  requested values\n");
+                        	printf("    start: %d\n",clrfreq_parameters.start);
+                        	printf("    end: %d\n",clrfreq_parameters.end);
+                        	printf("    center: %d\n",center);
+                        	printf("    bandwidth: %lf in Khz\n",(float)usable_bandwidth);
+                        	printf("    nave:  %d %d\n",nave,clrfreq_parameters.nave);
+			}
+                        usable_bandwidth=floor(usable_bandwidth/2)*2;
+			/*
+			*  Set up fft variables
+			*/
+                        N=(int)pow(2,ceil(log10(1.25*(float)usable_bandwidth)/log10(2)));
+                        if(N>1024){
+                          N=512;
+                          usable_bandwidth=300;
+                          start=(int)(center-usable_bandwidth/2+0.49999);
+                          end=(int)(center+usable_bandwidth/2+0.49999);
+                        }
+			/* 1 kHz fft bins*/
+
+			//Set the rx center frequency
+			for(size_t chan = 0; chan < usrp->get_rx_num_channels(); chan++) {
+			        usrp->set_rx_freq(1000*center, chan);
+			}
+			//Set the rx sample rate
+			for(size_t chan = 0; chan < usrp->get_rx_num_channels(); chan++) {
+			        usrp->set_rx_rate(1000*N, chan);
+				N = (int) (usrp->get_rx_rate() / 1000);
+				if(verbose>-1) std::cout << "Actual RX rate: " << N << " kHz\n";
+			}
+
+                        /* set up search parameters search_bandwidth > usable_bandwidth */
+                        search_bandwidth=N;
+                        //search_bandwidth=800;            
+                        start=(int)(center-search_bandwidth/2.0+0.49999);
+                        end=(int)(center+search_bandwidth/2+0.49999);
+                        unusable_sideband=(search_bandwidth-usable_bandwidth)/2;
+                        clrfreq_parameters.start=start;
+                        clrfreq_parameters.end=end;
+                        if(verbose > -1 ){
+				printf("  search values\n");
+                        	printf("  start: %d %d\n",start,clrfreq_parameters.start);
+                        	printf("  end: %d %d\n",end,clrfreq_parameters.end);
+                        	printf("  center: %d\n",center);
+                        	printf("  search_bandwidth: %lf in Khz\n",search_bandwidth);
+                        	printf("  usable_bandwidth: %d in Khz\n",usable_bandwidth);
+                        	printf("  unusable_sideband: %lf in Khz\n",unusable_sideband);
+                        	printf("  N: %d\n",N);
+                        	printf("Malloc fftw_complex arrays %d\n",N);
+			}
+
+                        if(pwr!=NULL) {free(pwr);pwr=NULL;}
+                        pwr = (double*) malloc(N*sizeof(double));
+			for(int i=0;i<N;i++)
+				pwr[i]=0.;
+                        //if(pwr2!=NULL) {free(pwr2);pwr2=NULL;}
+                        //pwr2 = (double*) malloc(N*sizeof(double));
+			if(verbose>1)std::cout << "starting clr freq search\n";
+
+			rx_clrfreq_rval= recv_clr_freq(usrp,rx_stream,search_bandwidth,clrfreq_parameters.nave,pwr);
+	
+			pwr2 = &pwr[(int)unusable_sideband];
+
+			if(verbose > 0 ) printf("Send clrfreq data back\n");
+                        rval=send_data(msgsock, &clrfreq_parameters, sizeof(struct CLRFreqPRM));
+                        rval=send_data(msgsock, &usable_bandwidth, sizeof(int));
+                        if(verbose > 1 ) {
+				printf("  final values\n");
+                        	printf("  start: %d\n",clrfreq_parameters.start);
+                        	printf("  end: %d\n",clrfreq_parameters.end);
+                        	printf("  nave: %d\n",clrfreq_parameters.nave);
+                        	printf("  usable_bandwidth: %d\n",usable_bandwidth);
+			}
+                        rval=send_data(msgsock, pwr2, sizeof(double)*usable_bandwidth);  //freq order power
+                        rval=send_data(msgsock, &msg, sizeof(struct DriverMsg));
+                        if(pwr!=NULL) {free(pwr);pwr=NULL;}
+			/* The following free causes crash because pwr2 is in use by the arby_server.
+			Does arby_server free() this pointer?  Or is this a memory leak? (AFM)*/
+                        //if(pwr2!=NULL) {free(pwr2);pwr2=NULL;}
+			
+			break;
+
 		      default:
 			if (verbose > -10) std::cerr << "BAD CODE: " << datacode << "\n"; //%c : %d\n",datacode,datacode);
 			break;

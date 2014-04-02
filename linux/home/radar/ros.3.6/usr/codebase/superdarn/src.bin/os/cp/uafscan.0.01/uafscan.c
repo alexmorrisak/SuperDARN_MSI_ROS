@@ -470,7 +470,6 @@ int main(int argc,char *argv[]) {
 
 
   /* Calculate txpl setting from rsep */
-
   txpl=(nbaud*rsep*20)/3;
 
   /* Attempt to adjust mpinc to be a multiple of 10 and a muliple of txpl */
@@ -648,6 +647,7 @@ int main(int argc,char *argv[]) {
       ErrLog(errlog.sock,progname,logtxt);
             
       printf("Entering Site Start Intt Station ID: %s  %d\n",ststr,stid);
+      printf("tsgprm.samples: %i\n",tsgprm.samples);
       SiteStartIntt(intsc,intus);
       gettimeofday(&t1,NULL);
       elapsed_secs=t1.tv_sec-t0.tv_sec;
@@ -735,7 +735,7 @@ int main(int argc,char *argv[]) {
   } while (exitpoll==0);
   for (n=0;n<tnum;n++) RMsgSndClose(task[n].sock);
   
-  /* free argtable and space allocated for arguements */
+  /* free argtable and space allocated for arguments */
   arg_freetable(argtable, sizeof(argtable)/sizeof(argtable[0]));
   free(ststr);
   free(roshost);

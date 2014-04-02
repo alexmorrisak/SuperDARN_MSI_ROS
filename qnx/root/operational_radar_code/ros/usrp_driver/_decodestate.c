@@ -20,8 +20,12 @@ int _decodestate(int r,int c,char state){
 	code=0;
 
 	if( (state & X_BIT) == X_BIT){
-		if ((state & P_BIT) == P_BIT) code |= 0x00040000; // 180 degress
-		else code |= 0x00020000; // 0 degrees
+		if ((state & P_BIT) == P_BIT){ code |= 0x00040000; // 180 degress
+		printf("180 degrees!\n");
+		}
+		else {code |= 0x00020000; // 0 degrees
+		printf("0 degrees!\n");
+		}
 	}
 	if( (state & TR_BIT) == TR_BIT) code |= 0x00010000; //LSB of in-phase component
 	if( (state & S_BIT) == S_BIT ) code |= 0x00000001; //LSB of q-phase component

@@ -2,18 +2,16 @@ OS:=$(shell uname -s)
 
 CC=gcc
 CCpp=g++
-CFLAGS=-c
+CFLAGS=-c -Wall -pthread -std=c++0x -g3
 LFLAGS  = -L"../iniparser3.0b" -L"${HOME}/uhd/host/build/lib"
-common_libs=-lm -liniparser -lrt -luhd
+common_libs=-lm -liniparser -lrt -luhd -lfftw3
 linux_libs=-lboost_thread
 qnx_libs=-lsocket
 INCLUDES=-I"../include/" -I"include/" -I"../tsg/include" -I"../iniparser3.0b/src/" \
-	 -I"${HOME}/uhd/host/include" -I"${HOME}/uhd/host/include/uhd/types" -I"${HOME}/uhd/host/include/uhd/usrp"
-	 #-I"${HOME}/uhd/host/include/uhd/utils" -I"${HOME}/uhd/host/include/uhd/transport" \
-	 #-I"${HOME}/uhd/host/lib" -I"${HOME}/uhd/host/lib/types" -I"${HOME}/uhd/host/lib/usrp" \
-	 #-I"${HOME}/uhd/host/lib/convert" 
+	 -I"${HOME}/uhd/host/include" -I"${HOME}/uhd/host/include/uhd/types" -I"${HOME}/uhd/host/include/uhd/usrp" 
+
 C_SOURCES=_dma.c _open_PLX9080.c _create_DMA_buff.c _decodestate.c _open_ini_file.c ../_tcpsocket.c ../utils.c 
-CPP_SOURCES=main.cpp
+CPP_SOURCES=main.cpp convolve.cpp recv_to_buffer.cpp recv_clr_freq.cpp
 C_OBJECTS=$(C_SOURCES:.c=.o)
 CPP_OBJECTS=$(CPP_SOURCES:.cpp=.o)
 EXECUTABLE=usrp_tcp_driver
