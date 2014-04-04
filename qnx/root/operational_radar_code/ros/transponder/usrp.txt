@@ -1,0 +1,49 @@
+linux; GNU C++ version 4.6.3; Boost_104800; UHD_003.006.002-1-g9fd308b3
+
+
+Creating the usrp device with: addr0=192.168.10.2, addr1=192.168.10.3...
+-- Opening a USRP2/N-Series device...
+-- Current recv frame size: 1472 bytes
+-- Current send frame size: 1472 bytes
+hello 1
+Time 0: 69.3755
+Time 1: 69.3782
+Setting TX Rate: 200.000000 kHz...
+Actual TX Rate: 200.000000 kHz...
+
+Setting RX Rate: 200.000000 kHz...
+Actual RX Rate: 200.000000 kHz...
+
+rx channel: 0
+rx channel: 1
+Using Device: Multi USRP:
+  Device: USRP2 / N-Series Device
+  Mboard 0: N200r4
+  Mboard 1: N200r4
+  RX Channel: 0
+    RX DSP: 0
+    RX Dboard: A
+    RX Subdev: LFRX (AB)
+  RX Channel: 1
+    RX DSP: 0
+    RX Dboard: A
+    RX Subdev: LFRX (AB)
+  TX Channel: 0
+    TX DSP: 0
+    TX Dboard: A
+    TX Subdev: LFTX (A)
+  TX Channel: 1
+    TX DSP: 0
+    TX Dboard: A
+    TX Subdev: LFTX (A)
+
+DDS Offset: 0 RX Offset: 0
+Zeroing arrays
+0 0
+0 1
+ EXECUTION TIME: 773133001 nsec
+TCP Socket using port #45001
+temp=0  optionlen=4  option=1
+temp=0  optionlen=4  option=65536
+temp=0  optionlen=4  option=65536
+Unlinking Unix Socket: rostiming

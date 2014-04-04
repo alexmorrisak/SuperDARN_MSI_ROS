@@ -1,0 +1,69 @@
+linux; GNU C++ version 4.6.3; Boost_104800; UHD_003.006.002-1-g9fd308b3
+
+
+Creating the usrp device with: addr0=192.168.10.2...
+-- Opening a USRP2/N-Series device...
+-- Current recv frame size: 1472 bytes
+-- Current send frame size: 1472 bytes
+1
+using single usrp unit..
+Setting TX Rate: 200.000000 kHz...
+Actual TX Rate: 200.000000 kHz...
+
+Setting RX Rate: 200.000000 kHz...
+Actual RX Rate: 10000.000000 kHz...
+
+rx channel: 0
+Using Device: Single USRP:
+  Device: USRP2 / N-Series Device
+  Mboard 0: N200r4
+  RX Channel: 0
+    RX DSP: 0
+    RX Dboard: A
+    RX Subdev: LFRX (AB)
+  TX Channel: 0
+    TX DSP: 0
+    TX Dboard: A
+    TX Subdev: LFTX (A)
+
+Tx Offset: 0DDS Offset: 0 RX Offset: 0
+Zeroing arrays
+0 0
+0 1
+Elapsed setup time: 0.635276 sec
+TCP Socket using port #45001
+temp=0  optionlen=4  option=1
+temp=0  optionlen=4  option=65536
+temp=0  optionlen=4  option=65536
+accepting socket!!!!!
+24 Entering Select
+24 Leaving Select 1
+24 PEEK Recv Msg 4
+Data is ready to be read
+24 Recv Msg
+
+msg code is +
+
+Register new timing sequence for timing card
+Radar: 1 Channel: 1 Beamnum: -1 Status: 0
+Requested index: 0 0 0
+Attempting Free on pulseseq: 0Done Free - Attempting Malloc
+Finished malloc
+Pulseseq length: 620
+24 Entering Select
+24 Leaving Select 1
+24 PEEK Recv Msg 4
+Data is ready to be read
+24 Recv Msg
+
+msg code is C
+Doing clear frequency search!!!
+Doing clear frequency search for radar 0, channel 0
+  requested values
+    start: 10600
+    end: 10900
+    center: 10750
+    bandwidth: 300.000000 in Khz
+    nave:  0 20
+Setting RX Freq: 10750 kHz...
+Setting RX rate: 512 kHz...

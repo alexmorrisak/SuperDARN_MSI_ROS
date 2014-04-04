@@ -1,0 +1,503 @@
+linux; GNU C++ version 4.6.3; Boost_104800; UHD_003.006.002-1-g9fd308b3
+
+
+Creating the usrp device with: addr0=192.168.10.2, addr1=192.168.10.3...
+-- Opening a USRP2/N-Series device...
+-- Current recv frame size: 1472 bytes
+-- Current send frame size: 1472 bytes
+hello 1
+Time 0: 73.5123
+Time 1: 73.515
+Setting TX Rate: 200.000000 kHz...
+Actual TX Rate: 200.000000 kHz...
+
+Setting RX Rate: 200.000000 kHz...
+Actual RX Rate: 200.000000 kHz...
+
+rx channel: 0
+rx channel: 1
+Using Device: Multi USRP:
+  Device: USRP2 / N-Series Device
+  Mboard 0: N200r4
+  Mboard 1: N200r4
+  RX Channel: 0
+    RX DSP: 0
+    RX Dboard: A
+    RX Subdev: LFRX (AB)
+  RX Channel: 1
+    RX DSP: 0
+    RX Dboard: A
+    RX Subdev: LFRX (AB)
+  TX Channel: 0
+    TX DSP: 0
+    TX Dboard: A
+    TX Subdev: LFTX (A)
+  TX Channel: 1
+    TX DSP: 0
+    TX Dboard: A
+    TX Subdev: LFTX (A)
+
+DDS Offset: 0 RX Offset: 0
+Zeroing arrays
+0 0
+0 1
+ EXECUTION TIME: 348996356 nsec
+TCP Socket using port #45001
+temp=0  optionlen=4  option=1
+temp=0  optionlen=4  option=65536
+temp=0  optionlen=4  option=65536
+accepting socket!!!!!
+44 Entering Select
+44 Leaving Select 1
+44 PEEK Recv Msg 4
+Data is ready to be read
+44 Recv Msg
+
+msg code is +
+
+Register new timing sequence for timing card
+Radar: 1 Channel: 1 Beamnum: -1 Status: 0
+Requested index: 0 0 0
+Attempting Free on pulseseq: 0Done Free - Attempting Malloc
+Finished malloc
+Pulseseq length: 620
+44 Entering Select
+44 Leaving Select 1
+44 PEEK Recv Msg 4
+Data is ready to be read
+44 Recv Msg
+
+msg code is W
+Waiting on receiver thread..
+Joined thread
+Rx samples elapsed milliseconds: 2873.62
+Timing Card: Wait
+Read msg struct from tcp socket!
+Ending Wait 
+44 Entering Select
+44 Leaving Select 1
+44 PEEK Recv Msg 4
+Data is ready to be read
+44 Recv Msg
+
+msg code is 1
+
+Asking to set up timing info for client that is ready 0
+alpha: 18.9433
+Radar: 1 Channel: 1 Beamnum: 2 Status: 0
+Time delay: 60 ns.  Phase delay: 172.8 degrees.
+Multiplication factor: -0.991922 + j*0.12685
+Transmit frequency: 8000
+Trise: 5000
+Need to unpack pulseseq 0 0 0
+Pulseseq length: 620
+offset pad: -2
+Timing Card seq length: 19700 state step: 5e-06 time: 0.0985
+
+client ready done
+44 Entering Select
+44 Leaving Select 1
+44 PEEK Recv Msg 4
+Data is ready to be read
+44 Recv Msg
+
+msg code is 3
+Setup Timing Card for next trigger
+Max Seq length: 0 Num clients: 1
+0 0 0
+Timing Driver: 0 -10
+Setting RX Freq: 8.000000 MHz...
+Actual RX Freq: 8.000000 MHz...
+
+Setting RX Freq: 8.000000 MHz...
+Actual RX Freq: 8.000000 MHz...
+
+Setting TX Freq: 8.000000 MHz...
+Actual TX Freq: 8.000000 MHz...
+
+Setting TX Freq: 8.000000 MHz...
+Actual TX Freq: 8.000000 MHz...
+
+Calculating Master sequence -10 0
+Max Seq length: 19700
+Merging Client Seq 0into Master Seq 0 0length: 19700
+Total Tr: 1
+Scope Sync sample start: 2 1
+Scope Sync sample end: 4 0
+seq length: 19700 state step: 5e-06 time: 0.0985
+Max Seq Count: 19700
+END FIFO Stamps
+Ending Pretrigger Setup
+Timing Pretrigger Elapsed Microseconds: 1381025
+44 Entering Select
+44 Leaving Select 1
+44 PEEK Recv Msg 4
+Data is ready to be read
+44 Recv Msg
+
+msg code is 4
+Setup Timing Card trigger
+Waiting on thread..
+client baseband sample rate: 3333.33
+Usrp sample rate: 200000
+Oversample rate: 60
+alpha: 6.31444
+recv_to_buffer: num_requested_samples: 305
+0.00011
+44 Entering Select
+44 Leaving Select 1
+44 PEEK Recv Msg 4
+Data is ready to be read
+44 Recv Msg
+
+msg code is 5
+44 Entering Select
+Timeout while streaming
+44 Leaving Select 1
+44 PEEK Recv Msg 4
+Data is ready to be read
+44 Recv Msg
+
+msg code is d
+Shit, bad status!!
+Client asking for rx samples (Radar,Channel): 1 1
+Repackaging RX data..
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Rx: 0	I: 0	Q: 0
+Radar: 1	Channel: 1
+r: 0	c: 0
+Number of samples to receive: 305
+About to send data to client
+Sending shared addresses..: 0x7ec4000	0xe095000
+Send data to client successful
+Ending RECV_GET_DATA. Elapsed time: 0.0170182
+44 Entering Select
+44 Leaving Select 1
+44 PEEK Recv Msg 4
+Data is ready to be read
+44 Recv Msg
+
+msg code is W
+Waiting on receiver thread..
+Joined thread
+Rx samples elapsed milliseconds: 306.476
+Timing Card: Wait
+Read msg struct from tcp socket!
+Ending Wait 
+44 Entering Select
+44 Leaving Select 1
+44 PEEK Recv Msg 4
+Data is ready to be read
+44 Recv Msg
+
+msg code is @
+
+A client is done
+44 Entering Select
+44 Leaving Select 1
+44 PEEK Recv Msg 0
+Remote Msgsock 44 client disconnected ...closing
+Unlinking Unix Socket: rostiming
