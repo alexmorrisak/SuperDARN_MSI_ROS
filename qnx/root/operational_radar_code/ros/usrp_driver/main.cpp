@@ -59,13 +59,13 @@
 #define BACK_INPUT 1 
 #define IMAGING 0 
 #define MAX_SAMPLES 262144 
-#define MIMO 0
-#define NUNITS 1
+#define MIMO 1
+#define NUNITS 2
 
 
 dictionary *Site_INI;
 int sock=0,msgsock=0;
-extern int verbose=0;
+int verbose=0;
 int configured=1;
 int		writingFIFO=0, dma_count=0, under_flag=0,empty_flag=0,IRQ, intid;
 int		max_seq_count=0, xfercount=0, totransfer=0;
@@ -131,6 +131,7 @@ int rx_clrfreq_rval=0;
 int usable_bandwidth,N,start,end;
 double search_bandwidth,unusable_sideband;
 double *pwr=NULL,*pwr2=NULL;
+FILE *clr_fd;
 int main(){
     // DECLARE AND INITIALIZE ANY NECESSARY VARIABLES
         int     maxclients=MAX_RADARS*MAX_CHANNELS+1;
@@ -195,13 +196,17 @@ int main(){
 	std::vector<std::vector<sc16> > rx_short_vecs;
 	std::vector<std::vector<sc16> *> rx_vec_ptrs;
 	//std::vector<sc16 > *rx_vec_ptrs;
+	std::vector<float> client_freqs;
+	client_freqs.push_back(5e6);
+	client_freqs.push_back(0);
 
 	float td,pd;
 	std::vector<fc32> pdvec;
 
 	//variables to be used as arguments to setup the usrp device(s)
 	std::string args, subdev;
-	//args = "addr0=192.168.10.2, addr1=192.168.10.3";
+	args = "addr0=192.168.10.2, addr1=192.168.10.3";
+	if(NUNITS==1)
 	args = "addr0=192.168.10.2";
 	subdev = "A:A";
 
@@ -256,9 +261,10 @@ int main(){
 	usrp->set_tx_rate(1e6 / STATE_TIME);
 	std::cout << boost::format("Actual TX Rate: %f kHz...") % (usrp->get_tx_rate()/1e3) << std::endl << std::endl;
 	//Set Rx sample rate
-	std::cout << boost::format("Setting RX Rate: %f kHz...") % (1e3/STATE_TIME) << std::endl;
+	int rx_rate=10e6;
+	std::cout << boost::format("Setting RX Rate: %f kHz...") % (rx_rate) << std::endl;
 	//usrp->set_rx_rate(1e6 / STATE_TIME);
-	usrp->set_rx_rate(10e6);
+	usrp->set_rx_rate(rx_rate);
 	std::cout << boost::format("Actual RX Rate: %f kHz...") % (usrp->get_rx_rate()/1e3) << std::endl << std::endl;
 
 	//create a transmit streamer
@@ -532,8 +538,8 @@ int main(){
                           if ((new_seq_id!=old_seq_id) | (new_beam != old_beam)) { 
 			    if (new_seq_id!=old_seq_id){
 			    	//Set the rx center frequency
-			    	for(size_t chan = 0; chan < usrp->get_tx_num_channels(); chan++) {
-			    	        usrp->set_rx_freq(1000*client.tfreq, chan);
+			    	for(size_t chan = 0; chan < usrp->get_rx_num_channels(); chan++) {
+			    	        usrp->set_rx_freq(1000*client.tfreq-5e6, chan);
 			    	        if(verbose>1)
 						std::cout << boost::format("RX freq set to: %f MHz...") % 
 								(usrp->get_rx_freq(chan)/1e6) << 
@@ -652,6 +658,13 @@ int main(){
 			    }
 
 			    if (new_beam != old_beam) {
+			    	for(size_t chan = 0; chan < usrp->get_rx_num_channels(); chan++) {
+			    	        usrp->set_rx_rate(10e6, chan);
+			    	        if(verbose>1)
+						std::cout << boost::format("RX rate set to: %f MHz...") % 
+								(usrp->get_rx_rate(chan)/1e6) << 
+								std::endl << std::endl;
+			    	}
 			    	tx_float_vecs.clear();
 				for(unsigned int i=0;i<usrp->get_tx_num_channels();i++)
 					tx_float_vecs.push_back(std::vector<fc32>(max_seq_count,0));
@@ -753,7 +766,7 @@ int main(){
 			  receive_threads.join_all();
 			  
 		       	  //Adjust the number of samples to receive to account for sample rate conversion
-			  if (verbose > 2){
+			  if (verbose > 1){
 			  	int usrp_rate = (int) (usrp->get_rx_rate());
 			  	int oversamplerate = usrp_rate/client.baseband_samplerate;
 			  	std::cout << "client baseband sample rate: " << client.baseband_samplerate << std::endl;;
@@ -762,17 +775,18 @@ int main(){
 			  }
 
 			  rx_short_vecs.clear();
-			  for(size_t i=0;i<usrp->get_rx_num_channels();i++)
+			  for(size_t i=0;i<client_freqs.size();i++)
 			  	rx_short_vecs.push_back(std::vector<sc16>(2*client.number_of_samples));
 
 			  rx_vec_ptrs.clear();
-			  for(size_t i=0;i<usrp->get_rx_num_channels();i++)
+			  for(size_t i=0;i<client_freqs.size();i++)
 			  	rx_vec_ptrs.push_back(&rx_short_vecs[i]);
 			  
 			  //Start the receive stream thread
 			  if(verbose>1) std::cout << "About to start rx thread..\n";
 			  rx_thread_status=0;
 			  gettimeofday(&t0,NULL);
+	
 		       	  receive_threads.create_thread(boost::bind(recv_to_buffer,
 			  	usrp,
 			  	rx_stream,
@@ -780,6 +794,8 @@ int main(){
 			  	client.number_of_samples,
 				usrp->get_rx_rate(),
 			  	(float)client.baseband_samplerate,
+				client_freqs,
+				//std::vector<float>(1,1e6),
 			  	start_time,
 			  	&rx_thread_status));
 
@@ -838,8 +854,10 @@ int main(){
 				std::cerr << "Error, bad status from Rx thread!!\n";
 				rx_status_flag=-1;
 			}
-			if (rx_thread_status==0) printf("Status okay!!\n");
-			std::cout << "Client asking for rx samples (Radar,Channel): " <<
+			if (rx_thread_status==0){
+				if (verbose>1) printf("Status okay!!\n");
+			}
+			if (verbose>1)std::cout << "Client asking for rx samples (Radar,Channel): " <<
 				client.radar << " " << client.channel << std::endl;
 			get_data_t0 = usrp->get_time_now();
 			r = client.radar-1; c = client.channel-1;
@@ -848,21 +866,24 @@ int main(){
                         rval=send_data(msgsock,&rx_status_flag, sizeof(int));
 
 			if(rx_status_flag == 0){
-			  std::cout << "Repackaging RX data.." << std::endl;
-			  for(int i=0; i < client.number_of_samples; i++){
+			  if(verbose>1)std::cout << "Repackaging RX data.." << std::endl;
+			  for(int i=0;i<client.number_of_samples;i++){
 			  	// Assuming i-phase component comes first ..?
 			  	shared_main_addresses[r][c][0][i] = 
 					( ((int32_t) rx_short_vecs[0][i].real() << 16) & 0xffff0000)| 
 					( (int32_t) rx_short_vecs[0][i].imag() & 0x0000ffff);
 				// Use the same data for front and back array for now
 			  	shared_back_addresses[r][c][0][i] = 
-					( ((int32_t) rx_short_vecs[0][i].real() << 16) & 0xffff0000 ) | 
-					( (int32_t) rx_short_vecs[0][i].imag() & 0x0000ffff);
+					( ((int32_t) rx_short_vecs[1][i].real() << 16) & 0xffff0000 ) | 
+					( (int32_t) rx_short_vecs[1][i].imag() & 0x0000ffff);
 
 				//std::cout << "Rx: " << rx_short_vecs[0][i] << "\t";
 			        //printf("%i %x\t",i,shared_main_addresses[r][c][0][i]);
-			        //printf("(%hi,",((shared_main_addresses[r][c][0][i] >> 16) & 0x0000ffff));
-			        //printf("%hi)\n",(shared_main_addresses[r][c][0][i] & 0x0000ffff));
+			        printf("(%hi,",((shared_main_addresses[r][c][0][i] >> 16) & 0x0000ffff));
+			        printf("%hi)\t",(shared_main_addresses[r][c][0][i] & 0x0000ffff));
+
+			        printf("(%hi,",((shared_back_addresses[r][c][0][i] >> 16) & 0x0000ffff));
+			        printf("%hi)\n",(shared_back_addresses[r][c][0][i] & 0x0000ffff));
 			  }
 			  
 			  r=client.radar-1;
@@ -945,7 +966,7 @@ int main(){
                         unusable_sideband=(search_bandwidth-usable_bandwidth)/2;
                         clrfreq_parameters.start=start;
                         clrfreq_parameters.end=end;
-                        if(verbose > -1 ){
+                        if(verbose > 1 ){
 				printf("  search values\n");
                         	printf("  start: %d %d\n",start,clrfreq_parameters.start);
                         	printf("  end: %d %d\n",end,clrfreq_parameters.end);
@@ -981,6 +1002,14 @@ int main(){
 			}
                         rval=send_data(msgsock, pwr2, sizeof(double)*usable_bandwidth);  //freq order power
                         rval=send_data(msgsock, &msg, sizeof(struct DriverMsg));
+
+			//clr_fd = fopen("/tmp/clr_data.txt","a+");
+			//for(int i=0;i<usable_bandwidth;i++){
+                        //    printf("%4d: %8d %8.3lf\n",i,(int)(unusable_sideband+start+i),pwr2[i]);
+                        //    fprintf(clr_fd,"%4d %8d %8.3lf\n",i,(int)(unusable_sideband+start+i),pwr2[i]);
+                        //  }
+                        //fclose(clr_fd);
+
                         if(pwr!=NULL) {free(pwr);pwr=NULL;}
 			/* The following free causes crash because pwr2 is in use by the arby_server.
 			Does arby_server free() this pointer?  Or is this a memory leak? (AFM)*/
