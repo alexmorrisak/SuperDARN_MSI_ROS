@@ -1,6 +1,7 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <sys/types.h>
+#include <sys/un.h>
 #ifdef __QNX__
   #include <hw/inout.h>
   #include <sys/socket.h>
@@ -26,7 +27,7 @@
 
 dictionary *Site_INI;
 int sock,msgsock;
-int verbose=0;
+int verbose=10;
 int configured=1;
 int		writingFIFO=0, dma_count=0, under_flag=0,empty_flag=0,IRQ, intid;
 int		max_seq_count, xfercount, totransfer;
@@ -40,7 +41,7 @@ void graceful_cleanup(int signum)
 {
   int temp;
   char path[256];
-  sprintf(path,"%s:%d","rostiming",0);
+  sprintf(path,"%s","rostiming");
 #ifdef __QNX__
   // disable interrupts
   temp=in32( mmap_io_ptr_dio+0x0c);
@@ -314,12 +315,17 @@ int main(){
         }            
 
     // OPEN TCP SOCKET AND START ACCEPTING CONNECTIONS 
+	//printf("timing host port: %i \n", TIMING_HOST_PORT);
 	//sock=tcpsocket(TIMING_HOST_PORT);
-        sock=server_unixsocket("rostiming",0);
+	//bind(sock, (struct sockaddr *) TIMING_HOST_IP, sizeof(struct sockaddr_un));
+	//printf("Done binding socket: %i \n", sock);
+        sock=server_unixsocket("/tmp/rostiming",0);
 	listen(sock, 5);
-	while (1) {
+	while(1){
                 rval=1;
+		//printf("sock: %i \n", sock);
 		msgsock=accept(sock, 0, 0);
+		//printf("msgsock: %i \n", msgsock);
 		if (verbose > 0) printf("accepting socket!!!!!\n");
 		if( (msgsock==-1) ){
 			perror("accept FAILED!");
@@ -336,8 +342,9 @@ int main(){
                   tv.tv_usec = 0;
 		  if (verbose > 1) printf("%d Entering Select\n",msgsock);
                   rval = select(msgsock+1, &rfds, NULL, &efds, NULL);
+                  //rval = select(msgsock+1, &rfds, NULL, &efds, &tv); //Actually implement the timeout (AFM)
 		  if (verbose > 1) printf("%d Leaving Select %d\n",msgsock,rval);
-                  /* Don’t rely on the value of tv now! */
+                  /* tv value might be modified -- Don’t rely on the value of tv now! */
                   if (FD_ISSET(msgsock,&efds)){
                     if (verbose > 1) printf("Exception on msgsock %d ...closing\n",msgsock);
                     break;
@@ -625,6 +632,16 @@ int main(){
                         msg.status=0;
 			if (verbose > 1) printf("Read msg struct from tcp socket!\n");	
                         if(configured) {
+
+			printf("Here is the head of the master buffer:\n");
+			printf("Length: %d\n",MAX_TIME_SEQ_LEN);
+			
+			for (i=0; i < 5000; i++){
+				if(master_buf[i] != 0){
+					printf("%d\t", i);
+					printf("%x\n", master_buf[i]);
+				}
+			};
 #ifdef __QNX__
                           //clear interrupt status
                           temp=in32(mmap_io_ptr_dio+0x0c);

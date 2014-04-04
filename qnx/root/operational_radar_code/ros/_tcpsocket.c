@@ -8,12 +8,18 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <time.h>
+
+#ifdef __cplusplus
+	extern "C" {
+#endif
+
 extern int verbose;
 int tcpsocket(int port){
 
 	time_t	tod;
 	
-	int	sock,length;
+	int	sock;//,length;
+	socklen_t length;
 	struct	sockaddr_in	servertx;
 	int	msgsock;
 	char	buf[1024];
@@ -21,7 +27,8 @@ int tcpsocket(int port){
 	struct	timespec start,stop;
 	float	ftime;
 
-	int 	temp, option, optionlen;
+	int 	temp, option;//, optionlen;
+	socklen_t optionlen;
 
 
 	/* CREATE SOCKET */
@@ -73,3 +80,6 @@ int tcpsocket(int port){
 }
 
 
+#ifdef __cplusplus
+	}
+#endif

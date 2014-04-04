@@ -7,10 +7,11 @@
 # Linux (GCC)
 #
 
-CFLAGS += -fPIC -Wall -O3 -ansi \
-         -D_GNU_SOURCE -D_LINUX $(INCLUDE)
+CFLAGS += -fPIC -g -Wall -O3 -ansi \
+         -D_GNU_SOURCE -D_LINUX $(INCLUDE) \
+	-fno-stack-protector # -fno-stack-protector-all
 
-LFLAGS += -shared -lm -lz 
+LFLAGS += -shared -lm -lz
 SUF=so
   
 VSTR=$(shell get.version ${CURDIR}/..)

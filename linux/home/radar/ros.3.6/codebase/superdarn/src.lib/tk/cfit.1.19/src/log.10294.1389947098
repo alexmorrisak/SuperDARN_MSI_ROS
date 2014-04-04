@@ -1,0 +1,3 @@
+make.hdr /home/alex/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/codebase/superdarn/src.lib/tk/cfit.1.19/src/../include /home/alex/ros.3.6/include/superdarn 
+/home/alex/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/codebase/superdarn/src.lib/tk/cfit.1.19/src/../include/cfitseek.h
+make: *** [hdr] Interrupt

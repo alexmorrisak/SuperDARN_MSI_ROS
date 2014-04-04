@@ -1,3 +1,5 @@
+#include <errno.h>
+
 #include <pthread.h>
 #include <limits.h>
 #include <math.h>
@@ -16,6 +18,7 @@
 #include "iniparser.h"
 
 extern int recvsock;
+extern int timingsock;
 extern int verbose;
 extern pthread_mutex_t recv_comm_lock, thread_list_lock;
 extern int *ready_state_pointer;
@@ -792,22 +795,22 @@ void *receiver_controlprogram_get_data(struct ControlProgram *arg)
 
         msg.type=RECV_GET_DATA;
         msg.status=1;
-        send_data(recvsock, &msg, sizeof(struct DriverMsg));
-        send_data(recvsock, arg->parameters, sizeof(struct ControlPRM));
-        recv_data(recvsock,&arg->data->status,sizeof(arg->data->status));
+        send_data(timingsock, &msg, sizeof(struct DriverMsg));
+        send_data(timingsock, arg->parameters, sizeof(struct ControlPRM));
+        recv_data(timingsock,&arg->data->status,sizeof(arg->data->status));
       } else {
         arg->data->status=error_flag;
         arg->data->samples=0;
       }      
       if (arg->data->status==0 ) {
-        //printf("RECV: GET_DATA: status good\n");
-        recv_data(recvsock,&arg->data->shm_memory,sizeof(arg->data->shm_memory));
-        recv_data(recvsock,&arg->data->frame_header,sizeof(arg->data->frame_header));
-        recv_data(recvsock,&arg->data->bufnum,sizeof(arg->data->bufnum));
-        recv_data(recvsock,&arg->data->samples,sizeof(arg->data->samples));
-        recv_data(recvsock,&arg->main_address,sizeof(arg->main_address));
-        recv_data(recvsock,&arg->back_address,sizeof(arg->back_address));
-        //printf("RECV: GET_DATA: data recv'd\n");
+        printf("RECV: GET_DATA: status good\n");
+        recv_data(timingsock,&arg->data->shm_memory,sizeof(arg->data->shm_memory));
+        recv_data(timingsock,&arg->data->frame_header,sizeof(arg->data->frame_header));
+        recv_data(timingsock,&arg->data->bufnum,sizeof(arg->data->bufnum));
+        recv_data(timingsock,&arg->data->samples,sizeof(arg->data->samples));
+        recv_data(timingsock,&arg->main_address,sizeof(arg->main_address));
+        recv_data(timingsock,&arg->back_address,sizeof(arg->back_address));
+        printf("RECV: GET_DATA: data recv'd\n");
         r=arg->parameters->radar-1;
         c=arg->parameters->channel-1;
         b=arg->data->bufnum;
@@ -818,11 +821,14 @@ void *receiver_controlprogram_get_data(struct ControlProgram *arg)
         if(arg->data->shm_memory) {
           //printf("RECV: GET_DATA: set up shm memory space\n");
           sprintf(shm_device,"/receiver_main_%d_%d_%d",r,c,b);
+	  printf("device: %s\n", shm_device);
           shm_fd=shm_open(shm_device,O_RDONLY,S_IRUSR | S_IWUSR);
-          if (shm_fd == -1) fprintf(stderr,"shm_open error\n");              
+	  int errorint;
+          if (shm_fd == -1) {errorint = errno; fprintf(stderr,"shm_open error\n");}
+	  fprintf(stderr, "error number: %d\n",errorint);              
           arg->main=mmap(0,sizeof(unsigned int)*arg->data->samples,PROT_READ,MAP_SHARED,shm_fd,0);
           close(shm_fd);
-          sprintf(shm_device,"/receiver_back_%d_%d_%d",r,c,b);
+          sprintf(shm_device,"receiver_back_%d_%d_%d",r,c,b);
           shm_fd=shm_open(shm_device,O_RDONLY,S_IRUSR | S_IWUSR);
           arg->back=mmap(0,sizeof(unsigned int)*arg->data->samples,PROT_READ,MAP_SHARED,shm_fd,0);
           close(shm_fd);
@@ -907,6 +913,7 @@ void *receiver_clrfreq(struct ControlProgram *arg)
     //Do not perform Full Search
     clr_needed=1;
   }
+  clr_needed=1;
   switch(clr_needed) {
    case 0:
      break; 
@@ -940,24 +947,26 @@ void *receiver_clrfreq(struct ControlProgram *arg)
     break;   
 */
    case 1:
+    printf("Doing clear search\n");
     r=arg->parameters->radar-1;
     msg.type=RECV_CLRFREQ;
     msg.status=1;
-    send_data(recvsock, &msg, sizeof(struct DriverMsg));
-    send_data(recvsock, &arg->clrfreqsearch, sizeof(struct CLRFreqPRM));
-    send_data(recvsock, arg->parameters, sizeof(struct ControlPRM));
-    recv_data(recvsock, &arg->clrfreqsearch, sizeof(struct CLRFreqPRM));
+    printf("sending message to rxsocket\n");
+    send_data(timingsock, &msg, sizeof(struct DriverMsg));
+    send_data(timingsock, &arg->clrfreqsearch, sizeof(struct CLRFreqPRM));
+    send_data(timingsock, arg->parameters, sizeof(struct ControlPRM));
+    recv_data(timingsock, &arg->clrfreqsearch, sizeof(struct CLRFreqPRM));
     if(verbose > 1 ) fprintf(stdout,"  final search parameters\n");  
     if(verbose > 1 ) fprintf(stdout,"  start: %d\n",arg->clrfreqsearch.start);        
     if(verbose > 1 ) fprintf(stdout,"  end: %d\n",arg->clrfreqsearch.end);    
     if(verbose > 1 ) fprintf(stdout,"  nave:  %d\n",arg->clrfreqsearch.nave); 
-    recv_data(recvsock, &arg->state->N, sizeof(int));
+    recv_data(timingsock, &arg->state->N, sizeof(int));
     if(verbose > 1 ) fprintf(stdout,"  N:  %d\n",arg->state->N); 
     if(pwr!=NULL) free(pwr); 
     pwr=NULL;
     pwr = (double*) malloc(sizeof(double) * arg->state->N);
-    recv_data(recvsock, pwr, sizeof(double)*arg->state->N);
-    recv_data(recvsock, &msg, sizeof(struct DriverMsg));
+    recv_data(timingsock, pwr, sizeof(double)*arg->state->N);
+    recv_data(timingsock, &msg, sizeof(struct DriverMsg));
     centre=(arg->clrfreqsearch.end+arg->clrfreqsearch.start)/2;
     bandwidth=arg->state->N;
     start=centre-arg->state->N/2;

@@ -69,6 +69,7 @@
 #include "freq.h"
 */
 
+<<<<<<< HEAD
 /* Argtable define for argument error parsing */
 #define ARG_MAXERRORS 30
 
@@ -81,6 +82,30 @@ int main(int argc,char *argv[]) {
 
   char *ststr=NULL;
   char *dfststr="tst";
+=======
+char *ststr=NULL;
+char *libstr=NULL;
+
+void *tmpbuf;
+size_t tmpsze;
+
+char progid[80]={"normalscan"};
+char progname[256];
+
+int arg=0;
+struct OptionData opt;
+
+char *roshost=NULL;
+char *droshost={"127.0.0.1"};
+
+int tnum=4;      
+struct TCPIPMsgHost task[4]={
+  {"127.0.0.1",1,-1}, /* iqwrite */
+  {"127.0.0.1",2,-1}, /* rawacfwrite */
+  {"127.0.0.1",3,-1}, /* fitacfwrite */
+  {"127.0.0.1",4,-1}  /* rtserver */
+};
+>>>>>>> 3abe7afc7571321c93d5a80cd3db6cf23bc410e1
 
   int status=0,n,i;
   int nerrors=0;
@@ -257,6 +282,7 @@ int main(int argc,char *argv[]) {
     printf("No arguements found, try running %s with --help for more information.\n", progid);
   }
 
+<<<<<<< HEAD
   if(al_help->count > 0) {
     printf("Usage: %s", progid);
     arg_print_syntax(stdout,argtable,"\n");
@@ -283,15 +309,66 @@ int main(int argc,char *argv[]) {
     ststr = getenv("STSTR");
     if (ststr == NULL) ststr = dfststr;
   }
+=======
+  /* ========= PROCESS COMMAND LINE ARGUMENTS ============= */
+
+  OptionAdd(&opt,"di",'x',&discretion);
+
+  OptionAdd(&opt,"frang",'i',&frang);
+  OptionAdd(&opt,"rsep",'i',&rsep);
+  OptionAdd(&opt,"nrang",'i',&nrang);
+
+  OptionAdd( &opt, "dt", 'i', &day);
+  OptionAdd( &opt, "nt", 'i', &night);
+  OptionAdd( &opt, "df", 'i', &dfrq);
+  OptionAdd( &opt, "nf", 'i', &nfrq);
+  OptionAdd( &opt, "fixfrq", 'i', &fixfrq);
+  OptionAdd( &opt, "xcf", 'i', &xcnt);
+
+  OptionAdd(&opt,"ep",'i',&errlog.port);
+  OptionAdd(&opt,"sp",'i',&shell.port); 
+
+  OptionAdd(&opt,"bp",'i',&baseport); 
+
+  OptionAdd(&opt,"ros",'t',&roshost);
+
+  OptionAdd(&opt,"stid",'t',&ststr); 
+  OptionAdd(&opt,"lib",'t',&libstr); 
+ 
+  OptionAdd(&opt,"fast",'x',&fast);
+
+  OptionAdd( &opt, "nowait", 'x', &scannowait);
+  OptionAdd(&opt,"sb",'i',&sbm);
+  OptionAdd(&opt,"eb",'i',&ebm);
+  OptionAdd(&opt,"c",'i',&cnum);
+
+   
+  arg=OptionProcess(1,argc,argv,&opt,NULL);  
+ 
+  if (ststr==NULL) ststr= getenv("STSTR");
+  if (libstr ==NULL ) libstr = getenv("LIBSTR");
+  if (libstr == NULL) libstr=ststr;
+
+  if (roshost==NULL) roshost=getenv("ROSHOST");
+  if (roshost==NULL) roshost=droshost;
+
+
+>>>>>>> 3abe7afc7571321c93d5a80cd3db6cf23bc410e1
 
 /* This loads Radar Site information from hdw.dat files */
   OpsStart(ststr);
+<<<<<<< HEAD
   status=SiteBuild(ststr,NULL); /* second argument is version string */
+=======
+
+  status=SiteBuild(libstr,NULL); /* second argument is version string */
+>>>>>>> 3abe7afc7571321c93d5a80cd3db6cf23bc410e1
  
   if (status==-1) {
     fprintf(stderr,"Could not identify station.\n");
     exit(1);
   }
+<<<<<<< HEAD
 /* Run SiteStart library function to load Site specific default values for global variables*/
   SiteStart(roshost);
 
@@ -324,9 +401,29 @@ int main(int argc,char *argv[]) {
 
 /* Open Connection to helper utilities like fitacfwrite*/  
   for (n=0;n<tnum;n++) task[n].port+=ai_bp->ival[0];
+=======
+
+  SiteStart(roshost,ststr);
+  arg=OptionProcess(1,argc,argv,&opt,NULL);  
+
+  printf("Station ID: %s  %d\n",ststr,stid);
+  printf("baseport:%d\n",baseport);
+>>>>>>> 3abe7afc7571321c93d5a80cd3db6cf23bc410e1
 
 /* Prep command string for tasks */ 
   strncpy(combf,progid,80);   
+<<<<<<< HEAD
+=======
+  for (n=0;n<tnum;n++) task[n].port+=baseport;
+  if ((errlog.sock=TCPIPMsgOpen(errlog.host,errlog.port))==-1) {    
+    fprintf(stderr,"Error connecting to error log.\n Host: %s Port: %d\n",errlog.host,errlog.port);
+  }
+
+  if ((shell.sock=TCPIPMsgOpen(shell.host,shell.port))==-1) {    
+    fprintf(stderr,"Error connecting to shell.\n");
+  }
+ 
+>>>>>>> 3abe7afc7571321c93d5a80cd3db6cf23bc410e1
   OpsSetupCommand(argc,argv);
   sprintf(progname,"normalscan");
   OpsLogStart(errlog.sock,progname,argc,argv);  

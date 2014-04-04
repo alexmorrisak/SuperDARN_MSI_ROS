@@ -60,7 +60,7 @@ int txread[MAX_RADARS];
 struct SiteSettings site_settings;
 struct GPSStatus gpsstatus;
 struct TRTimes bad_transmit_times;
-int32 gpsrate=GPS_DEFAULT_TRIGRATE;
+int32_t gpsrate=GPS_DEFAULT_TRIGRATE;
 int verbose=0;
 
 struct timeval t_pre_start,t_pre_end,t_ready_first,t_ready_final,t_post_start,t_post_end;
@@ -183,7 +183,7 @@ int main()
   int policy;
   struct sched_param sp;
 
-  fprintf(stdout,"Policy Options F: %d R:%d O:%d S: %d\n",SCHED_FIFO,SCHED_RR,SCHED_OTHER,SCHED_SPORADIC);
+  //fprintf(stdout,"Policy Options F: %d R:%d O:%d S: %d\n",SCHED_FIFO,SCHED_RR,SCHED_OTHER,SCHED_SPORADIC);
   pthread_getschedparam(pthread_self(),&policy,&sp);
   fprintf(stdout,"Policy %d Prio: %d\n",policy,sp.sched_priority);
   sp.sched_priority = 60;
@@ -211,7 +211,7 @@ int main()
   strcpy(coord_lock_buffer, "");
 
   printf("Size of Struct ROSMsg  %d\n",sizeof(struct ROSMsg));
-  printf("Size of Struct int32  %d\n",sizeof(int32_t));
+  printf("Size of Struct int32_t  %d\n",sizeof(int32_t));
   printf("Size of Struct float  %d\n",sizeof(float));
   printf("Size of Struct unsigned char  %d\n",sizeof(unsigned char));
   printf("Size of Struct ControlPRM  %d\n",sizeof(struct ControlPRM));
@@ -392,8 +392,8 @@ int main()
 //    graceful_socket_cleanup(1);
   } else  if (verbose>0) fprintf(stderr,"RECV Socket %d\n",recvsock);
   if (verbose>0) fprintf(stderr,"Opening Timing Socket\n");
-  //timingsock=opentcpsock(timinghostip, timingport);
-  timingsock=openunixsock("rostiming", 0);
+  timingsock=opentcpsock(timinghostip, timingport);
+  //timingsock=openunixsock("/tmp/rostiming", 0);
   if (timingsock < 0) {
     if (verbose>0) fprintf(stderr,"Timing Socket failure %d\n",timingsock);
 //    graceful_socket_cleanup(1);
