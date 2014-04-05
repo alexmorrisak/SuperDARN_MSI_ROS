@@ -15,3 +15,11 @@ int recv_clr_freq(
     int bandwidth,
     int naverages,
     double *pwr);
+int tx_mix_upsample(
+    std::vector<std::complex<float> >*input_bb,//input vector (same tx sequence for all antennas)
+    std::vector<std::vector<std::complex<float> > > *outputs_rf, //output vectors (number of antennas)
+    float bb_sample_rate, //rate of input samples
+    float rf_sample_rate, //rate of samples from host cpu to usrp
+    std::vector<float> center_freqs, //list of center frequencies to mix up (down) to
+    float phase_offset); //phase offset between each antenna in degrees
+
