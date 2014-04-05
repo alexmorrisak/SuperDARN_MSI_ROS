@@ -91,7 +91,7 @@ void recv_to_buffer(
     /*Hamming-windowed sinc. Same for all center frequencies*/
     for (int i=0;i<ntaps;i++){
             filter_taps[0][i] = 4*((0.54-0.46*cos((2*3.14*(double)(i))/ntaps))
-            	*(sin(4*3.14*(double)(i-ntaps/2)/ntaps) / (4*3.14*(double)(i-ntaps/2)/ntaps)))/ ntaps;
+            	*(sin(2*3.14*(double)(i-ntaps/2)/ntaps) / (2*3.14*(double)(i-ntaps/2)/ntaps)))/ ntaps;
     }
     filter_taps[0][ntaps/2]=4./ntaps;
     for (int i=1;i<center_freqs.size();i++)

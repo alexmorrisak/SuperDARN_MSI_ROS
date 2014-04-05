@@ -60,12 +60,12 @@
 #define IMAGING 0 
 #define MAX_SAMPLES 262144 
 #define MIMO 1
-#define NUNITS 2
+#define NUNITS 1
 
 
 dictionary *Site_INI;
 int sock=0,msgsock=0;
-int verbose=0;
+int verbose=1;
 int configured=1;
 int		writingFIFO=0, dma_count=0, under_flag=0,empty_flag=0,IRQ, intid;
 int		max_seq_count=0, xfercount=0, totransfer=0;
@@ -106,7 +106,6 @@ const struct sigevent* isr_handler(void *arg, int id){
 
 /***********************************************************************
  * transmit_worker function
- * A function to be used as a boost::thread_group thread for transmitting
  **********************************************************************/
 void transmit_worker(
     uhd::tx_streamer::sptr tx_stream,
@@ -193,12 +192,18 @@ int main(){
 	std::vector<std::vector<fc32> > tx_float_vecs;
 	std::vector<std::vector<sc16> > tx_short_vecs;
 	std::vector<sc16 *> tx_vec_ptrs;
+	std::vector<std::vector<fc32> > tx_rf_vecs;
+	//std::vector<std::vector<fc32> > *tx_rf_vec_ptrs;
 	std::vector<std::vector<sc16> > rx_short_vecs;
 	std::vector<std::vector<sc16> *> rx_vec_ptrs;
 	//std::vector<sc16 > *rx_vec_ptrs;
 	std::vector<float> client_freqs;
-	client_freqs.push_back(5e6);
+	client_freqs.push_back(1e6);
 	client_freqs.push_back(0);
+	int osr;
+	std::vector<float> tx_freqs;
+	tx_freqs.push_back(1e6);
+	tx_freqs.push_back(0);
 
 	float td,pd;
 	std::vector<fc32> pdvec;
@@ -258,13 +263,13 @@ int main(){
 
 	//Set Tx sample rate
 	std::cout << boost::format("Setting TX Rate: %f kHz...") % (1e3/STATE_TIME) << std::endl;
-	usrp->set_tx_rate(1e6 / STATE_TIME);
+	usrp->set_tx_rate(5e6);
 	std::cout << boost::format("Actual TX Rate: %f kHz...") % (usrp->get_tx_rate()/1e3) << std::endl << std::endl;
 	//Set Rx sample rate
-	int rx_rate=10e6;
-	std::cout << boost::format("Setting RX Rate: %f kHz...") % (rx_rate) << std::endl;
+	float rxrate=5e6;
+	std::cout << boost::format("Setting RX Rate: %f kHz...") % (rxrate) << std::endl;
 	//usrp->set_rx_rate(1e6 / STATE_TIME);
-	usrp->set_rx_rate(rx_rate);
+	usrp->set_rx_rate(rxrate);
 	std::cout << boost::format("Actual RX Rate: %f kHz...") % (usrp->get_rx_rate()/1e3) << std::endl << std::endl;
 
 	//create a transmit streamer
@@ -539,7 +544,7 @@ int main(){
 			    if (new_seq_id!=old_seq_id){
 			    	//Set the rx center frequency
 			    	for(size_t chan = 0; chan < usrp->get_rx_num_channels(); chan++) {
-			    	        usrp->set_rx_freq(1000*client.tfreq-5e6, chan);
+			    	        usrp->set_rx_freq(1000*client.tfreq, chan);
 			    	        if(verbose>1)
 						std::cout << boost::format("RX freq set to: %f MHz...") % 
 								(usrp->get_rx_freq(chan)/1e6) << 
@@ -659,27 +664,46 @@ int main(){
 
 			    if (new_beam != old_beam) {
 			    	for(size_t chan = 0; chan < usrp->get_rx_num_channels(); chan++) {
-			    	        usrp->set_rx_rate(10e6, chan);
+			    	        usrp->set_rx_rate(rxrate, chan);
 			    	        if(verbose>1)
 						std::cout << boost::format("RX rate set to: %f MHz...") % 
 								(usrp->get_rx_rate(chan)/1e6) << 
 								std::endl << std::endl;
 			    	}
+			    	for(size_t chan=0; chan<usrp->get_rx_num_channels(); chan++) {
+			    	        usrp->set_tx_rate(5e6, chan);
+			    	        if(verbose>1)
+						std::cout << boost::format("TX rate set to: %f MHz...") % 
+								(usrp->get_rx_rate(chan)/1e6) << 
+								std::endl << std::endl;
+			    	}
+
 			    	tx_float_vecs.clear();
-				for(unsigned int i=0;i<usrp->get_tx_num_channels();i++)
-					tx_float_vecs.push_back(std::vector<fc32>(max_seq_count,0));
+			    	tx_rf_vecs.clear();
+				std::cout << (float) (usrp->get_tx_rate() * (STATE_TIME*1.e-6)) << std::endl;
+				osr = round(usrp->get_tx_rate() * ((float)STATE_TIME*1e-6));
+				std::cout << "tx rate: " << usrp->get_tx_rate() << "\n";
+				std::cout << "bb rate: " << 1/(STATE_TIME*1e-6) << "\n";
+				std::cout << "creating tx vecs.\n osr: " << osr << "\n";
+				for(unsigned int i=0;i<usrp->get_tx_num_channels();i++){
+					tx_float_vecs.push_back(std::vector<fc32>(max_seq_count+1,0));
+					tx_rf_vecs.push_back(std::vector<fc32>(osr*max_seq_count,0));
+				}
 
 				tx_short_vecs.clear();
+				std::cout << "creating tx short vecs\n";
 				for(unsigned int i=0;i<usrp->get_tx_num_channels();i++)
-			    		tx_short_vecs.push_back(std::vector<sc16 >(max_seq_count,0));
+			    		tx_short_vecs.push_back(std::vector<sc16 >(osr*max_seq_count,0));
 
 			    	// Do a second-stage decode.. Put the tr and sync logic bits into the LSB's of
 			    	// of the real and imaginary components
 			    	// [TODO] this logic could probably be in the first decodestate() function
 				for (unsigned int i=0;i<usrp->get_tx_num_channels();i++){
 			    		for (j=0;j<max_seq_count;j++){
-			    		    tx_short_vecs[i][j] = sc16((0x0001 & (master_buf[j] >> 16)),
-						(0x0001 & master_buf[j]));
+					    for(int k=0;k<osr;k++){
+			    		    	tx_short_vecs[i][(j*osr)+k] = sc16((0x0001 & (master_buf[j] >> 16)),
+							(0x0001 & master_buf[j]));
+					    }
 			    		}
 				}
 
@@ -699,21 +723,34 @@ int main(){
 				      }
 			    	}
 			    	_convolve(tx_float_vecs[0], filter_table);
-			    
-			        for(unsigned int ant=1;ant<usrp->get_tx_num_channels();ant++){
-			        	for (j=0;j<max_seq_count;j++){
-			        	      if (tx_float_vecs[0][j] != std::complex<float>(0,0)){
-			        	    		tx_float_vecs[ant][j] = pdvec[ant] * tx_float_vecs[0][j];
-			        	      }
-			        	}
-			        }
+
+				//for(int i=0;i<tx_float_vecs.size();i++)
+				//	tx_rf_vec_ptrs.push_back(&tx_rf_vecs[i]);
+
+				std::cout << "upsample function\n";
+				tx_mix_upsample(
+					&tx_float_vecs[0],
+					&tx_rf_vecs,
+					1e6/STATE_TIME,
+					usrp->get_tx_rate(),
+					tx_freqs,
+					0.);
+
+			        //for(unsigned int ant=1;ant<usrp->get_tx_num_channels();ant++){
+			        //	for (j=0;j<max_seq_count;j++){
+			        //	      if (tx_float_vecs[0][j] != std::complex<float>(0,0)){
+			        //	    		tx_float_vecs[ant][j] = pdvec[ant] * tx_float_vecs[0][j];
+			        //	      }
+			        //	}
+			        //}
 
 			        // Merge the logic bits with the baseband rf complex values
 			        // The output needs to be sc16 type to preserve the tr and sync logic bits
 			        std::complex<float> fc32temp;
 			        for (unsigned int i=0;i<usrp->get_tx_num_channels(); i++){
-			        	for (j=0;j<max_seq_count;j++){
-			        	      fc32temp = tx_float_vecs[i][j] * std::complex<float>(0.95*pow(2,15),0);
+			        	for (j=0;j<osr*max_seq_count;j++){
+			        	      //fc32temp = tx_float_vecs[i][j] * std::complex<float>(0.95*pow(2,15),0);
+			        	      fc32temp = tx_rf_vecs[i][j] * std::complex<float>(0.95*pow(2,15),0);
 			        	      tx_short_vecs[i][j] = sc16(
 						tx_short_vecs[i][j].real() | ((int16_t) fc32temp.real() & 0xfffe),
 			        	      	tx_short_vecs[i][j].imag() | ((int16_t) fc32temp.imag() & 0xfffe));
@@ -754,7 +791,10 @@ int main(){
 		      case TIMING_TRIGGER:
 
 			if (verbose > 1 ) std::cout << "Setup for trigger\n";	
-			if (verbose > 1) std::cout << "Pdvec: " << pdvec[0] << " " << pdvec[1] << std::endl;
+			for (size_t i=0;i<pdvec.size();i++){
+				if (verbose > 1) std::cout << "pdvec[" << i << "]: "<< pdvec[i] << "\t";
+			}
+			if (verbose>1) std::cout << std::endl;
                         msg.status=0;
 
                         if(configured) {
@@ -804,7 +844,7 @@ int main(){
 			  //call function to start tx stream simultaneously with rx stream
 			  //std::cout << "time: " << now_time.get_real_secs() <<
 				//" start time: " << start_time.get_real_secs() << std::endl;
-		       	  transmit_worker(tx_stream, tx_vec_ptrs, max_seq_count, start_time);
+		       	  transmit_worker(tx_stream, tx_vec_ptrs, osr*max_seq_count, start_time);
                         }
 
                         rval=send_data(msgsock, &msg, sizeof(struct DriverMsg));
@@ -879,11 +919,13 @@ int main(){
 
 				//std::cout << "Rx: " << rx_short_vecs[0][i] << "\t";
 			        //printf("%i %x\t",i,shared_main_addresses[r][c][0][i]);
-			        printf("(%hi,",((shared_main_addresses[r][c][0][i] >> 16) & 0x0000ffff));
-			        printf("%hi)\t",(shared_main_addresses[r][c][0][i] & 0x0000ffff));
+				if(verbose>0){
+			        	printf("(%hi,",((shared_main_addresses[r][c][0][i] >> 16) & 0x0000ffff));
+			        	printf("%hi)\t",(shared_main_addresses[r][c][0][i] & 0x0000ffff));
 
-			        printf("(%hi,",((shared_back_addresses[r][c][0][i] >> 16) & 0x0000ffff));
-			        printf("%hi)\n",(shared_back_addresses[r][c][0][i] & 0x0000ffff));
+			        	printf("(%hi,",((shared_back_addresses[r][c][0][i] >> 16) & 0x0000ffff));
+			        	printf("%hi)\n",(shared_back_addresses[r][c][0][i] & 0x0000ffff));
+				}
 			  }
 			  
 			  r=client.radar-1;
