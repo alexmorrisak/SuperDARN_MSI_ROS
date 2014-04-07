@@ -34,6 +34,7 @@
 
 //Added by Alex for signal processing
 #include <alex_custom.hpp>
+#include <math.h>
 
 #ifdef __cplusplus
 	extern "C" {
@@ -60,7 +61,7 @@
 #define IMAGING 0 
 #define MAX_SAMPLES 262144 
 #define MIMO 1
-#define NUNITS 1
+#define NUNITS 2
 
 
 dictionary *Site_INI;
@@ -198,15 +199,14 @@ int main(){
 	std::vector<std::vector<sc16> *> rx_vec_ptrs;
 	//std::vector<sc16 > *rx_vec_ptrs;
 	std::vector<float> client_freqs;
-	client_freqs.push_back(1e6);
+	client_freqs.push_back(1.11234e6);
 	client_freqs.push_back(0);
 	int osr;
 	std::vector<float> tx_freqs;
-	tx_freqs.push_back(1e6);
+	tx_freqs.push_back(1.11234e6);
 	tx_freqs.push_back(0);
 
-	float td,pd;
-	std::vector<fc32> pdvec;
+	float td;//,pd;
 
 	//variables to be used as arguments to setup the usrp device(s)
 	std::string args, subdev;
@@ -467,7 +467,7 @@ int main(){
 			//alpha = 32*(9.86/(2e-8*client.trise)) / (0.8328*usrp->get_rx_rate());
 			//std::cout << "alpha: " << alpha << std::endl;
 			//for (i=0; i<filter_table_len; i++){
-			//	filter_table[i] = pow(alpha/3.14,0.5)*pow(2.7183, 
+			//	filter_table[i] = pow(alpha/3.14,0.5)*pow(M_E, 
 			//		-1*(alpha)*pow((((float)i-(filter_table_len-1)/2)/filter_table_len),2))/filter_table_len;
 			//}
                         if ((ready_index[r][c]>=0) && (ready_index[r][c] <maxclients) ) {
@@ -480,13 +480,8 @@ int main(){
 			if (verbose > 1) std::cout << "Radar: " << client.radar << " Channel: " << client.channel <<
 					" Beamnum: " << client.tbeam << " Status: " << msg.status << "\n";
 
-			// Calculate frequency-dependent phase shift based on time-delay
-			pdvec.clear();
-			for(unsigned int i=0;i<usrp->get_tx_num_channels();i++){
-				td = i * 10 * (16/2-client.tbeam); // 10 ns per antenna per beam..
-				pd = fmod((td*client.tfreq*1e-6), 1.0) * 6.28;
-				pdvec.push_back(std::complex<float>(cos(pd),sin(pd)));
-			}
+			// Calculate time delay for beamforming
+			td = 10 * (16/2-client.tbeam); // 10 ns per antenna per beam
 
                         index=client.current_pulseseq_index; 
                         if (index!=old_pulse_index[r][c]) {
@@ -733,16 +728,9 @@ int main(){
 					&tx_rf_vecs,
 					1e6/STATE_TIME,
 					usrp->get_tx_rate(),
+					usrp->get_tx_freq(),
 					tx_freqs,
-					0.);
-
-			        //for(unsigned int ant=1;ant<usrp->get_tx_num_channels();ant++){
-			        //	for (j=0;j<max_seq_count;j++){
-			        //	      if (tx_float_vecs[0][j] != std::complex<float>(0,0)){
-			        //	    		tx_float_vecs[ant][j] = pdvec[ant] * tx_float_vecs[0][j];
-			        //	      }
-			        //	}
-			        //}
+					td);
 
 			        // Merge the logic bits with the baseband rf complex values
 			        // The output needs to be sc16 type to preserve the tr and sync logic bits
@@ -791,9 +779,6 @@ int main(){
 		      case TIMING_TRIGGER:
 
 			if (verbose > 1 ) std::cout << "Setup for trigger\n";	
-			for (size_t i=0;i<pdvec.size();i++){
-				if (verbose > 1) std::cout << "pdvec[" << i << "]: "<< pdvec[i] << "\t";
-			}
 			if (verbose>1) std::cout << std::endl;
                         msg.status=0;
 
@@ -919,7 +904,7 @@ int main(){
 
 				//std::cout << "Rx: " << rx_short_vecs[0][i] << "\t";
 			        //printf("%i %x\t",i,shared_main_addresses[r][c][0][i]);
-				if(verbose>0){
+				if(verbose>2){
 			        	printf("(%hi,",((shared_main_addresses[r][c][0][i] >> 16) & 0x0000ffff));
 			        	printf("%hi)\t",(shared_main_addresses[r][c][0][i] & 0x0000ffff));
 

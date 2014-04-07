@@ -8,6 +8,7 @@
 #include <uhd/exception.hpp>
 #include <boost/thread.hpp>
 #include <thread>
+#include <math.h>
 
 #define NTHREADS 2
 
@@ -18,6 +19,13 @@ extern int verbose;
  * A function to be used to convolve filter taps with input data and
  * decimate.  Should be placed in its own thread context for 
  * parallelization
+***********************************************************************/
+/***********************************************************************
+ * TODO: this should be function should be broken down further such
+ * that each thread gets its own center frequency, not just its own 
+ * antenna channel. There should be NANTS*NFREQS threads.
+ * Think memory performance: this means that the received 
+ * samples in one buffer must be shared between multiple threads.
  **********************************************************************/
 void multiply_and_add(
     const std::vector<std::complex<double> > *buff,
@@ -81,27 +89,27 @@ void recv_to_buffer(
     for receiving.  Each frequency gets its own thread*/
     //double client_freq = 0; 
     std::vector<std::complex<double> > radfreq;
-    for (int i=0;i<center_freqs.size();i++)
-	radfreq.push_back(std::complex<double>(0,6.28*center_freqs[i]/rf_sample_rate));
+    for (size_t i=0;i<center_freqs.size();i++)
+	radfreq.push_back(std::complex<double>(0,2*M_PI*center_freqs[i]/rf_sample_rate));
     std::vector<std::complex<double> > radfreq_bb;
-    for (int i=0;i<center_freqs.size();i++)
-    	//radfreq_bb.push_back(std::complex<double>(0,6.28*fmod(center_freqs[0]*osr,1.)));
-    	radfreq_bb.push_back(std::complex<double>(0,0));
+    for (size_t i=0;i<center_freqs.size();i++)
+    	radfreq_bb.push_back(std::complex<double>(0,fmod(osr*radfreq[i].imag(),2*M_PI)));//*fmod(center_freqs[0]*osr,1.)));
+    	//radfreq_bb.push_back(std::complex<double>(0,0));
 
     /*Hamming-windowed sinc. Same for all center frequencies*/
     for (int i=0;i<ntaps;i++){
-            filter_taps[0][i] = 4*((0.54-0.46*cos((2*3.14*(double)(i))/ntaps))
-            	*(sin(2*3.14*(double)(i-ntaps/2)/ntaps) / (2*3.14*(double)(i-ntaps/2)/ntaps)))/ ntaps;
+            filter_taps[0][i] = 4*((0.54-0.46*cos((2*M_PI*(double)(i))/ntaps))
+            	*(sin(2*M_PI*(double)(i-ntaps/2)/ntaps) / (2*M_PI*(double)(i-ntaps/2)/ntaps)))/ ntaps;
     }
     filter_taps[0][ntaps/2]=4./ntaps;
-    for (int i=1;i<center_freqs.size();i++)
+    for (size_t i=1;i<center_freqs.size();i++)
     	filter_taps[1] = filter_taps[0];
     /*Mix the filter up(down) to the desired pass-band frequency*/
     /*Generally need two or more filters to rx multiple frequencies, but can
     perhaps use symmetry to kill two birds with one stone*/
     for (size_t i=0;i<center_freqs.size();i++){
     	for (int j=0;j<ntaps;j++){
-    	        NCO[i] *= pow(2.718,-radfreq[i]);
+    	        NCO[i] *= pow(M_E,-radfreq[i]);
     	        filter_taps[i][j] *= NCO[i];
 	}
     }
@@ -114,7 +122,7 @@ void recv_to_buffer(
     	buff_ptrs.push_back(&circ_buff[i].front());
     std::vector<std::vector<std::complex<double> > > temp;
     //for(size_t i=0;i<center_freqs.size();i++){
-    for(size_t i=0;i<nchannels;i++){
+    for(int i=0;i<nchannels;i++){
 	temp.push_back(std::vector<std::complex<double> >(center_freqs.size(),0));
     }
 
@@ -139,7 +147,7 @@ void recv_to_buffer(
     usrp->issue_stream_cmd(stream_cmd);
     md.error_code = uhd::rx_metadata_t::ERROR_CODE_NONE;
     while(num_total_samps < num_usrp_samples){
-        size_t num_rx_samps = rx_stream->recv(buff_ptrs, osr, md, timeout);
+        int num_rx_samps = rx_stream->recv(buff_ptrs, osr, md, timeout);
 	if (num_rx_samps != osr){
 		uhd::time_spec_t rx_error_time = usrp->get_time_now();
 		std::cerr << "Error in receiving samples..(" << rx_error_time.get_real_secs() << ")\t";;
@@ -176,7 +184,7 @@ void recv_to_buffer(
 		//	ntaps);
 	}
 	
-    	for(size_t i=0;i<nchannels;i++)
+    	for(int i=0;i<nchannels;i++)
 		filter_threads[i].join();
 	gettimeofday(&t1,NULL);
 	elapsed_time += 1e6*(t1.tv_sec-t0.tv_sec)+(t1.tv_usec-t0.tv_usec);
@@ -184,7 +192,7 @@ void recv_to_buffer(
 	/*There is some residual frequency offset after filtering/downsampling.
 	Now mix the downsampled signal to zero frequency.*/
     	for (size_t i=0;i<center_freqs.size();i++){
-		NCO_bb[i] *= pow(2.718,-radfreq_bb[i]);
+		NCO_bb[i] *= pow(M_E,-radfreq_bb[i]);
 		for(int j=0;j<nchannels;j++)
 			temp[j][i] *= NCO_bb[i];
 	}
