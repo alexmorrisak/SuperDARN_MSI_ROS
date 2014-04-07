@@ -20,6 +20,7 @@ int tx_mix_upsample(
     std::vector<std::vector<std::complex<float> > > *outputs_rf, //output vectors (number of antennas)
     float bb_sample_rate, //rate of input samples
     float rf_sample_rate, //rate of samples from host cpu to usrp
+    float usrp_center_freq, //Center frequency of USRP
     std::vector<float> center_freqs, //list of center frequencies to mix up (down) to
-    float phase_offset); //phase offset between each antenna in degrees
+    float time_delay); //time delay between each antenna in nanoseconds
 
