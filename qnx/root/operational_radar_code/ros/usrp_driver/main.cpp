@@ -66,7 +66,7 @@
 
 dictionary *Site_INI;
 int sock=0,msgsock=0;
-int verbose=1;
+int verbose=10;
 int configured=1;
 int		writingFIFO=0, dma_count=0, under_flag=0,empty_flag=0,IRQ, intid;
 int		max_seq_count=0, xfercount=0, totransfer=0;
@@ -196,14 +196,17 @@ int main(){
 	std::vector<std::vector<fc32> > tx_rf_vecs;
 	//std::vector<std::vector<fc32> > *tx_rf_vec_ptrs;
 	std::vector<std::vector<sc16> > rx_short_vecs;
-	std::vector<std::vector<sc16> *> rx_vec_ptrs;
+	std::vector<sc16 *> rx_vec_ptrs;
+	std::vector<std::vector<fc32> > client_vecs;
+	std::vector<fc32 *> client_vec_ptrs;
 	//std::vector<sc16 > *rx_vec_ptrs;
 	std::vector<float> client_freqs;
-	client_freqs.push_back(1.11234e6);
+	client_freqs.push_back(1.e6);
 	client_freqs.push_back(0);
-	int osr;
+	int tx_osr;
+	int rx_osr;
 	std::vector<float> tx_freqs;
-	tx_freqs.push_back(1.11234e6);
+	tx_freqs.push_back(1.e6);
 	tx_freqs.push_back(0);
 
 	float td;//,pd;
@@ -281,7 +284,7 @@ int main(){
 
 	//create a receive streamer
 	//linearly map channels (index0 = channel0, index1 = channel1, ...)
-	uhd::stream_args_t rx_stream_args("fc64", "sc16"); //use doubles for receiving
+	uhd::stream_args_t rx_stream_args("sc16", "sc16"); //use int16_t for receiving
 	for (size_t rx_chan = 0; rx_chan < usrp->get_rx_num_channels(); rx_chan++){
 	    std::cout << "rx channel: " << rx_chan << std::endl;
 	    rx_stream_args.channels.push_back(rx_chan); //linear mapping
@@ -676,27 +679,27 @@ int main(){
 			    	tx_float_vecs.clear();
 			    	tx_rf_vecs.clear();
 				std::cout << (float) (usrp->get_tx_rate() * (STATE_TIME*1.e-6)) << std::endl;
-				osr = round(usrp->get_tx_rate() * ((float)STATE_TIME*1e-6));
+				tx_osr = round(usrp->get_tx_rate() * ((float)STATE_TIME*1e-6));
 				std::cout << "tx rate: " << usrp->get_tx_rate() << "\n";
 				std::cout << "bb rate: " << 1/(STATE_TIME*1e-6) << "\n";
-				std::cout << "creating tx vecs.\n osr: " << osr << "\n";
+				std::cout << "creating tx vecs.\n osr: " << tx_osr << "\n";
 				for(unsigned int i=0;i<usrp->get_tx_num_channels();i++){
 					tx_float_vecs.push_back(std::vector<fc32>(max_seq_count+1,0));
-					tx_rf_vecs.push_back(std::vector<fc32>(osr*max_seq_count,0));
+					tx_rf_vecs.push_back(std::vector<fc32>(tx_osr*max_seq_count,0));
 				}
 
 				tx_short_vecs.clear();
 				std::cout << "creating tx short vecs\n";
 				for(unsigned int i=0;i<usrp->get_tx_num_channels();i++)
-			    		tx_short_vecs.push_back(std::vector<sc16 >(osr*max_seq_count,0));
+			    		tx_short_vecs.push_back(std::vector<sc16 >(tx_osr*max_seq_count,0));
 
 			    	// Do a second-stage decode.. Put the tr and sync logic bits into the LSB's of
 			    	// of the real and imaginary components
 			    	// [TODO] this logic could probably be in the first decodestate() function
 				for (unsigned int i=0;i<usrp->get_tx_num_channels();i++){
 			    		for (j=0;j<max_seq_count;j++){
-					    for(int k=0;k<osr;k++){
-			    		    	tx_short_vecs[i][(j*osr)+k] = sc16((0x0001 & (master_buf[j] >> 16)),
+					    for(int k=0;k<tx_osr;k++){
+			    		    	tx_short_vecs[i][(j*tx_osr)+k] = sc16((0x0001 & (master_buf[j] >> 16)),
 							(0x0001 & master_buf[j]));
 					    }
 			    		}
@@ -734,9 +737,10 @@ int main(){
 
 			        // Merge the logic bits with the baseband rf complex values
 			        // The output needs to be sc16 type to preserve the tr and sync logic bits
+				std::cout << "merging logic bits\n";
 			        std::complex<float> fc32temp;
 			        for (unsigned int i=0;i<usrp->get_tx_num_channels(); i++){
-			        	for (j=0;j<osr*max_seq_count;j++){
+			        	for (j=0;j<tx_osr*max_seq_count;j++){
 			        	      //fc32temp = tx_float_vecs[i][j] * std::complex<float>(0.95*pow(2,15),0);
 			        	      fc32temp = tx_rf_vecs[i][j] * std::complex<float>(0.95*pow(2,15),0);
 			        	      tx_short_vecs[i][j] = sc16(
@@ -745,11 +749,13 @@ int main(){
 			        	}
 			        }
 
+				std::cout << "pointing to tx vecss\n";
 			        tx_vec_ptrs.clear();
 			        for(unsigned int i=0;i<usrp->get_tx_num_channels();i++)
 			        	tx_vec_ptrs.push_back(&tx_short_vecs[i].front());
 
 			}
+			std::cout << "done pointing to tx vecss\n";
 
                         if (new_seq_id < 0 ) {
                           old_seq_id=-10;
@@ -783,9 +789,6 @@ int main(){
                         msg.status=0;
 
                         if(configured) {
-			  uhd::time_spec_t start_time = usrp->get_time_now() + 0.02;
-			  tstart = usrp->get_time_now();
-
 			  //First wait for any existing receiver threads..
 			  if (verbose > 1) std::cout << "Waiting on thread.." << std::endl;
 			  receive_threads.join_all();
@@ -793,43 +796,41 @@ int main(){
 		       	  //Adjust the number of samples to receive to account for sample rate conversion
 			  if (verbose > 1){
 			  	int usrp_rate = (int) (usrp->get_rx_rate());
-			  	int oversamplerate = usrp_rate/client.baseband_samplerate;
+			  	rx_osr = usrp_rate/client.baseband_samplerate;
 			  	std::cout << "client baseband sample rate: " << client.baseband_samplerate << std::endl;;
 			  	std::cout << "Usrp sample rate: " << usrp_rate << std::endl;;
-			  	std::cout << "Oversample rate: " << oversamplerate << std::endl;;
+			  	std::cout << "Oversample rate: " << rx_osr << std::endl;;
 			  }
 
 			  rx_short_vecs.clear();
-			  for(size_t i=0;i<client_freqs.size();i++)
-			  	rx_short_vecs.push_back(std::vector<sc16>(2*client.number_of_samples));
+			  //for(size_t i=0;i<client_freqs.size();i++)
+			  for(size_t i=0;i<usrp->get_rx_num_channels();i++)
+			  	rx_short_vecs.push_back(std::vector<sc16>(rx_osr*client.number_of_samples));
 
 			  rx_vec_ptrs.clear();
-			  for(size_t i=0;i<client_freqs.size();i++)
-			  	rx_vec_ptrs.push_back(&rx_short_vecs[i]);
+			  //for(size_t i=0;i<client_freqs.size();i++)
+			  for(size_t i=0;i<usrp->get_rx_num_channels();i++)
+			  	rx_vec_ptrs.push_back(&rx_short_vecs[i].front());
 			  
 			  //Start the receive stream thread
 			  if(verbose>1) std::cout << "About to start rx thread..\n";
 			  rx_thread_status=0;
 			  gettimeofday(&t0,NULL);
+			  uhd::time_spec_t start_time = usrp->get_time_now() + 0.1;
+			  tstart = usrp->get_time_now();
+
 	
-		       	  receive_threads.create_thread(boost::bind(recv_to_buffer,
+			  std::cout << "n samples to collect: " << rx_osr * client.number_of_samples << std::endl;
+		       	  receive_threads.create_thread(boost::bind(recv_and_hold,
 			  	usrp,
 			  	rx_stream,
 			  	rx_vec_ptrs,
-			  	client.number_of_samples,
-				usrp->get_rx_rate(),
-			  	(float)client.baseband_samplerate,
-				client_freqs,
-				//std::vector<float>(1,1e6),
+			  	rx_osr*client.number_of_samples,
 			  	start_time,
 			  	&rx_thread_status));
 
-			  //uhd::time_spec_t now_time = usrp->get_time_now();
-
 			  //call function to start tx stream simultaneously with rx stream
-			  //std::cout << "time: " << now_time.get_real_secs() <<
-				//" start time: " << start_time.get_real_secs() << std::endl;
-		       	  transmit_worker(tx_stream, tx_vec_ptrs, osr*max_seq_count, start_time);
+		       	  transmit_worker(tx_stream, tx_vec_ptrs, tx_osr*max_seq_count, start_time);
                         }
 
                         rval=send_data(msgsock, &msg, sizeof(struct DriverMsg));
@@ -889,22 +890,51 @@ int main(){
 
 		        rval=recv_data(msgsock,&client,sizeof(struct ControlPRM));
                         rval=send_data(msgsock,&rx_status_flag, sizeof(int));
+	
+			client_vecs.clear();
+			for(int i=0;i<usrp->get_rx_num_channels();i++)
+				client_vecs.push_back(std::vector<fc32>(client.number_of_samples,0));
+			client_vec_ptrs.clear();
+			for(int i=0;i<usrp->get_rx_num_channels();i++)
+				client_vec_ptrs.push_back(&client_vecs[i].front());
+			std::cout << "nrf samples: " << (rxrate/client.baseband_samplerate)*client.number_of_samples << std::endl;
+			std::cout << "n collected samples: " << rx_short_vecs[0].size() << std::endl;
+			std::cout << "bb samples: " << client.number_of_samples << std::endl;
+			rval = rx_mix_downsample(
+				rx_vec_ptrs,
+				client_vec_ptrs,
+				rx_osr*client.number_of_samples,
+				client.number_of_samples,
+				rxrate,
+				client.baseband_samplerate,
+				client_freqs,
+				std::vector<float>(1,0));
+				
+				
 
 			if(rx_status_flag == 0){
 			  if(verbose>1)std::cout << "Repackaging RX data.." << std::endl;
 			  for(int i=0;i<client.number_of_samples;i++){
 			  	// Assuming i-phase component comes first ..?
+			  	//shared_main_addresses[r][c][0][i] = 
+				//	( ((int32_t) rx_short_vecs[0][i].real() << 16) & 0xffff0000)| 
+				//	( (int32_t) rx_short_vecs[0][i].imag() & 0x0000ffff);
 			  	shared_main_addresses[r][c][0][i] = 
-					( ((int32_t) rx_short_vecs[0][i].real() << 16) & 0xffff0000)| 
-					( (int32_t) rx_short_vecs[0][i].imag() & 0x0000ffff);
+					( ((int32_t) (16384*client_vecs[0][i].real()) << 16) & 0xffff0000)| 
+					( (int32_t) (16384*client_vecs[0][i].imag()) & 0x0000ffff);
 				// Use the same data for front and back array for now
+			  	//shared_back_addresses[r][c][0][i] = 
+				//	( ((int32_t) rx_short_vecs[1][i].real() << 16) & 0xffff0000 ) | 
+				//	( (int32_t) rx_short_vecs[1][i].imag() & 0x0000ffff);
 			  	shared_back_addresses[r][c][0][i] = 
-					( ((int32_t) rx_short_vecs[1][i].real() << 16) & 0xffff0000 ) | 
-					( (int32_t) rx_short_vecs[1][i].imag() & 0x0000ffff);
+					( ((int32_t) (16384*client_vecs[1][i].real()) << 16) & 0xffff0000 ) | 
+					( (int32_t) (16384*client_vecs[1][i].imag()) & 0x0000ffff);
 
 				//std::cout << "Rx: " << rx_short_vecs[0][i] << "\t";
 			        //printf("%i %x\t",i,shared_main_addresses[r][c][0][i]);
-				if(verbose>2){
+				//std::cout << rx_short_vecs[0][i] << std::endl;
+				//std::cout << client_vecs[0][i] << std::endl;
+				if(verbose>0){
 			        	printf("(%hi,",((shared_main_addresses[r][c][0][i] >> 16) & 0x0000ffff));
 			        	printf("%hi)\t",(shared_main_addresses[r][c][0][i] & 0x0000ffff));
 

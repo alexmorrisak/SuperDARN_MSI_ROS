@@ -1,4 +1,20 @@
 void _convolve(std::vector<std::complex<float> >& signal, const std::vector<std::complex<float> >& taps);
+void recv_and_hold(
+    uhd::usrp::multi_usrp::sptr usrp,
+    uhd::rx_streamer::sptr rx_stream,
+    std::vector<std::complex<short> *> client_buff_ptrs,
+    size_t num_requested_samples,
+    uhd::time_spec_t start_time,
+    int *return_status);
+int rx_mix_downsample(
+    std::vector<std::complex<short> *> rx_buff_ptrs,
+    std::vector<std::complex<float> *> client_vec_ptrs,
+    size_t nrf_samples,
+    size_t nbb_samples,
+    float rf_sample_rate,
+    float client_sample_rate,
+    std::vector<float> center_freqs,
+    std::vector<float> bws);
 void recv_to_buffer(
     uhd::usrp::multi_usrp::sptr usrp,
     uhd::rx_streamer::sptr rx_stream,
