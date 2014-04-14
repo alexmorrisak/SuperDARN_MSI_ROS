@@ -11,7 +11,7 @@ INCLUDES=-I"../include/" -I"include/" -I"../tsg/include" -I"../iniparser3.0b/src
 	 -I"${HOME}/uhd/host/include" -I"${HOME}/uhd/host/include/uhd/types" -I"${HOME}/uhd/host/include/uhd/usrp" 
 
 C_SOURCES=_dma.c _open_PLX9080.c _create_DMA_buff.c _decodestate.c _open_ini_file.c ../_tcpsocket.c ../utils.c 
-CPP_SOURCES=main.cpp convolve.cpp recv_to_buffer.cpp recv_clr_freq.cpp tx_mix_upsample.cpp
+CPP_SOURCES=main.cpp convolve.cpp recv_to_buffer.cpp recv_clr_freq.cpp tx_mix_upsample.cpp recv_and_hold.cpp rx_mix_downsample.cpp
 C_OBJECTS=$(C_SOURCES:.c=.o)
 CPP_OBJECTS=$(CPP_SOURCES:.cpp=.o)
 EXECUTABLE=usrp_tcp_driver
