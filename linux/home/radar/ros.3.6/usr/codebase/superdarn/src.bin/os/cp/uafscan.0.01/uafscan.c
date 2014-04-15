@@ -647,7 +647,6 @@ int main(int argc,char *argv[]) {
       ErrLog(errlog.sock,progname,logtxt);
             
       printf("Entering Site Start Intt Station ID: %s  %d\n",ststr,stid);
-      printf("tsgprm.samples: %i\n",tsgprm.samples);
       SiteStartIntt(intsc,intus);
       gettimeofday(&t1,NULL);
       elapsed_secs=t1.tv_sec-t0.tv_sec;
