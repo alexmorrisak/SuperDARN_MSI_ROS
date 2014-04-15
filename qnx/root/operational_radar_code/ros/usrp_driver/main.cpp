@@ -66,7 +66,11 @@
 
 dictionary *Site_INI;
 int sock=0,msgsock=0;
+<<<<<<< HEAD
 int verbose=10;
+=======
+int verbose=1;
+>>>>>>> d384cc40c0b48a95bcfd4623fcbc3af820bb80d1
 int configured=1;
 int		writingFIFO=0, dma_count=0, under_flag=0,empty_flag=0,IRQ, intid;
 int		max_seq_count=0, xfercount=0, totransfer=0;
@@ -194,6 +198,7 @@ int main(){
 	std::vector<std::vector<sc16> > tx_short_vecs;
 	std::vector<sc16 *> tx_vec_ptrs;
 	std::vector<std::vector<fc32> > tx_rf_vecs;
+<<<<<<< HEAD
 	//std::vector<std::vector<fc32> > *tx_rf_vec_ptrs;
 	std::vector<std::vector<sc16> > rx_short_vecs;
 	std::vector<sc16 *> rx_vec_ptrs;
@@ -208,6 +213,28 @@ int main(){
 	std::vector<float> tx_freqs;
 	tx_freqs.push_back(1.e6);
 	tx_freqs.push_back(0);
+=======
+	std::vector<std::vector<std::vector<sc16> > > rx_short_vecs;
+	for(int i=0;i<2;i++)
+		rx_short_vecs.push_back(std::vector<std::vector<sc16> >());
+	std::vector<sc16 *> rx_vec_ptrs;
+
+	// Swing buffered.
+	unsigned int iseq=0;
+	std::vector<std::vector<std::vector<fc32> > > client_vecs;
+	for(int i=0;i<2;i++)
+		client_vecs.push_back(std::vector<std::vector<fc32> >());
+	std::vector<fc32 *> client_vec_ptrs;
+
+	std::vector<float> client_freqs;
+	client_freqs.push_back(0);
+	client_freqs.push_back(1.e5);
+	int tx_osr;
+	int rx_osr;
+	std::vector<float> tx_freqs;
+	tx_freqs.push_back(1.e5);
+	//tx_freqs.push_back(0);
+>>>>>>> d384cc40c0b48a95bcfd4623fcbc3af820bb80d1
 
 	float td;//,pd;
 
@@ -364,7 +391,9 @@ int main(){
 	uhd::time_spec_t tstart;
 	//std::vector<boost::thread *> receive_threads;
 	boost::thread_group receive_threads;
+	boost::thread_group rx_process_threads;
 	receive_threads.join_all();
+	rx_process_threads.join_all();
 	int32_t rx_status_flag;
 	int32_t frame_offset;
 	int32_t dma_buffer;
@@ -539,6 +568,7 @@ int main(){
                           if (verbose > 1) std::cout << "Timing Driver: " << new_seq_id << " " << old_seq_id << "\n";
 
                           if ((new_seq_id!=old_seq_id) | (new_beam != old_beam)) { 
+			    iseq=0;
 			    if (new_seq_id!=old_seq_id){
 			    	//Set the rx center frequency
 			    	for(size_t chan = 0; chan < usrp->get_rx_num_channels(); chan++) {
@@ -794,6 +824,7 @@ int main(){
 			  receive_threads.join_all();
 			  
 		       	  //Adjust the number of samples to receive to account for sample rate conversion
+<<<<<<< HEAD
 			  if (verbose > 1){
 			  	int usrp_rate = (int) (usrp->get_rx_rate());
 			  	rx_osr = usrp_rate/client.baseband_samplerate;
@@ -806,26 +837,55 @@ int main(){
 			  //for(size_t i=0;i<client_freqs.size();i++)
 			  for(size_t i=0;i<usrp->get_rx_num_channels();i++)
 			  	rx_short_vecs.push_back(std::vector<sc16>(rx_osr*client.number_of_samples));
+=======
+			  int usrp_rate = (int) (usrp->get_rx_rate());
+			  rx_osr = usrp_rate/client.baseband_samplerate;
+			  if (verbose > 1){
+			  	std::cout << "client baseband sample rate: " << client.baseband_samplerate << std::endl;
+			  	std::cout << "Usrp sample rate: " << usrp_rate << std::endl;
+			  	std::cout << "Oversample rate: " << rx_osr << std::endl;
+				std::cout << "Number of rf samples: " << rx_osr*client.number_of_samples <<  std::endl;
+			  }
+
+			  rx_short_vecs[iseq%2].clear();
+			  //for(size_t i=0;i<client_freqs.size();i++)
+			  for(size_t i=0;i<usrp->get_rx_num_channels();i++)
+			  	rx_short_vecs[iseq%2].push_back(std::vector<sc16>(rx_osr*(1+client.number_of_samples)));
+>>>>>>> d384cc40c0b48a95bcfd4623fcbc3af820bb80d1
 
 			  rx_vec_ptrs.clear();
 			  //for(size_t i=0;i<client_freqs.size();i++)
 			  for(size_t i=0;i<usrp->get_rx_num_channels();i++)
+<<<<<<< HEAD
 			  	rx_vec_ptrs.push_back(&rx_short_vecs[i].front());
+=======
+			  	rx_vec_ptrs.push_back(&rx_short_vecs[iseq%2][i].front());
+>>>>>>> d384cc40c0b48a95bcfd4623fcbc3af820bb80d1
 			  
 			  //Start the receive stream thread
 			  if(verbose>1) std::cout << "About to start rx thread..\n";
 			  rx_thread_status=0;
 			  gettimeofday(&t0,NULL);
+<<<<<<< HEAD
 			  uhd::time_spec_t start_time = usrp->get_time_now() + 0.1;
 			  tstart = usrp->get_time_now();
 
 	
 			  std::cout << "n samples to collect: " << rx_osr * client.number_of_samples << std::endl;
+=======
+			  tstart = usrp->get_time_now();
+			  uhd::time_spec_t start_time = usrp->get_time_now() + 0.05;
+	
+>>>>>>> d384cc40c0b48a95bcfd4623fcbc3af820bb80d1
 		       	  receive_threads.create_thread(boost::bind(recv_and_hold,
 			  	usrp,
 			  	rx_stream,
 			  	rx_vec_ptrs,
+<<<<<<< HEAD
 			  	rx_osr*client.number_of_samples,
+=======
+			  	rx_osr*(client.number_of_samples+1),
+>>>>>>> d384cc40c0b48a95bcfd4623fcbc3af820bb80d1
 			  	start_time,
 			  	&rx_thread_status));
 
@@ -870,6 +930,7 @@ int main(){
 		      case RECV_GET_DATA:
 			if (verbose>1) std::cout << "RECV_GET_DATA: Waiting on receiver thread.." << std::endl;
 			receive_threads.join_all();
+			rx_process_threads.join_all();
 			gettimeofday(&t6,NULL);
                         elapsed=(t6.tv_sec-t0.tv_sec)*1E6;
                         elapsed+=(t6.tv_usec-t0.tv_usec);
@@ -891,6 +952,7 @@ int main(){
 		        rval=recv_data(msgsock,&client,sizeof(struct ControlPRM));
                         rval=send_data(msgsock,&rx_status_flag, sizeof(int));
 	
+<<<<<<< HEAD
 			client_vecs.clear();
 			for(int i=0;i<usrp->get_rx_num_channels();i++)
 				client_vecs.push_back(std::vector<fc32>(client.number_of_samples,0));
@@ -901,6 +963,20 @@ int main(){
 			std::cout << "n collected samples: " << rx_short_vecs[0].size() << std::endl;
 			std::cout << "bb samples: " << client.number_of_samples << std::endl;
 			rval = rx_mix_downsample(
+=======
+			if (iseq==0) {
+				for (int i=0;i<usrp->get_rx_num_channels();i++)
+					client_vecs[1].push_back(std::vector<fc32>(client.number_of_samples,0));
+			}
+			client_vecs[iseq%2].clear();
+			//client_vecs[1].clear();
+			for(int i=0;i<usrp->get_rx_num_channels();i++)
+				client_vecs[iseq%2].push_back(std::vector<fc32>(client.number_of_samples,0));
+			client_vec_ptrs.clear();
+			for(int i=0;i<usrp->get_rx_num_channels();i++)
+				client_vec_ptrs.push_back(&client_vecs[iseq%2][i].front());
+			rx_process_threads.create_thread(boost::bind(rx_mix_downsample,
+>>>>>>> d384cc40c0b48a95bcfd4623fcbc3af820bb80d1
 				rx_vec_ptrs,
 				client_vec_ptrs,
 				rx_osr*client.number_of_samples,
@@ -908,8 +984,20 @@ int main(){
 				rxrate,
 				client.baseband_samplerate,
 				client_freqs,
+<<<<<<< HEAD
 				std::vector<float>(1,0));
 				
+=======
+				std::vector<float>(1,0)));
+				
+		       	  //receive_threads.create_thread(boost::bind(recv_and_hold,
+			  //	usrp,
+			  //	rx_stream,
+			  //	rx_vec_ptrs,
+			  //	rx_osr*(client.number_of_samples+1),
+			  //	start_time,
+			  //	&rx_thread_status));
+>>>>>>> d384cc40c0b48a95bcfd4623fcbc3af820bb80d1
 				
 
 			if(rx_status_flag == 0){
@@ -920,15 +1008,25 @@ int main(){
 				//	( ((int32_t) rx_short_vecs[0][i].real() << 16) & 0xffff0000)| 
 				//	( (int32_t) rx_short_vecs[0][i].imag() & 0x0000ffff);
 			  	shared_main_addresses[r][c][0][i] = 
+<<<<<<< HEAD
 					( ((int32_t) (16384*client_vecs[0][i].real()) << 16) & 0xffff0000)| 
 					( (int32_t) (16384*client_vecs[0][i].imag()) & 0x0000ffff);
+=======
+					( ((int32_t) (16384*client_vecs[(iseq+1)%2][0][i].real()) << 16) & 0xffff0000)| 
+					( (int32_t) (16384*client_vecs[(iseq+1)%2][0][i].imag()) & 0x0000ffff);
+>>>>>>> d384cc40c0b48a95bcfd4623fcbc3af820bb80d1
 				// Use the same data for front and back array for now
 			  	//shared_back_addresses[r][c][0][i] = 
 				//	( ((int32_t) rx_short_vecs[1][i].real() << 16) & 0xffff0000 ) | 
 				//	( (int32_t) rx_short_vecs[1][i].imag() & 0x0000ffff);
 			  	shared_back_addresses[r][c][0][i] = 
+<<<<<<< HEAD
 					( ((int32_t) (16384*client_vecs[1][i].real()) << 16) & 0xffff0000 ) | 
 					( (int32_t) (16384*client_vecs[1][i].imag()) & 0x0000ffff);
+=======
+					( ((int32_t) (16384*client_vecs[(iseq+1)%2][1][i].real()) << 16) & 0xffff0000 ) | 
+					( (int32_t) (16384*client_vecs[(iseq+1)%2][1][i].imag()) & 0x0000ffff);
+>>>>>>> d384cc40c0b48a95bcfd4623fcbc3af820bb80d1
 
 				//std::cout << "Rx: " << rx_short_vecs[0][i] << "\t";
 			        //printf("%i %x\t",i,shared_main_addresses[r][c][0][i]);
@@ -942,6 +1040,7 @@ int main(){
 			        	printf("%hi)\n",(shared_back_addresses[r][c][0][i] & 0x0000ffff));
 				}
 			  }
+			  iseq += 1;
 			  
 			  r=client.radar-1;
 			  c=client.channel-1;
