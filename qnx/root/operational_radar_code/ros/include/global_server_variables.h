@@ -9,7 +9,7 @@
 #define _GLOBAL_SERVER_H
 
 #define SITE_NAME "unknown"
-#define SITE_DIR "/home/alex/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/site_data"
+#define SITE_DIR "/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/site_data"
 
 #define IF_ENABLED         0 
 #define IF_FREQ            71000 // in KHz
