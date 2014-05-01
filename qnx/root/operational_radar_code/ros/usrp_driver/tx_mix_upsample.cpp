@@ -98,7 +98,7 @@ int tx_mix_upsample(
     double elapsed_time=0;
 
     int osr = (int) (rf_sample_rate / bb_sample_rate);
-    int nbb_samps=input_bb->size()+1;
+    //int nbb_samps=input_bb->size()+1;
     //int nrf_samps=osr*nbb_samps;
     int nants = outputs_rf->size();
 
@@ -144,7 +144,7 @@ int tx_mix_upsample(
    //temp[0]=(*input_bb)[i] * NCO_bb[i][j];
    //temp[1]=(*input_bb)[i+1];
    //input_bb->push_back(std::complex<float>(0,0));
-   for(int i=0;i<nbb_samps-1;i++){
+   for(size_t i=0;i<input_bb->size()-1;i++){
 
 	gettimeofday(&t0,NULL);
 

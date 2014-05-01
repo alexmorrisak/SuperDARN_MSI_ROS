@@ -58,7 +58,7 @@ int recv_clr_freq(
 
     md.error_code = uhd::rx_metadata_t::ERROR_CODE_NONE;
     while(num_total_samps < num_usrp_samples){
-        size_t num_rx_samps = rx_stream->recv(rx_vec_ptrs, bandwidth, md, timeout);
+        int num_rx_samps = rx_stream->recv(rx_vec_ptrs, bandwidth, md, timeout);
 
 	//Check for errors
 	if (num_rx_samps != bandwidth){
