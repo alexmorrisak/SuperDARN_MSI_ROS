@@ -25,8 +25,8 @@ int recv_clr_freq(
     int num_total_samps = 0;
     int num_usrp_samples = naverages * bandwidth;
 
-    std::vector<std::vector<std::complex<double> > > rx_short_vecs;
-    std::vector<std::complex<double> *> rx_vec_ptrs;
+    std::vector<std::vector<std::complex<int16_t> > > rx_short_vecs;
+    std::vector<std::complex<int16_t> *> rx_vec_ptrs;
     fftw_complex *in=NULL, *out=NULL;
     fftw_plan plan;
     double *tmp_pwr=NULL;
@@ -39,20 +39,20 @@ int recv_clr_freq(
     tmp_pwr = (double*) calloc(bandwidth,sizeof(double));
 
     for(size_t i=0;i<usrp->get_rx_num_channels();i++)
-	rx_short_vecs.push_back(std::vector<std::complex<double> >(bandwidth,0));
+	rx_short_vecs.push_back(std::vector<std::complex<int16_t> >(bandwidth,0));
     for(size_t i=0;i<usrp->get_rx_num_channels();i++)
 	rx_vec_ptrs.push_back(&rx_short_vecs[i].front());
 
-    uhd::time_spec_t start_time = usrp->get_time_now() + 0.02;
     uhd::rx_metadata_t md;
     float timeout = 0.1;
 
     //setup streaming
     //usrp->set_rx_freq(1e3*center_freq);
-    //usrp->set_rx_rate(bandwidth);
+    //usrp->get_rx_rate(bandwidth);
     uhd::stream_cmd_t stream_cmd = uhd::stream_cmd_t::STREAM_MODE_NUM_SAMPS_AND_DONE;
     stream_cmd.num_samps = num_usrp_samples;
     stream_cmd.stream_now = false;
+    uhd::time_spec_t start_time = usrp->get_time_now() + 0.02;
     stream_cmd.time_spec = start_time;
     usrp->issue_stream_cmd(stream_cmd);
 
@@ -103,6 +103,7 @@ int recv_clr_freq(
 	for (int i=0;i<bandwidth;i++){
         	in[i][0] = (hann_window[i]*rx_short_vecs[0][i].real());
         	in[i][1] = (hann_window[i]*rx_short_vecs[0][i].imag());
+            //std::cout << "ini: " << in[i][0] << " inq: " << in[i][1] << std::endl;
         	//in[i][0] = rx_short_vecs[0][i].real();
         	//in[i][1] = rx_short_vecs[0][i].imag();
 	}
@@ -113,7 +114,8 @@ int recv_clr_freq(
 	//Add the current spectrum to the running total
 	for (int i=0;i<bandwidth;i++){
         	tmp_pwr[i] += out[i][0]*out[i][0] + out[i][1]*out[i][1] / 
-			double(bandwidth*bandwidth*naverages);
+			    double(bandwidth*bandwidth*naverages);
+            //std::cout << "outi: " << out[i][0] << " outq: " << out[i][1] << std::endl;
 	}
 	//Done adding spectrum to running total
 

@@ -15,7 +15,7 @@ INCLUDES=-I"../include/" -I"include/" -I"../tsg/include" -I"../iniparser3.0b/src
 C_SOURCES=_decodestate.c _open_ini_file.c ../_tcpsocket.c ../utils.c 
 CUDA_SOURCE0=rx_process_gpu.cu
 CUDA_SOURCE1=tx_process_gpu.cu
-CPP_SOURCES=main.cpp convolve.cpp recv_clr_freq.cpp tx_mix_upsample.cpp recv_and_hold.cpp tx_worker.cpp
+CPP_SOURCES=main.cpp convolve2.cpp convolve.cpp recv_clr_freq.cpp tx_mix_upsample.cpp recv_and_hold.cpp tx_worker.cpp
 C_OBJECTS=$(C_SOURCES:.c=.o)
 CUDA_OBJECT0=$(CUDA_SOURCE0:.cu=.o)
 CUDA_OBJECT1=$(CUDA_SOURCE1:.cu=.o)

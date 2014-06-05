@@ -22,8 +22,9 @@ extern int verbose;
  * own thread context so that it does not block the execution in main()
  **********************************************************************/
 void recv_and_hold(
-    double* trtimes,
-    int npulses,
+    unsigned int* trtimes,
+    unsigned int* trdurations,
+    unsigned int npulses,
     uhd::usrp::multi_usrp::sptr usrp,
     uhd::rx_streamer::sptr rx_stream,
     std::vector<std::complex<int16_t> *> client_buff_ptrs,
@@ -52,14 +53,15 @@ void recv_and_hold(
 
     usrp->issue_stream_cmd(stream_cmd);
 
-    usrp->set_command_time(start_time+1e-6);
+    usrp->set_command_time(start_time+10e-9);
     usrp->set_gpio_attr("TXA","OUT",0x00,0x40);
+
+
     for (int i=0; i<npulses; i++){
-        //std::cout << "ipulse: " << i << " time: " << trtimes[i] << std::endl;
-        usrp->set_command_time(start_time+trtimes[i]);
+        usrp->set_command_time(start_time+1e-6*trtimes[i]);
         usrp->set_gpio_attr("TXA","OUT",0x20,0x20);
 
-        usrp->set_command_time(start_time+trtimes[i]+600*1e-6);
+        usrp->set_command_time(start_time+1e-6*(trtimes[i]+trdurations[i]));
         usrp->set_gpio_attr("TXA","OUT",0x00,0x20);
     }
         

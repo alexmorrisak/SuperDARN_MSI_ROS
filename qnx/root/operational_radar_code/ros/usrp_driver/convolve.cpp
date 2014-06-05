@@ -4,7 +4,7 @@
 
 void _convolve(
 std::vector<std::complex<float> > *signal, 
-const std::vector<std::complex<float> > *taps)
+std::vector<std::complex<float> > *taps)
 {
         std::vector<std::complex<float> > output;
         std::complex<float>  temp;

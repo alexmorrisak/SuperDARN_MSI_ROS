@@ -176,8 +176,7 @@ int main(){
 	// usrp-data variables
 	typedef std::complex<int16_t> sc16;
 	typedef std::complex<float> fc32;
-	const int filter_table_len = 30;
-	std::vector<fc32> filter_table(filter_table_len, std::complex<float>(1./filter_table_len,0));
+	std::vector<fc32> filter_taps;//filter_table_len, std::complex<float>(1./filter_table_len,0));
 	std::vector<std::vector<fc32> > tx_float_vecs;
 	std::vector<std::vector<sc16> > tx_short_vecs;
 	std::vector<sc16 *> tx_vec_ptrs;
@@ -203,18 +202,19 @@ int main(){
 	int tx_osr;
 	int rx_osr;
 	std::vector<float> tx_freqs;
-	//tx_freqs.push_back(12.e6);
+	tx_freqs.push_back(12.e6);
 	tx_freqs.push_back(10.e6);
 	//tx_freqs.push_back(12.e6);
 
     std::vector<float> time_delays;//,pd;
 
 	//variables to be used as arguments to setup the usrp device(s)
-	std::string args, subdev;
+	std::string args, txsubdev, rxsubdev;
 	args = "addr0=192.168.10.2, addr1=192.168.10.3";
 	if(NUNITS==1)
 	args = "addr0=192.168.10.2";
-	subdev = "A:A";
+	txsubdev = "A:A";
+	rxsubdev = "A:A A:B";
 
 	clock_gettime(CLOCK_REALTIME, &cpu_start);
 
@@ -222,7 +222,13 @@ int main(){
 	std::cout << std::endl;
 	std::cout << boost::format("Creating the usrp device with: %s...") % args << std::endl;
 	uhd::usrp::multi_usrp::sptr usrp = uhd::usrp::multi_usrp::make(args);
-    int n_antennas = usrp->get_rx_num_channels();
+    
+	//Specify daughterboard routing
+	usrp->set_tx_subdev_spec(txsubdev);
+	usrp->set_rx_subdev_spec(rxsubdev);
+
+    int nrx_antennas = usrp->get_rx_num_channels();
+    int ntx_antennas = usrp->get_tx_num_channels();
 
 	//Lock mboard clocks
 	std::cout << usrp->get_num_mboards() << std::endl;
@@ -260,8 +266,6 @@ int main(){
 		}
 	}
 
-	//Specify daughterboard routing
-	usrp->set_tx_subdev_spec(subdev);
 
 	//Set Tx and Rx sample rates
 	std::cout << boost::format("Setting TX Rate: %f kHz...") % (1e3/STATE_TIME) << std::endl;
@@ -553,7 +557,7 @@ int main(){
 			        iseq=0;
 			        if (new_seq_id!=old_seq_id){
 			    	    //Set the rx center frequency
-			    	    for(int chan = 0; chan < n_antennas; chan++) {
+			    	    for(int chan = 0; chan < nrx_antennas; chan++) {
 			    	        usrp->set_rx_freq(1000*client.tfreq, chan);
 			    	        if(verbose>1)
 					            std::cout << boost::format("RX freq set to: %f MHz...") % 
@@ -561,7 +565,7 @@ int main(){
 					    	    std::endl << std::endl;
 			    	    }
 			    	    //Set the tx center frequency
-			    	    for(int chan = 0; chan < n_antennas; chan++) {
+			    	    for(int chan = 0; chan < ntx_antennas; chan++) {
 			    	        usrp->set_tx_freq(1000*client.tfreq, chan);
 			    	        if(verbose>1)
 						         std::cout << boost::format("TX freq set to: %f MHz...") % 
@@ -679,7 +683,7 @@ int main(){
 								(usrp->get_rx_rate(chan)/1e6) << 
 								std::endl << std::endl;
 			    	}
-			    	for(size_t chan=0; chan<usrp->get_rx_num_channels(); chan++) {
+			    	for(size_t chan=0; chan<usrp->get_tx_num_channels(); chan++) {
 			    	        usrp->set_tx_rate(txrate, chan);
 			    	        if(verbose>1)
 						std::cout << boost::format("TX rate set to: %f MHz...") % 
@@ -697,14 +701,14 @@ int main(){
 				        std::cout << "bb rate: " << 1/(STATE_TIME*1e-6) << "\n";
 				        std::cout << "creating tx vecs.\n osr: " << tx_osr << "\n";
                     }
-				    for(int i=0; i<n_antennas; i++){
+				    for(int i=0; i<ntx_antennas; i++){
 				    	tx_float_vecs.push_back(std::vector<fc32>(max_seq_count,0));
 				    	tx_rf_vecs.push_back(std::vector<sc16>(tx_osr*max_seq_count,0));
 				    }
 
 				    tx_short_vecs.clear();
 				    std::cout << "creating tx short vecs\n";
-				    for(int i=0; i<n_antennas; i++)
+				    for(int i=0; i<ntx_antennas; i++)
 			        		tx_short_vecs.push_back(std::vector<sc16 >(tx_osr*max_seq_count,0));
 
 			        // Do a second-stage decode.. Put the tr and sync logic bits into the LSB's of
@@ -734,10 +738,18 @@ int main(){
 			    	    	tx_float_vecs[0][j] = (std::complex<float>(-1,0));
 				          }
 			    	}
-			    	_convolve(&tx_float_vecs[0], &filter_table);
 
-                    tx_rf_vec_ptrs.resize(n_antennas);
-				    for(int i=0;i<n_antennas;i++)
+                    std::cout << client.trise << std::endl;
+                    filter_taps.resize(50e3/client.trise,std::complex<float>(client.trise/50.e3/tx_freqs.size(),0));
+                    std::cout << filter_taps.size() << std::endl;
+			    	//_convolve(&tx_float_vecs[0], &filter_taps);
+			    	_convolve2(&tx_float_vecs[0].front(), 
+                        tx_float_vecs[0].size(), 
+                        &filter_taps.front(),
+                        filter_taps.size());
+
+                    tx_rf_vec_ptrs.resize(ntx_antennas);
+				    for(int i=0;i<ntx_antennas;i++)
 				    	tx_rf_vec_ptrs[i] = &tx_rf_vecs[i].front();
 
 				    std::cout << "upsample function\n";
@@ -753,7 +765,7 @@ int main(){
                         &tx_freqs.front(),
 				    	&time_delays.front(),
                         tx_freqs.size(),
-                        n_antennas);
+                        ntx_antennas);
                     clock_gettime(CLOCK_MONOTONIC, &tx1);
 				    //tx_mix_upsample(
 				    //	&tx_float_vecs[0],
@@ -781,8 +793,8 @@ int main(){
                     printf("\n\ntx mix upsample elapsed time: %.2f ms (%.2f ms total)\n", 
                         elapsed_t1/1e6, elapsed_t2/1e6);
 
-			        tx_vec_ptrs.resize(n_antennas);
-			        for(unsigned int i=0;i<n_antennas;i++)
+			        tx_vec_ptrs.resize(ntx_antennas);
+			        for(unsigned int i=0;i<ntx_antennas;i++)
 			    	    tx_vec_ptrs[i]=&tx_rf_vecs[i].front();
 			    }
 
@@ -831,12 +843,12 @@ int main(){
 				        std::cout << "Number of rf samples: " << rx_osr*client.number_of_samples <<  std::endl;
 			        }
 
-			        rx_short_vecs[iseq%2].resize(n_antennas);
-			        for(int i=0;i<n_antennas;i++)
+			        rx_short_vecs[iseq%2].resize(nrx_antennas);
+			        for(int i=0;i<nrx_antennas;i++)
 			        	rx_short_vecs[iseq%2][i].resize(rx_osr*(1+client.number_of_samples));
 
-			        rx_vec_ptrs.resize(n_antennas);
-			        for(int i=0; i<n_antennas; i++)
+			        rx_vec_ptrs.resize(nrx_antennas);
+			        for(int i=0; i<nrx_antennas; i++)
 			        	rx_vec_ptrs[i] = &rx_short_vecs[iseq%2][i].front();
 			        
 			        //Start the receive stream thread
@@ -846,14 +858,10 @@ int main(){
 			        tstart = usrp->get_time_now();
 			        uhd::time_spec_t start_time = usrp->get_time_now() + 0.01;
 	
-                    std::vector<double> trtimes(bad_transmit_times.length,0);
-                    for (size_t i=0; i<trtimes.size(); i++){
-                        trtimes[i] = 1e-6*bad_transmit_times.start_usec[i];
-                        //std::cout << trtimes[i] << std::endl;
-                    }
                     //rx_process_threads.join_all();
 		            receive_threads.create_thread(boost::bind(recv_and_hold,
-                        &trtimes.front(),
+                        bad_transmit_times.start_usec,
+                        bad_transmit_times.duration_usec,
                         bad_transmit_times.length,
 			         	usrp,
 			         	rx_stream,
@@ -939,8 +947,8 @@ int main(){
 			    if (iseq==0) {
                     bb_vecs[1].resize(client_freqs.size());
 			    	for (size_t ifreq=0;ifreq<client_freqs.size();ifreq++){
-			    		bb_vecs[1][ifreq].resize(n_antennas);
-                        for (int iant=0; iant < n_antennas; iant++){
+			    		bb_vecs[1][ifreq].resize(nrx_antennas);
+                        for (int iant=0; iant < nrx_antennas; iant++){
                             bb_vecs[1][ifreq][iant].resize(client.number_of_samples,0);
                         }
                     }
@@ -949,8 +957,8 @@ int main(){
 			    //bb_vecs[iseq%2].clear();
                 bb_vecs[iseq%2].resize(client_freqs.size());
 			    for (size_t ifreq=0;ifreq<client_freqs.size();ifreq++){
-			    	bb_vecs[iseq%2][ifreq].resize(n_antennas);
-                    for (int iant=0; iant < n_antennas; iant++){
+			    	bb_vecs[iseq%2][ifreq].resize(nrx_antennas);
+                    for (int iant=0; iant < nrx_antennas; iant++){
                         bb_vecs[iseq%2][ifreq][iant].resize(client.number_of_samples,990);
                     }
                 }
@@ -959,9 +967,9 @@ int main(){
 
                 bb_vecs_ptrs.resize(client_freqs.size());
                 for (size_t ifreq=0; ifreq<client_freqs.size(); ifreq++)
-                    bb_vecs_ptrs[ifreq].resize(n_antennas);
+                    bb_vecs_ptrs[ifreq].resize(nrx_antennas);
 			    for(size_t ifreq=0;ifreq<client_freqs.size();ifreq++){
-                    for (int iant=0; iant<n_antennas; iant++){
+                    for (int iant=0; iant<nrx_antennas; iant++){
                         bb_vecs_ptrs[ifreq][iant] = (float *) &bb_vecs[iseq%2][ifreq][iant].front();
                     }
                     bb_vecs_ant_ptrs[ifreq] = ((float**) &bb_vecs_ptrs[ifreq].front());
@@ -974,7 +982,7 @@ int main(){
 			    	rx_osr*client.number_of_samples,
 			    	client.number_of_samples,
 			    	client_freqs.size(),
-			    	n_antennas,
+			    	nrx_antennas,
 			    	rxrate,
 			    	client.baseband_samplerate,
 			    	&client_freqs.front()));
@@ -987,12 +995,12 @@ int main(){
 			      for(int i=0;i<client.number_of_samples;i++){
 			      	// Assuming i-phase component comes first ..?
 			      	shared_main_addresses[r][c][0][i] = 
-			    		( ((int32_t) (bb_vecs[(iseq+1)%2][0][0][i].real()) << 16) & 0xffff0000)| 
-			    		( (int32_t) (bb_vecs[(iseq+1)%2][0][0][i].imag()) & 0x0000ffff);
+			    		( ((int32_t) (bb_vecs[(iseq+1)%2][0][MAIN_INPUT][i].real()) << 16) & 0xffff0000)| 
+			    		( (int32_t) (bb_vecs[(iseq+1)%2][0][MAIN_INPUT][i].imag()) & 0x0000ffff);
 			    	// Use the same data for front and back array for now
 			      	shared_back_addresses[r][c][0][i] = 
-			    		( ((int32_t) (bb_vecs[(iseq+1)%2][0][0][i].real()) << 16) & 0xffff0000 ) | 
-			    		( (int32_t) (bb_vecs[(iseq+1)%2][0][0][i].imag()) & 0x0000ffff);
+			    		( ((int32_t) (bb_vecs[(iseq+1)%2][0][BACK_INPUT][i].real()) << 16) & 0xffff0000 ) | 
+			    		( (int32_t) (bb_vecs[(iseq+1)%2][0][BACK_INPUT][i].imag()) & 0x0000ffff);
 
                     //Rx:
 			    	if(verbose>100){
@@ -1075,14 +1083,12 @@ int main(){
 			    /* 1 kHz fft bins*/
 
 			    //Set the rx center frequency
-			    for(int chan = 0; chan < n_antennas; chan++) {
-			            usrp->set_rx_freq(1000*center, chan);
-			    }
 			    //Set the rx sample rate
-			    for(int chan = 0; chan < n_antennas; chan++) {
+			    for(int chan = 0; chan < nrx_antennas; chan++) {
+			            usrp->set_rx_freq(center, chan);
 			            usrp->set_rx_rate(1000*N, chan);
-			    	    N = (int) (rxrate / 1000);
-			    if(verbose>-1) std::cout << "Actual RX rate: " << N << " kHz\n";
+			    	    //N = (int) (usrp->get_rx_rate() / 1000);
+			    if(verbose>-1) std::cout << "Actual RX rate for clr freq search: " << N << " kHz\n";
 			    }
 
                 /* set up search parameters search_bandwidth > usable_bandwidth */
@@ -1114,6 +1120,8 @@ int main(){
 
 			    if(verbose>1)std::cout << "starting clr freq search\n";
 
+                //usrp->set_rx_freq(1e3*center);
+                //usrp->set_rx_rate(1e3*center);
 			    rx_clrfreq_rval= recv_clr_freq(usrp,rx_stream,search_bandwidth,clrfreq_parameters.nave,pwr);
 	
 			    pwr2 = &pwr[(int)unusable_sideband];
@@ -1128,6 +1136,9 @@ int main(){
                             	printf("  nave: %d\n",clrfreq_parameters.nave);
                             	printf("  usable_bandwidth: %d\n",usable_bandwidth);
 			    }
+                //for (int i=0; i<usable_bandwidth; i++){
+                //    std::cout << pwr2[i] << std::endl;
+                //}
                 rval=send_data(msgsock, pwr2, sizeof(double)*usable_bandwidth);  //freq order power
                 rval=send_data(msgsock, &msg, sizeof(struct DriverMsg));
 
