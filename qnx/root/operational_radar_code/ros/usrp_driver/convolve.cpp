@@ -3,35 +3,45 @@
 #include <vector>
 
 void _convolve(
-std::vector<std::complex<float> > *signal, 
-std::vector<std::complex<float> > *taps)
-{
-        std::vector<std::complex<float> > output;
-        std::complex<float>  temp;
-        unsigned int i,j;
-        output.clear();
+    std::complex<float>* signal, 
+    unsigned int signal_len,
+    std::complex<float>* taps, 
+    unsigned int taps_len
+    //std::complex<float>* outsignal
+){
+    std::vector<std::complex<float> > outsignal(signal_len);
+    std::complex<float>  temp;
+    unsigned int i,j;
+    
+    for (i=0; i<taps_len/2; i++){
+            temp = std::complex<float>(0,0);
+            for(j=0; j<taps_len/2+i; j++){
+                    temp += signal[i+j] * taps[taps_len/2-i+j];
+            }
+            outsignal[i] = temp;
+            //std::cout << i << " " << temp << std::endl;
+            //if (i %5 == 0 ) std::cout << i << " " << temp << std::endl;
+    }
+    
+    for (i=taps_len/2; i<signal_len-taps_len; i++){
+            temp = std::complex<float>(0,0);
+            for(j=0; j<taps_len; j++){
+                    temp += signal[i+j] * taps[j];
+            }
+            outsignal[i] = temp;
+            //std::cout << i << " " << temp << std::endl;
+    }
 
-        for (i=0; i<taps->size(); i++){
-                temp = std::complex<float>(0,0);
-                for(j=0; j<(i+1); j++){
-                        temp += (*signal)[i+j] * (*taps)[taps->size()-1-j];
-                }
-                output.push_back(temp);
-        }
-
-        for (i=0; i<(signal->size()-taps->size()); i++){
-                temp = std::complex<float>(0,0);
-                for(j=0; j<taps->size(); j++){
-                        temp += (*signal)[i+j] * (*taps)[j];
-                }
-                output.push_back(temp);
-        }
-
-        std::cout << output.size() << std::endl;
-        std::cout << signal->size() << std::endl;
-        for (i=0; i<signal->size(); i++){
-                (*signal)[i] = output[i];// / std::complex<float> (30,0);
-        }
+    for (i=signal_len-taps_len; i<signal_len/2; i++){
+            temp = std::complex<float>(0,0);
+            for(j=0; j<signal_len-i; j++){
+                    temp += signal[i+j] * taps[j];
+            }
+            outsignal[i] = temp;
+            //if (i 5 == 0 ) std::cout << i << " " << temp << std::endl;
+    }
+    for (i=0; i<signal_len; i++)
+        signal[i] = outsignal[i];
 }
 
 

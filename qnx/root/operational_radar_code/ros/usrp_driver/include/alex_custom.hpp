@@ -1,7 +1,4 @@
 void _convolve(
-    std::vector<std::complex<float> > *signal,
-    std::vector<std::complex<float> > *taps);
-void _convolve2(
     std::complex<float>* signal,
     unsigned int signal_len,
     std::complex<float>* taps,

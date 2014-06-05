@@ -742,8 +742,7 @@ int main(){
                     std::cout << client.trise << std::endl;
                     filter_taps.resize(50e3/client.trise,std::complex<float>(client.trise/50.e3/tx_freqs.size(),0));
                     std::cout << filter_taps.size() << std::endl;
-			    	//_convolve(&tx_float_vecs[0], &filter_taps);
-			    	_convolve2(&tx_float_vecs[0].front(), 
+			    	_convolve(&tx_float_vecs[0].front(), 
                         tx_float_vecs[0].size(), 
                         &filter_taps.front(),
                         filter_taps.size());
