@@ -215,7 +215,7 @@ void rx_process_gpu(
     float elapsed_t, elapsed_proc_t;
     int dmrate = nrf_samples / nbb_samples;
     int dmrate0 = dmrate;
-    nants *= 10;
+    //nants *= 10;
 
 
     //if (dmrate*nfreqs > MAX_BLOCK_SIZE){

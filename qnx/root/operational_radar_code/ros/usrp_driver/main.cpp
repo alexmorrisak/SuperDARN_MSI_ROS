@@ -66,12 +66,12 @@
 #define TXRATE 10e6
 #define RXRATE 10e6
 #define MIMO 1
-#define NUNITS 2
+#define NUNITS 1
 
 
 dictionary *Site_INI;
 int sock=0,msgsock=0;
-int verbose=1;
+int verbose=0;
 int configured=1;
 int		writingFIFO=0, dma_count=0, under_flag=0,empty_flag=0,IRQ, intid;
 int		max_seq_count=0, xfercount=0, totransfer=0;
@@ -197,9 +197,9 @@ int main(){
 
 	std::vector<float> client_freqs;
 	client_freqs.push_back(0e6);
-	client_freqs.push_back(1e6);
-	client_freqs.push_back(2e6);
-	client_freqs.push_back(3.e6);
+	//client_freqs.push_back(1e6);
+	//client_freqs.push_back(2e6);
+	//client_freqs.push_back(3.e6);
 	int tx_osr;
 	int rx_osr;
 	std::vector<float> tx_freqs;
@@ -604,7 +604,7 @@ int main(){
                             rx_trigger=0;
 
 			                for(int i=0;i<max_seq_count;i++){
-                                    if ((master_buf[i] & 0x02)==0x02) {
+                                    if ((master_buf[i] & 0x00010000)==0x00010000) {
                                       /* JDS: use tx as AM gate for mimic recv sample for external freq gen */
                                       //if(tx_offset > 0) {
                                       //  temp=tx_offset/STATE_TIME;
@@ -846,8 +846,15 @@ int main(){
 			        tstart = usrp->get_time_now();
 			        uhd::time_spec_t start_time = usrp->get_time_now() + 0.01;
 	
+                    std::vector<double> trtimes(bad_transmit_times.length,0);
+                    for (size_t i=0; i<trtimes.size(); i++){
+                        trtimes[i] = 1e-6*bad_transmit_times.start_usec[i];
+                        //std::cout << trtimes[i] << std::endl;
+                    }
                     //rx_process_threads.join_all();
 		            receive_threads.create_thread(boost::bind(recv_and_hold,
+                        &trtimes.front(),
+                        bad_transmit_times.length,
 			         	usrp,
 			         	rx_stream,
 			         	rx_vec_ptrs,
@@ -984,8 +991,8 @@ int main(){
 			    		( (int32_t) (bb_vecs[(iseq+1)%2][0][0][i].imag()) & 0x0000ffff);
 			    	// Use the same data for front and back array for now
 			      	shared_back_addresses[r][c][0][i] = 
-			    		( ((int32_t) (bb_vecs[(iseq+1)%2][1][0][i].real()) << 16) & 0xffff0000 ) | 
-			    		( (int32_t) (bb_vecs[(iseq+1)%2][1][0][i].imag()) & 0x0000ffff);
+			    		( ((int32_t) (bb_vecs[(iseq+1)%2][0][0][i].real()) << 16) & 0xffff0000 ) | 
+			    		( (int32_t) (bb_vecs[(iseq+1)%2][0][0][i].imag()) & 0x0000ffff);
 
                     //Rx:
 			    	if(verbose>100){

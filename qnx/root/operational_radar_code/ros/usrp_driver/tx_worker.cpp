@@ -29,6 +29,9 @@ void transmit_worker(
     md.end_of_burst   = false;
     md.has_time_spec  = true;
     md.time_spec = start_time;
+    for (int i=0; i<pulse_seq_ptrs.size(); i++)
+        pulse_seq_ptrs[i] += 2000;
+    sequence_length -= 2000;
     std::vector<std::complex<short> *> temp_ptrs = pulse_seq_ptrs;
 
     size_t nacc_samps = 0;

@@ -2,6 +2,8 @@ void _convolve(
     std::vector<std::complex<float> > *signal,
     const std::vector<std::complex<float> > *taps);
 void recv_and_hold(
+    double* trtimes,
+    int npulses,
     uhd::usrp::multi_usrp::sptr usrp,
     uhd::rx_streamer::sptr rx_stream,
     std::vector<std::complex<short> *> client_buff_ptrs,
