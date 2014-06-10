@@ -39,6 +39,10 @@
 
 int AZE_exit_flag=0;
 char channame[5]="\0";
+char server[256]="127.0.0.1";
+int  port=0;
+int  sock=0;
+
 
 FILE *seqlog=NULL;
 char seqlog_name[256];
@@ -550,7 +554,11 @@ int SiteAzeIntegrate(int (*lags)[2]) {
   int32 temp32;
   /* phase code declarations */
   int n,nsamp, *code,   Iout, Qout;
+<<<<<<< HEAD
+  uint32 uQ32,uI32;
+=======
   uint32 uI32,uQ32;
+>>>>>>> 3abe7afc7571321c93d5a80cd3db6cf23bc410e1
   if (debug) {
     fprintf(stderr,"AZE SiteIntegrate: start\n");
   }

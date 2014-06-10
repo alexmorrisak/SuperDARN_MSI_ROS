@@ -11,7 +11,11 @@ temp.out*
 *.so
 *.so.0
 *.a
+<<<<<<< HEAD
+*.la 
+=======
 *.la
+>>>>>>> 3abe7afc7571321c93d5a80cd3db6cf23bc410e1
 *.Po
 *.Plo
 .libs/
@@ -22,7 +26,10 @@ linux/home/radar/ros.3.6/include/
 linux/home/radar/ros.3.6/bin/
 linux/home/radar/ros.3.6/usr/bin/
 linux/home/radar/ros.3.6/build/bin
+<<<<<<< HEAD
+=======
 qnx/root/operational_radar_code/ros/fftw-3.2.2/libtool
+>>>>>>> 3abe7afc7571321c93d5a80cd3db6cf23bc410e1
 qnx/root/operational_radar_code/ros/dio_tcp_driver/dio_tcp_driver
 qnx/root/operational_radar_code/ros/fftw-3.2.2/tools/fftw-wisdom
 qnx/root/operational_radar_code/ros/gc214_tcp_driver/receiver_tcp_driver
@@ -32,6 +39,9 @@ qnx/root/operational_radar_code/ros/gps_tcp_driver/gps_tcp_driver
 +qnx/root/operational_radar_code/ros/ddsserver_tcp_driver/dds_tcp_driver
 qnx/root/operational_radar_code/ros/fftw-3.2.2/tests/bench
 qnx/root/operational_radar_code/ros/server/arby_server
+<<<<<<< HEAD
+=======
 qnx/root/operational_radar_code/ros/gc314FS_driver.1.31/_gc314FS
 qnx/root/operational_radar_code/ros/ics660_drv/_ics660-drv
+>>>>>>> 3abe7afc7571321c93d5a80cd3db6cf23bc410e1
 qnx/root/operational_radar_code/ros/timing_tcp_driver/timing_tcp_driver

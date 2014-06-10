@@ -168,7 +168,7 @@ int _open_PLX9050(unsigned int *BASEA, unsigned int *BASEB, int *pci_handle, uns
         //turn on interrupts
         BASE0[0x4c]=0x48;
         printf("            INTSCR=	%p\n",BASE0[0x4c]);
-        // mmap for BASE0: The GPS configuration space
+        // mmap for BASE1: The GPS configuration space
         page_num=gps_device->maps[1].addr/page_size;
         page_addr=page_num*page_size;
         page_offset=gps_device->maps[1].addr-page_addr;

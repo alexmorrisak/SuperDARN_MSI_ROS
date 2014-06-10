@@ -6,6 +6,9 @@
 
 #ifndef _CONTROL_PROGRAM_H
 #define _CONTROL_PROGRAM_H
+#ifdef __cplusplus
+	extern "C" {
+#endif
 
 #define ROS_IP "127.0.0.1"
 #define ROS_PORT 45000
@@ -156,5 +159,9 @@ struct CLRFreqPRM {
 #define UNSET_PROCESSING_FLAG '@'
 
 #define GET_DATA 'd'
+
+#ifdef __cplusplus
+	}
+#endif
 
 #endif

@@ -13,9 +13,9 @@ dds:
 	cd ics660_drv && ${MAKE} clean  && ${MAKE}
 	cd ddsserver_tcp_driver && ${MAKE} clean  && ${MAKE} all
 receiver:
-	cd gc314FS_driver.1.31 && ${MAKE} clean  && ${MAKE}
-	cd gc316_tcp_driver && ${MAKE} clean  && ${MAKE} all
-	cd gc214_tcp_driver && ${MAKE} clean  && ${MAKE} all
+	#cd gc314FS_driver.1.31 && ${MAKE} clean  && ${MAKE}
+	#cd gc316_tcp_driver && ${MAKE} clean  && ${MAKE} all
+	#cd gc214_tcp_driver && ${MAKE} clean  && ${MAKE} all
 timing:
 	cd timing_tcp_driver && ${MAKE} clean  && ${MAKE} all
 diodriver:

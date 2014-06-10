@@ -12,15 +12,20 @@
 
 #include "global_server_variables.h"
 
+#ifdef __cplusplus
+	extern "C" {
+#endif
+
 //#define MSG_NOSIGNAL 0 
 int opentcpsock(char *hostip, int port){
 	//DECLARE VARIABLES FOR IP CONNECTIONS
 	char	datacode,ipaddr[16];
 	int		sock,data,temp;
 	struct	sockaddr_in	server;
-	struct	hostent		*hp, *gethostbyname();
+	struct	hostent		*hp;//, *gethostbyname();
 	float	ftime;
-	int		buffer2,channel2,sample2i,option,optionlen;
+	int		buffer2,channel2,sample2i,option;//,optionlen;
+	socklen_t	optionlen;
 	int		do_scan_rx[4];
 	struct 	protent*	protocol_info;
 
@@ -74,7 +79,8 @@ int server_unixsocket(char *hostip,int port){
 	char	path[256];
 	int	sock,len,temp;
 	struct	sockaddr_un	saun;
-	int	option,optionlen;
+	int	option;//,optionlen;
+	socklen_t	optionlen;
 
 
     if ((sock = socket(AF_UNIX, SOCK_STREAM, 0)) < 0) {
@@ -83,7 +89,7 @@ int server_unixsocket(char *hostip,int port){
     }
 
     saun.sun_family = AF_UNIX;
-    sprintf(path,"%s:%d",hostip,port);
+    sprintf(path,"%s",hostip);
 
     strcpy(saun.sun_path, path);
     fprintf(stdout,"Unix Path: %s\n",path);
@@ -112,16 +118,18 @@ int openunixsock(char *hostip, int port){
 	char	path[256];
 	int	sock,len,temp;
 	struct	sockaddr_un	saun;
-	int	option,optionlen;
+	int	option;//,optionlen;
+	socklen_t	optionlen;
 
         if ((sock = socket(AF_UNIX, SOCK_STREAM, 0)) < 0) {
 	  perror("opening unix domain stream socket");
           exit(1);
         }
 	saun.sun_family=AF_UNIX;
-	sprintf(path,"%s:%d",hostip,port);
+	sprintf(path,"%s",hostip);
+        fprintf(stderr,"Sock Path: %s\n",path);
         strcpy(saun.sun_path, path);
-        unlink(path);
+        //unlink(path);
         len = sizeof(saun.sun_family) + strlen(saun.sun_path);
         if (connect(sock,(struct sockaddr *) &saun,(socklen_t) len) < 0) {
           perror("client: connect");
@@ -178,3 +186,6 @@ int recv_data(int fd,void *buf,size_t buflen)
 }
 
 
+#ifdef __cplusplus
+	}
+#endif
