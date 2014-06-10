@@ -121,7 +121,7 @@ FILE *clr_fd;
 int main(){
     // DECLARE AND INITIALIZE ANY NECESSARY VARIABLES
     int     maxclients=MAX_RADARS*MAX_CHANNELS+1;
-    struct  ControlPRM  clients[maxclients],client ;
+    struct  ControlPRM  clients[maxclients], client;
     struct  TSGbuf *pulseseqs[MAX_RADARS][MAX_CHANNELS][MAX_SEQS];
     struct  CLRFreqPRM clrfreq_parameters;
     //struct  TSGprm *tsgparams[MAX_RADARS][MAX_CHANNELS][MAX_SEQS];
@@ -177,7 +177,7 @@ int main(){
 	typedef std::complex<int16_t> sc16;
 	typedef std::complex<float> fc32;
 	std::vector<fc32> filter_taps;//filter_table_len, std::complex<float>(1./filter_table_len,0));
-	std::vector<std::vector<fc32> > tx_float_vecs;
+    std::vector<std::vector<std::vector<fc32> > > tx_float_vecs;
 	std::vector<std::vector<sc16> > tx_short_vecs;
 	std::vector<sc16 *> tx_vec_ptrs;
 	std::vector<std::vector<sc16> > tx_rf_vecs;
@@ -203,7 +203,6 @@ int main(){
 	int rx_osr;
 	std::vector<float> tx_freqs;
 	tx_freqs.push_back(12.e6);
-	tx_freqs.push_back(10.e6);
 	//tx_freqs.push_back(12.e6);
 
     std::vector<float> time_delays;//,pd;
@@ -489,11 +488,13 @@ int main(){
                 
                 if ((ready_index[r][c]>=0) && (ready_index[r][c] <maxclients) ) {
                     clients[ready_index[r][c]]=client;
-                } else {
+                } 
+                else {
                     clients[numclients]=client;
                     ready_index[r][c]=numclients;
                     numclients=(numclients+1);
                 }
+
 			    if (verbose > 1) std::cout << "Radar: " << client.radar << " Channel: " << client.channel <<
 					" Beamnum: " << client.tbeam << " Status: " << msg.status << "\n";
 
@@ -576,23 +577,41 @@ int main(){
                         max_seq_count=0;
 			    	    printf("numclients: %i\n",numclients);
 
+			    	    //tx_float_vecs.clear();
+                        tx_float_vecs.resize(numclients);
+
                         for (int i=0;i<numclients;i++) {
+                            tx_float_vecs[i].resize(ntx_antennas);
                             r=clients[i].radar-1;
                             c=clients[i].channel-1;
                             if (seq_count[r][c]>=max_seq_count) max_seq_count=seq_count[r][c];
 		            	    if (verbose > 1) std::cout << "Max Seq length: " << max_seq_count << "\n";
-                            	  counter=0;
+                            counter=0;
 			    	        if (verbose > 1) std::cout << "Merging Client Seq " <<  i << 
 			    	    		"into Master Seq " << r << " " << c << 
 			    	    		"length: " << seq_count[r][c] << "\n";
+                            tx_float_vecs[i][0].resize(seq_count[r][c],0);
+                            std::cout << "tx float vecs size: " << tx_float_vecs[i][0].size() << std::endl;
                             if (i==0) {
 			    	            for (j=0;j<seq_count[r][c];j++) {
+			    	                if ((seq_buf[r][c][j] & 0x00020000) == 0x00020000){
+                                        tx_float_vecs[i][0][j] = std::complex<float>(1,0);
+                                    }
+			    	                if ((seq_buf[r][c][j] & 0x00040000) == 0x00040000){
+			    	                  tx_float_vecs[i][0][j] = (std::complex<float>(-1,0));
+				                    }
                            	        master_buf[j]=seq_buf[r][c][j];
 			    	            }
                                 counter++;
                             }
                             else {
 			    	            for (j=0;j<seq_count[r][c];j++) {
+			    	                if ((seq_buf[r][c][j] & 0x00020000) == 0x00020000){
+                                        tx_float_vecs[i][0][j] = std::complex<float>(1,0);
+                                    }
+			    	                if ((seq_buf[r][c][j] & 0x00040000) == 0x00040000){
+			    	                  tx_float_vecs[i][0][j] = (std::complex<float>(-1,0));
+				                    }
 			    	                master_buf[j]|=seq_buf[r][c][j];
 			    	            }
 			    	            counter++;
@@ -691,7 +710,6 @@ int main(){
 								std::endl << std::endl;
 			    	}
 
-			    	tx_float_vecs.clear();
 			    	tx_rf_vecs.clear();
                     
 				    //std::cout << (float) (usrp->get_tx_rate() * (STATE_TIME*1.e-6)) << std::endl;
@@ -702,50 +720,54 @@ int main(){
 				        std::cout << "creating tx vecs.\n osr: " << tx_osr << "\n";
                     }
 				    for(int i=0; i<ntx_antennas; i++){
-				    	tx_float_vecs.push_back(std::vector<fc32>(max_seq_count,0));
+				    	//tx_float_vecs.push_back(std::vector<fc32>(max_seq_count,0));
 				    	tx_rf_vecs.push_back(std::vector<sc16>(tx_osr*max_seq_count,0));
 				    }
 
-				    tx_short_vecs.clear();
-				    std::cout << "creating tx short vecs\n";
-				    for(int i=0; i<ntx_antennas; i++)
-			        		tx_short_vecs.push_back(std::vector<sc16 >(tx_osr*max_seq_count,0));
+				    //tx_short_vecs.clear();
+				    //std::cout << "creating tx short vecs\n";
+				    //for(int i=0; i<ntx_antennas; i++)
+			        //		tx_short_vecs.push_back(std::vector<sc16 >(tx_osr*max_seq_count,0));
 
 			        // Do a second-stage decode.. Put the tr and sync logic bits into the LSB's of
 			        // of the real and imaginary components
 			        // [TODO] this logic could probably be in the first decodestate() function
-				    for (unsigned int i=0;i<usrp->get_tx_num_channels();i++){
-			        		for (j=0;j<max_seq_count;j++){
-				    	        for(int k=0;k<tx_osr;k++){
-			        		        	tx_short_vecs[i][(j*tx_osr)+k] = sc16((0x0001 & (master_buf[j] >> 16)),
-				    		    	        (0x0001 & master_buf[j]));
-				    	        }
-			        		}
-				    }
+				    //for (unsigned int i=0;i<usrp->get_tx_num_channels();i++){
+			        //		for (j=0;j<max_seq_count;j++){
+				    //	        for(int k=0;k<tx_osr;k++){
+			        //		        	tx_short_vecs[i][(j*tx_osr)+k] = sc16((0x0001 & (master_buf[j] >> 16)),
+				    //		    	        (0x0001 & master_buf[j]));
+				    //	        }
+			        //		}
+				    //}
 
 			    	// Build the complex-float-valued vector of baseband rf values
 			    	// For imaging configuration, the output should
 			    	// be a two-dimensional vector of values,i.e tx_float_vecs[16][master_buf_len]
 				    //int txon_flag = 0;
-			    	for (j=0;j<max_seq_count;j++){
-			    	      if ((master_buf[j] & 0x00020000) == 0x00020000){
-					//if (txon_flag == 0){
-			    	    	tx_float_vecs[0][j] = (std::complex<float>(1,0));
-			    	      }
-			    	      if ((master_buf[j] & 0x00040000) == 0x00040000){
-				    //if (((master_buf[j] & 0x00020000) == 0x00000000) && (txon_flag==1)){
-				    //    txon_flag=0;
-			    	    	tx_float_vecs[0][j] = (std::complex<float>(-1,0));
-				          }
-			    	}
+			    	//for (j=0;j<max_seq_count;j++){
+			    	//      if ((master_buf[j] & 0x00020000) == 0x00020000){
+					////if (txon_flag == 0){
+			    	//    	tx_float_vecs[0][j] = (std::complex<float>(1,0));
+			    	//      }
+			    	//      if ((master_buf[j] & 0x00040000) == 0x00040000){
+				    ////if (((master_buf[j] & 0x00020000) == 0x00000000) && (txon_flag==1)){
+				    ////    txon_flag=0;
+			    	//    	tx_float_vecs[0][j] = (std::complex<float>(-1,0));
+				    //      }
+			    	//}
 
                     std::cout << client.trise << std::endl;
                     filter_taps.resize(50e3/client.trise,std::complex<float>(client.trise/50.e3/tx_freqs.size(),0));
                     std::cout << filter_taps.size() << std::endl;
-			    	_convolve(&tx_float_vecs[0].front(), 
-                        tx_float_vecs[0].size(), 
+			    	_convolve(&tx_float_vecs[0][0].front(), 
+                        tx_float_vecs[0][0].size(), 
                         &filter_taps.front(),
                         filter_taps.size());
+
+                    for (int i=0; i<10000; i++){
+                        if (tx_float_vecs[0][0][j] != std::complex<float>(0,0)) std::cout << tx_float_vecs[0][0][i] << std::endl;
+                    }
 
                     tx_rf_vec_ptrs.resize(ntx_antennas);
 				    for(int i=0;i<ntx_antennas;i++)
@@ -755,9 +777,9 @@ int main(){
                     clock_gettime(CLOCK_MONOTONIC, &tx0);
                     rx_process_threads.join_all();
 				    tx_process_gpu(
-				    	(float*) &tx_float_vecs[0].front(),
+				    	(float*) &tx_float_vecs[0][0].front(),
 				    	(int16_t**) &tx_rf_vec_ptrs.front(),
-				    	tx_float_vecs[0].size(),
+				    	tx_float_vecs[0][0].size(),
 				    	tx_rf_vecs[0].size(),
 				    	usrp->get_tx_freq(),
                         txrate,
@@ -775,16 +797,16 @@ int main(){
 				    //	tx_freqs,
 				    //	td);
 
-			        // Merge the logic bits with the baseband rf complex values
-			        // The output needs to be sc16 type to preserve the tr and sync logic bits
-			        //for (unsigned int i=0;i<usrp->get_tx_num_channels(); i++){
-			        for (unsigned int i=0;i<1; i++){ //Only do channel 0
-			        	for (j=0;j<tx_osr*max_seq_count;j++){
-			        	      tx_rf_vecs[i][j] = sc16(
-				    	        tx_short_vecs[i][j].real() | (int16_t) tx_rf_vecs[i][j].real(),
-			        	      	tx_short_vecs[i][j].imag() | (int16_t) tx_rf_vecs[i][j].imag());
-			        	}
-			        }
+                    // Convert the floating point values to integer values
+			        //for (unsigned int i=0;i<1; i++){ //Only do channel 0
+			        //	for (j=0;j<tx_osr*max_seq_count;j++){
+			        //	      tx_rf_vecs[i][j] = sc16(
+				    //	        (int16_t) tx_rf_vecs[i][j].real(),
+			        //	      	(int16_t) tx_rf_vecs[i][j].imag());
+				    //	        //tx_short_vecs[i][j].real() | (int16_t) tx_rf_vecs[i][j].real(),
+			        //	      	//tx_short_vecs[i][j].imag() | (int16_t) tx_rf_vecs[i][j].imag());
+			        //	}
+			        //}
 
                     clock_gettime(CLOCK_MONOTONIC, &tx2);
                     elapsed_t1 = (1e9*tx1.tv_sec+tx1.tv_nsec) - (1e9*tx0.tv_sec+tx0.tv_nsec);
