@@ -19,7 +19,7 @@ extern int verbose;
  **********************************************************************/
 void transmit_worker(
     uhd::tx_streamer::sptr tx_stream,
-    std::vector<std::complex<short> *> pulse_seq_ptrs,
+    std::vector<std::complex<short> *>& pulse_seq_ptrs,
     int sequence_length,
     uhd::time_spec_t start_time
 ){
@@ -32,13 +32,23 @@ void transmit_worker(
     //for (int i=0; i<pulse_seq_ptrs.size(); i++)
     //    pulse_seq_ptrs[i] += 2000;
     //sequence_length -= 2000;
-    std::vector<std::complex<short> *> temp_ptrs = pulse_seq_ptrs;
+    std::vector<std::complex<short> *> temp_ptrs(tx_stream->get_num_channels());
+    //temp_ptrs = pulse_seq_ptrs;
+    std::cout << "num tx channels: " << tx_stream->get_num_channels() << std::endl;
+    std::cout << "pointer values: " << std::endl;
+    for (int i=0; i<tx_stream->get_num_channels(); i++){
+        temp_ptrs[i] = pulse_seq_ptrs[i];
+        std::cout << temp_ptrs[i] << std::endl;
+    }
+    //for (int i=0; i<sequence_length; i++){
 
     size_t nacc_samps = 0;
+    //size_t spb = 10*tx_stream->get_max_num_samps();
     size_t spb = tx_stream->get_max_num_samps()/2;
 
     //Now go for it!
     while(nacc_samps < sequence_length - spb){
+        //std::cout << "about to transmit.. " << std::endl;
         size_t ntx_samps = tx_stream->send(temp_ptrs, spb, md);
         if (ntx_samps != spb)
             std::cerr << "Error transmitting samples\n";
