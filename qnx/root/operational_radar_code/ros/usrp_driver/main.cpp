@@ -63,15 +63,186 @@
 #define IMAGING 0 
 #define MAX_SAMPLES 262144 
 
-#define TXRATE 10e6
-#define RXRATE 10e6
+#define TXRATE 5e6
+#define TXFREQ 12e6
+#define RXRATE 2.5e6
+#define RXFREQ 12e6
+
 #define MIMO 1
-#define NUNITS 1
+#define NUNITS 2
+
+#define NRADARS 2
+
+class tx_data{
+    size_t nclients; //number of clients registered to the usrp driver
+    std::vector<std::vector<std::complex<float> > > tx_bb_vecs; //baseband data, tx_bb_vecs[nradars][nbbsamps]
+    float bb_rate, rf_rate; //baseband and rf sample rates
+    std::vector<std::vector<std::complex<int16_t> > > tx_rf_vecs; //rf data, one vector for each antenna
+    std::vector<int16_t*> tx_rf_fronts;
+    std::vector<std::vector<float> > tx_freqs; //Vectors of transmit frequencies, one vector for each radar
+    size_t num_ants, num_radars, num_ants_per_radar;
+    //std::vector<size_t> nclients; //List of number of clients attached to each radar
+
+    public:
+    tx_data(size_t nradars, size_t nants);
+    ~tx_data();
+    void add_client();
+    void add_client(size_t radar);
+    void drop_client();
+    void drop_client(size_t radar);
+    void add_pulse_seq(size_t channel, float freq, std::vector<std::complex<float> >& bb_vec);
+    void add_pulse_seq(size_t radar, size_t channel, float freq, std::vector<std::complex<float> >& bb_vec);
+    size_t get_num_ants(); //Get number of antennas
+    size_t get_num_radars(); //Get number of radars
+    size_t get_num_clients(); //Get total number of clients for all radars
+    size_t get_num_clients(size_t radar); //Get number of clients for that radar
+    size_t get_num_bb_samples(); //Get number of bb samples.  It is and must be the same for all clients!
+    size_t get_num_rf_samples(); //Get number of rf samples.  It is and must be the same for all antenna channels!
+    size_t get_num_ants_per_radar();
+    float* get_bb_vec_ptr(); //Get pointer to bb vector
+    float* get_bb_vec_ptr(size_t radar);
+    void set_rf_vec_size(size_t nrf_samples); //Allocate memory for rf vectors
+    void zero_rf_vec(size_t radar); //Allocate memory for rf vectors
+    void set_rf_vec_ptrs(std::vector<std::complex<int16_t> *>* rf_vec_ptrs);
+    int16_t** get_rf_vec_ptrs(size_t radar);
+    float* get_freqs(size_t radar);
+};
+
+tx_data::tx_data(size_t nradars, size_t nants){
+    num_ants = nants;
+    num_radars = nradars;
+    num_ants_per_radar = nants/nradars;
+    tx_bb_vecs.resize(nradars);
+    tx_rf_vecs.resize(nants);
+    tx_freqs.resize(nradars);
+    //std::cout << "tx_freqs size: " << tx_freqs[0].size() << std::endl;
+    //std::cout << "tx_freqs size: " << tx_freqs[1].size() << std::endl;
+}
+
+tx_data::~tx_data(){} //Don't need to free memory here--trust that memory allocated to vectors is freed when the vectors fall out of scope
+
+void tx_data::add_client(){
+    tx_freqs[0].resize(tx_freqs[0].size()+1);
+}
+
+void tx_data::add_client(size_t radar){
+    tx_freqs[radar].resize(tx_freqs[radar].size()+1);
+}
+
+void tx_data::drop_client(){
+    tx_freqs[0].resize(tx_freqs[0].size()-1);
+}
+
+void tx_data::drop_client(size_t radar){
+    tx_freqs[radar].resize(tx_freqs[radar].size()-1);
+}
+
+void tx_data::add_pulse_seq(size_t channel, float freq, std::vector<std::complex<float> >& bb_vec){
+    if (channel==0){
+        tx_bb_vecs[0] = bb_vec;
+    }
+    tx_freqs[0][channel] = freq;
+}
+
+void tx_data::add_pulse_seq(size_t radar, size_t channel, float freq, std::vector<std::complex<float> >& bb_vec){
+    for (size_t i=0; i<num_radars; i++){
+        if (i != radar && tx_bb_vecs[i].size() != bb_vec.size()){
+           tx_bb_vecs[i].resize(bb_vec.size(), 0);
+        }
+        if (channel==0){
+            tx_bb_vecs[radar] = bb_vec; //Add the new vector of baseband values to the vector of clients for that radar
+        }
+    }
+    tx_freqs[radar][channel] = freq;
+}
+
+size_t tx_data::get_num_ants(){
+    return num_ants;
+}
+
+size_t tx_data::get_num_radars(){
+    return num_radars;
+}
+
+size_t tx_data::get_num_ants_per_radar(){
+    return num_ants_per_radar;
+}
+
+size_t tx_data::get_num_clients(){
+    size_t nchans=0;
+    for (int i=0; i<num_radars; i++)
+        nchans += tx_freqs[i].size();
+    return nchans;
+}
+
+size_t tx_data::get_num_clients(size_t radar){
+    return tx_freqs[radar].size();
+}
+
+size_t tx_data::get_num_bb_samples(){
+    return tx_bb_vecs[0].size();
+}
+
+size_t tx_data::get_num_rf_samples(){
+    return tx_rf_vecs[0].size();
+}
+
+float* tx_data::get_bb_vec_ptr(){
+    return (float*) &tx_bb_vecs[0].front();
+}
+
+float* tx_data::get_bb_vec_ptr(size_t radar){
+    return (float*) &tx_bb_vecs[radar].front();
+}
+
+void tx_data::set_rf_vec_size(size_t nrf_samples){
+    for (size_t i=0; i<tx_rf_vecs.size(); i++){
+        tx_rf_vecs[i].resize(nrf_samples);
+    }
+}
+
+void tx_data::zero_rf_vec(size_t radar){
+    //std::fill(tx_rf_vecs[radar].begin(), tx_rf_vecs[radar].end(), std::complex<int16_t>(0,0));
+    std::cout << "Entering zero antenna channel " << std::endl;
+    std::cout << "num ants: " << num_ants_per_radar << std::endl;
+    std::cout << radar*(num_ants_per_radar) << " " <<  (radar+1)*(num_ants_per_radar) << std::endl;
+    for (size_t i=radar*(num_ants_per_radar); i<(radar+1)*(num_ants_per_radar); i++){
+        //vec_ptrs[i] = (int16_t*) &tx_rf_vecs[i].front();
+        tx_rf_vecs[i].assign(tx_rf_vecs[0].size(), std::complex<int16_t>(0,0));
+        std::cout << "Zeroing antenna channel " << i << std::endl;
+    }
+}
+
+void tx_data::set_rf_vec_ptrs(std::vector<std::complex<int16_t> *>* rf_vec_ptrs){
+    rf_vec_ptrs->resize(num_ants);
+    for (size_t i=0; i<num_ants; i++){
+        (*rf_vec_ptrs)[i] = &tx_rf_vecs[i].front();
+    }
+}
+
+int16_t** tx_data::get_rf_vec_ptrs(size_t radar){
+    tx_rf_fronts.resize(num_ants_per_radar);
+    //std::cout << "getting pointers to antenna channels " << radar*(num_ants_per_radar) << 
+    //    " to " <<  (radar+1)*(num_ants_per_radar)-1 << std::endl;
+    //for (size_t i=radar*(num_ants_per_radar); i<(radar+1)*(num_ants_per_radar); i++){
+    for (size_t i=0; i<num_ants_per_radar; i++){
+        tx_rf_fronts[i] = (int16_t*) &tx_rf_vecs[radar*num_ants_per_radar+i].front();
+    }
+    return (int16_t**) &tx_rf_fronts.front();
+}
+
+float* tx_data::get_freqs(size_t radar){
+    return (float*) &tx_freqs[radar].front();
+}
+
+
+    
+
 
 
 dictionary *Site_INI;
 int sock=0,msgsock=0;
-int verbose=0;
+int verbose=-10;
 int configured=1;
 int		writingFIFO=0, dma_count=0, under_flag=0,empty_flag=0,IRQ, intid;
 int		max_seq_count=0, xfercount=0, totransfer=0;
@@ -161,13 +332,13 @@ int main(){
     unsigned long elapsed;
 
 	// function-specific message variables
-    int     numclients=0;
+    int     numclients=0,nactiveclients=0;
     struct  DriverMsg msg;
 
 	// timing related variables
 	struct	timespec cpu_start, cpu_stop;
 	struct	timespec tx0,tx1,tx2;
-    float elapsed_t1,elapsed_t2;
+    float elapsed_t1;
 
 	// usrp-timing related variables
 	uhd::time_spec_t get_data_t0;
@@ -177,32 +348,35 @@ int main(){
 	typedef std::complex<int16_t> sc16;
 	typedef std::complex<float> fc32;
 	std::vector<fc32> filter_taps;//filter_table_len, std::complex<float>(1./filter_table_len,0));
-    std::vector<std::vector<std::vector<fc32> > > tx_float_vecs;
-	std::vector<std::vector<sc16> > tx_short_vecs;
+    std::vector<std::vector<fc32> > tx_bb_vecs;
 	std::vector<sc16 *> tx_vec_ptrs;
-	std::vector<std::vector<sc16> > tx_rf_vecs;
+    std::vector<std::vector<sc16> > tx_rf_vecs;
 	std::vector<sc16 *> tx_rf_vec_ptrs;
+
 	std::vector<std::vector<std::vector<sc16> > > rx_short_vecs;
-	for(int i=0;i<2;i++)
-		rx_short_vecs.push_back(std::vector<std::vector<sc16> >());
+    rx_short_vecs.resize(2); //Two vector blocks for double-buffer
 	std::vector<sc16 *> rx_vec_ptrs;
+
+    tx_data tx(2,2);
 
 	// Swing buffered.
 	unsigned int iseq=0;
-    std::vector<std::vector<std::vector<fc32> > > bb_vecs[2]; // Two 3-D vectors [nfreqs, nants, nsamples]
+    std::vector<std::vector<std::vector<std::vector<fc32> > > > bb_vecs[2]; // Two 3-D vectors [nfreqs, nants, nsamples]
+    for (int i=0; i<2; i++)
+        bb_vecs[i].resize(maxclients);
     float*** bb_vecs_master_ptr;
     std::vector<float** > bb_vecs_ant_ptrs;
     std::vector<std::vector<float* > > bb_vecs_ptrs;
 
 	std::vector<float> client_freqs;
-	client_freqs.push_back(0e6);
+	//client_freqs.push_back(0e6);
 	//client_freqs.push_back(1e6);
 	//client_freqs.push_back(2e6);
 	//client_freqs.push_back(3.e6);
 	int tx_osr;
 	int rx_osr;
 	std::vector<float> tx_freqs;
-	tx_freqs.push_back(12.e6);
+	//tx_freqs.push_back(12.e6);
 	//tx_freqs.push_back(12.e6);
 
     std::vector<float> time_delays;//,pd;
@@ -227,7 +401,9 @@ int main(){
 	usrp->set_rx_subdev_spec(rxsubdev);
 
     int nrx_antennas = usrp->get_rx_num_channels();
+    std::cout << "nrx_antennas: " << nrx_antennas << std::endl;
     int ntx_antennas = usrp->get_tx_num_channels();
+    //ntx_antennas = 1;
 
 	//Lock mboard clocks
 	std::cout << usrp->get_num_mboards() << std::endl;
@@ -270,12 +446,14 @@ int main(){
 	std::cout << boost::format("Setting TX Rate: %f kHz...") % (1e3/STATE_TIME) << std::endl;
 	float txrate=TXRATE;
 	usrp->set_tx_rate(txrate);
+    usrp->set_tx_freq(TXFREQ);
 	std::cout << boost::format("Actual TX Rate: %f kHz...") % (usrp->get_tx_rate()/1e3) << std::endl << std::endl;
 	txrate = usrp->get_tx_rate();
 	//Set Rx sample rate
 	float rxrate=RXRATE;
 	std::cout << boost::format("Setting RX Rate: %f kHz...") % (rxrate) << std::endl;
 	usrp->set_rx_rate(rxrate);
+    usrp->set_rx_freq(RXFREQ);
 	std::cout << boost::format("Actual RX Rate: %f kHz...") % (usrp->get_rx_rate()/1e3) << std::endl << std::endl;
 	rxrate = usrp->get_rx_rate();
 
@@ -344,11 +522,13 @@ int main(){
 	for (int r=0;r<MAX_RADARS;r++){
 	    for (int c=0;c<MAX_CHANNELS;c++){
 	        if (verbose > 1) std::cout << r << " " << c << "\n";
-	        for (i=0;i<MAX_SEQS;i++) pulseseqs[r][c][i]=NULL;
+	        for (i=0;i<MAX_SEQS;i++) {
+                pulseseqs[r][c][i]=NULL;
                 ready_index[r][c]=-1; 
                 old_pulse_index[r][c]=-1; 
                 seq_buf[r][c]=(unsigned int*) malloc(4*MAX_TIME_SEQ_LEN);
-            } 
+            }
+        } 
     }
     bad_transmit_times.length=0;
     bad_transmit_times.start_usec=(uint32_t*) malloc(sizeof(unsigned int)*MAX_PULSES);
@@ -418,18 +598,19 @@ int main(){
             break;
            } 
            if ( FD_ISSET(msgsock,&rfds) && rval>0 ) {
-            if (verbose>1) std::cout << "Data is ready to be read\n";
+            if (verbose>1) std::cout << "Socket data is ready to be read\n";
 		    if (verbose > 1) std::cout << msgsock << " Recv Msg\n";
             rval=recv_data(msgsock,&msg,sizeof(struct DriverMsg));
             datacode=msg.type;
 		    if (verbose > 1) std::cout << "\nmsg code is " <<  datacode << "\n";
 		   switch( datacode ){
 		      case TIMING_REGISTER_SEQ:
-		        if (verbose > 0) std::cout << "\nRegister new timing sequence for timing card\n";
+		        if (verbose > 0) std::cout << "\nRegister new sequence for usrp driver\n";
 		        msg.status=0;
                 rval=recv_data(msgsock,&client,sizeof(struct ControlPRM));
                 r=client.radar-1; 
                 c=client.channel-1; 
+                tx.add_client(r);
 			    if (verbose > 1) std::cout << "Radar: " << client.radar <<
 				    " Channel: " << client.channel << " Beamnum: " << client.tbeam <<
 				    " Status: " << msg.status << "\n";
@@ -438,12 +619,15 @@ int main(){
 		        if (verbose > 1) std::cout << "Attempting Free on pulseseq: " << pulseseqs[r][c][index];
                 if (pulseseqs[r][c][index]!=NULL) {
                     if (pulseseqs[r][c][index]->rep!=NULL){
-				        free(pulseseqs[r][c][index]->rep);pulseseqs[r][c][index]->rep=NULL;
+				        free(pulseseqs[r][c][index]->rep);
+                        pulseseqs[r][c][index]->rep=NULL;
                     }
                     if (pulseseqs[r][c][index]->code!=NULL){
-                        free(pulseseqs[r][c][index]->code);pulseseqs[r][c][index]->code=NULL;
+                        free(pulseseqs[r][c][index]->code);
+                        pulseseqs[r][c][index]->code=NULL;
                     }
-                    free(pulseseqs[r][c][index]);pulseseqs[r][c][index]=NULL;
+                    free(pulseseqs[r][c][index]);
+                    pulseseqs[r][c][index]=NULL;
                 }
 		        if (verbose > 1) std::cout << "Done Free - Attempting Malloc\n";	
                 pulseseqs[r][c][index]=(TSGbuf*) malloc(sizeof(struct TSGbuf));
@@ -472,24 +656,19 @@ int main(){
                 break;
 
 		      case TIMING_CtrlProg_READY:
-		        if (verbose > 1) std::cout << "\nAsking to set up timing info for client that is ready " << numclients << "\n";
-                        msg.status=0;
+                //numclients = 0;
+		        if (verbose > 1) printf("\nAsking to set up timing info for client that is ready %i\n",numclients);
+                msg.status=0;
 		        rval=recv_data(msgsock,&client,sizeof(struct ControlPRM));
-                        r=client.radar-1; 
-                        c=client.channel-1; 
+                r=client.radar-1; 
+                c=client.channel-1; 
 
-                /*Calculate taps for Gaussian filter*/
-			    //alpha = 32*(9.86/(2e-8*client.trise)) / (0.8328*usrp->get_rx_rate());
-			    //std::cout << "alpha: " << alpha << std::endl;
-			    //for (i=0; i<filter_table_len; i++){
-			    //	filter_table[i] = pow(alpha/3.14,0.5)*pow(M_E, 
-			    //		-1*(alpha)*pow((((float)i-(filter_table_len-1)/2)/filter_table_len),2))/filter_table_len;
-			    //}
                 
                 if ((ready_index[r][c]>=0) && (ready_index[r][c] <maxclients) ) {
                     clients[ready_index[r][c]]=client;
                 } 
                 else {
+                    //std::cout << "Shoot! There should only be one client!!\n";
                     clients[numclients]=client;
                     ready_index[r][c]=numclients;
                     numclients=(numclients+1);
@@ -499,6 +678,15 @@ int main(){
 					" Beamnum: " << client.tbeam << " Status: " << msg.status << "\n";
 
 			    // Calculate time delay for beamforming
+                //tx_freqs.clear();
+                tx_freqs.push_back(1e3*client.tfreq);
+                //tx_freqs[0] = (1000*client.tfreq);
+                for (size_t i=0; i<tx_freqs.size(); i++)
+                    std::cout << "tx_freqs: " << tx_freqs[i] << std::endl;
+                client_freqs.resize(1);
+                //client_freqs.resize(1);
+                client_freqs[0]= (1000*client.tfreq-RXFREQ);
+                std::cout << "rx_freqs: " << client_freqs[0] << std::endl;
                 time_delays.resize(tx_freqs.size());
                 for (int i=0; i< tx_freqs.size(); i++)
 			        time_delays[i] = 10 * (16/2-client.tbeam); // 10 ns per antenna per beam
@@ -544,7 +732,7 @@ int main(){
                     msg.status=0;
 		        if (verbose > 1) std::cout << "Max Seq length: " << max_seq_count <<
 					 " Num clients: " << numclients << "\n";	
-                          new_seq_id=-1;
+                new_seq_id=-1;
 			    new_beam=client.tbeam;
 	            for(int i=0; i<numclients; i++){
                     r=clients[i].radar-1;
@@ -554,274 +742,311 @@ int main(){
                         new_seq_id << " " << clients[i].current_pulseseq_index << "\n";
                 }
                 if (verbose > 1) std::cout << "Timing Driver: " << new_seq_id << " " << old_seq_id << "\n";
-                if ((new_seq_id!=old_seq_id) | (new_beam != old_beam)) { 
+                if ((new_seq_id!=old_seq_id) | (new_beam != old_beam)) // A new integration period is happening so set iseq to zero
 			        iseq=0;
-			        if (new_seq_id!=old_seq_id){
-			    	    //Set the rx center frequency
-			    	    for(int chan = 0; chan < nrx_antennas; chan++) {
-			    	        usrp->set_rx_freq(1000*client.tfreq, chan);
-			    	        if(verbose>1)
-					            std::cout << boost::format("RX freq set to: %f MHz...") % 
-					    	    (usrp->get_rx_freq(chan)/1e6) << 
-					    	    std::endl << std::endl;
-			    	    }
-			    	    //Set the tx center frequency
-			    	    for(int chan = 0; chan < ntx_antennas; chan++) {
-			    	        usrp->set_tx_freq(1000*client.tfreq, chan);
-			    	        if(verbose>1)
-						         std::cout << boost::format("TX freq set to: %f MHz...") % 
-								    (usrp->get_tx_freq(chan)/1e6) << 
-								    std::endl << std::endl;
-			    	    }
-                        if (verbose > -1) std::cout << "Calculating Master sequence " << old_seq_id << " " << new_seq_id << "\n";
-                        max_seq_count=0;
-			    	    printf("numclients: %i\n",numclients);
+			    if (new_seq_id!=old_seq_id){ // Calculate new baseband pulse sequence if needed.  Otherwise just use the last pulse sequence
+			        //Set the rx center frequency
+			        for(int chan = 0; chan < nrx_antennas; chan++) {
+			            usrp->set_rx_freq(RXFREQ,chan);
+			            if(verbose>1)
+				            std::cout << boost::format("RX freq set to: %f MHz...") % 
+				    	    (usrp->get_rx_freq(chan)/1e6) << 
+				    	    std::endl << std::endl;
+			        }
+			        //Set the tx center frequency
+			        for(int chan = 0; chan < ntx_antennas; chan++) {
+			            usrp->set_tx_freq(TXFREQ, chan);
+			            if(verbose>1)
+					         std::cout << boost::format("TX freq set to: %f MHz...") % 
+							    (usrp->get_tx_freq(chan)/1e6) << 
+							    std::endl << std::endl;
+			        }
+                    if (verbose > -1) std::cout << "Calculating Master sequence " << old_seq_id << " " << new_seq_id << "\n";
+                    max_seq_count=0;
+			        printf("numclients: %i\n",numclients);
 
-			    	    //tx_float_vecs.clear();
-                        tx_float_vecs.resize(numclients);
-
-                        for (int i=0;i<numclients;i++) {
-                            tx_float_vecs[i].resize(ntx_antennas);
-                            r=clients[i].radar-1;
-                            c=clients[i].channel-1;
-                            if (seq_count[r][c]>=max_seq_count) max_seq_count=seq_count[r][c];
-		            	    if (verbose > 1) std::cout << "Max Seq length: " << max_seq_count << "\n";
-                            counter=0;
-			    	        if (verbose > 1) std::cout << "Merging Client Seq " <<  i << 
-			    	    		"into Master Seq " << r << " " << c << 
-			    	    		"length: " << seq_count[r][c] << "\n";
-                            tx_float_vecs[i][0].resize(seq_count[r][c],0);
-                            std::cout << "tx float vecs size: " << tx_float_vecs[i][0].size() << std::endl;
-                            if (i==0) {
-			    	            for (j=0;j<seq_count[r][c];j++) {
-			    	                if ((seq_buf[r][c][j] & 0x00020000) == 0x00020000){
-                                        tx_float_vecs[i][0][j] = std::complex<float>(1,0);
-                                    }
-			    	                if ((seq_buf[r][c][j] & 0x00040000) == 0x00040000){
-			    	                  tx_float_vecs[i][0][j] = (std::complex<float>(-1,0));
-				                    }
-                           	        master_buf[j]=seq_buf[r][c][j];
-			    	            }
-                                counter++;
-                            }
-                            else {
-			    	            for (j=0;j<seq_count[r][c];j++) {
-			    	                if ((seq_buf[r][c][j] & 0x00020000) == 0x00020000){
-                                        tx_float_vecs[i][0][j] = std::complex<float>(1,0);
-                                    }
-			    	                if ((seq_buf[r][c][j] & 0x00040000) == 0x00040000){
-			    	                  tx_float_vecs[i][0][j] = (std::complex<float>(-1,0));
-				                    }
-			    	                master_buf[j]|=seq_buf[r][c][j];
-			    	            }
-			    	            counter++;
-			    	        }
-                            	  
-                            if (verbose > 1 ) std::cout << "Total Tr: " << counter << "\n";
-
-                            bad_transmit_times.length=0;
-                            tr_event=0; 
-                            scope_event=0; 
-                            scope_start=-1;
-                            dds_trigger=0;
-                            rx_trigger=0;
-
-			                for(int i=0;i<max_seq_count;i++){
-                                    if ((master_buf[i] & 0x00010000)==0x00010000) {
-                                      /* JDS: use tx as AM gate for mimic recv sample for external freq gen */
-                                      //if(tx_offset > 0) {
-                                      //  temp=tx_offset/STATE_TIME;
-                                      //  master_buf[i+temp]|= 0x04 ; 
-                                      //}
-                                      if (tr_event==0) { 
-                                        if (verbose > 1 ) std::cout << "Master TR sample start: " << i << " " << master_buf[i] << "\n";
-                                        bad_transmit_times.length++;
-                                        if(bad_transmit_times.length > 0){ 
-                                          if(bad_transmit_times.length < MAX_PULSES) { 
-                                            (bad_transmit_times.start_usec)[bad_transmit_times.length-1]=i*STATE_TIME;
-                                            (bad_transmit_times.duration_usec)[bad_transmit_times.length-1]=STATE_TIME;
-                                          } else {
-                                            std::cout << "Too many transmit pulses\n";
-                                          } 
-                                        }
-                                      } else {
-                                          (bad_transmit_times.duration_usec)[bad_transmit_times.length-1]+=STATE_TIME;
-                                      }
-                                      tr_event=1;
-                                    } else {
-                                      if(tr_event==1) 
-                                        if (verbose > 1 ) std::cout << "Master TR sample end: " << i << " " << master_buf[i] << "\n";
-                                      tr_event=0;
-                                    }
-                                    if ((master_buf[i] & 0x01)==0x01) {
-                                      if (scope_event==0) { 
-                                        if (verbose > 1 ) std::cout << "Scope Sync sample start: " << i << " " << master_buf[i] << "\n";
-                                        scope_start=i;
-                                      }
-                                      scope_event=1;
-                                    } else {
-                                      if (scope_event==1) 
-                                        if (verbose > 1 ) std::cout << "Scope Sync sample end: " << i << " " << master_buf[i] << "\n";
-                                      scope_event=0;
-                                    }
-                                  }
-                                  if (scope_start>-1) { 
-                                    //dds_trigger=scope_start+(int)((double)dds_offset/((double)STATE_TIME+0.5));
-                                    //rx_trigger=scope_start+(int)((double)rx_offset/((double)STATE_TIME+0.5));
-                                    //if (verbose > 1 ) {
-                                    //  std::cout << "---> Scope Sync in Master " << max_seq_count << " at " << scope_start << "\n";
-                                    //  std::cout << "---> DDS Trigger in Master " << max_seq_count << " at " << dds_trigger << "\n"; 
-                                    //  std::cout << "---> Rx Trigger in Master " << max_seq_count << " at " << rx_trigger << "\n"; 
-                                    //} 
-                                  } else {
-                                    //if (verbose > 1 ) std::cout << "XXX> Scope Sync not in Master " << max_seq_count << "\n";
-                                    //dds_trigger=0;
-                                    //rx_trigger=0;
-                                  }
-                                  if((dds_trigger>=0) && (dds_trigger<max_seq_count)) {
-                                    //master_buf[dds_trigger]|=0x4000;                            
-                                  }
-                                  if((rx_trigger>=0) && (rx_trigger<max_seq_count)) {
-                                    //master_buf[rx_trigger]|=0x8000;                            
-                                  }
-                              }
-                            
-	                      if (verbose > 1) std::cout << "seq length: " << max_seq_count << " state step: " <<
-			    			STATE_TIME*1e-6 << " time: " << (STATE_TIME*1E-6*max_seq_count) << "\n";
-
-			              if (verbose > 1) std::cout << "Max Seq Count: " << max_seq_count << "\n";
-                          if (verbose > 1) std::cout << "END FIFO Stamps\n";
-			    	}
-			    }
-
-			    if (new_beam != old_beam) {
-			    	for(size_t chan = 0; chan < usrp->get_rx_num_channels(); chan++) {
-			    	        usrp->set_rx_rate(rxrate, chan);
-			    	        if(verbose>1)
-						std::cout << boost::format("RX rate set to: %f MHz...") % 
-								(usrp->get_rx_rate(chan)/1e6) << 
-								std::endl << std::endl;
-			    	}
-			    	for(size_t chan=0; chan<usrp->get_tx_num_channels(); chan++) {
-			    	        usrp->set_tx_rate(txrate, chan);
-			    	        if(verbose>1)
-						std::cout << boost::format("TX rate set to: %f MHz...") % 
-								(usrp->get_rx_rate(chan)/1e6) << 
-								std::endl << std::endl;
-			    	}
-
-			    	tx_rf_vecs.clear();
-                    
-				    //std::cout << (float) (usrp->get_tx_rate() * (STATE_TIME*1.e-6)) << std::endl;
 				    tx_osr = round(txrate * ((float)STATE_TIME*1e-6));
-                    if (verbose > 1){
-				        std::cout << "tx rate: " << usrp->get_tx_rate() << "\n";
-				        std::cout << "bb rate: " << 1/(STATE_TIME*1e-6) << "\n";
-				        std::cout << "creating tx vecs.\n osr: " << tx_osr << "\n";
+
+                    //if (verbose > -1){
+				    //    std::cout << "tx rate: " << usrp->get_tx_rate() << "\n";
+				    //    std::cout << "bb rate: " << 1/(STATE_TIME*1e-6) << "\n";
+				    //    std::cout << "creating tx vecs.\n osr: " << tx_osr << "\n";
+                    //}
+
+					//tx_rf_vecs.push_back(std::vector<sc16>(tx_osr*max_seq_count,0));
+
+                    tx_bb_vecs.resize(NRADARS);
+                    for (int iclient=0; iclient<numclients; iclient++) {
+                        //tx_bb_vecs[i].resize(ntx_antennas);
+                        //tx_rf_vecs[i].resize(ntx_antennas);
+                        //for (int iant=0; iant<ntx_antennas; iant++){
+                        //    tx_rf_vecs[i][iant].resize(tx_osr*seq_count[r][c]);
+                        //    //std::cout << "tx rf vec size: " << tx_rf_vecs[0][i].size() << std::endl;
+                        //}
+                        r=clients[iclient].radar-1;
+                        c=clients[iclient].channel-1;
+                        if (seq_count[r][c]>=max_seq_count) max_seq_count=seq_count[r][c];
+		        	    if (verbose > 1) std::cout << "Max Seq length: " << max_seq_count << "\n";
+                        counter=0;
+			            if (verbose > 1) std::cout << "Merging Client Seq " <<  iclient << 
+			        		"into Master Seq " << r << " " << c << 
+			        		"length: " << seq_count[r][c] << "\n";
+                        tx_bb_vecs[iclient].clear();
+                        tx_bb_vecs[iclient].resize(max_seq_count,0);
+                        std::cout << "tx bb vecs size: " << tx_bb_vecs[iclient].size() << std::endl;
+                        if (iclient==0) {
+                            printf("Initializing master buffer\n");
+			                for (j=0;j<seq_count[r][c];j++) {
+			                    if ((seq_buf[r][c][j] & 0x00020000) == 0x00020000){
+                                    tx_bb_vecs[iclient][j] = std::complex<float>(1,0);
+                                }
+			                    if ((seq_buf[r][c][j] & 0x00040000) == 0x00040000){
+			                      tx_bb_vecs[iclient][j] = (std::complex<float>(-1,0));
+				                }
+                       	        master_buf[j]=seq_buf[r][c][j];
+			                }
+                            counter++;
+                        }
+                        else {
+                            printf("Appending master buffer\n");
+			                for (j=0;j<seq_count[r][c];j++) {
+			                    if ((seq_buf[r][c][j] & 0x00020000) == 0x00020000){
+                                    tx_bb_vecs[iclient][j] = std::complex<float>(1,0);
+                                }
+			                    if ((seq_buf[r][c][j] & 0x00040000) == 0x00040000){
+			                      tx_bb_vecs[iclient][j] = (std::complex<float>(-1,0));
+				                
+			                    master_buf[j]|=seq_buf[r][c][j];
+			                }
+			                counter++;
+			                }
+                        }
                     }
-				    for(int i=0; i<ntx_antennas; i++){
-				    	//tx_float_vecs.push_back(std::vector<fc32>(max_seq_count,0));
-				    	tx_rf_vecs.push_back(std::vector<sc16>(tx_osr*max_seq_count,0));
-				    }
+                        	  
+                    if (verbose > 1 ) std::cout << "Total Tr: " << counter << "\n";
 
-				    //tx_short_vecs.clear();
-				    //std::cout << "creating tx short vecs\n";
-				    //for(int i=0; i<ntx_antennas; i++)
-			        //		tx_short_vecs.push_back(std::vector<sc16 >(tx_osr*max_seq_count,0));
+                    bad_transmit_times.length=0;
+                    tr_event=0; 
+                    scope_event=0; 
+                    scope_start=-1;
+                    dds_trigger=0;
+                    rx_trigger=0;
 
-			        // Do a second-stage decode.. Put the tr and sync logic bits into the LSB's of
-			        // of the real and imaginary components
-			        // [TODO] this logic could probably be in the first decodestate() function
-				    //for (unsigned int i=0;i<usrp->get_tx_num_channels();i++){
-			        //		for (j=0;j<max_seq_count;j++){
-				    //	        for(int k=0;k<tx_osr;k++){
-			        //		        	tx_short_vecs[i][(j*tx_osr)+k] = sc16((0x0001 & (master_buf[j] >> 16)),
-				    //		    	        (0x0001 & master_buf[j]));
-				    //	        }
-			        //		}
-				    //}
+			        for(int i=0;i<max_seq_count;i++){
+                        if ((master_buf[i] & 0x00010000)==0x00010000) {
+                          /* JDS: use tx as AM gate for mimic recv sample for external freq gen */
+                          //if(tx_offset > 0) {
+                          //  temp=tx_offset/STATE_TIME;
+                          //  master_buf[i+temp]|= 0x04 ; 
+                          //}
+                          if (tr_event==0) { 
+                            if (verbose > 1 ) std::cout << "Master TR sample start: " << i << " " << master_buf[i] << "\n";
+                            bad_transmit_times.length++;
+                            if(bad_transmit_times.length > 0){ 
+                              if(bad_transmit_times.length < MAX_PULSES) { 
+                                (bad_transmit_times.start_usec)[bad_transmit_times.length-1]=i*STATE_TIME;
+                                (bad_transmit_times.duration_usec)[bad_transmit_times.length-1]=STATE_TIME;
+                              } else {
+                                std::cout << "Too many transmit pulses\n";
+                              } 
+                            }
+                          } else {
+                              (bad_transmit_times.duration_usec)[bad_transmit_times.length-1]+=STATE_TIME;
+                          }
+                          tr_event=1;
+                        } else {
+                          if(tr_event==1) 
+                            if (verbose > 1 ) std::cout << "Master TR sample end: " << i << " " << master_buf[i] << "\n";
+                          tr_event=0;
+                        }
+                        if ((master_buf[i] & 0x01)==0x01) {
+                          if (scope_event==0) { 
+                            if (verbose > 1 ) std::cout << "Scope Sync sample start: " << i << " " << master_buf[i] << "\n";
+                            scope_start=i;
+                          }
+                          scope_event=1;
+                        } else {
+                          if (scope_event==1) 
+                            if (verbose > 1 ) std::cout << "Scope Sync sample end: " << i << " " << master_buf[i] << "\n";
+                          scope_event=0;
+                        }
+                        }
+                        if (scope_start>-1) { 
+                          //dds_trigger=scope_start+(int)((double)dds_offset/((double)STATE_TIME+0.5));
+                          //rx_trigger=scope_start+(int)((double)rx_offset/((double)STATE_TIME+0.5));
+                          //if (verbose > 1 ) {
+                          //  std::cout << "---> Scope Sync in Master " << max_seq_count << " at " << scope_start << "\n";
+                          //  std::cout << "---> DDS Trigger in Master " << max_seq_count << " at " << dds_trigger << "\n"; 
+                          //  std::cout << "---> Rx Trigger in Master " << max_seq_count << " at " << rx_trigger << "\n"; 
+                          //} 
+                        } else {
+                          //if (verbose > 1 ) std::cout << "XXX> Scope Sync not in Master " << max_seq_count << "\n";
+                          //dds_trigger=0;
+                          //rx_trigger=0;
+                        }
+                        if((dds_trigger>=0) && (dds_trigger<max_seq_count)) {
+                          //master_buf[dds_trigger]|=0x4000;                            
+                        }
+                        if((rx_trigger>=0) && (rx_trigger<max_seq_count)) {
+                          //master_buf[rx_trigger]|=0x8000;                            
+                        }
+                    
+	                  if (verbose > 1) std::cout << "seq length: " << max_seq_count << " state step: " <<
+			    		STATE_TIME*1e-6 << " time: " << (STATE_TIME*1E-6*max_seq_count) << "\n";
 
-			    	// Build the complex-float-valued vector of baseband rf values
-			    	// For imaging configuration, the output should
-			    	// be a two-dimensional vector of values,i.e tx_float_vecs[16][master_buf_len]
-				    //int txon_flag = 0;
-			    	//for (j=0;j<max_seq_count;j++){
-			    	//      if ((master_buf[j] & 0x00020000) == 0x00020000){
-					////if (txon_flag == 0){
-			    	//    	tx_float_vecs[0][j] = (std::complex<float>(1,0));
-			    	//      }
-			    	//      if ((master_buf[j] & 0x00040000) == 0x00040000){
-				    ////if (((master_buf[j] & 0x00020000) == 0x00000000) && (txon_flag==1)){
-				    ////    txon_flag=0;
-			    	//    	tx_float_vecs[0][j] = (std::complex<float>(-1,0));
-				    //      }
-			    	//}
+			          if (verbose > 1) std::cout << "Max Seq Count: " << max_seq_count << "\n";
+                      if (verbose > 1) std::cout << "END FIFO Stamps\n";
 
                     std::cout << client.trise << std::endl;
-                    filter_taps.resize(50e3/client.trise,std::complex<float>(client.trise/50.e3/tx_freqs.size(),0));
-                    std::cout << filter_taps.size() << std::endl;
-			    	_convolve(&tx_float_vecs[0][0].front(), 
-                        tx_float_vecs[0][0].size(), 
-                        &filter_taps.front(),
-                        filter_taps.size());
+                    /*Calculate taps for Gaussian filter*/
+			        //alpha = 32*(9.86/(2e-8*client.trise)) / (0.8328*usrp->get_rx_rate());
+			        //std::cout << "alpha: " << alpha << std::endl;
+			        //for (i=0; i<filter_table_len; i++){
+			        //	filter_table[i] = pow(alpha/3.14,0.5)*pow(M_E, 
+			        //		-1*(alpha)*pow((((float)i-(filter_table_len-1)/2)/filter_table_len),2))/filter_table_len;
+			        //}
+                    for (int iclient=0; iclient<numclients; iclient++){
+                        filter_taps.resize(50e3/client.trise,std::complex<float>(client.trise/50.e3/tx.get_num_clients(iclient),0));
+                        std::cout << filter_taps.size() << std::endl;
+                        std::cout << "signal length: " << tx_bb_vecs[iclient].size() << std::endl;
+			            _convolve(&tx_bb_vecs[iclient].front(), 
+                            tx_bb_vecs[iclient].size(), 
+                            &filter_taps.front(),
+                            filter_taps.size());
+                        tx.add_pulse_seq(clients[iclient].radar-1,
+                            clients[iclient].channel-1, 
+                            (float) 1e3*clients[iclient].tfreq, 
+                            tx_bb_vecs[iclient]);
+                    }
+			    }
 
-                    for (int i=0; i<10000; i++){
-                        if (tx_float_vecs[0][0][j] != std::complex<float>(0,0)) std::cout << tx_float_vecs[0][0][i] << std::endl;
+			    if (new_beam != old_beam) { //Re-calculate the RF sample vectors for new beam direction.  BB samples are the same.
+			    	for(size_t chan = 0; chan < usrp->get_rx_num_channels(); chan++) {
+			    	        usrp->set_rx_rate(rxrate, chan);
+			                usrp->set_rx_freq(RXFREQ, chan);
+			    	        if(verbose>1)
+						std::cout << boost::format("RX rate set to: %f MHz...") % 
+								(usrp->get_rx_rate(chan)/1e6) << std::endl;
+						std::cout << boost::format("RX freq set to: %f MHz...") % 
+								(usrp->get_rx_freq(chan)/1e6) << std::endl;
+			    	}
+			    	for(size_t chan=0; chan<ntx_antennas; chan++) {
+			    	        usrp->set_tx_rate(txrate, chan);
+			                usrp->set_tx_freq(TXFREQ, chan);
+			    	        if(verbose>1)
+						std::cout << boost::format("TX rate set to: %f MHz...") % 
+								(usrp->get_rx_rate(chan)/1e6) << std::endl;
+						std::cout << boost::format("TX freq set to: %f MHz...") % 
+								(usrp->get_tx_freq(chan)/1e6) << std::endl;
+			    	}
+
+                    rx_process_threads.join_all(); //Make sure rx processing is done so that we have exclusive access to the GPU
+
+                    clock_gettime(CLOCK_MONOTONIC, &tx0);
+			        //tx_bb_vecs.clear();
+                    //tx_bb_vecs.resize(ntx_antennas);
+			        tx_rf_vecs.clear();
+					tx_rf_vecs.resize(ntx_antennas);
+                    tx_rf_vec_ptrs.resize(ntx_antennas);
+                    for (int iant=0; iant<ntx_antennas; iant++){
+                        tx_rf_vecs[iant].resize(tx_osr*max_seq_count);
+                        //tx_rf_vec_ptrs[iant] = &tx_rf_vecs[iant].front();
                     }
 
-                    tx_rf_vec_ptrs.resize(ntx_antennas);
-				    for(int i=0;i<ntx_antennas;i++)
-				    	tx_rf_vec_ptrs[i] = &tx_rf_vecs[i].front();
 
-				    std::cout << "upsample function\n";
-                    clock_gettime(CLOCK_MONOTONIC, &tx0);
-                    rx_process_threads.join_all();
-				    tx_process_gpu(
-				    	(float*) &tx_float_vecs[0][0].front(),
-				    	(int16_t**) &tx_rf_vec_ptrs.front(),
-				    	tx_float_vecs[0][0].size(),
-				    	tx_rf_vecs[0].size(),
-				    	usrp->get_tx_freq(),
-                        txrate,
-                        &tx_freqs.front(),
-				    	&time_delays.front(),
-                        tx_freqs.size(),
-                        ntx_antennas);
+                    for (int iradar=0; iradar<NRADARS; iradar++){ //Deal with each antenna channel for each radar
+                        /*This handles the mapping from client number to antenna number(s).
+                         * Make adjustments based on single-site vs. dual-site radars, IP
+                         * address mapping, etc. */
+				        for(int iant=0; iant<ntx_antennas/NRADARS; iant++) {
+				            tx_rf_vec_ptrs[iant] = &tx_rf_vecs[iradar*(NRADARS-1) + iant].front();
+				            std::cout << "upsample function for radar number " << iradar << std::endl;
+				            std::cout << "tx_rf_vec_ptrs: " << tx_rf_vec_ptrs[iant] << std::endl;
+				            std::cout << "index: " << iradar*(NRADARS-1)+iant << std::endl;
+                        }
+
+                        if (numclients == 1){
+                            for (int i=1; i<NRADARS; i++){
+                                tx_bb_vecs[i].clear();
+                                tx_bb_vecs[i].resize(tx_bb_vecs[0].size(), 0);
+                                tx_freqs.push_back(0);
+                            }
+                        }
+                        //if (tx.get_num_clients(iradar) != 0){
+                        //    float* bb_ptr = tx.get_bb_vec_ptr(iradar);
+                        //    for (int i=0; i<tx.get_num_bb_samples(); i+=10){
+                        //        std::cout << i << " " << bb_ptr[i] << std::endl;
+                        //    }
+                        //}
+
+                        
+                        tx.set_rf_vec_size(tx_osr*max_seq_count);
+                        std::cout << "num bb samps: " << tx.get_num_bb_samples() << std::endl;
+                        std::cout << "num rf samps: " << tx.get_num_rf_samples() << std::endl;
+                        std::cout << "rf vec ptrs: " << tx.get_rf_vec_ptrs(iradar) << std::endl;
+                        std::cout << "num rf samps: " << tx.get_num_rf_samples() << std::endl;
+                        for (int i=0; i<tx.get_num_clients(iradar); i++){
+                            std::cout << "tx freqs: " << tx.get_freqs(iradar)[i] << std::endl;
+                        }
+                        //for (size_t i=0; i<tx.get_num_rf_samples(); i++){
+                        //    int16_t** rf_ptr = tx.get_rf_vec_ptrs(iradar);
+                        //    //std::cout << rf_ptr << std::endl;
+                        //    //std::cout << i << " " << rf_ptr[0] << std::endl;
+                        //}
+                        std::cout << "num clients: " << tx.get_num_clients(iradar) << std::endl;
+                        std::cout << "tx freq: " << tx_freqs[iradar] << std::endl;
+                        if (tx.get_num_clients(iradar) == 0){
+                            std::cout << "zeroing rf vector\n";
+                            tx.zero_rf_vec(iradar);
+                            continue;
+                        }
+                        std::cout << "rf vec ptrs: " << tx.get_rf_vec_ptrs(iradar) << std::endl;
+                        //std::cout << (tx.get_rf_vec_ptrs(iradar))[0][0] << std::endl;
+                        std::cout << "about to enter tx_process_gpu\n";
+				        tx_process_gpu(
+                            tx.get_bb_vec_ptr(iradar),
+                            tx.get_rf_vec_ptrs(iradar),
+				        	tx.get_num_bb_samples(),
+				        	tx.get_num_rf_samples(),
+				        	usrp->get_tx_freq(),
+                            txrate,
+                            tx.get_freqs(iradar), // List of center frequencies for this radar
+				        	&time_delays.front(), // Vector of beam-forming-related time delays
+                            tx.get_num_clients(iradar), // Number of channels for this radar [TODO] Numclients handles nradars but not nchannels yet
+                            tx.get_num_ants_per_radar()); //number of antennas per radar
+                    }
+
                     clock_gettime(CLOCK_MONOTONIC, &tx1);
-				    //tx_mix_upsample(
-				    //	&tx_float_vecs[0],
-				    //	&tx_rf_vecs,
-				    //	1e6/STATE_TIME,
-				    //	usrp->get_tx_rate(),
-				    //	usrp->get_tx_freq(),
-				    //	tx_freqs,
-				    //	td);
-
-                    // Convert the floating point values to integer values
-			        //for (unsigned int i=0;i<1; i++){ //Only do channel 0
-			        //	for (j=0;j<tx_osr*max_seq_count;j++){
-			        //	      tx_rf_vecs[i][j] = sc16(
-				    //	        (int16_t) tx_rf_vecs[i][j].real(),
-			        //	      	(int16_t) tx_rf_vecs[i][j].imag());
-				    //	        //tx_short_vecs[i][j].real() | (int16_t) tx_rf_vecs[i][j].real(),
-			        //	      	//tx_short_vecs[i][j].imag() | (int16_t) tx_rf_vecs[i][j].imag());
-			        //	}
-			        //}
-
-                    clock_gettime(CLOCK_MONOTONIC, &tx2);
                     elapsed_t1 = (1e9*tx1.tv_sec+tx1.tv_nsec) - (1e9*tx0.tv_sec+tx0.tv_nsec);
-                    elapsed_t2 = (1e9*tx2.tv_sec+tx2.tv_nsec) - (1e9*tx0.tv_sec+tx0.tv_nsec);
-                    printf("\n\ntx mix upsample elapsed time: %.2f ms (%.2f ms total)\n", 
-                        elapsed_t1/1e6, elapsed_t2/1e6);
-
+                    printf("\n\ntx mix upsample elapsed time: %.2f ms\n", elapsed_t1/1e6);
 			        tx_vec_ptrs.resize(ntx_antennas);
-			        for(unsigned int i=0;i<ntx_antennas;i++)
-			    	    tx_vec_ptrs[i]=&tx_rf_vecs[i].front();
+                    std::cout << "num clients: " << numclients << std::endl;
+                    std::cout << "txrfvecs size: " << tx_rf_vecs.size() << std::endl;
+                    for (size_t iant=0; iant<ntx_antennas; iant++){
+                        tx_vec_ptrs[iant] = &tx_rf_vecs[iant].front();
+                    }
+                        
+			        //for(unsigned int iant=0;iant<ntx_antennas;iant++){
+			        //    for(unsigned int iclient=0;iclient<numclients;iclient++){
+                    //        std::cout << "index: " << iclient << " " << iclient << std::endl;
+			    	//        tx_vec_ptrs[iclient]=&tx_rf_vecs[iclient][0].front();
+                    //        std::cout << "tx_vec_ptr size: " <<  tx_vec_ptrs.size() << std::endl;
+                    //        std::cout << "tx_vec_ptr: " <<  tx_vec_ptrs[iclient] << std::endl;
+                    //    }
+			        //    for(unsigned int iclient=numclients;iclient<ntx_antennas;iclient++){
+                    //        std::cout << "index: " << iclient << " " << iclient%2 << std::endl;
+                    //        std::cout << "tx_rf_vecs size: " <<  tx_rf_vecs.size() << std::endl;
+                    //        std::cout << "iclient mod 2: " <<  iclient%2 << std::endl;
+                    //        std::cout << "tx_vec_ptr: " <<  tx_vec_ptrs[iclient] << std::endl;
+			    	//        tx_vec_ptrs[iclient]=&tx_rf_vecs[iclient%2][0].front();
+                    //    }
+                    //}
 			    }
 
                 if (new_seq_id < 0 ) {
                   old_seq_id=-10;
-                }  else {
+                }
+                else {
                   old_seq_id=new_seq_id;
                 }
                 new_seq_id=-1;
@@ -848,7 +1073,7 @@ int main(){
 
 			    if (verbose > 1 ) std::cout << "Setup for trigger\n";	
 			    if (verbose>1) std::cout << std::endl;
-                    msg.status=0;
+                msg.status=0;
 
                 if(configured) {
 			        //First wait for any existing receiver threads..
@@ -856,7 +1081,7 @@ int main(){
 			        receive_threads.join_all();
 			  
 		       	    //Adjust the number of samples to receive to account for sample rate conversion
-                    rx_osr = rxrate/client.baseband_samplerate;
+                    rx_osr = 2*rxrate/client.baseband_samplerate;
 			        if (verbose > 1){
 			  	        std::cout << "client baseband sample rate: " << client.baseband_samplerate << std::endl;
 			  	        std::cout << "Usrp sample rate: " << rxrate << std::endl;
@@ -869,6 +1094,7 @@ int main(){
 			        	rx_short_vecs[iseq%2][i].resize(rx_osr*(1+client.number_of_samples));
 
 			        rx_vec_ptrs.resize(nrx_antennas);
+                    std::cout << "rx_vec_ptrs size: " << rx_vec_ptrs.size() << std::endl;
 			        for(int i=0; i<nrx_antennas; i++)
 			        	rx_vec_ptrs[i] = &rx_short_vecs[iseq%2][i].front();
 			        
@@ -877,7 +1103,7 @@ int main(){
 			        rx_thread_status=0;
 			        gettimeofday(&t0,NULL);
 			        tstart = usrp->get_time_now();
-			        uhd::time_spec_t start_time = usrp->get_time_now() + 0.01;
+			        uhd::time_spec_t start_time = usrp->get_time_now() + 0.02;
 	
                     //rx_process_threads.join_all();
 		            receive_threads.create_thread(boost::bind(recv_and_hold,
@@ -892,12 +1118,18 @@ int main(){
 			         	&rx_thread_status));
 
 			         //call function to start tx stream simultaneously with rx stream
+                     tx.set_rf_vec_ptrs(&tx_vec_ptrs);
+                     //for (int i=0; i<tx.get_num_rf_samples(); i++){
+                     //    if (tx_vec_ptrs[0][i] != std::complex<int16_t>(0,0)) std::cout << i << " " << tx_vec_ptrs[0][i] << std::endl;
+                     //}
 		             tx_threads.create_thread(boost::bind(transmit_worker,
                         tx_stream,
                         tx_vec_ptrs,
                         tx_osr*max_seq_count,
                         start_time));
                 }
+                tx_threads.join_all();
+                receive_threads.join_all();
 
                 rval=send_data(msgsock, &msg, sizeof(struct DriverMsg));
 
@@ -912,41 +1144,44 @@ int main(){
                 break;
 
 		    case TIMING_WAIT:
-			    if(verbose > 1) std::cout << "USRP_TCP_DRIVER_WAIT: Waiting on receiver thread.." << std::endl;
+			    if(verbose > 1) std::cout << "USRP_TCP_DRIVER_WAIT: Nothing happens here.." << std::endl;
                 //tx_threads.join_all();
 			    //receive_threads.join_all();
-
-			    if (verbose > 1 ) std::cout << "Timing Card: Wait\n";	
                 msg.status=0;
 
 			    if (verbose > 1) std::cout << "Read msg struct from tcp socket!\n";	
                 //dead_flag=0;
                 
-                if (verbose > 1)  std::cout << "Ending Wait \n";
+                if (verbose > 1)  std::cout << "Ending Wait \n\n";
                 rval=send_data(msgsock, &msg, sizeof(struct DriverMsg));
 
 			    break;
 
             case TIMING_POSTTRIGGER:
+                tx_freqs.clear();
+                nactiveclients=numclients;
                 numclients=0;
+                std::cout << "Post trigger.  Un-readying all clients\n\n";
                 for (r=0;r<MAX_RADARS;r++){
-                  for (c=0;c<MAX_CHANNELS;c++){
-                    ready_index[r][c]=-1;
-                  }
+                    for (c=0;c<MAX_CHANNELS;c++){
+                        ready_index[r][c]=-1;
+                    }
                 }
                 rval=send_data(msgsock, &msg, sizeof(struct DriverMsg));
                 break;
 
             case RECV_GET_DATA:
-			    if (verbose>1) std::cout << "RECV_GET_DATA: Waiting on receiver thread.." << std::endl;
+                //tx_threads.join_all();
+                //receive_threads.join_all();
+			    if (verbose>1) std::cout << "RECV_GET_DATA: Waiting on all threads.." << std::endl;
 
                 tx_threads.join_all();
-			    receive_threads.join_all();
+			    //receive_threads.join_all();
 			    rx_process_threads.join_all();
 
 			    gettimeofday(&t6,NULL);
-                            elapsed=(t6.tv_sec-t0.tv_sec)*1E6;
-                            elapsed+=(t6.tv_usec-t0.tv_usec);
+                elapsed=(t6.tv_sec-t0.tv_sec)*1E6;
+                elapsed+=(t6.tv_usec-t0.tv_usec);
 			    if (verbose>1)std::cout << "Rx thread elapsed: " << 
 			    	elapsed << " usec" << std::endl;
 			    rx_status_flag=0;
@@ -954,81 +1189,100 @@ int main(){
 			    	std::cerr << "Error, bad status from Rx thread!!\n";
 			    	rx_status_flag=-1;
 			    }
-			    if (rx_thread_status==0){
+			    else {
 			    	if (verbose>1) printf("Status okay!!\n");
 			    }
+
+		        rval=recv_data(msgsock,&client,sizeof(struct ControlPRM));
+                rval=send_data(msgsock,&rx_status_flag, sizeof(int));
+
 			    if (verbose>1)std::cout << "Client asking for rx samples (Radar,Channel): " <<
 			    	client.radar << " " << client.channel << std::endl;
 			    get_data_t0 = usrp->get_time_now();
 			    r = client.radar-1; c = client.channel-1;
-
-		        rval=recv_data(msgsock,&client,sizeof(struct ControlPRM));
-                rval=send_data(msgsock,&rx_status_flag, sizeof(int));
 	
+                //std::cout << "numclients: " << numclients << std::endl;
 			    if (iseq==0) {
-                    bb_vecs[1].resize(client_freqs.size());
-			    	for (size_t ifreq=0;ifreq<client_freqs.size();ifreq++){
-			    		bb_vecs[1][ifreq].resize(nrx_antennas);
-                        for (int iant=0; iant < nrx_antennas; iant++){
-                            bb_vecs[1][ifreq][iant].resize(client.number_of_samples,0);
+                    for (int iclient=0; iclient<nactiveclients; iclient++){
+                        bb_vecs[1][iclient].resize(client_freqs.size());
+			    	    for (size_t ifreq=0;ifreq<client_freqs.size();ifreq++){
+			    	    	bb_vecs[1][iclient][ifreq].resize(nrx_antennas);
+                            for (int iant=0; iant < nrx_antennas; iant++){
+                                bb_vecs[1][iclient][ifreq][iant].resize(client.number_of_samples,0);
+                                //std::cout << "bbvec size: " << bb_vecs[1][iclient][ifreq][iant].size() << std::endl;
+                            }
                         }
                     }
 			    }
 
 			    //bb_vecs[iseq%2].clear();
-                bb_vecs[iseq%2].resize(client_freqs.size());
-			    for (size_t ifreq=0;ifreq<client_freqs.size();ifreq++){
-			    	bb_vecs[iseq%2][ifreq].resize(nrx_antennas);
-                    for (int iant=0; iant < nrx_antennas; iant++){
-                        bb_vecs[iseq%2][ifreq][iant].resize(client.number_of_samples,990);
+                for (int iclient=0; iclient<nactiveclients; iclient++){
+                    bb_vecs[iseq%2][iclient].resize(client_freqs.size());
+			        for (size_t ifreq=0;ifreq<client_freqs.size();ifreq++){
+			        	bb_vecs[iseq%2][iclient][ifreq].resize(nrx_antennas);
+                        for (int iant=0; iant < nrx_antennas; iant++){
+                            bb_vecs[iseq%2][iclient][ifreq][iant].resize(client.number_of_samples,0);
+                        }
                     }
                 }
+
 
                 bb_vecs_ant_ptrs.resize(client_freqs.size());
 
-                bb_vecs_ptrs.resize(client_freqs.size());
-                for (size_t ifreq=0; ifreq<client_freqs.size(); ifreq++)
-                    bb_vecs_ptrs[ifreq].resize(nrx_antennas);
-			    for(size_t ifreq=0;ifreq<client_freqs.size();ifreq++){
-                    for (int iant=0; iant<nrx_antennas; iant++){
-                        bb_vecs_ptrs[ifreq][iant] = (float *) &bb_vecs[iseq%2][ifreq][iant].front();
+                //for (int iclient=0; iclient<nactiveclients; iclient++){
+                    bb_vecs_ptrs.resize(client_freqs.size());
+                    for (size_t ifreq=0; ifreq<client_freqs.size(); ifreq++)
+                        bb_vecs_ptrs[ifreq].resize(nrx_antennas);
+                    std::cout << "bb_vecptrs size: " << bb_vecs_ptrs[0].size() <<std::endl;
+			        for(size_t ifreq=0;ifreq<client_freqs.size();ifreq++){
+                        for (int iant=0; iant<nrx_antennas; iant++){
+                            bb_vecs_ptrs[ifreq][iant] = (float *) &bb_vecs[iseq%2][client.radar-1][ifreq][iant].front();
+                        }
+                        bb_vecs_ant_ptrs[ifreq] = ((float**) &bb_vecs_ptrs[ifreq].front());
                     }
-                    bb_vecs_ant_ptrs[ifreq] = ((float**) &bb_vecs_ptrs[ifreq].front());
-                }
-                bb_vecs_master_ptr = &bb_vecs_ant_ptrs.front();
-                
-			    rx_process_threads.create_thread(boost::bind(rx_process_gpu,
-			    	(int16_t**) &rx_vec_ptrs.front(),
-			    	(float ***) bb_vecs_master_ptr,
-			    	rx_osr*client.number_of_samples,
-			    	client.number_of_samples,
-			    	client_freqs.size(),
-			    	nrx_antennas,
-			    	rxrate,
-			    	client.baseband_samplerate,
-			    	&client_freqs.front()));
+                    bb_vecs_master_ptr = &bb_vecs_ant_ptrs.front();
+                    
+			        rx_process_threads.create_thread(boost::bind(rx_process_gpu,
+			        	(int16_t**) &rx_vec_ptrs.front(),
+			        	(float ***) bb_vecs_master_ptr,
+			        	rx_osr*client.number_of_samples,
+			        	client.number_of_samples,
+			        	client_freqs.size(),
+			        	nrx_antennas,
+			        	rxrate,
+			        	client.baseband_samplerate,
+			        	&client_freqs.front()));
+                //}
 
                 //rx_process_threads.join_all();
                 printf("iseq: %i\n", iseq);
-			    	
 			    if(rx_status_flag == 0){
 			      if(verbose>1)std::cout << "Repackaging RX data.." << std::endl;
+                  std::cout << "nactiveclients: " << nactiveclients << std::endl;
 			      for(int i=0;i<client.number_of_samples;i++){
 			      	// Assuming i-phase component comes first ..?
-			      	shared_main_addresses[r][c][0][i] = 
-			    		( ((int32_t) (bb_vecs[(iseq+1)%2][0][MAIN_INPUT][i].real()) << 16) & 0xffff0000)| 
-			    		( (int32_t) (bb_vecs[(iseq+1)%2][0][MAIN_INPUT][i].imag()) & 0x0000ffff);
+			    	//std::cout << bb_vecs[(iseq+1)%2][0][0][MAIN_INPUT].size() << std::endl;
+			    	//std::cout << bb_vecs[(iseq+1)%2][0][0][BACK_INPUT].size() << std::endl;
+			      	//shared_main_addresses[r][c][0][i] = (unsigned int) 0xfffd0001;
+                    //printf("shared_main_addresses %i: %7x\n",i,(unsigned int)shared_main_addresses[r][c][0][i]);
+			      	shared_main_addresses[r][c][0][i] = (int32_t)
+			    		( ((int32_t) (bb_vecs[(iseq+1)%2][0][0][MAIN_INPUT][i].real())/10 << 16) & 0xffff0000)| 
+			    		( ((int32_t) (bb_vecs[(iseq+1)%2][0][0][MAIN_INPUT][i].imag())/10 ) & 0x0000ffff);
+			    		//( ((int32_t) (bb_vecs[(iseq+1)%2][r*MAX_CHANNELS+c][0][MAIN_INPUT][i].real()) << 16) & 0xffff0000)| 
+			    		//( (int32_t) (bb_vecs[(iseq+1)%2][r*MAX_CHANNELS+c][0][MAIN_INPUT][i].imag()) & 0x0000ffff);
 			    	// Use the same data for front and back array for now
-			      	shared_back_addresses[r][c][0][i] = 
-			    		( ((int32_t) (bb_vecs[(iseq+1)%2][0][BACK_INPUT][i].real()) << 16) & 0xffff0000 ) | 
-			    		( (int32_t) (bb_vecs[(iseq+1)%2][0][BACK_INPUT][i].imag()) & 0x0000ffff);
+			      	shared_back_addresses[r][c][0][i] = (int32_t)
+			    		( ((int32_t) (bb_vecs[(iseq+1)%2][0][0][BACK_INPUT][i].real())/10 << 16) & 0xffff0000 ) | 
+			    		( ((int32_t) (bb_vecs[(iseq+1)%2][0][0][BACK_INPUT][i].imag())/10 ) & 0x0000ffff);
+			    		//( ((int32_t) (bb_vecs[(iseq+1)%2][r*MAX_CHANNELS+c][0][BACK_INPUT][i].real()) << 16) & 0xffff0000 ) | 
+			    		//( (int32_t) (bb_vecs[(iseq+1)%2][r*MAX_CHANNELS+c][0][BACK_INPUT][i].imag()) & 0x0000ffff);
 
                     //Rx:
 			    	if(verbose>100){
                             printf("%i\t",i);
                             for (size_t ifreq=0; ifreq<client_freqs.size(); ifreq++){
-                                printf("%04.0f, ",std::abs(bb_vecs[iseq%2][ifreq][0][i]));
-                                printf("%04.0f \t ",360. / M_PI * std::arg(bb_vecs[iseq%2][ifreq][0][i]));
+                                printf("%04.0f, ",std::abs(bb_vecs[(iseq+1)%2][0][ifreq][0][i]));
+                                printf("%04.0f \t ",360. / M_PI * std::arg(bb_vecs[(iseq+1)%2][0][ifreq][0][i]));
                             }
                             printf("\n");
 			    	}
@@ -1041,7 +1295,7 @@ int main(){
 			        //    	printf("%hi)\n",(shared_back_addresses[r][c][0][i] & 0x0000ffff));
 			    	//}
 			      }
-			      iseq += 1;
+			      iseq++;
 			      
 			      r=client.radar-1;
 			      c=client.channel-1;
@@ -1069,26 +1323,33 @@ int main(){
 			      msg.status = rx_status_flag;
 			      rval=send_data(msgsock,&msg,sizeof(DriverMsg));
 			    }
+
+                nactiveclients=0;
 			    get_data_t1 = usrp->get_time_now();
 			    if(verbose>1)std::cout << "Ending RECV_GET_DATA. Elapsed time: " << 
 			    	get_data_t1.get_real_secs() - get_data_t0.get_real_secs() << std::endl;
 			    break;
 
             case RECV_CLRFREQ:
+                tx_threads.join_all();
+			    receive_threads.join_all();
+			    rx_process_threads.join_all();
+
 			    if(verbose > 1) std::cout << "Doing clear frequency search!!!" << std::endl;
 			    rval=recv_data(msgsock,&clrfreq_parameters,sizeof(struct CLRFreqPRM));
 			    rval=recv_data(msgsock,&client,sizeof(struct ControlPRM));
-			    if (verbose) printf("Doing clear frequency search for radar %d, channel %d\n",client.radar-1,client.channel-1);
+                //printf("RECV_CLRFREQ for radar %i channel %i",client.radar, client.channel);
+			    if (verbose) printf("Doing clear frequency search for radar %d, channel %d\n",client.radar,client.channel);
 			    nave=0;
 			    usable_bandwidth=clrfreq_parameters.end-clrfreq_parameters.start;
 			    center=(clrfreq_parameters.start+clrfreq_parameters.end)/2;
 			    if(verbose > -1 ){
 			    	printf("  requested values\n");
-                            	printf("    start: %d\n",clrfreq_parameters.start);
-                            	printf("    end: %d\n",clrfreq_parameters.end);
-                            	printf("    center: %d\n",center);
-                            	printf("    bandwidth: %lf in Khz\n",(float)usable_bandwidth);
-                            	printf("    nave:  %d %d\n",nave,clrfreq_parameters.nave);
+                    printf("    start: %d\n",clrfreq_parameters.start);
+                    printf("    end: %d\n",clrfreq_parameters.end);
+                    printf("    center: %d\n",center);
+                    printf("    bandwidth: %lf in Khz\n",(float)usable_bandwidth);
+                    printf("    nave:  %d %d\n",nave,clrfreq_parameters.nave);
 			    }
                             usable_bandwidth=floor(usable_bandwidth/2)*2;
 			    /*
