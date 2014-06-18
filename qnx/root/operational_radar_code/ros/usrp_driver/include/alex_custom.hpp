@@ -49,7 +49,7 @@ int tx_mix_upsample(
     float time_delay); //time delay between each antenna in nanoseconds
 void transmit_worker(
     uhd::tx_streamer::sptr tx_stream,
-    std::vector<std::complex<short> *> pulse_seq_ptrs,
+    std::vector<std::complex<short> *>& pulse_seq_ptrs,
     int sequence_length,
     uhd::time_spec_t start_time);
 
