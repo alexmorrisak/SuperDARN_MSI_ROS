@@ -13,14 +13,18 @@ itself to parallelization, so it is performed on an Nvidia GPU.*/
 #include <stdio.h>
 
 #define TEST 0
-#define NTHREADS 20
-#define NRFSAMPS 2000
-#define NANTS 2
-#define NFREQS 2
+#define NRFSAMPS 5000
+#define NANTS 1
+#define NFREQS 1
 #define DECIM_RATE 200
 #define MAX_BLOCK_SIZE 512
 
-extern int verbose;
+#if TEST == 0
+    extern int verbose;
+#endif
+#if TEST == 1
+    int verbose;
+#endif
 
 __global__ void multiply_and_add(float ***samples, float ***odata, float **filter)
 {
@@ -224,7 +228,7 @@ void rx_process_gpu(
     //    extra_stages=1;
     //}
     dmrate0 = 100;
-    int dmrate1 = dmrate / dmrate0;
+    int dmrate1 = 2*dmrate / dmrate0;
         
     int ntaps0 = 2*dmrate0; //The coarse filter length is 2x the decimation rate
     int ntaps1 = 8*dmrate1; //The fine filter length is 8x the decimation rate
@@ -301,13 +305,15 @@ void rx_process_gpu(
     cudaMalloc( (void***)&indata_p2vp_d, nants*sizeof(int16_t*));
     for (int iant=0; iant<nants; iant++){
         cudaMalloc( (void**)&indata_vp_d[iant], (nrf_samples+dmrate0)*sizeof(int16_t)*2);
-        cudaMemset(indata_vp_d[iant]+2*nrf_samples, 0, 2*dmrate0*sizeof(int16_t));
+        cudaMemset(indata_vp_d[iant], 0, dmrate0*sizeof(int16_t));
+        cudaMemset(indata_vp_d[iant]+2*nrf_samples, 0, dmrate0*sizeof(int16_t));
+        //indata_vp_d[iant] += dmrate0;
         cudaMemcpy(
-                indata_vp_d[iant],
+                indata_vp_d[iant] + dmrate0,
                 rx_buff_ptrs[iant%2], 
                 nrf_samples*2*sizeof(int16_t),
                 cudaMemcpyHostToDevice);
-        indata_p2vp_h[iant] = indata_vp_d[iant];
+        indata_p2vp_h[iant] = indata_vp_d[iant] + dmrate0;
     }
     cudaMemcpy(
             indata_p2vp_d,
@@ -338,13 +344,12 @@ void rx_process_gpu(
     }
     cudaMemcpy(
             outdata_p2channels_d,
-            &outdata_p2vp_h[0],
+            outdata_p2vp_h,
             nfreqs*sizeof(float**),
             cudaMemcpyHostToDevice);
 
     //cudaMalloc( (void**)&outdata_dptr, nfreqs*nbb_samples*nants*sizeof(float)*2);
     //float output_buffer[NFREQS][NANTS][nbb_samples][2];// = (float*) malloc(nbb_samples*nants*nfreqs*2*sizeof(float));
-
 
 
     dim3 dimGrid(nrf_samples/dmrate0,nants,1);
@@ -363,6 +368,16 @@ void rx_process_gpu(
     multiply_mix_add<<<dimGrid, dimBlock>>>(indata_p2vp_d, outdata_p2channels_d, taps_ptr_dptr);
     cudaDeviceSynchronize();
     clock_gettime(CLOCK_MONOTONIC, &tock);
+
+    //printf("About to print output of first stage\n");
+    //for (int i=0; i<NRFSAMPS/dmrate0; i++){
+    //    //printf("rx_process_gpu: output samples head\n");
+    //    int iant =0, ifreq=0;
+    //    printf("output %i, %i: (%i, %i)\n",ifreq, iant,
+    //    (int) outdata_p2vp_h[0][0][2*i],
+    //    (int) outdata_p2vp_h[0][0][2*i+1]);
+    //  printf("\n\n");
+    //}
 
 
 
@@ -397,11 +412,12 @@ void rx_process_gpu(
             cudaMalloc( (void**)&imt_vp_d[ifreq][iant], ((nrf_samples/dmrate0)+ntaps1)*sizeof(float)*2);
             cudaMemset( imt_vp_d[ifreq][iant], 0x00, ((nrf_samples/dmrate0)+ntaps1)*sizeof(float)*2);
             cudaMemcpy( 
-                &imt_vp_d[ifreq][iant][0], 
+                imt_vp_d[ifreq][iant]+ntaps1, 
                 outdata_vp_d[ifreq][iant], 
                 (nrf_samples/dmrate0) * 2*sizeof(float),
                 cudaMemcpyDeviceToDevice);
-            imt_vp_h[ifreq][iant] = imt_vp_d[ifreq][iant];
+            //imt_vp_d[ifreq][iant] += ntaps1;
+            imt_vp_h[ifreq][iant] = imt_vp_d[ifreq][iant] + ntaps1;
             cudaFree(outdata_vp_d[ifreq][iant]);
         }
         cudaMemcpy(
@@ -422,9 +438,9 @@ void rx_process_gpu(
     they might not be.  Take care of that here if you like*/
     for (int ifreq=0; ifreq<nfreqs; ifreq++){
         for (int i=0;i<ntaps1;i++){
-                double x = 2*M_PI*((float)i/ntaps1) - M_PI;
+                double x = 8*(2*M_PI*((float)i/ntaps1) - M_PI);
                 filter_taps1[ifreq][i][0] = (0.54-0.46*cos((2*M_PI*((float)(i)+0.5))/ntaps1))
-                	*sin(2*x)/(2*x);
+                	*sin(x)/(x);
                 //filter_taps1[ifreq][i][0] = 1./ntaps1; //Q-component is zero
                 filter_taps1[ifreq][i][1] = 0; //Q-component is zero
                 //printf("filter tap %i: %f\n", i, filter_taps1[ifreq][i][0]);
@@ -561,8 +577,9 @@ int main(){
 
     for(int iant=0; iant<NANTS; iant++){
         for (int i=0;i<NRFSAMPS;i++){
-            fake_samples[iant*((NRFSAMPS)*2)+2*i] = sin(M_PI*i/4);
+            fake_samples[iant*((NRFSAMPS)*2)+2*i] = i;//sin(M_PI*i/4);
             fake_samples[iant*((NRFSAMPS)*2)+2*i+1] = 0;
+            printf("fake_samples %i: %i\n", fake_samples[iant*((NRFSAMPS)*2)+2*i]);
         }
     }
 
@@ -578,8 +595,8 @@ int main(){
     float elapsed;
     float center_freqs[NFREQS];
     for (int i=0;i<NFREQS;i++){
-        center_freqs[i] = M_PI/4;
-        //center_freqs[i] = 0;
+        //center_freqs[i] = M_PI/4;
+        center_freqs[i] = 0;
     }
     clock_gettime(CLOCK_MONOTONIC, &tick);
     rx_process_gpu(
@@ -603,7 +620,7 @@ int main(){
         printf("copying %i samples back to client buffer\n",NRFSAMPS/DECIM_RATE);
         printf("rx_process_gpu: output samples head\n");
 
-        for(int i=0;i<10;i+=1){
+        for(int i=0;i<NRFSAMPS/DECIM_RATE;i+=1){
             for (int iant=0; iant<NANTS; iant++){
                     printf("output %i, %i: (%f, %f)\t",ifreq, iant,
                          (float) output_buffer[ifreq][iant][2*i],
