@@ -32,6 +32,7 @@ void recv_and_hold(
     uhd::time_spec_t start_time,
     int *return_status
 ){
+    std::cout << "Entering rx_and_hold()\n";
     std::vector<std::vector<std::complex<short> > >  temp_buffs;
     std::vector<std::complex<short> *> temp_buff_ptrs;
 
@@ -44,19 +45,27 @@ void recv_and_hold(
     stream_cmd.stream_now = false;
     stream_cmd.time_spec = start_time;
 
+    usleep(1000);
+    std::cout << "Sending out logic signals\n";
+
     usrp->set_gpio_attr("TXA","CTRL",0x0,0x40);
     usrp->set_gpio_attr("TXA","DDR",0x40,0x40);
     usrp->set_gpio_attr("TXA","CTRL",0x0,0x20);
     usrp->set_gpio_attr("TXA","DDR",0x20,0x20);
-    usrp->set_command_time(start_time-10e-6);
-    usrp->set_gpio_attr("TXA","OUT",0x40,0x40);
 
+    std::cout << "issuing stream command\n";
     usrp->issue_stream_cmd(stream_cmd);
+    std::cout << "issued stream command\n";
 
-    usrp->set_command_time(start_time+10e-9);
+    usrp->set_command_time(start_time+100e-9);
+    usrp->set_gpio_attr("TXA","OUT",0x40,0x40);
+    std::cout << "issued stream command\n";
+
+    usrp->set_command_time(start_time+200e-9);
     usrp->set_gpio_attr("TXA","OUT",0x00,0x40);
 
 
+    std::cout << "Sending out TR logic signals\n";
     for (int i=0; i<npulses; i++){
         usrp->set_command_time(start_time+1e-6*trtimes[i]);
         usrp->set_gpio_attr("TXA","OUT",0x20,0x20);
@@ -67,6 +76,7 @@ void recv_and_hold(
         
 
     md.error_code = uhd::rx_metadata_t::ERROR_CODE_NONE;
+    std::cout << "about to start receiving samples\n";
     size_t num_rx_samps = rx_stream->recv(client_buff_ptrs, num_requested_samples, md, timeout);
 	if (num_rx_samps != num_requested_samples){
         *return_status=-1;
