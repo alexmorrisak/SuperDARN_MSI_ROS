@@ -57,6 +57,10 @@ int recv_clr_freq(
     usrp->issue_stream_cmd(stream_cmd);
 
     md.error_code = uhd::rx_metadata_t::ERROR_CODE_NONE;
+    std::cout << "clr freq search: about to start receiving\n";
+    std::cout << "nusrp samples: " << num_usrp_samples << std::endl;
+    std::cout << "bandwidth: " << bandwidth << std::endl;
+    std::cout << "start_time: " << start_time.get_real_secs() << std::endl;
     while(num_total_samps < num_usrp_samples){
         int num_rx_samps = rx_stream->recv(rx_vec_ptrs, bandwidth, md, timeout);
 
