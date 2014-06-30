@@ -127,6 +127,7 @@ ADW_exit_flag	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/usr/codebas
 ADone	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.2/genfft/annotate.ml	/^    ADone$/;"	C	type:aschedule
 ADone	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.2/genfft/annotate.mli	/^    ADone$/;"	C	type:aschedule
 AGC	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/codebase/superdarn/src.lib/os/rosmsg.1.5/include/rosmsg.h	/^  int32 AGC[30];$/;"	m	struct:TXStatus
+AGC	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/include/superdarn/rosmsg.h	/^  int32 AGC[30];$/;"	m	struct:TXStatus
 AGC	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/include/global_server_variables.h	/^  int32_t AGC[MAX_TRANSMITTERS];$/;"	m	struct:tx_status
 AGC_STAT	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/codebase/superdarn/src.lib/tk/oldfit.1.25/src/fitstr.h	/^	 AGC_STAT,	\/* AGC status word *\/$/;"	m	struct:radar_parms
 AGC_STAT	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/codebase/superdarn/src.lib/tk/oldraw.1.16/src/raw.h	/^	 AGC_STAT,	\/* AGC status word *\/$/;"	m	struct:radar_parms
@@ -928,6 +929,7 @@ CLOCK_PERIOD	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/include/supe
 CLOCK_PERIOD	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/tsg/include/tsg.h	4;"	d
 CLOCK_SELECT	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/ddsserver_tcp_driver/include/ics660b.h	44;"	d
 CLRFreqPRM	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/codebase/superdarn/src.lib/os/rosmsg.1.5/include/rosmsg.h	/^struct CLRFreqPRM {$/;"	s
+CLRFreqPRM	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/include/superdarn/rosmsg.h	/^struct CLRFreqPRM {$/;"	s
 CLRFreqPRM	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/include/control_program.h	/^struct CLRFreqPRM {$/;"	s
 CLR_SAMP_OFFSET	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc316_tcp_driver/main.c	49;"	d	file:
 CMA	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.2/genfft/Makefile	/^CMA = nums.cma unix.cma$/;"	m
@@ -1285,6 +1287,7 @@ ConnexWriteMem	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/codebase/b
 Constant	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.2/genfft/c.ml	/^  | Constant of (string * int)$/;"	C	type:sstride
 Constant	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.2/genfft/variable.ml	/^  | Constant of (Unique.unique * string)$/;"	C	type:variable
 ControlPRM	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/codebase/superdarn/src.lib/os/rosmsg.1.5/include/rosmsg.h	/^struct ControlPRM {$/;"	s
+ControlPRM	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/include/superdarn/rosmsg.h	/^struct ControlPRM {$/;"	s
 ControlPRM	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/include/control_program.h	/^struct ControlPRM {$/;"	s
 ControlProgram	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/include/global_server_variables.h	/^struct ControlProgram {$/;"	s
 ControlState	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/include/global_server_variables.h	/^struct ControlState {$/;"	s
@@ -1530,6 +1533,8 @@ DDS_MASTER_INDEX	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/r
 DDS_MAX_CARDS	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/ddsserver_tcp_driver/include/dds_defs.h	17;"	d
 DDS_MAX_CHANNELS	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/ddsserver_tcp_driver/include/dds_defs.h	16;"	d
 DDS_MAX_RADAR_OUTPUT	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/adak/site_data/site.h	25;"	d
+DDS_MAX_RADAR_OUTPUT	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/include/site.h	25;"	d
+DDS_MAX_RADAR_OUTPUT	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/site_data/site.h	25;"	d
 DDS_MAX_RADAR_OUTPUT	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/sps/site_data/site.h	27;"	d
 DDS_OFFSET	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/timing_tcp_driver/include/timing_defs.h	9;"	d
 DDS_OFFSET	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/transponder/include/timing_defs.h	9;"	d
@@ -2137,6 +2142,7 @@ DataMapTestScalar	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/codebas
 DataMapWrite	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/codebase/general/src.lib/dmap.1.25/src/dmap.c	/^int DataMapWrite(int fid,struct DataMap *ptr) {$/;"	f
 DataMapWriteZ	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/codebase/general/src.lib/dmap.1.25/src/dmap.c	/^int DataMapWriteZ(gzFile file,struct DataMap *ptr) {$/;"	f
 DataPRM	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/codebase/superdarn/src.lib/os/rosmsg.1.5/include/rosmsg.h	/^struct DataPRM {$/;"	s
+DataPRM	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/include/superdarn/rosmsg.h	/^struct DataPRM {$/;"	s
 DataPRM	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/include/control_program.h	/^struct DataPRM {$/;"	s
 Decl	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.2/genfft/c.ml	/^  | Decl of string * string$/;"	C	type:c_decl
 Decl	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.2/genfft/c.mli	/^  | Decl of string * string$/;"	C	type:c_decl
@@ -3578,10 +3584,13 @@ GENUS	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2
 GETCHR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.2/kernel/scan.c	58;"	d	file:
 GET_BUFFER_ADDRESS	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/include/gc314FS.h	31;"	d
 GET_DATA	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/codebase/superdarn/src.lib/os/rosmsg.1.5/include/rosmsg.h	189;"	d
+GET_DATA	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/include/superdarn/rosmsg.h	189;"	d
 GET_DATA	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/include/control_program.h	161;"	d
 GET_PARAMETERS	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/codebase/superdarn/src.lib/os/rosmsg.1.5/include/rosmsg.h	169;"	d
+GET_PARAMETERS	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/include/superdarn/rosmsg.h	169;"	d
 GET_PARAMETERS	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/include/control_program.h	141;"	d
 GET_SITE_SETTINGS	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/codebase/superdarn/src.lib/os/rosmsg.1.5/include/rosmsg.h	166;"	d
+GET_SITE_SETTINGS	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/include/superdarn/rosmsg.h	166;"	d
 GET_SITE_SETTINGS	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/include/control_program.h	137;"	d
 GOOD	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/ddsserver_tcp_driver/include/ics660b.h	10;"	d
 GOOSEBAY	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/codebase/superdarn/src.lib/tk/fitacf.2.5/src/fitacf.c	50;"	d	file:
@@ -3589,13 +3598,13 @@ GPS	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/bc635_gps_
 GPSStatus	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/include/global_server_variables.h	/^struct GPSStatus {$/;"	s
 GPS_DEFAULT_REFRESHRATE	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/adak/site_data/site.h	13;"	d
 GPS_DEFAULT_REFRESHRATE	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/mcm/site_data/site.h	14;"	d
-GPS_DEFAULT_REFRESHRATE	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/include/site.h	14;"	d
-GPS_DEFAULT_REFRESHRATE	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/site_data/site.h	14;"	d
+GPS_DEFAULT_REFRESHRATE	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/include/site.h	13;"	d
+GPS_DEFAULT_REFRESHRATE	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/site_data/site.h	13;"	d
 GPS_DEFAULT_REFRESHRATE	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/sps/site_data/site.h	15;"	d
 GPS_DEFAULT_TRIGRATE	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/adak/site_data/site.h	14;"	d
 GPS_DEFAULT_TRIGRATE	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/mcm/site_data/site.h	15;"	d
-GPS_DEFAULT_TRIGRATE	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/include/site.h	15;"	d
-GPS_DEFAULT_TRIGRATE	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/site_data/site.h	15;"	d
+GPS_DEFAULT_TRIGRATE	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/include/site.h	14;"	d
+GPS_DEFAULT_TRIGRATE	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/site_data/site.h	14;"	d
 GPS_DEFAULT_TRIGRATE	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/sps/site_data/site.h	16;"	d
 GPS_GET_EVENT_TIME	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/include/global_server_variables.h	175;"	d
 GPS_GET_HDW_STATUS	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/include/global_server_variables.h	164;"	d
@@ -5259,6 +5268,7 @@ LINK	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.
 LINK	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.2/threads/Makefile	/^LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) \\$/;"	m
 LINK	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.2/tools/Makefile	/^LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) \\$/;"	m
 LINK_RADAR_CHAN	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/codebase/superdarn/src.lib/os/rosmsg.1.5/include/rosmsg.h	182;"	d
+LINK_RADAR_CHAN	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/include/superdarn/rosmsg.h	182;"	d
 LINK_RADAR_CHAN	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/include/control_program.h	154;"	d
 LIPO	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.2/Makefile	/^LIPO = $/;"	m
 LIPO	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.2/api/Makefile	/^LIPO = $/;"	m
@@ -5337,6 +5347,7 @@ LOOP	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/ddsserver
 LOPWR_STAT	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/codebase/superdarn/src.lib/tk/oldfit.1.25/src/fitstr.h	/^	 LOPWR_STAT,	\/* Low power status word *\/$/;"	m	struct:radar_parms
 LOPWR_STAT	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/codebase/superdarn/src.lib/tk/oldraw.1.16/src/raw.h	/^	 LOPWR_STAT,	\/* Low power status word *\/$/;"	m	struct:radar_parms
 LOWPWR	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/codebase/superdarn/src.lib/os/rosmsg.1.5/include/rosmsg.h	/^  int32 LOWPWR[30];$/;"	m	struct:TXStatus
+LOWPWR	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/include/superdarn/rosmsg.h	/^  int32 LOWPWR[30];$/;"	m	struct:TXStatus
 LOWPWR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/include/global_server_variables.h	/^  int32_t LOWPWR[MAX_TRANSMITTERS];$/;"	m	struct:tx_status
 LTCOMPILE	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.2/Makefile	/^LTCOMPILE = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) \\$/;"	m
 LTCOMPILE	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.2/api/Makefile	/^LTCOMPILE = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) \\$/;"	m
@@ -6106,6 +6117,7 @@ NOISE_MEAN	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/codebase/super
 NONE	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.2/genfft/gen_mdct.ml	/^  | NONE$/;"	C	type:mode
 NONE	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.2/genfft/gen_r2r.ml	/^  | NONE$/;"	C	type:mode
 NOOP	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/codebase/superdarn/src.lib/os/rosmsg.1.5/include/rosmsg.h	174;"	d
+NOOP	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/include/superdarn/rosmsg.h	174;"	d
 NOOP	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/include/control_program.h	146;"	d
 NORMAL_INSTALL	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.2/Makefile	/^NORMAL_INSTALL = :$/;"	m
 NORMAL_INSTALL	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.2/api/Makefile	/^NORMAL_INSTALL = :$/;"	m
@@ -6797,6 +6809,7 @@ OFF	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/phasing_ma
 OFF	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/rxfe_build_table/include/plx_defines.h	35;"	d
 OFILES	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/codebase/analysis/src.lib/cmpfit-1.2/Makefile	/^OFILES=mpfit.o$/;"	m
 OKAY	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/codebase/superdarn/src.lib/os/rosmsg.1.5/include/rosmsg.h	173;"	d
+OKAY	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/include/superdarn/rosmsg.h	173;"	d
 OKAY	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/include/control_program.h	145;"	d
 ON	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/beam_direction_only/include/plx_defines.h	33;"	d
 ON	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/dio_tcp_driver/include/plx_defines.h	33;"	d
@@ -7619,6 +7632,7 @@ PI	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_dri
 PI	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.32.exp/include/_set_GC4016_vals.c	11;"	d	file:
 PI	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/ics660_drv/ideal_filter_coef.c	10;"	d	file:
 PING	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/codebase/superdarn/src.lib/os/rosmsg.1.5/include/rosmsg.h	172;"	d
+PING	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/include/superdarn/rosmsg.h	172;"	d
 PING	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/include/control_program.h	144;"	d
 PLANNERS	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.2/kernel/ifftw.h	/^     PLANNERS,$/;"	e	enum:malloc_tag
 PLANS	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.2/cell/Makefile	/^PLANS = plans-double.c$/;"	m
@@ -8935,7 +8949,9 @@ QRECURSE	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/laten
 QRECURSE	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/latency_test/x86/Makefile	/^QRECURSE=recurse.mk$/;"	m
 QUERY_INI_SETTING	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/include/control_program.h	139;"	d
 QUERY_INI_SETTINGS	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/codebase/superdarn/src.lib/os/rosmsg.1.5/include/rosmsg.h	165;"	d
+QUERY_INI_SETTINGS	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/include/superdarn/rosmsg.h	165;"	d
 QUIT	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/codebase/superdarn/src.lib/os/rosmsg.1.5/include/rosmsg.h	175;"	d
+QUIT	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/include/superdarn/rosmsg.h	175;"	d
 QUIT	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/include/control_program.h	147;"	d
 R	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.2/kernel/ifftw.h	/^  typedef double R;$/;"	t
 R	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.2/kernel/ifftw.h	/^  typedef float R;$/;"	t
@@ -9089,18 +9105,22 @@ REDFT11	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3
 REDFT11	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.2/rdft/codelet-rdft.h	/^     REDFT00, REDFT01, REDFT10, REDFT11, \/* real-even == DCT's *\/$/;"	e	enum:__anon249
 REDFT_KINDP	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.2/rdft/codelet-rdft.h	62;"	d
 REGISTER_SEQ	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/codebase/superdarn/src.lib/os/rosmsg.1.5/include/rosmsg.h	177;"	d
+REGISTER_SEQ	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/include/superdarn/rosmsg.h	177;"	d
 REGISTER_SEQ	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/include/control_program.h	149;"	d
 REGISTER_SOLVER	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.2/kernel/ifftw.h	84;"	d
 REG_BLOCK_SIZE	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/ddsserver_tcp_driver/include/ics660b.h	26;"	d
 RELEASE_RESETS	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/ddsserver_tcp_driver/include/ics660b.h	85;"	d
 REMOVE_SEQ	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/codebase/superdarn/src.lib/os/rosmsg.1.5/include/rosmsg.h	178;"	d
+REMOVE_SEQ	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/include/superdarn/rosmsg.h	178;"	d
 REMOVE_SEQ	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/include/control_program.h	150;"	d
 REODFT_KINDP	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.2/rdft/codelet-rdft.h	64;"	d
 REODFT_KINDP	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.2/reodft/reodft.h	27;"	d
 REQARG	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.2/libbench2/my-getopt.h	/^enum { REQARG, OPTARG, NOARG };$/;"	e	enum:__anon171
 REQUEST_ASSIGNED_FREQ	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/codebase/superdarn/src.lib/os/rosmsg.1.5/include/rosmsg.h	180;"	d
+REQUEST_ASSIGNED_FREQ	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/include/superdarn/rosmsg.h	180;"	d
 REQUEST_ASSIGNED_FREQ	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/include/control_program.h	152;"	d
 REQUEST_CLEAR_FREQ_SEARCH	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/codebase/superdarn/src.lib/os/rosmsg.1.5/include/rosmsg.h	181;"	d
+REQUEST_CLEAR_FREQ_SEARCH	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/include/superdarn/rosmsg.h	181;"	d
 REQUEST_CLEAR_FREQ_SEARCH	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/include/control_program.h	153;"	d
 REQUIRE_N_MULTIPLE_OF	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.2/cell/fftw-cell.h	24;"	d
 REQUIRE_N_MULTIPLE_OF	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.2/cell/fftw-cell.h	28;"	d
@@ -9146,6 +9166,7 @@ RODFT11	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3
 RODFT_KINDP	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.2/rdft/codelet-rdft.h	63;"	d
 ROOT_3	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/codebase/superdarn/src.lib/tk/fitacf.2.5/src/noise_stat.c	43;"	d	file:
 ROSMsg	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/codebase/superdarn/src.lib/os/rosmsg.1.5/include/rosmsg.h	/^struct ROSMsg {$/;"	s
+ROSMsg	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/include/superdarn/rosmsg.h	/^struct ROSMsg {$/;"	s
 ROSMsg	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/include/control_program.h	/^struct ROSMsg {$/;"	s
 ROS_IP	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/include/control_program.h	13;"	d
 ROS_PORT	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/include/control_program.h	14;"	d
@@ -9174,6 +9195,7 @@ RShellTable	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/codebase/supe
 RShellTable	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/include/superdarn/radarshell.h	/^struct RShellTable {$/;"	s
 RT_TASK	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/usr/codebase/superdarn/src.bin/os/cp/normalsound.1.7/normalsound.c	106;"	d	file:
 RXFESettings	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/codebase/superdarn/src.lib/os/rosmsg.1.5/include/rosmsg.h	/^struct RXFESettings {$/;"	s
+RXFESettings	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/include/superdarn/rosmsg.h	/^struct RXFESettings {$/;"	s
 RXFESettings	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/include/control_program.h	/^struct RXFESettings {$/;"	s
 RXFE_ADDRESS	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/beam_direction_only/include/plx_defines.h	37;"	d
 RXFE_ADDRESS	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/dio_tcp_driver/include/plx_defines.h	37;"	d
@@ -9213,6 +9235,7 @@ RadarLoadHardware	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/codebas
 RadarNetwork	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/codebase/superdarn/src.lib/tk/radar.1.21/include/radar.h	/^struct RadarNetwork {$/;"	s
 RadarNetwork	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/include/superdarn/radar.h	/^struct RadarNetwork {$/;"	s
 RadarPRM	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/codebase/superdarn/src.lib/os/rosmsg.1.5/include/rosmsg.h	/^struct RadarPRM {$/;"	s
+RadarPRM	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/include/superdarn/rosmsg.h	/^struct RadarPRM {$/;"	s
 RadarPRM	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/include/control_program.h	/^struct RadarPRM {$/;"	s
 RadarParm	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/codebase/superdarn/src.lib/tk/radar.1.21/include/rprm.h	/^struct RadarParm {$/;"	s
 RadarParm	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/include/superdarn/rprm.h	/^struct RadarParm {$/;"	s
@@ -9294,6 +9317,7 @@ RfileReadRaw	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/codebase/gen
 RfileReadRawLine	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/codebase/general/src.lib/rfile.1.9/src/rfile.c	/^int RfileReadRawLine(FILE *fp,int buflen,char *buffer) {$/;"	f
 RfileSeek	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/codebase/general/src.lib/rfile.1.9/src/rfile.c	/^int RfileSeek(FILE *fp,$/;"	f
 RosData	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/codebase/superdarn/src.lib/os/rosmsg.1.5/include/rosmsg.h	/^struct RosData {$/;"	s
+RosData	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/include/superdarn/rosmsg.h	/^struct RosData {$/;"	s
 Row-major-Format	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.2/doc/html/Row_002dmajor-Format.html	/^<a name="Row-major-Format"><\/a>$/;"	a
 Row_002dmajor-Format	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.2/doc/html/Row_002dmajor-Format.html	/^<a name="Row_002dmajor-Format"><\/a>$/;"	a
 S	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.2/api/import-wisdom-from-file.c	/^} S;$/;"	t	typeref:struct:__anon191	file:
@@ -9403,6 +9427,7 @@ SED	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.2
 SED	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.2/threads/Makefile	/^SED = \/bin\/sed$/;"	m
 SED	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.2/tools/Makefile	/^SED = \/bin\/sed$/;"	m
 SET_ACTIVE	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/codebase/superdarn/src.lib/os/rosmsg.1.5/include/rosmsg.h	164;"	d
+SET_ACTIVE	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/include/superdarn/rosmsg.h	164;"	d
 SET_ACTIVE	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/include/control_program.h	136;"	d
 SET_CFIR_CHA	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/include/gc314FS.h	33;"	d
 SET_CHIP	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/ddsserver_tcp_driver/include/ics660b.h	79;"	d
@@ -9412,6 +9437,7 @@ SET_FILTERS	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/in
 SET_FREQUENCY	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/include/gc314FS.h	36;"	d
 SET_GLOBAL_RESET	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/include/gc314FS.h	37;"	d
 SET_INACTIVE	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/codebase/superdarn/src.lib/os/rosmsg.1.5/include/rosmsg.h	163;"	d
+SET_INACTIVE	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/include/superdarn/rosmsg.h	163;"	d
 SET_INACTIVE	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/include/control_program.h	135;"	d
 SET_MAKE	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.2/Makefile	/^SET_MAKE = $/;"	m
 SET_MAKE	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.2/api/Makefile	/^SET_MAKE = $/;"	m
@@ -9445,13 +9471,17 @@ SET_MAKE	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-
 SET_OUTPUT_RATE	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/include/gc314FS.h	38;"	d
 SET_PAGE	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/ddsserver_tcp_driver/include/ics660b.h	80;"	d
 SET_PARAMETERS	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/codebase/superdarn/src.lib/os/rosmsg.1.5/include/rosmsg.h	170;"	d
+SET_PARAMETERS	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/include/superdarn/rosmsg.h	170;"	d
 SET_PARAMETERS	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/include/control_program.h	142;"	d
 SET_PROCESSING_FLAG	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/codebase/superdarn/src.lib/os/rosmsg.1.5/include/rosmsg.h	186;"	d
+SET_PROCESSING_FLAG	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/include/superdarn/rosmsg.h	186;"	d
 SET_PROCESSING_FLAG	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/include/control_program.h	158;"	d
 SET_RADAR_CHAN	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/codebase/superdarn/src.lib/os/rosmsg.1.5/include/rosmsg.h	162;"	d
+SET_RADAR_CHAN	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/include/superdarn/rosmsg.h	162;"	d
 SET_RADAR_CHAN	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/include/control_program.h	134;"	d
 SET_RDA	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/include/gc314FS.h	42;"	d
 SET_READY_FLAG	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/codebase/superdarn/src.lib/os/rosmsg.1.5/include/rosmsg.h	184;"	d
+SET_READY_FLAG	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/include/superdarn/rosmsg.h	184;"	d
 SET_READY_FLAG	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/include/control_program.h	156;"	d
 SET_SAMPLES	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/include/gc314FS.h	39;"	d
 SET_SITE_IFMODE	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/include/control_program.h	140;"	d
@@ -10077,8 +10107,6 @@ STATE_TIME	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usr
 STATE_TIME	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/include/timing_defs.h	7;"	d
 STATUS	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/ddsserver_tcp_driver/include/ics660b.h	33;"	d
 STATUS_PORT	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/mcm/site_data/site.h	13;"	d
-STATUS_PORT	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/include/site.h	13;"	d
-STATUS_PORT	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/site_data/site.h	13;"	d
 STATUS_PORT	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/sps/site_data/site.h	14;"	d
 STATUS_REG	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/ddsserver_tcp_driver/include/ics660b.h	148;"	d
 STDC_HEADERS	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.2/config.h	343;"	d
@@ -10239,6 +10267,7 @@ ScriptSetText	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/codebase/ba
 Seq	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.2/genfft/schedule.ml	/^  | Seq of (schedule * schedule)$/;"	C	type:schedule
 Seq	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.2/genfft/schedule.mli	/^  | Seq of (schedule * schedule)$/;"	C	type:schedule
 SeqPRM	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/codebase/superdarn/src.lib/os/rosmsg.1.5/include/rosmsg.h	/^struct SeqPRM {$/;"	s
+SeqPRM	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/include/superdarn/rosmsg.h	/^struct SeqPRM {$/;"	s
 SeqPRM	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/include/control_program.h	/^struct SeqPRM {$/;"	s
 ShMemAlloc	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/codebase/base/src.lib/memory/shmem.1.2/src/shmem.c	/^unsigned char *ShMemAlloc(char *memname,int size,int flags,int unlink,$/;"	f
 ShMemFree	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/codebase/base/src.lib/memory/shmem.1.2/src/shmem.c	/^int ShMemFree(unsigned char *p,char *memname,int size,int unlink,int fd) {$/;"	f
@@ -10319,6 +10348,7 @@ SiteRosStartIntt	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/usr/code
 SiteRosStartScan	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/usr/codebase/superdarn/src.lib/os/site.ros.1.0/src/site.c	/^int SiteRosStartScan() {$/;"	f
 SiteRosTimeSeq	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/usr/codebase/superdarn/src.lib/os/site.ros.1.0/src/site.c	/^int SiteRosTimeSeq(int *ptab) {$/;"	f
 SiteSettings	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/codebase/superdarn/src.lib/os/rosmsg.1.5/include/rosmsg.h	/^struct SiteSettings {$/;"	s
+SiteSettings	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/include/superdarn/rosmsg.h	/^struct SiteSettings {$/;"	s
 SiteSettings	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/include/control_program.h	/^struct SiteSettings {$/;"	s
 SiteSetupRadar	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/usr/codebase/superdarn/src.lib/os/site.1.6/src/site.c	/^int SiteSetupRadar() {$/;"	f
 SiteStart	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/usr/codebase/superdarn/src.lib/os/site.1.6/src/site.c	/^int SiteStart(char *host,char *ststr) {$/;"	f
@@ -10553,6 +10583,7 @@ TRIGGER	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/ddsser
 TRIGGER_SOURCE	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/ddsserver_tcp_driver/include/ics660b.h	43;"	d
 TRIGREAL_IS_LONG_DOUBLE	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.2/kernel/ifftw.h	64;"	d
 TRTimes	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/codebase/superdarn/src.lib/os/rosmsg.1.5/include/rosmsg.h	/^struct TRTimes {$/;"	s
+TRTimes	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/include/superdarn/rosmsg.h	/^struct TRTimes {$/;"	s
 TRTimes	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/include/control_program.h	/^struct TRTimes {$/;"	s
 TRUE	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/codebase/superdarn/src.bin/os/radarshell.1.2/shell.c	43;"	d	file:
 TR_BIT	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/transponder/_decodestate.c	13;"	d	file:
@@ -10663,6 +10694,7 @@ TXPOW	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/codebase/superdarn/
 TXRATE	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_backup/main.cpp	66;"	d	file:
 TXRATE	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/main.cpp	66;"	d	file:
 TXStatus	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/codebase/superdarn/src.lib/os/rosmsg.1.5/include/rosmsg.h	/^struct TXStatus {$/;"	s
+TXStatus	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/include/superdarn/rosmsg.h	/^struct TXStatus {$/;"	s
 TX_BEAM_PRIORITY	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/include/priority.h	1;"	d
 TX_FREQ_PRIORITY	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/include/priority.h	3;"	d
 TX_OFFSET	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/timing_tcp_driver/include/timing_defs.h	10;"	d
@@ -10760,8 +10792,10 @@ UNPCKL	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.
 UNPCKL	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.2/simd/simd-sse.h	53;"	d
 UNPCKL	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.2/simd/simd-sse2.h	50;"	d
 UNSET_PROCESSING_FLAG	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/codebase/superdarn/src.lib/os/rosmsg.1.5/include/rosmsg.h	187;"	d
+UNSET_PROCESSING_FLAG	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/include/superdarn/rosmsg.h	187;"	d
 UNSET_PROCESSING_FLAG	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/include/control_program.h	159;"	d
 UNSET_READY_FLAG	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/codebase/superdarn/src.lib/os/rosmsg.1.5/include/rosmsg.h	185;"	d
+UNSET_READY_FLAG	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/include/superdarn/rosmsg.h	185;"	d
 UNSET_READY_FLAG	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/include/control_program.h	157;"	d
 UNTAINT	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.2/kernel/ifftw.h	970;"	d
 UNTAINT	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.2/kernel/ifftw.h	975;"	d
@@ -10770,6 +10804,7 @@ UNUSED	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.
 UPCONVERTER_SELECT	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/ddsserver_tcp_driver/include/ics660b.h	46;"	d
 UPDATE_CHANNEL	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/include/gc314FS.h	44;"	d
 UPDATE_SITE_SETTINGS	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/codebase/superdarn/src.lib/os/rosmsg.1.5/include/rosmsg.h	167;"	d
+UPDATE_SITE_SETTINGS	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/include/superdarn/rosmsg.h	167;"	d
 UPDATE_SITE_SETTINGS	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/include/control_program.h	138;"	d
 USEC	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/usr/codebase/superdarn/src.lib/os/ops.1.13/src/sync.c	52;"	d	file:
 USEC	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/usr/codebase/superdarn/src.lib/os/site.ade.2.0/src/site.c	36;"	d	file:
@@ -10996,6 +11031,7 @@ W	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.2/k
 W0	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.2/kernel/ifftw.h	/^     trigreal *W0, *W1;$/;"	m	struct:triggen_s
 W1	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.2/kernel/ifftw.h	/^     trigreal *W0, *W1;$/;"	m	struct:triggen_s
 WAIT_FOR_DATA	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/codebase/superdarn/src.lib/os/rosmsg.1.5/include/rosmsg.h	191;"	d
+WAIT_FOR_DATA	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/include/superdarn/rosmsg.h	191;"	d
 WAIT_FOR_DATA	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/include/gc314FS.h	46;"	d
 WHEN_VERBOSE	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.2/libbench2/util.c	93;"	d	file:
 WHEN_VERBOSE	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.2/libbench2/util.c	95;"	d	file:
@@ -11391,6 +11427,7 @@ _RMSGSND_H	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/include/superd
 _RMSG_H	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/codebase/superdarn/src.lib/os/rmsgrcv.1.2/include/rmsg.h	47;"	d
 _RMSG_H	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/include/superdarn/rmsg.h	47;"	d
 _ROSMSG_H	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/codebase/superdarn/src.lib/os/rosmsg.1.5/include/rosmsg.h	15;"	d
+_ROSMSG_H	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/include/superdarn/rosmsg.h	15;"	d
 _RPOS_H	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/codebase/superdarn/src.lib/tk/rpos.1.7/include/rpos.h	35;"	d
 _RPOS_H	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/include/superdarn/rpos.h	35;"	d
 _RPRM_H	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/codebase/superdarn/src.lib/tk/radar.1.21/include/rprm.h	34;"	d
@@ -11959,6 +11996,7 @@ after_problem_rcopy_from	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_rada
 after_problem_rcopy_to	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.2/libbench2/after-rcopy-to.c	/^void after_problem_rcopy_to(bench_problem *p, bench_real *ro)$/;"	f
 agc	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/codebase/superdarn/src.lib/os/rosmsg.1.5/include/rosmsg.h	/^  uint32  *agc;$/;"	m	struct:RosData
 agc	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/codebase/superdarn/src.lib/tk/radar.1.21/include/rprm.h	/^    int16 agc;$/;"	m	struct:RadarParm::__anon73
+agc	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/include/superdarn/rosmsg.h	/^  uint32  *agc;$/;"	m	struct:RosData
 agc	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/include/superdarn/rprm.h	/^    int16 agc;$/;"	m	struct:RadarParm::__anon137
 agcstat	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/usr/codebase/superdarn/src.lib/os/ops.1.13/src/global.c	/^int agcstat=0;$/;"	v
 al	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.2/genfft/to_alist.ml	/^  let al = List.rev (runM ([], empty, empty) peek_alistM dag) in$/;"	v
@@ -12361,10 +12399,13 @@ am_spufftw_OBJECTS	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code
 amnesia	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.2/kernel/ifftw.h	/^typedef enum { FORGET_ACCURSED, FORGET_EVERYTHING } amnesia;$/;"	t	typeref:enum:__anon301
 amnesia	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.2/tests/fftw-bench.c	/^int amnesia = 0;$/;"	v
 amp1	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/codebase/superdarn/src.lib/os/rosmsg.1.5/include/rosmsg.h	/^     uint32 amp1;    \/* Stage 1 Amp 20 db before IF mixer *\/$/;"	m	struct:RXFESettings
+amp1	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/include/superdarn/rosmsg.h	/^     uint32 amp1;    \/* Stage 1 Amp 20 db before IF mixer *\/$/;"	m	struct:RXFESettings
 amp1	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/include/control_program.h	/^     uint32_t amp1;    \/\/ Stage 1 Amp 20 db before IF mixer$/;"	m	struct:RXFESettings
 amp2	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/codebase/superdarn/src.lib/os/rosmsg.1.5/include/rosmsg.h	/^     uint32 amp2;    \/* Stage 2 Amp 10 db after IF mixer *\/$/;"	m	struct:RXFESettings
+amp2	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/include/superdarn/rosmsg.h	/^     uint32 amp2;    \/* Stage 2 Amp 10 db after IF mixer *\/$/;"	m	struct:RXFESettings
 amp2	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/include/control_program.h	/^     uint32_t amp2;    \/\/ Stage 2 Amp 10 db after IF mixer$/;"	m	struct:RXFESettings
 amp3	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/codebase/superdarn/src.lib/os/rosmsg.1.5/include/rosmsg.h	/^     uint32 amp3;    \/* Stage 3 Amp 10 db after IF mixer *\/$/;"	m	struct:RXFESettings
+amp3	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/include/superdarn/rosmsg.h	/^     uint32 amp3;    \/* Stage 3 Amp 10 db after IF mixer *\/$/;"	m	struct:RXFESettings
 amp3	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/include/control_program.h	/^     uint32_t amp3;    \/\/ Stage 3 Amp 10 db after IF mixer$/;"	m	struct:RXFESettings
 an_INT_guaranteed_to_be_zero	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.2/kernel/stride.c	/^const INT X(an_INT_guaranteed_to_be_zero) = 0;$/;"	v
 angles	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/dio_tcp_driver/main.c	/^double *freqs[MAX_RADARS],*angles[MAX_RADARS];$/;"	v
@@ -12785,12 +12826,16 @@ atnum	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/build/include/base/
 atnum	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/codebase/base/src.lib/xml/xmldb.1.6/include/rxmldb.h	/^  int atnum;$/;"	m	struct:XMLDBelement
 atnum	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/include/base/rxmldb.h	/^  int atnum;$/;"	m	struct:XMLDBelement
 att1	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/codebase/superdarn/src.lib/os/rosmsg.1.5/include/rosmsg.h	/^     uint32 att1;    \/* 1\/2 db Attenuator *\/$/;"	m	struct:RXFESettings
+att1	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/include/superdarn/rosmsg.h	/^     uint32 att1;    \/* 1\/2 db Attenuator *\/$/;"	m	struct:RXFESettings
 att1	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/include/control_program.h	/^     uint32_t att1;    \/\/ 1\/2 db Attenuator$/;"	m	struct:RXFESettings
 att2	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/codebase/superdarn/src.lib/os/rosmsg.1.5/include/rosmsg.h	/^     uint32 att2;    \/*  1  db Attenuator *\/$/;"	m	struct:RXFESettings
+att2	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/include/superdarn/rosmsg.h	/^     uint32 att2;    \/*  1  db Attenuator *\/$/;"	m	struct:RXFESettings
 att2	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/include/control_program.h	/^     uint32_t att2;    \/\/  1  db Attenuator$/;"	m	struct:RXFESettings
 att3	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/codebase/superdarn/src.lib/os/rosmsg.1.5/include/rosmsg.h	/^     uint32 att3;    \/*  2  db Attenuator *\/$/;"	m	struct:RXFESettings
+att3	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/include/superdarn/rosmsg.h	/^     uint32 att3;    \/*  2  db Attenuator *\/$/;"	m	struct:RXFESettings
 att3	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/include/control_program.h	/^     uint32_t att3;    \/\/  2  db Attenuator $/;"	m	struct:RXFESettings
 att4	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/codebase/superdarn/src.lib/os/rosmsg.1.5/include/rosmsg.h	/^     uint32 att4;    \/*  4  db Attenuator *\/$/;"	m	struct:RXFESettings
+att4	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/include/superdarn/rosmsg.h	/^     uint32 att4;    \/*  4  db Attenuator *\/$/;"	m	struct:RXFESettings
 att4	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/include/control_program.h	/^     uint32_t att4;    \/\/  4  db Attenuator$/;"	m	struct:RXFESettings
 atten	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/codebase/superdarn/src.lib/tk/cfit.1.19/include/cfitdata.h	/^  int16 atten;$/;"	m	struct:CFitdata
 atten	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/codebase/superdarn/src.lib/tk/iq.1.7/include/iq.h	/^  int *atten;$/;"	m	struct:IQ
@@ -12888,6 +12933,7 @@ ba	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/codebase/analysis/src.
 ba	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/codebase/analysis/src.lib/geopack/geopack.1.4/src/geopack_2005.c	/^	real a[12], shi, chi, ab[13], ba[8];$/;"	m	struct:__anon52::__anon58	file:
 ba	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/codebase/analysis/src.lib/geopack/geopack.1.4/src/geopack_2005.c	/^	real a[8], sfi, cfi, b[7], ab[10], ba[8];$/;"	m	struct:__anon52::__anon57	file:
 back	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/codebase/superdarn/src.lib/os/rosmsg.1.5/include/rosmsg.h	/^  uint32 *back;$/;"	m	struct:RosData
+back	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/include/superdarn/rosmsg.h	/^  uint32 *back;$/;"	m	struct:RosData
 back	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/include/global_server_variables.h	/^     uint32_t *back;$/;"	m	struct:ControlProgram
 back_address	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/include/global_server_variables.h	/^     uint64_t back_address;$/;"	m	struct:ControlProgram
 back_input	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc316_tcp_driver/main.c	/^int back_input=1;$/;"	v
@@ -12912,6 +12958,7 @@ base0	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/ddsserve
 base1	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/ddsserver_tcp_driver/include/ics660b.h	/^  uint32_t base1;$/;"	m	struct:pci_base
 baseGC214	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc214_tcp_driver/main.c	/^long baseGC214;$/;"	v
 baseband_samplerate	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/codebase/superdarn/src.lib/os/rosmsg.1.5/include/rosmsg.h	/^  float baseband_samplerate; \/* required: normally equals (nbaud\/txpl)$/;"	m	struct:ControlPRM
+baseband_samplerate	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/include/superdarn/rosmsg.h	/^  float baseband_samplerate; \/* required: normally equals (nbaud\/txpl)$/;"	m	struct:ControlPRM
 baseband_samplerate	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/include/control_program.h	/^     float baseband_samplerate; \/\/required: normally equals (nbaud\/txpl) but can be changed for oversampling needs$/;"	m	struct:ControlPRM
 baseport	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/untested_cp/fsvscan.1.1/fsvscan.c	/^int baseport=44100;$/;"	v
 baseport	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/untested_cp/fsvscan.1.1/normalscan.c	/^int baseport=44100;$/;"	v
@@ -12935,8 +12982,10 @@ bcsr	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.
 beam_num	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/usr/codebase/superdarn/src.bin/os/cp/normalsound.1.7/normalsound.c	/^  int beam_num;$/;"	m	struct:sounder_struct	file:
 beam_num	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/usr/codebase/superdarn/src.bin/os/cp/pcodesound.1.1/pcodesound.c	/^  int beam_num;$/;"	m	struct:sounder_struct	file:
 beam_table_1	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/codebase/superdarn/src.lib/os/rosmsg.1.5/include/rosmsg.h	/^     char beam_table_1[256];$/;"	m	struct:SiteSettings
+beam_table_1	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/include/superdarn/rosmsg.h	/^     char beam_table_1[256];$/;"	m	struct:SiteSettings
 beam_table_1	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/include/control_program.h	/^     char beam_table_1[256];$/;"	m	struct:SiteSettings
 beam_table_2	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/codebase/superdarn/src.lib/os/rosmsg.1.5/include/rosmsg.h	/^     char beam_table_2[256];$/;"	m	struct:SiteSettings
+beam_table_2	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/include/superdarn/rosmsg.h	/^     char beam_table_2[256];$/;"	m	struct:SiteSettings
 beam_table_2	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/include/control_program.h	/^     char beam_table_2[256];$/;"	m	struct:SiteSettings
 beamdir	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc316_tcp_driver/include/gc314FS_defines.h	/^        int beamdir;$/;"	m	struct:_copy_chuck
 beamdirs_rad	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/include/beam_phase.h	/^double  beamdirs_rad[16]={      -.4241, -.3676, -.3110, -.2545, -.1979, -.1414, -.0848, -.0283, $/;"	v
@@ -13157,6 +13206,7 @@ buffer	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/codebase/superdarn
 buffer	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/doc/html/base/src.lib/tcpip/cnx/src/ConnexWriteMem.c	/^unsigned char buffer[4096];$/;"	v
 buffer	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc316_tcp_driver/include/gc314FS_defines.h	/^        int buffer;$/;"	m	struct:_copy_chuck
 buffer_index	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/codebase/superdarn/src.lib/os/rosmsg.1.5/include/rosmsg.h	/^  int32 buffer_index;  \/* required: valid 0-1: DMA buffer to use for recv *\/$/;"	m	struct:ControlPRM
+buffer_index	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/include/superdarn/rosmsg.h	/^  int32 buffer_index;  \/* required: valid 0-1: DMA buffer to use for recv *\/$/;"	m	struct:ControlPRM
 buffer_index	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/include/control_program.h	/^     int32_t buffer_index; \/\/required: valid 0-1: DMA buffer to use for recv$/;"	m	struct:ControlPRM
 bufferedp	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.2/dft/dftw-direct.c	/^     int bufferedp;$/;"	m	struct:__anon260	file:
 bufferedp	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.2/dft/direct.c	/^     int bufferedp;$/;"	m	struct:__anon277	file:
@@ -13164,6 +13214,7 @@ bufferedp	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw
 bufferedp	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.2/rdft/direct-r2c.c	/^     int bufferedp;$/;"	m	struct:__anon223	file:
 bufferedp	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.2/rdft/hc2hc-direct.c	/^     int bufferedp;$/;"	m	struct:__anon221	file:
 bufnum	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/codebase/superdarn/src.lib/os/rosmsg.1.5/include/rosmsg.h	/^  int32 bufnum;$/;"	m	struct:DataPRM
+bufnum	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/include/superdarn/rosmsg.h	/^  int32 bufnum;$/;"	m	struct:DataPRM
 bufnum	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/include/control_program.h	/^  int32_t bufnum;$/;"	m	struct:DataPRM
 bufptr	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/codebase/base/src.lib/tcpip/cnx.1.17/doc/src/ConnexWriteMem/ConnexWriteMem.c	/^int bufptr=0;$/;"	v
 bufptr	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/doc/html/base/src.lib/tcpip/cnx/src/ConnexWriteMem.c	/^int bufptr=0;$/;"	v
@@ -13543,6 +13594,8 @@ channel	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/codebase/superdar
 channel	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/codebase/superdarn/src.lib/tk/scan.1.7/include/scandata.h	/^  int channel;  $/;"	m	struct:RadarBeam
 channel	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/include/superdarn/cfitdata.h	/^  int16 channel;$/;"	m	struct:CFitdata
 channel	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/include/superdarn/fitblk.h	/^  int channel; \/* zero=mono 1 or 2 is stereo *\/$/;"	m	struct:FitPrm
+channel	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/include/superdarn/rosmsg.h	/^  int32 channel; \/* required: DO NOT SET MANUALLY *\/$/;"	m	struct:RadarPRM
+channel	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/include/superdarn/rosmsg.h	/^  int32 channel;\/* required: DO NOT SET MANUALLY *\/$/;"	m	struct:ControlPRM
 channel	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/include/superdarn/rprm.h	/^  int16 channel;$/;"	m	struct:RadarParm
 channel	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/include/superdarn/scandata.h	/^  int channel;  $/;"	m	struct:RadarBeam
 channel	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/usr/codebase/superdarn/src.bin/os/cp/pcodecamp_bm3_15km.1.4/pcodecamp.c	/^int  channel=0;$/;"	v
@@ -14427,6 +14480,7 @@ current_assigned_freq	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_c
 current_assigned_noise	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/include/global_server_variables.h	/^     float current_assigned_noise; $/;"	m	struct:ControlState
 current_assigned_pwr	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/include/global_server_variables.h	/^     double current_assigned_pwr; $/;"	m	struct:ControlState
 current_pulseseq_index	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/codebase/superdarn/src.lib/os/rosmsg.1.5/include/rosmsg.h	/^  int32 current_pulseseq_index; \/* required: registered pulse sequence to use $/;"	m	struct:ControlPRM
+current_pulseseq_index	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/include/superdarn/rosmsg.h	/^  int32 current_pulseseq_index; \/* required: registered pulse sequence to use $/;"	m	struct:ControlPRM
 current_pulseseq_index	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/include/control_program.h	/^     int32_t current_pulseseq_index; \/\/required: registered pulse sequence to use $/;"	m	struct:ControlPRM
 current_time	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/src/adak-rbsp.py	/^current_time=datetime.datetime.utcnow()$/;"	v
 current_twiddle_policy	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.2/genfft/twiddle.ml	/^let current_twiddle_policy = ref twiddle_policy_load_all$/;"	v
@@ -14632,7 +14686,7 @@ dds_rxfe_settings	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/
 ddshostip	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/server/main.c	/^char *ddshostip=DDS_HOST_IP;$/;"	v
 ddsport	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/server/main.c	/^int ddsport=DDS_HOST_PORT;$/;"	v
 ddssock	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/server/main.c	/^int ddssock=-1;$/;"	v
-debug	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/usr/codebase/superdarn/src.lib/os/ops.1.13/src/global.c	/^int debug=0;$/;"	v
+debug	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/usr/codebase/superdarn/src.lib/os/ops.1.13/src/global.c	/^int debug=1;$/;"	v
 debug	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.2/kernel/debug.c	/^void X(debug)(const char *format, ...)$/;"	f
 dec	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.2/dft/ct.h	/^     int dec;$/;"	m	struct:ct_solver_s
 dec	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.2/dft/dftw-generic.c	/^     int dec;$/;"	m	struct:__anon262	file:
@@ -15528,6 +15582,7 @@ desc	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.
 desc	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.2/rdft/simd/codelets/hc2cfdftv_8.c	/^static const hc2c_desc desc = { 8, "hc2cfdftv_8", twinstr, &GENUS, {23, 22, 18, 0} };$/;"	v	file:
 desc	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.2/rdft/simd/codelets/hc2cfdftv_8.c	/^static const hc2c_desc desc = { 8, "hc2cfdftv_8", twinstr, &GENUS, {41, 23, 0, 0} };$/;"	v	file:
 description	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/codebase/superdarn/src.lib/os/rosmsg.1.5/include/rosmsg.h	/^  char description[120];\/* optional: but a very good idea to set *\/$/;"	m	struct:ControlPRM
+description	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/include/superdarn/rosmsg.h	/^  char description[120];\/* optional: but a very good idea to set *\/$/;"	m	struct:ControlPRM
 description	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/include/control_program.h	/^     char description[120]; \/\/optional: but a very good idea to set$/;"	m	struct:ControlPRM
 destroy	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.2/dft/bluestein.c	/^static void destroy(plan *ego_)$/;"	f	file:
 destroy	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.2/dft/buffered.c	/^static void destroy(plan *ego_)$/;"	f	file:
@@ -15872,6 +15927,7 @@ duration	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/codebase/superda
 duration	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/tsg/maketsg.c	/^	 int duration;	        \/* maximum duration of this state *\/$/;"	m	struct:TSGsdef	file:
 duration_minutes	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/codebase/superdarn/src.bin/os/schedule.1.5/schedule.h	/^  int duration_minutes;$/;"	m	struct:scd_entry
 duration_usec	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/codebase/superdarn/src.lib/os/rosmsg.1.5/include/rosmsg.h	/^  uint32 *duration_usec;$/;"	m	struct:TRTimes
+duration_usec	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/include/superdarn/rosmsg.h	/^  uint32 *duration_usec;$/;"	m	struct:TRTimes
 duration_usec	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/include/control_program.h	/^  uint32_t *duration_usec; \/* unsigned int32 pointer *\/$/;"	m	struct:TRTimes
 dval	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/codebase/general/src.lib/rfile.1.9/include/rfile.h	/^    double dval;$/;"	m	union:RfileData::__anon45
 dval	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/include/general/rfile.h	/^    double dval;$/;"	m	union:RfileData::__anon132
@@ -16004,6 +16060,7 @@ end	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/include/base/rxmldb.h
 end	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/include/base/tagdb.h	/^  } end;$/;"	m	struct:TagDBtag	typeref:struct:TagDBtag::__anon112
 end	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/include/general/rfile.h	/^    double *end;$/;"	m	struct:RfileIndex::__anon131
 end	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/include/superdarn/freq.h	/^  int *end;$/;"	m	struct:FreqTable
+end	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/include/superdarn/rosmsg.h	/^  int32 end; \/* in kHz *\/$/;"	m	struct:CLRFreqPRM
 end	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/include/control_program.h	/^     int32_t end;  \/\/in kHz$/;"	m	struct:CLRFreqPRM
 end	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/include/global_server_variables.h	/^     int end;$/;"	m	struct:BlackList
 end	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/include/global_server_variables.h	/^  int *end;$/;"	m	struct:FreqTable
@@ -16122,13 +16179,16 @@ event1	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/bc635_g
 event2_0	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/bc635_gps_tcp_driver/include/bc635_registers.h	/^        unsigned long event2_0;$/;"	m	struct:DEV_reg
 event2_1	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/bc635_gps_tcp_driver/include/bc635_registers.h	/^        unsigned long event2_1;$/;"	m	struct:DEV_reg
 event_capture	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/codebase/superdarn/src.lib/os/rosmsg.1.5/include/rosmsg.h	/^  uint32 event_capture; $/;"	m	struct:DataPRM
+event_capture	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/include/superdarn/rosmsg.h	/^  uint32 event_capture; $/;"	m	struct:DataPRM
 event_capture	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/include/control_program.h	/^  uint32_t event_capture;$/;"	m	struct:DataPRM
 event_count	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/bc635_gps_tcp_driver/include/uio_helper.h	/^	unsigned long event_count;$/;"	m	struct:uio_info_t
 event_count	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gps_tcp_driver/include/uio_helper.h	/^	unsigned long event_count;$/;"	m	struct:uio_info_t
 event_count	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gps_usrp_driver/include/uio_helper.h	/^	unsigned long event_count;$/;"	m	struct:uio_info_t
 event_nsecs	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/codebase/superdarn/src.lib/os/rosmsg.1.5/include/rosmsg.h	/^  uint32 event_nsecs; $/;"	m	struct:DataPRM
+event_nsecs	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/include/superdarn/rosmsg.h	/^  uint32 event_nsecs; $/;"	m	struct:DataPRM
 event_nsecs	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/include/control_program.h	/^  uint32_t event_nsecs;$/;"	m	struct:DataPRM
 event_secs	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/codebase/superdarn/src.lib/os/rosmsg.1.5/include/rosmsg.h	/^  uint32 event_secs;$/;"	m	struct:DataPRM
+event_secs	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/include/superdarn/rosmsg.h	/^  uint32 event_secs;$/;"	m	struct:DataPRM
 event_secs	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/include/control_program.h	/^  uint32_t event_secs;$/;"	m	struct:DataPRM
 eventreq	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/bc635_gps_tcp_driver/include/bc635_registers.h	/^        unsigned long eventreq;$/;"	m	struct:DEV_reg
 eventupdate	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/bc635_gps_tcp_driver/main.c	/^int 	timecompareupdate=0,eventupdate=0;$/;"	v
@@ -16331,6 +16391,8 @@ fill_twiddles	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/
 filmod	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/codebase/analysis/src.lib/igrf/igrf.1.12/src/igrfcall.c	/^char filmod[256][256];$/;"	v
 filter_bandwidth	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/codebase/superdarn/src.lib/os/rosmsg.1.5/include/rosmsg.h	/^  float filter_bandwidth; \/* in kHz  typically c\/(rsep*2) *\/$/;"	m	struct:CLRFreqPRM
 filter_bandwidth	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/codebase/superdarn/src.lib/os/rosmsg.1.5/include/rosmsg.h	/^  int32 filter_bandwidth; \/* required: normally equals basebad_samplerate $/;"	m	struct:ControlPRM
+filter_bandwidth	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/include/superdarn/rosmsg.h	/^  float filter_bandwidth; \/* in kHz  typically c\/(rsep*2) *\/$/;"	m	struct:CLRFreqPRM
+filter_bandwidth	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/include/superdarn/rosmsg.h	/^  int32 filter_bandwidth; \/* required: normally equals basebad_samplerate $/;"	m	struct:ControlPRM
 filter_bandwidth	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/include/control_program.h	/^     float filter_bandwidth;  \/\/in kHz  typically c\/(rsep*2)$/;"	m	struct:CLRFreqPRM
 filter_bandwidth	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/include/control_program.h	/^     int32_t filter_bandwidth; \/\/required: normally equals basebad_samplerate but can be changed for oversampling needs$/;"	m	struct:ControlPRM
 filter_select	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.31/include/_regs_GC4016.h	/^	char	filter_select;$/;"	m	struct:GC4016_reg_vals
@@ -16483,6 +16545,7 @@ fptr	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/codebase/superdarn/s
 fptr	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/include/general/dmap.h	/^  float *fptr;$/;"	m	union:DataMapPointer
 fptr	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/include/superdarn/cfitread.h	/^  int fptr;$/;"	m	struct:CFitfp
 frame_header	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/codebase/superdarn/src.lib/os/rosmsg.1.5/include/rosmsg.h	/^  int32 frame_header;$/;"	m	struct:DataPRM
+frame_header	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/include/superdarn/rosmsg.h	/^  int32 frame_header;$/;"	m	struct:DataPRM
 frame_header	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/include/control_program.h	/^  int32_t frame_header;$/;"	m	struct:DataPRM
 frang	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/codebase/superdarn/src.lib/tk/cfit.1.19/include/cfitdata.h	/^  int16 frang;$/;"	m	struct:CFitdata
 frang	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/codebase/superdarn/src.lib/tk/radar.1.21/include/rprm.h	/^  int16 frang;$/;"	m	struct:RadarParm
@@ -17460,6 +17523,7 @@ identity	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-
 identity	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.2/genfft/util.mli	/^val identity : 'a -> 'a$/;"	v	function:@@
 iestimate_cost	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.2/kernel/planner.c	/^double X(iestimate_cost)(const planner *ego, const plan *pln, const problem *p)$/;"	f
 if_settings	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/codebase/superdarn/src.lib/os/rosmsg.1.5/include/rosmsg.h	/^     struct RXFESettings if_settings;  \/* reciever front end settings for this site *\/$/;"	m	struct:SiteSettings	typeref:struct:SiteSettings::RXFESettings
+if_settings	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/include/superdarn/rosmsg.h	/^     struct RXFESettings if_settings;  \/* reciever front end settings for this site *\/$/;"	m	struct:SiteSettings	typeref:struct:SiteSettings::RXFESettings
 if_settings	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/ddsserver_tcp_driver/dds_main_fix.c	/^struct  RXFESettings if_settings;$/;"	v	typeref:struct:RXFESettings
 if_settings	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/ddsserver_tcp_driver/main.c	/^struct  RXFESettings if_settings;$/;"	v	typeref:struct:RXFESettings
 if_settings	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/include/control_program.h	/^     struct RXFESettings if_settings;  \/* reciever front end settings for this site *\/$/;"	m	struct:SiteSettings	typeref:struct:SiteSettings::RXFESettings
@@ -17470,6 +17534,8 @@ iflg	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/include/base/rscript
 ifmode	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/codebase/superdarn/src.lib/os/rosmsg.1.5/include/rosmsg.h	/^     uint32 ifmode;  \/* IF Enabled *\/$/;"	m	struct:RXFESettings
 ifmode	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/codebase/superdarn/src.lib/os/rosmsg.1.5/include/rosmsg.h	/^     uint32 ifmode;$/;"	m	struct:SiteSettings
 ifmode	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/codebase/superdarn/src.lib/tk/radar.1.21/include/rprm.h	/^  int16 ifmode;$/;"	m	struct:RadarParm
+ifmode	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/include/superdarn/rosmsg.h	/^     uint32 ifmode;  \/* IF Enabled *\/$/;"	m	struct:RXFESettings
+ifmode	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/include/superdarn/rosmsg.h	/^     uint32 ifmode;$/;"	m	struct:SiteSettings
 ifmode	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/include/superdarn/rprm.h	/^  int16 ifmode;$/;"	m	struct:RadarParm
 ifmode	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/usr/codebase/superdarn/src.lib/os/ops.1.13/src/global.c	/^int ifmode=0;$/;"	v
 ifmode	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/ddsserver_tcp_driver/dds_main_fix.c	/^uint32_t ifmode=IF_ENABLED;$/;"	v
@@ -17568,6 +17634,7 @@ indent_incr	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/ff
 index	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/codebase/superdarn/src.lib/os/rmsgrcv.1.2/include/rmsg.h	/^  int index;$/;"	m	struct:RMsgData
 index	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/codebase/superdarn/src.lib/os/rosmsg.1.5/include/rosmsg.h	/^  uint32 index;$/;"	m	struct:SeqPRM
 index	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/include/superdarn/rmsg.h	/^  int index;$/;"	m	struct:RMsgData
+index	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/include/superdarn/rosmsg.h	/^  uint32 index;$/;"	m	struct:SeqPRM
 index	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/include/control_program.h	/^  uint32_t index;$/;"	m	struct:SeqPRM
 index	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/include/global_server_variables.h	/^	int index;$/;"	m	struct:_fft_index
 index	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/tsg/include/tsg.h	/^  int index;$/;"	m	struct:TSGbuf
@@ -18582,10 +18649,12 @@ len	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/codebase/superdarn/sr
 len	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/codebase/superdarn/src.lib/os/rshell.1.2/include/radarshell.h	/^  size_t len;$/;"	m	struct:RShellBuffer
 len	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/codebase/superdarn/src.lib/tk/tsg.1.13/include/tsg.h	/^  int len;$/;"	m	struct:TSGbuf
 len	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/include/superdarn/radarshell.h	/^  size_t len;$/;"	m	struct:RShellBuffer
+len	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/include/superdarn/rosmsg.h	/^  uint32 len;$/;"	m	struct:SeqPRM
 len	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/include/superdarn/tsg.h	/^  int len;$/;"	m	struct:TSGbuf
 len	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/include/control_program.h	/^  uint32_t len;$/;"	m	struct:SeqPRM
 len	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/tsg/include/tsg.h	/^  int len;$/;"	m	struct:TSGbuf
 length	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/codebase/superdarn/src.lib/os/rosmsg.1.5/include/rosmsg.h	/^  int32 length;$/;"	m	struct:TRTimes
+length	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/include/superdarn/rosmsg.h	/^  int32 length;$/;"	m	struct:TRTimes
 length	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/usr/codebase/superdarn/src.lib/os/ops.1.13/include/global.h	/^  unsigned int *length;$/;"	m	struct:__anon2
 length	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/usr/codebase/superdarn/src.lib/os/ops.1.13/src/global.c	/^  unsigned int *length;$/;"	m	struct:__anon1	file:
 length	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/usr/include/superdarn/global.h	/^  unsigned int *length;$/;"	m	struct:__anon3
@@ -18811,6 +18880,7 @@ loads_locative	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros
 loadtable	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/codebase/base/src.bin/xmldoc/scdoc.1.4/scdoc.c	/^int loadtable(FILE *fp) {$/;"	f
 loadtagDB	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/codebase/base/src.lib/xml/xmldoclib.1.5/src/build.c	/^int loadtagDB(FILE *fp,struct TagDBtable *tag) {$/;"	f
 local	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/codebase/superdarn/src.lib/os/rosmsg.1.5/include/rosmsg.h	/^  int32 local; \/*if local is set use shared memory for data handling else tcp *\/ $/;"	m	struct:ControlPRM
+local	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/include/superdarn/rosmsg.h	/^  int32 local; \/*if local is set use shared memory for data handling else tcp *\/ $/;"	m	struct:ControlPRM
 local	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/include/control_program.h	/^     int32_t local;  \/\/if local use shared memory for data handling else use tcp$/;"	m	struct:ControlPRM
 localedir	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.2/Makefile	/^localedir = ${datarootdir}\/locale$/;"	m
 localedir	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.2/api/Makefile	/^localedir = ${datarootdir}\/locale$/;"	m
@@ -18916,6 +18986,7 @@ loop	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_d
 loops	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc316_tcp_driver/_iofuncs.c	/^int		 sample_count=0,overflow=0, loops,samples_to_collect,remaining_samples,DMA_switch=0;$/;"	v
 lopwr	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/codebase/superdarn/src.lib/os/rosmsg.1.5/include/rosmsg.h	/^  uint32 *lopwr;$/;"	m	struct:RosData
 lopwr	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/codebase/superdarn/src.lib/tk/radar.1.21/include/rprm.h	/^    int16 lopwr;$/;"	m	struct:RadarParm::__anon73
+lopwr	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/include/superdarn/rosmsg.h	/^  uint32 *lopwr;$/;"	m	struct:RosData
 lopwr	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/include/superdarn/rprm.h	/^    int16 lopwr;$/;"	m	struct:RadarParm::__anon137
 lopwrstat	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/usr/codebase/superdarn/src.lib/os/ops.1.13/src/global.c	/^int lopwrstat=0;$/;"	v
 lout_courier	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.2/doc/FAQ/m-lout.pl	/^sub lout_courier {$/;"	s
@@ -19342,6 +19413,7 @@ main	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/doc/html/superdarn/s
 main	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/doc/html/superdarn/src.lib/tk/rpos/src/RPosRngBmAzmElv.c	/^int main(int argc,char *argv[]) {$/;"	f
 main	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/doc/html/superdarn/src.lib/tk/scan/src/RadarScanReset.c	/^int main(int argc,char *argv[]) {$/;"	f
 main	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/doc/html/superdarn/src.lib/tk/scan/src/RadarScanResetBeam.c	/^int main(int argc,char *argv[]) {$/;"	f
+main	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/include/superdarn/rosmsg.h	/^  uint32 *main;$/;"	m	struct:RosData
 main	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/untested_cp/fsvscan.1.1/fsvscan.c	/^int main(int argc,char *argv[]) {$/;"	f
 main	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/untested_cp/fsvscan.1.1/normalscan.c	/^int main(int argc,char *argv[]) {$/;"	f
 main	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/untested_cp/rbspscan.1.02/rbspscan.c	/^int main(int argc,char *argv[]) {$/;"	f
@@ -19570,6 +19642,7 @@ mask_revision	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/
 match	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/codebase/base/src.bin/xmldoc/xmldoc.1.6/xmldoc.h	/^  } match;$/;"	m	struct:xmldoc	typeref:struct:xmldoc::__anon30
 match	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc214_tcp_driver/include/gc4016.h	/^  int match;         $/;"	m	struct:GC4016Channel
 match_filter	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/codebase/superdarn/src.lib/os/rosmsg.1.5/include/rosmsg.h	/^  int32 match_filter; \/* required: valid 0-1: whether to use $/;"	m	struct:ControlPRM
+match_filter	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/include/superdarn/rosmsg.h	/^  int32 match_filter; \/* required: valid 0-1: whether to use $/;"	m	struct:ControlPRM
 match_filter	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/include/control_program.h	/^     int32_t match_filter;  \/\/ required: valid 0-1: whether to use match filter, normally equal 1 $/;"	m	struct:ControlPRM
 matched	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.31/include/_structures.h	/^	int	matched;$/;"	m	struct:channel_params
 matched	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.32.exp/include/_structures.h	/^	int	matched;$/;"	m	struct:channel_params
@@ -20319,6 +20392,8 @@ name	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/include/general/dmap
 name	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/include/general/dmap.h	/^  char *name;$/;"	m	struct:DataMapScalar
 name	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/include/superdarn/radar.h	/^  char *name;$/;"	m	struct:Radar
 name	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/include/superdarn/radarshell.h	/^  char *name; $/;"	m	struct:RShellEntry
+name	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/include/superdarn/rosmsg.h	/^     char name[80];$/;"	m	struct:SiteSettings
+name	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/include/superdarn/rosmsg.h	/^  char name[80]; \/* optional: but a very good idea to set *\/$/;"	m	struct:ControlPRM
 name	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/bc635_gps_tcp_driver/include/uio_helper.h	/^	char name[ UIO_MAX_NAME_SIZE ];$/;"	m	struct:uio_dev_attr_t
 name	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/bc635_gps_tcp_driver/include/uio_helper.h	/^	char name[ UIO_MAX_NAME_SIZE ];$/;"	m	struct:uio_info_t
 name	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gps_tcp_driver/include/uio_helper.h	/^	char name[ UIO_MAX_NAME_SIZE ];$/;"	m	struct:uio_dev_attr_t
@@ -20337,6 +20412,7 @@ nave	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/codebase/superdarn/s
 nave	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/codebase/superdarn/src.lib/tk/scan.1.7/include/scandata.h	/^  int nave;$/;"	m	struct:RadarBeam
 nave	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/include/superdarn/cfitdata.h	/^  int16 nave;$/;"	m	struct:CFitdata
 nave	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/include/superdarn/fitblk.h	/^  int nave;$/;"	m	struct:FitPrm
+nave	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/include/superdarn/rosmsg.h	/^  int32 nave; \/*  Number of passes to average *\/$/;"	m	struct:CLRFreqPRM
 nave	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/include/superdarn/rprm.h	/^  int16 nave;$/;"	m	struct:RadarParm
 nave	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/include/superdarn/scandata.h	/^  int nave;$/;"	m	struct:RadarBeam
 nave	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/usr/codebase/superdarn/src.lib/os/ops.1.13/src/global.c	/^int nave=0;$/;"	v
@@ -20677,6 +20753,7 @@ num_files	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/codebase/superd
 num_freqs	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/dio_tcp_driver/main.c	/^int32_t num_freqs[MAX_RADARS],max_angles[MAX_RADARS],num_angles[MAX_RADARS],num_beamcodes[MAX_RADARS],num_fsteps[MAX_RADARS],foffset[MAX_RADARS],num_cards[MAX_RADARS];$/;"	v
 num_fsteps	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/dio_tcp_driver/main.c	/^int32_t num_freqs[MAX_RADARS],max_angles[MAX_RADARS],num_angles[MAX_RADARS],num_beamcodes[MAX_RADARS],num_fsteps[MAX_RADARS],foffset[MAX_RADARS],num_cards[MAX_RADARS];$/;"	v
 num_radars	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/codebase/superdarn/src.lib/os/rosmsg.1.5/include/rosmsg.h	/^     uint32 num_radars;$/;"	m	struct:SiteSettings
+num_radars	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/include/superdarn/rosmsg.h	/^     uint32 num_radars;$/;"	m	struct:SiteSettings
 num_radars	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/include/control_program.h	/^     uint32_t num_radars;$/;"	m	struct:SiteSettings
 num_transmitters	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/usr/codebase/superdarn/src.lib/os/site.1.6/src/site.c	/^int num_transmitters;$/;"	v
 number	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/codebase/superdarn/src.lib/tk/oldraw.1.16/src/rawopen.c	/^    unsigned char number[4];$/;"	m	struct:rawrechdr	file:
@@ -20684,6 +20761,7 @@ number	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/codebase/superdarn
 number	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.2/genfft/number.ml	/^type number = N of num$/;"	t
 number	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.2/genfft/number.mli	/^type number$/;"	t
 number_of_samples	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/codebase/superdarn/src.lib/os/rosmsg.1.5/include/rosmsg.h	/^  int32 number_of_samples; \/* required: number of recv samples to collect *\/$/;"	m	struct:ControlPRM
+number_of_samples	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/include/superdarn/rosmsg.h	/^  int32 number_of_samples; \/* required: number of recv samples to collect *\/$/;"	m	struct:ControlPRM
 number_of_samples	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/include/control_program.h	/^     int32_t number_of_samples;  \/\/required: number of recv samples to collect $/;"	m	struct:ControlPRM
 number_of_variables	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.2/genfft/magic.ml	/^let number_of_variables = ref 4$/;"	v
 numdim	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/codebase/analysis/src.lib/cdf/rcdf.1.5/include/rcdf.h	/^  long numdim;$/;"	m	struct:RCDFData
@@ -21392,6 +21470,8 @@ polyphase	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw
 port	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/codebase/superdarn/src.lib/os/tcpipmsg.1.2/include/tcpipmsg.h	/^  int port;$/;"	m	struct:TCPIPMsgHost
 port	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/include/superdarn/tcpipmsg.h	/^  int port;$/;"	m	struct:TCPIPMsgHost
 port	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/usr/codebase/superdarn/src.bin/os/cp/transponder_pulse.0.1/transponder_pulse.c	/^int  port=0;$/;"	v
+port	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/usr/codebase/superdarn/src.lib/os/site.ade.2.0/src/site.c	/^int port=0;$/;"	v
+port	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/usr/codebase/superdarn/src.lib/os/site.adw.2.0/src/site.c	/^int port = 0;$/;"	v
 port	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/usr/codebase/superdarn/src.lib/os/site.aze.1.0/src/site.c	/^int  port=0;$/;"	v
 port	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/usr/codebase/superdarn/src.lib/os/site.azw.1.0/src/site.c	/^int  port=0;$/;"	v
 port	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/usr/codebase/superdarn/src.lib/os/site.tst.1.0/src/site.c	/^int  port=0;$/;"	v
@@ -21579,6 +21659,7 @@ printresult	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/codebase/anal
 printw	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.2/cell/dft-direct-cell.c	/^static void printw(const plan *ego_, printer *p)$/;"	f	file:
 priority	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/codebase/superdarn/src.bin/os/schedule.1.5/schedule.h	/^  int priority;$/;"	m	struct:scd_entry
 priority	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/codebase/superdarn/src.lib/os/rosmsg.1.5/include/rosmsg.h	/^  int32 priority;\/* optional: valid 0-99: lower value higher $/;"	m	struct:ControlPRM
+priority	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/include/superdarn/rosmsg.h	/^  int32 priority;\/* optional: valid 0-99: lower value higher $/;"	m	struct:ControlPRM
 priority	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/include/control_program.h	/^     int32_t priority; \/\/optional: valid 0-99: lower value higher priority when running multiple operational programs$/;"	m	struct:ControlPRM
 prm	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/codebase/superdarn/src.bin/os/fitacfwrite.1.7/fitacfwrite.c	/^struct RadarParm *prm;$/;"	v	typeref:struct:RadarParm
 prm	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/codebase/superdarn/src.bin/os/iqwrite.1.6/iqwrite.c	/^struct RadarParm *prm;$/;"	v	typeref:struct:RadarParm
@@ -21793,6 +21874,7 @@ pwr0	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/usr/codebase/superda
 pwr2	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_backup/main.cpp	/^double *pwr=NULL,*pwr2=NULL;$/;"	v
 pwr2	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/main.cpp	/^double *pwr=NULL,*pwr2=NULL;$/;"	v
 pwr_threshold	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/codebase/superdarn/src.lib/os/rosmsg.1.5/include/rosmsg.h	/^  float pwr_threshold; \/* typical value 0.9: power at best $/;"	m	struct:CLRFreqPRM
+pwr_threshold	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/include/superdarn/rosmsg.h	/^  float pwr_threshold; \/* typical value 0.9: power at best $/;"	m	struct:CLRFreqPRM
 pwr_threshold	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/include/control_program.h	/^     float pwr_threshold;  \/\/  typical value 0.9: power at best available frequency must be 90% or less of current assigned $/;"	m	struct:CLRFreqPRM
 q	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.2/genfft/number.ml	/^  in let q = string_of_int (truncate(f2 *. 1.0E9))$/;"	v
 q	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.2/threads/threads.c	/^     struct worker *q; \/* the worker responsible for performing this work *\/$/;"	m	struct:work	typeref:struct:work::worker	file:
@@ -21993,6 +22075,8 @@ radar	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/doc/html/superdarn/
 radar	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/doc/html/superdarn/src.lib/tk/fitacf/src/FitACFEnd.c	/^struct Radar *radar;$/;"	v	typeref:struct:Radar
 radar	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/doc/html/superdarn/src.lib/tk/fitacf/src/FitACFStart.c	/^struct Radar *radar;$/;"	v	typeref:struct:Radar
 radar	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/include/superdarn/radar.h	/^  struct Radar *radar;$/;"	m	struct:RadarNetwork	typeref:struct:RadarNetwork::Radar
+radar	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/include/superdarn/rosmsg.h	/^  int32 radar; \/* required: DO NOT SET MANUALLY *\/$/;"	m	struct:ControlPRM
+radar	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/include/superdarn/rosmsg.h	/^  int32 radar; \/* required: DO NOT SET MANUALLY *\/$/;"	m	struct:RadarPRM
 radar	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/usr/codebase/superdarn/src.lib/os/ops.1.13/src/global.c	/^struct Radar *radar;$/;"	v	typeref:struct:Radar
 radar	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc316_tcp_driver/include/gc314FS_defines.h	/^        int radar;$/;"	m	struct:_copy_chuck
 radar	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/include/control_program.h	/^     int32_t radar; \/\/required: DO NOT SET MANUALLY$/;"	m	struct:ControlPRM
@@ -22079,12 +22163,16 @@ rb	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.2/
 rb	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.2/libbench2/verify-rdft2.c	/^     R *rb, *ib;$/;"	m	struct:__anon179	file:
 rb	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.2/libbench2/verify-rdft2.c	/^     R *rb;$/;"	m	struct:__anon178	file:
 rbeam	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/codebase/superdarn/src.lib/os/rosmsg.1.5/include/rosmsg.h	/^  int32 rbeam;  \/* optional: valid 0-31: defines standard look directions: $/;"	m	struct:ControlPRM
+rbeam	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/include/superdarn/rosmsg.h	/^  int32 rbeam;  \/* optional: valid 0-31: defines standard look directions: $/;"	m	struct:ControlPRM
 rbeam	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/include/control_program.h	/^     int32_t rbeam;  \/\/optional: valid 0-31: defines standard look directions: if invalid tbeam is used $/;"	m	struct:ControlPRM
 rbeamazm	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/codebase/superdarn/src.lib/os/rosmsg.1.5/include/rosmsg.h	/^  float rbeamazm; \/* optional: used for imaging radar *\/$/;"	m	struct:ControlPRM
+rbeamazm	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/include/superdarn/rosmsg.h	/^  float rbeamazm; \/* optional: used for imaging radar *\/$/;"	m	struct:ControlPRM
 rbeamazm	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/include/control_program.h	/^     float rbeamazm; \/\/optional: used for imaging radar$/;"	m	struct:ControlPRM
 rbeamcode	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/codebase/superdarn/src.lib/os/rosmsg.1.5/include/rosmsg.h	/^  uint32 rbeamcode; \/* optional: used for special beam directions, $/;"	m	struct:ControlPRM
+rbeamcode	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/include/superdarn/rosmsg.h	/^  uint32 rbeamcode; \/* optional: used for special beam directions, $/;"	m	struct:ControlPRM
 rbeamcode	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/include/control_program.h	/^     uint32_t rbeamcode; \/\/optional: used for special beam directions, used only if rbeam and tbeam is invalid value.$/;"	m	struct:ControlPRM
 rbeamwidth	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/codebase/superdarn/src.lib/os/rosmsg.1.5/include/rosmsg.h	/^  float rbeamwidth; \/* optional: used for imaging radar *\/$/;"	m	struct:ControlPRM
+rbeamwidth	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/include/superdarn/rosmsg.h	/^  float rbeamwidth; \/* optional: used for imaging radar *\/$/;"	m	struct:ControlPRM
 rbeamwidth	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/include/control_program.h	/^     float rbeamwidth; \/\/optional: used for imaging radar$/;"	m	struct:ControlPRM
 rblk	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/codebase/superdarn/src.bin/os/fitacfwrite.1.7/fitacfwrite.c	/^struct RMsgBlock rblk;$/;"	v	typeref:struct:RMsgBlock
 rblk	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/codebase/superdarn/src.bin/os/iqwrite.1.6/iqwrite.c	/^struct RMsgBlock rblk;$/;"	v	typeref:struct:RMsgBlock
@@ -22493,10 +22581,12 @@ revision	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/include/superdar
 revision	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/include/superdarn/rprm.h	/^  } revision;$/;"	m	struct:RadarParm	typeref:struct:RadarParm::__anon134
 rewrite_declarations	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.2/genfft/annotate.ml	/^let rec rewrite_declarations force_declarations $/;"	v
 rf_settings	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/codebase/superdarn/src.lib/os/rosmsg.1.5/include/rosmsg.h	/^     struct RXFESettings rf_settings;  \/* reciever front end settings for this site *\/$/;"	m	struct:SiteSettings	typeref:struct:SiteSettings::RXFESettings
+rf_settings	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/include/superdarn/rosmsg.h	/^     struct RXFESettings rf_settings;  \/* reciever front end settings for this site *\/$/;"	m	struct:SiteSettings	typeref:struct:SiteSettings::RXFESettings
 rf_settings	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/ddsserver_tcp_driver/dds_main_fix.c	/^struct  RXFESettings rf_settings;$/;"	v	typeref:struct:RXFESettings
 rf_settings	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/ddsserver_tcp_driver/main.c	/^struct  RXFESettings rf_settings;$/;"	v	typeref:struct:RXFESettings
 rf_settings	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/include/control_program.h	/^     struct RXFESettings rf_settings;  \/* reciever front end settings for this site *\/$/;"	m	struct:SiteSettings	typeref:struct:SiteSettings::RXFESettings
 rfreq	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/codebase/superdarn/src.lib/os/rosmsg.1.5/include/rosmsg.h	/^  int32 rfreq;  \/* optional: if invalid value tfreq is used *\/$/;"	m	struct:ControlPRM
+rfreq	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/include/superdarn/rosmsg.h	/^  int32 rfreq;  \/* optional: if invalid value tfreq is used *\/$/;"	m	struct:ControlPRM
 rfreq	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/usr/codebase/superdarn/src.lib/os/ops.1.13/src/global.c	/^int rfreq=DEFAULT_TFREQ;$/;"	v
 rfreq	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/include/control_program.h	/^     int32_t rfreq;  \/\/optional: if invalid value tfreq is used$/;"	m	struct:ControlPRM
 rfvect	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/codebase/superdarn/src.lib/tk/tsg.1.13/src/maketsg.c	/^	 int rfvect;		\/* code bits asserted when in this state *\/$/;"	m	struct:TSGsdef	file:
@@ -22676,6 +22766,8 @@ sample_count	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/g
 samples	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/codebase/superdarn/src.lib/os/rosmsg.1.5/include/rosmsg.h	/^  int32 samples;$/;"	m	struct:DataPRM
 samples	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/codebase/superdarn/src.lib/os/rosmsg.1.5/include/rosmsg.h	/^  uint32 samples;$/;"	m	struct:SeqPRM
 samples	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/codebase/superdarn/src.lib/tk/tsg.1.13/include/tsg.h	/^      samples,	      \/* number of samples generated by the sequence *\/$/;"	m	struct:TSGprm
+samples	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/include/superdarn/rosmsg.h	/^  int32 samples;$/;"	m	struct:DataPRM
+samples	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/include/superdarn/rosmsg.h	/^  uint32 samples;$/;"	m	struct:SeqPRM
 samples	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/include/superdarn/tsg.h	/^      samples,	      \/* number of samples generated by the sequence *\/$/;"	m	struct:TSGprm
 samples	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/usr/codebase/superdarn/src.lib/os/ops.1.13/src/global.c	/^int16 *samples;$/;"	v
 samples	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc214_tcp_driver/include/gc4016.h	/^  int samples;         $/;"	m	struct:GC4016Channel
@@ -22860,6 +22952,8 @@ serial_mux_control	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code
 sermuxcntrl	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc214_tcp_driver/include/gc4016.h	/^   char sermuxcntrl;    \/* 0xe4 *\/$/;"	m	struct:GC4016Global
 server	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/codebase/superdarn/src.bin/os/radarshell.1.2/radarshell.c	/^struct TCPIPMsgHost server;$/;"	v	typeref:struct:TCPIPMsgHost
 server	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/usr/codebase/superdarn/src.bin/os/cp/transponder_pulse.0.1/transponder_pulse.c	/^char server[256]="127.0.0.1";$/;"	v
+server	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/usr/codebase/superdarn/src.lib/os/site.ade.2.0/src/site.c	/^char server[256]="127.0.0.1";$/;"	v
+server	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/usr/codebase/superdarn/src.lib/os/site.adw.2.0/src/site.c	/^char server[256] = "127.0.0.1";$/;"	v
 server	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/usr/codebase/superdarn/src.lib/os/site.aze.1.0/src/site.c	/^char server[256]="127.0.0.1";$/;"	v
 server	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/usr/codebase/superdarn/src.lib/os/site.azw.1.0/src/site.c	/^char server[256]="127.0.0.1";$/;"	v
 server	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/usr/codebase/superdarn/src.lib/os/site.tst.1.0/src/site.c	/^char server[256]="127.0.0.1";$/;"	v
@@ -22965,6 +23059,7 @@ shm	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/codebase/superdarn/sr
 shm_back_addresses	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc214_tcp_driver/main.c	/^unsigned int     *shm_back_addresses[MAX_RADARS][MAX_CHANNELS][BUFS];$/;"	v
 shm_main_addresses	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc214_tcp_driver/main.c	/^unsigned int     *shm_main_addresses[MAX_RADARS][MAX_CHANNELS][BUFS];$/;"	v
 shm_memory	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/codebase/superdarn/src.lib/os/rosmsg.1.5/include/rosmsg.h	/^  int32 shm_memory;$/;"	m	struct:DataPRM
+shm_memory	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/include/superdarn/rosmsg.h	/^  int32 shm_memory;$/;"	m	struct:DataPRM
 shm_memory	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/include/control_program.h	/^  int32_t shm_memory;$/;"	m	struct:DataPRM
 shmem	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/codebase/superdarn/src.bin/os/shellserver.1.4/shellserver.c	/^char *shmem=NULL;$/;"	v
 shmemd	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/codebase/superdarn/src.bin/os/shellserver.1.4/shellserver.c	/^char *shmemd="RadarShell";$/;"	v
@@ -23059,6 +23154,7 @@ site	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/doc/html/superdarn/s
 site	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/doc/html/superdarn/src.lib/tk/rpos/src/RPosMagGS.c	/^struct RadarSite *site; $/;"	v	typeref:struct:RadarSite
 site	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/doc/html/superdarn/src.lib/tk/rpos/src/RPosRngBmAzmElv.c	/^struct RadarSite *site; $/;"	v	typeref:struct:RadarSite
 site	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/include/superdarn/radar.h	/^  struct RadarSite *site;$/;"	m	struct:Radar	typeref:struct:Radar::RadarSite
+site	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/include/superdarn/rosmsg.h	/^  int32 site;$/;"	m	struct:RadarPRM
 site	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/usr/codebase/superdarn/src.lib/os/ops.1.13/src/global.c	/^struct RadarSite *site;$/;"	v	typeref:struct:RadarSite
 site	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/include/control_program.h	/^     int32_t site;$/;"	m	struct:RadarPRM
 site_id	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/usr/codebase/superdarn/src.bin/os/cp/normalsound.1.7/normalsound.c	/^  int site_id;$/;"	m	struct:sounder_struct	file:
@@ -23127,6 +23223,7 @@ small_enough	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/f
 smallest_power_larger_than	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.2/genfft/twiddle.ml	/^let rec smallest_power_larger_than m i =$/;"	v
 smdelay	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/codebase/superdarn/src.lib/os/rosmsg.1.5/include/rosmsg.h	/^  uint32 smdelay;$/;"	m	struct:SeqPRM
 smdelay	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/codebase/superdarn/src.lib/tk/tsg.1.13/include/tsg.h	/^      smdelay,        \/* sample delay *\/$/;"	m	struct:TSGprm
+smdelay	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/include/superdarn/rosmsg.h	/^  uint32 smdelay;$/;"	m	struct:SeqPRM
 smdelay	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/include/superdarn/tsg.h	/^      smdelay,        \/* sample delay *\/$/;"	m	struct:TSGprm
 smdelay	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/include/control_program.h	/^  uint32_t smdelay;$/;"	m	struct:SeqPRM
 smgsm_	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/codebase/analysis/src.lib/geopack/geopack.1.4/src/geopack_2005.c	/^\/* Subroutine *\/ int smgsm_(real *xsm, real *ysm, real *zsm, real *xgsm, real $/;"	f
@@ -23153,6 +23250,8 @@ sock	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/codebase/superdarn/s
 sock	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/codebase/superdarn/src.lib/os/tcpipmsg.1.2/include/tcpipmsg.h	/^  int sock;$/;"	m	struct:TCPIPMsgHost
 sock	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/include/superdarn/tcpipmsg.h	/^  int sock;$/;"	m	struct:TCPIPMsgHost
 sock	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/usr/codebase/superdarn/src.bin/os/cp/transponder_pulse.0.1/transponder_pulse.c	/^int  sock=0;$/;"	v
+sock	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/usr/codebase/superdarn/src.lib/os/site.ade.2.0/src/site.c	/^int sock=0;$/;"	v
+sock	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/usr/codebase/superdarn/src.lib/os/site.adw.2.0/src/site.c	/^int sock = 0;$/;"	v
 sock	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/usr/codebase/superdarn/src.lib/os/site.aze.1.0/src/site.c	/^int  sock=0;$/;"	v
 sock	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/usr/codebase/superdarn/src.lib/os/site.azw.1.0/src/site.c	/^int  sock=0;$/;"	v
 sock	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/usr/codebase/superdarn/src.lib/os/site.tst.1.0/src/site.c	/^int  sock=0;$/;"	v
@@ -23365,6 +23464,7 @@ start	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/include/base/rxml.h
 start	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/include/base/tagdb.h	/^  } start;$/;"	m	struct:TagDBtag	typeref:struct:TagDBtag::__anon111
 start	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/include/general/rfile.h	/^    double *start;$/;"	m	struct:RfileIndex::__anon131
 start	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/include/superdarn/freq.h	/^  int *start;$/;"	m	struct:FreqTable
+start	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/include/superdarn/rosmsg.h	/^  int32 start;\/* In kHz *\/$/;"	m	struct:CLRFreqPRM
 start	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/usr/codebase/superdarn/src.lib/os/ops.1.13/include/global.h	/^  unsigned int *start;$/;"	m	struct:__anon2
 start	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/usr/codebase/superdarn/src.lib/os/ops.1.13/src/global.c	/^  unsigned int *start;$/;"	m	struct:__anon1	file:
 start	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/usr/codebase/superdarn/src.lib/os/site.1.6/include/site.h	/^  int (*start)(char *,char *);$/;"	m	struct:SiteLibrary
@@ -23382,6 +23482,7 @@ start_p	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314F
 start_p	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.32.exp/main.c	/^struct		 timespec start_p, stop_p, start, stop, sleeper, time_now;$/;"	v	typeref:struct:timespec
 start_time	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.2/kernel/ifftw.h	/^     crude_time start_time;$/;"	m	struct:planner_s
 start_usec	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/codebase/superdarn/src.lib/os/rosmsg.1.5/include/rosmsg.h	/^  uint32 *start_usec;$/;"	m	struct:TRTimes
+start_usec	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/include/superdarn/rosmsg.h	/^  uint32 *start_usec;$/;"	m	struct:TRTimes
 start_usec	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/include/control_program.h	/^  uint32_t *start_usec;  \/* unsigned int32 pointer *\/$/;"	m	struct:TRTimes
 startintt	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/usr/codebase/superdarn/src.lib/os/site.1.6/include/site.h	/^  int (*startintt)(int,int);$/;"	m	struct:SiteLibrary
 startintt	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/usr/include/superdarn/site.h	/^  int (*startintt)(int,int);$/;"	m	struct:SiteLibrary
@@ -23415,6 +23516,10 @@ status	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/codebase/superdarn
 status	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/codebase/superdarn/src.lib/tk/radar.1.21/include/radar.h	/^  int status;$/;"	m	struct:Radar
 status	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/include/analysis/rcdf.h	/^  CDFstatus status;$/;"	m	struct:RCDFData
 status	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/include/superdarn/radar.h	/^  int status;$/;"	m	struct:Radar
+status	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/include/superdarn/rosmsg.h	/^  int status; \/* coded value: non-zero values will code to an error msg *\/$/;"	m	struct:ControlPRM
+status	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/include/superdarn/rosmsg.h	/^  int32 status;$/;"	m	struct:DataPRM
+status	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/include/superdarn/rosmsg.h	/^  int32 status;$/;"	m	struct:ROSMsg
+status	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/include/superdarn/rosmsg.h	/^  int32 status[30];$/;"	m	struct:TXStatus
 status	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/ddsserver_tcp_driver/include/ics660b.h	/^  int status;$/;"	m	struct:ics660_registers
 status	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc214_tcp_driver/main.c	/^int32 status;$/;"	v
 status	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.31/include/_regs_GC4016.h	/^	char	status;$/;"	m	struct:GC4016_reg_vals
@@ -23431,6 +23536,7 @@ stdelay	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/codebase/superdar
 stdelay	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/include/superdarn/tsg.h	/^      stdelay,        \/* delay at front of sequence *\/$/;"	m	struct:TSGprm
 step	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/codebase/analysis/src.lib/cmpfit-1.2/mpfit.h	/^  double step;      \/* Step size for finite difference *\/$/;"	m	struct:mp_par_struct
 step	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/codebase/superdarn/src.lib/os/rosmsg.1.5/include/rosmsg.h	/^  uint32 step;  \/* packed timesequence stepsize in microseconds *\/$/;"	m	struct:SeqPRM
+step	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/include/superdarn/rosmsg.h	/^  uint32 step;  \/* packed timesequence stepsize in microseconds *\/$/;"	m	struct:SeqPRM
 step	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/include/control_program.h	/^  uint32_t step;  \/\/packed timesequence stepsize in microseconds$/;"	m	struct:SeqPRM
 step	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/tsg/include/tsg.h	/^  int step;  \/\/packed timesequence stepsize in microseconds$/;"	m	struct:TSGbuf
 step_	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/codebase/analysis/src.lib/geopack/geopack.1.4/src/geopack_2005.c	/^\/* Subroutine *\/ int step_(real *x, real *y, real *z__, real *ds, real *errin,$/;"	f
@@ -24004,12 +24110,16 @@ taskname	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/codebase/superda
 tbadtr	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/codebase/superdarn/src.lib/tk/iq.1.7/include/iq.h	/^  int tbadtr;$/;"	m	struct:IQ
 tbadtr	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/include/superdarn/iq.h	/^  int tbadtr;$/;"	m	struct:IQ
 tbeam	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/codebase/superdarn/src.lib/os/rosmsg.1.5/include/rosmsg.h	/^  int32 tbeam; \/* required: valid 0-31: defines standard look directions *\/ $/;"	m	struct:ControlPRM
+tbeam	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/include/superdarn/rosmsg.h	/^  int32 tbeam; \/* required: valid 0-31: defines standard look directions *\/ $/;"	m	struct:ControlPRM
 tbeam	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/include/control_program.h	/^     int32_t tbeam;  \/\/required: valid 0-31: defines standard look directions $/;"	m	struct:ControlPRM
 tbeamazm	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/codebase/superdarn/src.lib/os/rosmsg.1.5/include/rosmsg.h	/^  float tbeamazm; \/* optional: used for imaging radar *\/$/;"	m	struct:ControlPRM
+tbeamazm	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/include/superdarn/rosmsg.h	/^  float tbeamazm; \/* optional: used for imaging radar *\/$/;"	m	struct:ControlPRM
 tbeamazm	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/include/control_program.h	/^     float tbeamazm; \/\/optional: used for imaging radar$/;"	m	struct:ControlPRM
 tbeamcode	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/codebase/superdarn/src.lib/os/rosmsg.1.5/include/rosmsg.h	/^  uint32 tbeamcode; \/* optional: used for special beam $/;"	m	struct:ControlPRM
+tbeamcode	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/include/superdarn/rosmsg.h	/^  uint32 tbeamcode; \/* optional: used for special beam $/;"	m	struct:ControlPRM
 tbeamcode	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/include/control_program.h	/^     uint32_t tbeamcode; \/\/optional: used for special beam directions, used only if beam is invalid value.$/;"	m	struct:ControlPRM
 tbeamwidth	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/codebase/superdarn/src.lib/os/rosmsg.1.5/include/rosmsg.h	/^  float tbeamwidth; \/* optional: used for imaging radar$/;"	m	struct:ControlPRM
+tbeamwidth	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/include/superdarn/rosmsg.h	/^  float tbeamwidth; \/* optional: used for imaging radar$/;"	m	struct:ControlPRM
 tbeamwidth	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/include/control_program.h	/^     float tbeamwidth; \/\/optional: used for imaging radar$/;"	m	struct:ControlPRM
 tc_count	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/bc635_gps_tcp_driver/main.c	/^int tc_count=0;$/;"	v
 tc_count	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gps_tcp_driver/main.c	/^int tc_count=0;$/;"	v
@@ -24141,6 +24251,7 @@ tfreq	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/codebase/superdarn/
 tfreq	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/codebase/superdarn/src.lib/tk/radar.1.21/include/rprm.h	/^  int16 tfreq;$/;"	m	struct:RadarParm
 tfreq	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/include/superdarn/cfitdata.h	/^  int16 tfreq;$/;"	m	struct:CFitdata
 tfreq	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/include/superdarn/fitblk.h	/^  int tfreq;$/;"	m	struct:FitPrm
+tfreq	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/include/superdarn/rosmsg.h	/^  int32 tfreq; \/* required: transmit freq in kHz *\/ $/;"	m	struct:ControlPRM
 tfreq	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/include/superdarn/rprm.h	/^  int16 tfreq;$/;"	m	struct:RadarParm
 tfreq	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/usr/codebase/superdarn/src.lib/os/ops.1.13/src/global.c	/^int tfreq=DEFAULT_TFREQ;$/;"	v
 tfreq	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/include/control_program.h	/^     int32_t tfreq;  \/\/required: transmit freq in kHz $/;"	m	struct:ControlPRM
@@ -24463,6 +24574,7 @@ tr_event	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/trans
 tr_event	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_backup/main.cpp	/^int tr_event=0, scope_event=0;$/;"	v
 tr_event	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/main.cpp	/^int tr_event=0, scope_event=0;$/;"	v
 tr_times	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/codebase/superdarn/src.lib/os/rosmsg.1.5/include/rosmsg.h	/^  struct TRTimes tr_times;$/;"	m	struct:RosData	typeref:struct:RosData::TRTimes
+tr_times	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/include/superdarn/rosmsg.h	/^  struct TRTimes tr_times;$/;"	m	struct:RosData	typeref:struct:RosData::TRTimes
 trace_	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/codebase/analysis/src.lib/geopack/geopack.1.4/src/geopack_2005.c	/^\/* Subroutine *\/ int trace_(real *xi, real *yi, real *zi, real *dir, real *$/;"	f
 trans_length	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/ddsserver_tcp_driver/include/ics660b.h	/^  int trans_length;$/;"	m	struct:ics660_registers
 transcendent	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.2/genfft/expr.ml	/^type transcendent = I | MULTI_A | MULTI_B | CONJ$/;"	t
@@ -24552,6 +24664,7 @@ trigreal	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-
 trigreal	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.2/libbench2/verify.h	/^   typedef long double trigreal;$/;"	t
 trim	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/codebase/superdarn/src.bin/os/schedule.1.5/load_schedule.c	/^char *trim(char *str)$/;"	f
 trise	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/codebase/superdarn/src.lib/os/rosmsg.1.5/include/rosmsg.h	/^  int32 trise; \/* required: rise time in microseconds$/;"	m	struct:ControlPRM
+trise	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/include/superdarn/rosmsg.h	/^  int32 trise; \/* required: rise time in microseconds$/;"	m	struct:ControlPRM
 trise	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/include/control_program.h	/^     int32_t trise;  \/\/ required: rise time in microseconds$/;"	m	struct:ControlPRM
 tristate_controls	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.31/include/_regs_GC4016.h	/^	char	tristate_controls;$/;"	m	struct:GC4016_reg_vals
 tristate_controls	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.32.exp/include/_regs_GC4016.h	/^	char	tristate_controls;$/;"	m	struct:GC4016_reg_vals
@@ -24931,6 +25044,7 @@ type	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/include/general/dmap
 type	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/include/general/rfile.h	/^  int type;$/;"	m	struct:RfileData
 type	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/include/superdarn/radarshell.h	/^  int type;$/;"	m	struct:RShellEntry
 type	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/include/superdarn/rmsg.h	/^  int type;$/;"	m	struct:RMsgData
+type	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/include/superdarn/rosmsg.h	/^  char type;$/;"	m	struct:ROSMsg
 type	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/include/control_program.h	/^     char type;$/;"	m	struct:ROSMsg
 type	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/include/global_server_variables.h	/^     char type;$/;"	m	struct:DriverMsg
 type	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/include/global_server_variables.h	/^     int type;$/;"	m	struct:Thread_List_Item
@@ -25167,6 +25281,7 @@ usage	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2
 usage	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.2/genfft/gen_twidsq_c.ml	/^let usage = "Usage: " ^ Sys.argv.(0) ^ " -n <number> [ -dit | -dif ]"$/;"	v
 usage	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/iniparser3.0b/html/index.html	/^<h2><a class="anchor" name="usage">$/;"	a
 use_beam_table	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/codebase/superdarn/src.lib/os/rosmsg.1.5/include/rosmsg.h	/^     uint32 use_beam_table;$/;"	m	struct:SiteSettings
+use_beam_table	/home/radar/SuperDARN_MSI_ROS/linux/home/radar/ros.3.6/include/superdarn/rosmsg.h	/^     uint32 use_beam_table;$/;"	m	struct:SiteSettings
 use_beam_table	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/dio_tcp_driver/main.c	/^uint32_t use_beam_table;$/;"	v
 use_beam_table	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/include/control_program.h	/^     uint32_t use_beam_table;$/;"	m	struct:SiteSettings
 use_flag	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc316_tcp_driver/main.c	/^int 		use_flag[20] = {$/;"	v
@@ -25325,7 +25440,7 @@ verbose	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/server
 verbose	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/timing_tcp_driver/main.c	/^int verbose=10;$/;"	v
 verbose	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/transponder/main.cpp	/^int verbose=10;$/;"	v
 verbose	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_backup/main.cpp	/^int verbose=1;$/;"	v
-verbose	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/main.cpp	/^int verbose=0;$/;"	v
+verbose	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/main.cpp	/^int verbose=10;$/;"	v
 verify	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.2/libbench2/verify.c	/^void verify(const char *param, int rounds, double tol)$/;"	f
 verify_dft	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.2/libbench2/verify-dft.c	/^void verify_dft(bench_problem *p, int rounds, double tol, errors *e)$/;"	f
 verify_pack	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.2/libbench2/verify-lib.c	/^bench_tensor *verify_pack(const bench_tensor *sz, int s)$/;"	f

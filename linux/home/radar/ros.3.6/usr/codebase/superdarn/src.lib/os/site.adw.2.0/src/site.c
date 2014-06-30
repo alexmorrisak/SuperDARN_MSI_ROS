@@ -34,6 +34,10 @@
 #define REAL_BUF_OFFSET 0
 #define IMAG_BUF_OFFSET 1
 #define USEC 1000000.0
+int sock = 0;
+int port = 0;
+char server[256] = "127.0.0.1";
+
 int ADW_exit_flag=0;
 char channame[5]="\0";
 
@@ -1025,6 +1029,9 @@ usleep(usecs);
         dest += dprm.samples*sizeof(uint32); /* skip ahead number of samples * 32 bit per sample to account for rdata.main*/
         memmove(dest,rdata.back,dprm.samples*sizeof(uint32));
       } else {
+        fprintf(stdout,"IQUBUFFSIZE: %i\n", IQBUFSIZE);
+        fprintf(stdout,"iqoff: %i\n", iqoff);
+        fprintf(stdout,"dprm.samples: %i\n", dprm.samples);
         fprintf(stderr,"IQ Buffer overrun in SiteIntegrate\n");
         fflush(stderr);
       }

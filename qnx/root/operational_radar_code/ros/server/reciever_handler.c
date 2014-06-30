@@ -821,7 +821,9 @@ void *receiver_controlprogram_get_data(struct ControlProgram *arg)
         if(arg->data->shm_memory) {
           //printf("RECV: GET_DATA: set up shm memory space\n");
           sprintf(shm_device,"/receiver_main_%d_%d_%d",r,c,b);
-	  printf("device: %s\n", shm_device);
+	      printf("device: %s\n", shm_device);
+          printf("opening device\n");
+          
           shm_fd=shm_open(shm_device,O_RDONLY,S_IRUSR | S_IWUSR);
 	  int errorint;
           if (shm_fd == -1) {errorint = errno; fprintf(stderr,"shm_open error\n");}
@@ -955,7 +957,9 @@ void *receiver_clrfreq(struct ControlProgram *arg)
     send_data(timingsock, &msg, sizeof(struct DriverMsg));
     send_data(timingsock, &arg->clrfreqsearch, sizeof(struct CLRFreqPRM));
     send_data(timingsock, arg->parameters, sizeof(struct ControlPRM));
+    printf("sent message to rxsocket\n");
     recv_data(timingsock, &arg->clrfreqsearch, sizeof(struct CLRFreqPRM));
+    printf("got data from rxsocket\n");
     if(verbose > 1 ) fprintf(stdout,"  final search parameters\n");  
     if(verbose > 1 ) fprintf(stdout,"  start: %d\n",arg->clrfreqsearch.start);        
     if(verbose > 1 ) fprintf(stdout,"  end: %d\n",arg->clrfreqsearch.end);    

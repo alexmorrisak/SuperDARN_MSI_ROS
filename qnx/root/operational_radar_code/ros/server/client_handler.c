@@ -340,7 +340,8 @@ void controlprogram_exit(struct ControlProgram *control_program)
      i=0;
      rc = pthread_create(&threads[i], NULL, (void *) &dds_end_controlprogram, NULL);
      i++;
-     rc = pthread_create(&threads[i], NULL, (void *) &timing_end_controlprogram, NULL);
+     //rc = pthread_create(&threads[i], NULL, (void *) &timing_end_controlprogram, NULL);
+     rc = pthread_create(&threads[i], NULL, (void *) &timing_end_controlprogram, control_program);
 //   i++;
 //   rc = pthread_create(&threads[i], NULL, (void *) &DIO_end_controlprogram, NULL);
      i++;
@@ -763,6 +764,9 @@ control_program);
                 send_data(socket, control_program->data, sizeof(struct DataPRM));
                 if(control_program->data->status==0) {
                   //printf("GET_DATA: main: %d %d\n",sizeof(uint32_t),sizeof(uint32)*control_program->data->samples);
+                  //for (i=0; i<control_program->data->samples; i++){
+                  //  printf("samples %i: %7x\n", i, (uint32_t)control_program->main[i]);
+                  //}
                   send_data(socket, control_program->main, sizeof(uint32_t)*control_program->data->samples);
                   send_data(socket, control_program->back, sizeof(uint32_t)*control_program->data->samples);
                   send_data(socket, &bad_transmit_times.length, sizeof(bad_transmit_times.length));

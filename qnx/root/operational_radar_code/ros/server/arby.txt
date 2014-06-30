@@ -1,7 +1,6 @@
 Policy 0 Prio: 0
-Policy 0 Prio: 0
+Policy 2 Prio: 60
 Min Prio: 1 Max Prio: 99
-parsing file: /home/alex/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/site_data/site.ini
 Size of Struct ROSMsg  8
 Size of Struct int32_t  4
 Size of Struct float  4
@@ -9,22 +8,22 @@ Size of Struct unsigned char  1
 Size of Struct ControlPRM  288
 Size of Struct CLRFreqPRM  20
 Size of Struct SeqPRM  20
-Size of Struct DataPRM  28
+Size of Struct DataPRM  32
 Size of Struct SiteSettings  668
-Opening restricted file: /home/alex/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/site_data/restrict.dat
-Number of restricted windows: 20
-max blacklist: 140
-Blacklist : 0x8eb0068
+Opening restricted file: /home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/site_data/restrict.dat
+Number of restricted windows: 27
+max blacklist: 147
+Blacklist : 0x8f80d0
 Default IF Enable flag : 0
 Trigger_type: 0
 GPSrate: 0
 beam_lookup: False
-radar_1: /root/operational_radar_code/mcm/site_data/calibrations/mcm/beamcode_lookup_table_mcm.dat
-radar_2: ERROR
+radar_1: /data/calibrations/ade/beamcode_lookup_table_ade.dat
+radar_2: /data/calibrations/adw/beamcode_lookup_table_adw.dat
 RXFE RF Mode Settings from INI File ::
 RXFE :: IF: 0
 RXFE :: amp1: 1
-RXFE :: amp2: 0
+RXFE :: amp2: 1
 RXFE :: amp3: 0
 RXFE :: att1: 0
 RXFE :: att2: 0
@@ -40,1016 +39,3721 @@ RXFE :: att2: 0
 RXFE :: att3: 0
 RXFE :: att4: 0
 Configured IF Enable flag : 0
-Opening DIO Socket 127.0.0.1 45005
-Sock Path: rosdio
-client: connect: No such file or directory
-Dio Socket failure -1
-Opening DDS Socket
-Sock Path: rosdds
-client: connect: No such file or directory
-DDS Socket failure -1
-Opening Recv Socket
-Sock Path: rosrecv
-client: connect: No such file or directory
-RECV Socket failure -1
-Opening Timing Socket
-connecting stream socket: Connection refused
-Timing Socket failure -1
-Opening GPS Socket
-Sock Path: rosgps
-client: connect: No such file or directory
-GPS Socket failure -1
 Setting up thread for dead clients
-Checking for dead clients: 1394220973.170147
-Checking for dead clients: 1394220973.170147
 updating dio settings
 done updating dio settings
-main: create socket server
-TCP Socket using port #45000
-temp=0  optionlen=4  option=1
-temp=0  optionlen=4  option=65536
-temp=0  optionlen=4  option=65536
-main: listen for sockets 8
-main: listen for clients on socket 8
-ROS Main: Listening for new client connections
-ROS Main: New Client! 1394220976.937449
-main: new client socket 9 9
-Main: Client Thread
- No existing threads
- New thread: 0x8eb1068  next: (nil)  prev: (nil)
-ROS Main: Listening for new client connections
-SET_RADAR_CHAN: 1394220976.937531
+ROS Main: New Client! 1402607018.408181
+SET_RADAR_CHAN: 1402607018.408313
   Radar: 1 Chan: 1
-Unregister_radar_channel: Current State:
-  0 : r:1 c:1 :: cp: (nil)
-  1 : r:1 c:2 :: cp: (nil)
-Register_radar_channel: Current State:
-  0 : r:1 c:1 :: cp: (nil)
-  1 : r:1 c:2 :: cp: (nil)
-  Registering:: radar: 1 channel: 1 :: cp: 0x8eb0e58
-REGISTER_SEQ: r: 0 c: 0  1394220976.937808
-Client:  Reg Seq Elapsed Microseconds: 94
-Client: Set ACTIVE: 1394220976 937949 :: 0 0
-Client: End ACTIVE: 1394220976 937959 :: 0 0
-Client: Requst CLRSearch: 10600 10900
-  final search parameters
-  start: 10600
-  end: 10900
-  nave:  20
-  N:  0
-Client:  CLR Elapsed Microseconds: 154
-ASSIGN FREQ: 0 0
- FFT FREQ: 10600 10900
- Start Freq: 0.000000
- Padded Rx Side Band: 8 [kHz]
-0 frequencies in fft 
-  freq[       0]:    0.000
-  freq[      -1]:    0.000
- Separation Enabled
- Minimum Freq Separation: 60
- Detrending Disabled
-0 frequencies in clrfreqsearch band
-1 1 :: Filling backlist 18
-1 1 :: Done Filling backlist 18
-Current blacklist:
-        0     8100 : (nil)
-     8195     8500 : (nil)
-     8650     9300 : (nil)
-     9400     9600 : (nil)
-     9750    10100 : (nil)
-    10400    10700 : (nil)
-    10800    11400 : (nil)
-    11700    12490 : (nil)
-    12610    12800 : (nil)
-    12950    13700 : (nil)
-    13800    14400 : (nil)
-    14700    15200 : (nil)
-    15300    16570 : (nil)
-    16700    16975 : (nil)
-    17200    17600 : (nil)
-    17900    18400 : (nil)
-    18600    19020 : (nil)
-    19680    99999 : (nil)
-0 frequencies that are allowed
-Sorted nfreq: 0
-No valid frequencies Setting best available frequency to zero with very high noise
-Client:  Request Freq Elapsed Microseconds: 181
-Client: Set READY: 1394220976 941528 :: 0 0
-Client:Set Ready: 3 Elapsed Microseconds: 0
-Client:Set Ready: 2 Elapsed Microseconds: 1
-Client:Set Ready: 1 Elapsed Microseconds: 0
-Client:Set Ready: 0 Elapsed Microseconds: 0
-Coord: Start Coord Handler: 1394220976 941782
-Coord: Client Ready Wait Elapsed Microseconds:          0 :: sec: 1394220976 usec:     941788
-Coord: Num ready: 1  Num clients: 1 Ready State: 2 
-Coord: Start Ready State Case 2 Elapsed Microseconds: 15
-Coord: Pre-Trigger Active Check -1218608538 Elapsed Microseconds: 3
-Coord: Pre-Trigger Thread Run Elapsed Microseconds:       1167 :: sec: 1394220976 usec:     942970
-Coord: Trigger Elapsed Microseconds: 51
-Coord: Post Trigger Elapsed Microseconds: 155
-Coord: Total Elapsed Microseconds: 1406
-Coord: Pre-trigger start to Post-Trigger end Elapsed Microseconds:       1393 :: sec: 1394220976 usec:     943196
-Coord: End Coord Handler: 1394220976 943199
-Client:Set Ready: Coord Elapsed Microseconds: 1443
-Client:  Set Ready Elapsed Microseconds: 1703
-Client: End READY: 1394220976 943231 :: 0 0
-RECV::GET_DATA: Bad Status: -1 Time: Fri Mar  7 10:36:17 2014
-  Collected: 1  Errors: 1  Percentage: 100.000000
-GET_DATA: Bad status -1
-Client:  Get Data Elapsed Microseconds: 318
-Client  0  0:  From Pretrig start to Get Data end Elapsed Microseconds:      93379  :: sec: 1394220977 usec:      35182
-Client  0  0:  From Client Ready start to Get Data end Elapsed Microseconds:      93394  :: sec: 1394220977 usec:      35182
-Client: Set READY: 1394220977 35373 :: 0 0
-Client:Set Ready: 3 Elapsed Microseconds: 0
-Client:Set Ready: 2 Elapsed Microseconds: 1
-Client:Set Ready: 1 Elapsed Microseconds: 0
-Client:Set Ready: 0 Elapsed Microseconds: 0
-Coord: Start Coord Handler: 1394220977 35721
-Coord: Client Ready Wait Elapsed Microseconds:          0 :: sec: 1394220977 usec:      35735
-Coord: Num ready: 1  Num clients: 1 Ready State: 2 
-Coord: Start Ready State Case 2 Elapsed Microseconds: 30
-Coord: Pre-Trigger Active Check -1218608538 Elapsed Microseconds: 7
-Coord: Pre-Trigger Thread Run Elapsed Microseconds:       1316 :: sec: 1394220977 usec:      37080
-Coord: Trigger Elapsed Microseconds: 51
-Coord: Post Trigger Elapsed Microseconds: 158
-Coord: Total Elapsed Microseconds: 1583
-Coord: Pre-trigger start to Post-Trigger end Elapsed Microseconds:       1557 :: sec: 1394220977 usec:      37321
-Coord: End Coord Handler: 1394220977 37329
-Client:Set Ready: Coord Elapsed Microseconds: 1673
-Client:  Set Ready Elapsed Microseconds: 2025
-Client: End READY: 1394220977 37398 :: 0 0
-RECV::GET_DATA: Bad Status: -1 Time: Fri Mar  7 10:36:17 2014
-  Collected: 2  Errors: 2  Percentage: 100.000000
-GET_DATA: Bad status -1
-Client:  Get Data Elapsed Microseconds: 212
-Client  0  0:  From Pretrig start to Get Data end Elapsed Microseconds:      93474  :: sec: 1394220977 usec:     129238
-Client  0  0:  From Client Ready start to Get Data end Elapsed Microseconds:      93503  :: sec: 1394220977 usec:     129238
-Client: Set READY: 1394220977 129419 :: 0 0
-Client:Set Ready: 3 Elapsed Microseconds: 0
-Client:Set Ready: 2 Elapsed Microseconds: 1
-Client:Set Ready: 1 Elapsed Microseconds: 1
-Client:Set Ready: 0 Elapsed Microseconds: 1
-Coord: Start Coord Handler: 1394220977 129752
-Coord: Client Ready Wait Elapsed Microseconds:          1 :: sec: 1394220977 usec:     129762
-Coord: Num ready: 1  Num clients: 1 Ready State: 2 
-Coord: Start Ready State Case 2 Elapsed Microseconds: 25
-Coord: Pre-Trigger Active Check -1218608538 Elapsed Microseconds: 6
-Coord: Pre-Trigger Thread Run Elapsed Microseconds:       1255 :: sec: 1394220977 usec:     131045
-Coord: Trigger Elapsed Microseconds: 48
-Coord: Post Trigger Elapsed Microseconds: 130
-Coord: Total Elapsed Microseconds: 1483
-Coord: Pre-trigger start to Post-Trigger end Elapsed Microseconds:       1464 :: sec: 1394220977 usec:     131254
-Coord: End Coord Handler: 1394220977 131263
-Client:Set Ready: Coord Elapsed Microseconds: 1567
-Client:  Set Ready Elapsed Microseconds: 1910
-Client: End READY: 1394220977 131329 :: 0 0
-RECV::GET_DATA: Bad Status: -1 Time: Fri Mar  7 10:36:17 2014
-  Collected: 3  Errors: 3  Percentage: 100.000000
-GET_DATA: Bad status -1
-Client:  Get Data Elapsed Microseconds: 215
-Client  0  0:  From Pretrig start to Get Data end Elapsed Microseconds:      93382  :: sec: 1394220977 usec:     223172
-Client  0  0:  From Client Ready start to Get Data end Elapsed Microseconds:      93411  :: sec: 1394220977 usec:     223172
-Client: Set READY: 1394220977 223374 :: 0 0
-Client:Set Ready: 3 Elapsed Microseconds: 1
-Client:Set Ready: 2 Elapsed Microseconds: 1
-Client:Set Ready: 1 Elapsed Microseconds: 1
-Client:Set Ready: 0 Elapsed Microseconds: 1
-Coord: Start Coord Handler: 1394220977 223721
-Coord: Client Ready Wait Elapsed Microseconds:          0 :: sec: 1394220977 usec:     223735
-Coord: Num ready: 1  Num clients: 1 Ready State: 2 
-Coord: Start Ready State Case 2 Elapsed Microseconds: 31
-Coord: Pre-Trigger Active Check -1218608538 Elapsed Microseconds: 6
-Coord: Pre-Trigger Thread Run Elapsed Microseconds:       1308 :: sec: 1394220977 usec:     225073
-Coord: Trigger Elapsed Microseconds: 50
-Coord: Post Trigger Elapsed Microseconds: 126
-Coord: Total Elapsed Microseconds: 1541
-Coord: Pre-trigger start to Post-Trigger end Elapsed Microseconds:       1515 :: sec: 1394220977 usec:     225280
-Coord: End Coord Handler: 1394220977 225288
-Client:Set Ready: Coord Elapsed Microseconds: 1622
-Client:  Set Ready Elapsed Microseconds: 1981
-Client: End READY: 1394220977 225355 :: 0 0
-RECV::GET_DATA: Bad Status: -1 Time: Fri Mar  7 10:36:17 2014
-  Collected: 4  Errors: 4  Percentage: 100.000000
-GET_DATA: Bad status -1
-Client:  Get Data Elapsed Microseconds: 219
-Client  0  0:  From Pretrig start to Get Data end Elapsed Microseconds:      93443  :: sec: 1394220977 usec:     317208
-Client  0  0:  From Client Ready start to Get Data end Elapsed Microseconds:      93473  :: sec: 1394220977 usec:     317208
-Client: Set READY: 1394220977 317390 :: 0 0
-Client:Set Ready: 3 Elapsed Microseconds: 0
-Client:Set Ready: 2 Elapsed Microseconds: 0
-Client:Set Ready: 1 Elapsed Microseconds: 1
-Client:Set Ready: 0 Elapsed Microseconds: 0
-Coord: Start Coord Handler: 1394220977 317787
-Coord: Client Ready Wait Elapsed Microseconds:          1 :: sec: 1394220977 usec:     317802
-Coord: Num ready: 1  Num clients: 1 Ready State: 2 
-Coord: Start Ready State Case 2 Elapsed Microseconds: 31
-Coord: Pre-Trigger Active Check -1218608538 Elapsed Microseconds: 7
-Coord: Pre-Trigger Thread Run Elapsed Microseconds:       1269 :: sec: 1394220977 usec:     319100
-Coord: Trigger Elapsed Microseconds: 49
-Coord: Post Trigger Elapsed Microseconds: 127
-Coord: Total Elapsed Microseconds: 1501
-Coord: Pre-trigger start to Post-Trigger end Elapsed Microseconds:       1475 :: sec: 1394220977 usec:     319306
-Coord: End Coord Handler: 1394220977 319314
-Client:Set Ready: Coord Elapsed Microseconds: 1582
-Client:  Set Ready Elapsed Microseconds: 1992
-Client: End READY: 1394220977 319382 :: 0 0
-RECV::GET_DATA: Bad Status: -1 Time: Fri Mar  7 10:36:17 2014
-  Collected: 5  Errors: 5  Percentage: 100.000000
-GET_DATA: Bad status -1
-Client:  Get Data Elapsed Microseconds: 233
-Client  0  0:  From Pretrig start to Get Data end Elapsed Microseconds:      93426  :: sec: 1394220977 usec:     411257
-Client  0  0:  From Client Ready start to Get Data end Elapsed Microseconds:      93456  :: sec: 1394220977 usec:     411257
-Client: Set READY: 1394220977 411524 :: 0 0
-Client:Set Ready: 3 Elapsed Microseconds: 1
-Client:Set Ready: 2 Elapsed Microseconds: 0
-Client:Set Ready: 1 Elapsed Microseconds: 1
-Client:Set Ready: 0 Elapsed Microseconds: 0
-Coord: Start Coord Handler: 1394220977 411881
-Coord: Client Ready Wait Elapsed Microseconds:          0 :: sec: 1394220977 usec:     411891
-Coord: Num ready: 1  Num clients: 1 Ready State: 2 
-Coord: Start Ready State Case 2 Elapsed Microseconds: 26
-Coord: Pre-Trigger Active Check -1218608538 Elapsed Microseconds: 6
-Coord: Pre-Trigger Thread Run Elapsed Microseconds:       1258 :: sec: 1394220977 usec:     413178
-Coord: Trigger Elapsed Microseconds: 49
-Coord: Post Trigger Elapsed Microseconds: 136
-Coord: Total Elapsed Microseconds: 1494
-Coord: Pre-trigger start to Post-Trigger end Elapsed Microseconds:       1475 :: sec: 1394220977 usec:     413395
-Coord: End Coord Handler: 1394220977 413403
-Client:Set Ready: Coord Elapsed Microseconds: 1580
-Client:  Set Ready Elapsed Microseconds: 1961
-Client: End READY: 1394220977 413485 :: 0 0
-RECV::GET_DATA: Bad Status: -1 Time: Fri Mar  7 10:36:17 2014
-  Collected: 6  Errors: 6  Percentage: 100.000000
-GET_DATA: Bad status -1
-Client:  Get Data Elapsed Microseconds: 213
-Client  0  0:  From Pretrig start to Get Data end Elapsed Microseconds:      93415  :: sec: 1394220977 usec:     505335
-Client  0  0:  From Client Ready start to Get Data end Elapsed Microseconds:      93444  :: sec: 1394220977 usec:     505335
-Client: Set READY: 1394220977 505518 :: 0 0
-Client:Set Ready: 3 Elapsed Microseconds: 1
-Client:Set Ready: 2 Elapsed Microseconds: 0
-Client:Set Ready: 1 Elapsed Microseconds: 1
-Client:Set Ready: 0 Elapsed Microseconds: 0
-Coord: Start Coord Handler: 1394220977 505862
-Coord: Client Ready Wait Elapsed Microseconds:          0 :: sec: 1394220977 usec:     505876
-Coord: Num ready: 1  Num clients: 1 Ready State: 2 
-Coord: Start Ready State Case 2 Elapsed Microseconds: 31
-Coord: Pre-Trigger Active Check -1218608538 Elapsed Microseconds: 6
-Coord: Pre-Trigger Thread Run Elapsed Microseconds:       1283 :: sec: 1394220977 usec:     507189
-Coord: Trigger Elapsed Microseconds: 58
-Coord: Post Trigger Elapsed Microseconds: 129
-Coord: Total Elapsed Microseconds: 1529
-Coord: Pre-trigger start to Post-Trigger end Elapsed Microseconds:       1504 :: sec: 1394220977 usec:     507410
-Coord: End Coord Handler: 1394220977 507418
-Client:Set Ready: Coord Elapsed Microseconds: 1612
-Client:  Set Ready Elapsed Microseconds: 1970
-Client: End READY: 1394220977 507488 :: 0 0
-RECV::GET_DATA: Bad Status: -1 Time: Fri Mar  7 10:36:17 2014
-  Collected: 7  Errors: 7  Percentage: 100.000000
-GET_DATA: Bad status -1
-Client:  Get Data Elapsed Microseconds: 198
-Client  0  0:  From Pretrig start to Get Data end Elapsed Microseconds:      93410  :: sec: 1394220977 usec:     599316
-Client  0  0:  From Client Ready start to Get Data end Elapsed Microseconds:      93440  :: sec: 1394220977 usec:     599316
-Client: Set READY: 1394220977 599496 :: 0 0
-Client:Set Ready: 3 Elapsed Microseconds: 1
-Client:Set Ready: 2 Elapsed Microseconds: 1
-Client:Set Ready: 1 Elapsed Microseconds: 0
-Client:Set Ready: 0 Elapsed Microseconds: 0
-Coord: Start Coord Handler: 1394220977 599848
-Coord: Client Ready Wait Elapsed Microseconds:          0 :: sec: 1394220977 usec:     599860
-Coord: Num ready: 1  Num clients: 1 Ready State: 2 
-Coord: Start Ready State Case 2 Elapsed Microseconds: 29
-Coord: Pre-Trigger Active Check -1218608538 Elapsed Microseconds: 6
-Coord: Pre-Trigger Thread Run Elapsed Microseconds:       1298 :: sec: 1394220977 usec:     601187
-Coord: Trigger Elapsed Microseconds: 49
-Coord: Post Trigger Elapsed Microseconds: 134
-Coord: Total Elapsed Microseconds: 1536
-Coord: Pre-trigger start to Post-Trigger end Elapsed Microseconds:       1512 :: sec: 1394220977 usec:     601401
-Coord: End Coord Handler: 1394220977 601409
-Client:Set Ready: Coord Elapsed Microseconds: 1618
-Client:  Set Ready Elapsed Microseconds: 1977
-Client: End READY: 1394220977 601473 :: 0 0
-RECV::GET_DATA: Bad Status: -1 Time: Fri Mar  7 10:36:17 2014
-  Collected: 8  Errors: 8  Percentage: 100.000000
-GET_DATA: Bad status -1
-Client:  Get Data Elapsed Microseconds: 175
-Client  0  0:  From Pretrig start to Get Data end Elapsed Microseconds:      93411  :: sec: 1394220977 usec:     693300
-Client  0  0:  From Client Ready start to Get Data end Elapsed Microseconds:      93440  :: sec: 1394220977 usec:     693300
-Client: Set READY: 1394220977 693478 :: 0 0
-Client:Set Ready: 3 Elapsed Microseconds: 0
-Client:Set Ready: 2 Elapsed Microseconds: 0
-Client:Set Ready: 1 Elapsed Microseconds: 0
-Client:Set Ready: 0 Elapsed Microseconds: 0
-Coord: Start Coord Handler: 1394220977 693802
-Coord: Client Ready Wait Elapsed Microseconds:          0 :: sec: 1394220977 usec:     693811
-Coord: Num ready: 1  Num clients: 1 Ready State: 2 
-Coord: Start Ready State Case 2 Elapsed Microseconds: 25
-Coord: Pre-Trigger Active Check -1218608538 Elapsed Microseconds: 6
-Coord: Pre-Trigger Thread Run Elapsed Microseconds:       1252 :: sec: 1394220977 usec:     695092
-Coord: Trigger Elapsed Microseconds: 49
-Coord: Post Trigger Elapsed Microseconds: 130
-Coord: Total Elapsed Microseconds: 1497
-Coord: Pre-trigger start to Post-Trigger end Elapsed Microseconds:       1479 :: sec: 1394220977 usec:     695319
-Coord: End Coord Handler: 1394220977 695327
-Client:Set Ready: Coord Elapsed Microseconds: 1584
-Client:  Set Ready Elapsed Microseconds: 1917
-Client: End READY: 1394220977 695395 :: 0 0
-RECV::GET_DATA: Bad Status: -1 Time: Fri Mar  7 10:36:17 2014
-  Collected: 9  Errors: 9  Percentage: 100.000000
-GET_DATA: Bad status -1
-Client:  Get Data Elapsed Microseconds: 171
-Client  0  0:  From Pretrig start to Get Data end Elapsed Microseconds:      93339  :: sec: 1394220977 usec:     787179
-Client  0  0:  From Client Ready start to Get Data end Elapsed Microseconds:      93368  :: sec: 1394220977 usec:     787179
-Client: Set READY: 1394220977 787357 :: 0 0
-Client:Set Ready: 3 Elapsed Microseconds: 0
-Client:Set Ready: 2 Elapsed Microseconds: 1
-Client:Set Ready: 1 Elapsed Microseconds: 1
-Client:Set Ready: 0 Elapsed Microseconds: 1
-Coord: Start Coord Handler: 1394220977 787682
-Coord: Client Ready Wait Elapsed Microseconds:          1 :: sec: 1394220977 usec:     787692
-Coord: Num ready: 1  Num clients: 1 Ready State: 2 
-Coord: Start Ready State Case 2 Elapsed Microseconds: 25
-Coord: Pre-Trigger Active Check -1218608538 Elapsed Microseconds: 6
-Coord: Pre-Trigger Thread Run Elapsed Microseconds:       1318 :: sec: 1394220977 usec:     789038
-Coord: Trigger Elapsed Microseconds: 51
-Coord: Post Trigger Elapsed Microseconds: 130
-Coord: Total Elapsed Microseconds: 1552
-Coord: Pre-trigger start to Post-Trigger end Elapsed Microseconds:       1534 :: sec: 1394220977 usec:     789254
-Coord: End Coord Handler: 1394220977 789262
-Client:Set Ready: Coord Elapsed Microseconds: 1636
-Client:  Set Ready Elapsed Microseconds: 1972
-Client: End READY: 1394220977 789329 :: 0 0
-RECV::GET_DATA: Bad Status: -1 Time: Fri Mar  7 10:36:17 2014
-  Collected: 10  Errors: 10  Percentage: 100.000000
-GET_DATA: Bad status -1
-Client:  Get Data Elapsed Microseconds: 211
-Client  0  0:  From Pretrig start to Get Data end Elapsed Microseconds:      93452  :: sec: 1394220977 usec:     881172
-Client  0  0:  From Client Ready start to Get Data end Elapsed Microseconds:      93481  :: sec: 1394220977 usec:     881172
-Client: Set READY: 1394220977 881353 :: 0 0
-Client:Set Ready: 3 Elapsed Microseconds: 1
-Client:Set Ready: 2 Elapsed Microseconds: 0
-Client:Set Ready: 1 Elapsed Microseconds: 0
-Client:Set Ready: 0 Elapsed Microseconds: 1
-Coord: Start Coord Handler: 1394220977 881685
-Coord: Client Ready Wait Elapsed Microseconds:          1 :: sec: 1394220977 usec:     881695
-Coord: Num ready: 1  Num clients: 1 Ready State: 2 
-Coord: Start Ready State Case 2 Elapsed Microseconds: 25
-Coord: Pre-Trigger Active Check -1218608538 Elapsed Microseconds: 6
-Coord: Pre-Trigger Thread Run Elapsed Microseconds:       1256 :: sec: 1394220977 usec:     882979
-Coord: Trigger Elapsed Microseconds: 48
-Coord: Post Trigger Elapsed Microseconds: 130
-Coord: Total Elapsed Microseconds: 1484
-Coord: Pre-trigger start to Post-Trigger end Elapsed Microseconds:       1465 :: sec: 1394220977 usec:     883188
-Coord: End Coord Handler: 1394220977 883196
-Client:Set Ready: Coord Elapsed Microseconds: 1569
-Client:  Set Ready Elapsed Microseconds: 1909
-Client: End READY: 1394220977 883262 :: 0 0
-RECV::GET_DATA: Bad Status: -1 Time: Fri Mar  7 10:36:17 2014
-  Collected: 11  Errors: 11  Percentage: 100.000000
-GET_DATA: Bad status -1
-Client:  Get Data Elapsed Microseconds: 211
-Client  0  0:  From Pretrig start to Get Data end Elapsed Microseconds:      93386  :: sec: 1394220977 usec:     975109
-Client  0  0:  From Client Ready start to Get Data end Elapsed Microseconds:      93415  :: sec: 1394220977 usec:     975109
-Client: Set READY: 1394220977 975291 :: 0 0
-Client:Set Ready: 3 Elapsed Microseconds: 1
-Client:Set Ready: 2 Elapsed Microseconds: 0
-Client:Set Ready: 1 Elapsed Microseconds: 0
-Client:Set Ready: 0 Elapsed Microseconds: 0
-Coord: Start Coord Handler: 1394220977 975642
-Coord: Client Ready Wait Elapsed Microseconds:          1 :: sec: 1394220977 usec:     975656
-Coord: Num ready: 1  Num clients: 1 Ready State: 2 
-Coord: Start Ready State Case 2 Elapsed Microseconds: 30
-Coord: Pre-Trigger Active Check -1218608538 Elapsed Microseconds: 7
-Coord: Pre-Trigger Thread Run Elapsed Microseconds:       1328 :: sec: 1394220977 usec:     977013
-Coord: Trigger Elapsed Microseconds: 50
-Coord: Post Trigger Elapsed Microseconds: 190
-Coord: Total Elapsed Microseconds: 1624
-Coord: Pre-trigger start to Post-Trigger end Elapsed Microseconds:       1599 :: sec: 1394220977 usec:     977284
-Coord: End Coord Handler: 1394220977 977293
-Client:Set Ready: Coord Elapsed Microseconds: 1709
-Client:  Set Ready Elapsed Microseconds: 2072
-Client: End READY: 1394220977 977363 :: 0 0
-RECV::GET_DATA: Bad Status: -1 Time: Fri Mar  7 10:36:18 2014
-  Collected: 12  Errors: 12  Percentage: 100.000000
-GET_DATA: Bad status -1
-Client:  Get Data Elapsed Microseconds: 207
-Client  0  0:  From Pretrig start to Get Data end Elapsed Microseconds:      93515  :: sec: 1394220978 usec:      69200
-Client  0  0:  From Client Ready start to Get Data end Elapsed Microseconds:      93545  :: sec: 1394220978 usec:      69200
-Client: Set READY: 1394220978 69385 :: 0 0
-Client:Set Ready: 3 Elapsed Microseconds: 1
-Client:Set Ready: 2 Elapsed Microseconds: 0
-Client:Set Ready: 1 Elapsed Microseconds: 0
-Client:Set Ready: 0 Elapsed Microseconds: 0
-Coord: Start Coord Handler: 1394220978 69718
-Coord: Client Ready Wait Elapsed Microseconds:          1 :: sec: 1394220978 usec:      69728
-Coord: Num ready: 1  Num clients: 1 Ready State: 2 
-Coord: Start Ready State Case 2 Elapsed Microseconds: 25
-Coord: Pre-Trigger Active Check -1218608538 Elapsed Microseconds: 6
-Coord: Pre-Trigger Thread Run Elapsed Microseconds:       1259 :: sec: 1394220978 usec:      71014
-Coord: Trigger Elapsed Microseconds: 51
-Coord: Post Trigger Elapsed Microseconds: 132
-Coord: Total Elapsed Microseconds: 1494
-Coord: Pre-trigger start to Post-Trigger end Elapsed Microseconds:       1477 :: sec: 1394220978 usec:      71232
-Coord: End Coord Handler: 1394220978 71240
-Client:Set Ready: Coord Elapsed Microseconds: 1579
-Client:  Set Ready Elapsed Microseconds: 1922
-Client: End READY: 1394220978 71307 :: 0 0
-RECV::GET_DATA: Bad Status: -1 Time: Fri Mar  7 10:36:18 2014
-  Collected: 13  Errors: 13  Percentage: 100.000000
-GET_DATA: Bad status -1
-Client:  Get Data Elapsed Microseconds: 182
-Client  0  0:  From Pretrig start to Get Data end Elapsed Microseconds:      93353  :: sec: 1394220978 usec:     163108
-Client  0  0:  From Client Ready start to Get Data end Elapsed Microseconds:      93381  :: sec: 1394220978 usec:     163108
-Client: Set READY: 1394220978 163284 :: 0 0
-Client:Set Ready: 3 Elapsed Microseconds: 1
-Client:Set Ready: 2 Elapsed Microseconds: 1
-Client:Set Ready: 1 Elapsed Microseconds: 1
-Client:Set Ready: 0 Elapsed Microseconds: 0
-Coord: Start Coord Handler: 1394220978 163633
-Coord: Client Ready Wait Elapsed Microseconds:          1 :: sec: 1394220978 usec:     163647
-Coord: Num ready: 1  Num clients: 1 Ready State: 2 
-Coord: Start Ready State Case 2 Elapsed Microseconds: 30
-Coord: Pre-Trigger Active Check -1218608538 Elapsed Microseconds: 6
-Coord: Pre-Trigger Thread Run Elapsed Microseconds:       1309 :: sec: 1394220978 usec:     164985
-Coord: Trigger Elapsed Microseconds: 51
-Coord: Post Trigger Elapsed Microseconds: 129
-Coord: Total Elapsed Microseconds: 1546
-Coord: Pre-trigger start to Post-Trigger end Elapsed Microseconds:       1521 :: sec: 1394220978 usec:     165197
-Coord: End Coord Handler: 1394220978 165205
-Client:Set Ready: Coord Elapsed Microseconds: 1628
-Client:  Set Ready Elapsed Microseconds: 1987
-Client: End READY: 1394220978 165271 :: 0 0
-Checking for dead clients: 1394220978.170230
-Checking for dead clients: 1394220978.170230
-TIMEOUT: 0x8eb0e58 elapsed: 0 timeout: 15
-RECV::GET_DATA: Bad Status: -1 Time: Fri Mar  7 10:36:18 2014
-  Collected: 14  Errors: 14  Percentage: 100.000000
-GET_DATA: Bad status -1
-Client:  Get Data Elapsed Microseconds: 203
-Client  0  0:  From Pretrig start to Get Data end Elapsed Microseconds:      93439  :: sec: 1394220978 usec:     257115
-Client  0  0:  From Client Ready start to Get Data end Elapsed Microseconds:      93469  :: sec: 1394220978 usec:     257115
-Client: Set READY: 1394220978 257202 :: 0 0
-Client:Set Ready: 3 Elapsed Microseconds: 0
-Client:Set Ready: 2 Elapsed Microseconds: 0
-Client:Set Ready: 1 Elapsed Microseconds: 0
-Client:Set Ready: 0 Elapsed Microseconds: 0
-Coord: Start Coord Handler: 1394220978 257367
-Coord: Client Ready Wait Elapsed Microseconds:          0 :: sec: 1394220978 usec:     257372
-Coord: Num ready: 1  Num clients: 1 Ready State: 2 
-Coord: Start Ready State Case 2 Elapsed Microseconds: 12
-Coord: Pre-Trigger Active Check -1218608538 Elapsed Microseconds: 3
-Coord: Pre-Trigger Thread Run Elapsed Microseconds:       1149 :: sec: 1394220978 usec:     258534
-Coord: Trigger Elapsed Microseconds: 49
-Coord: Post Trigger Elapsed Microseconds: 131
-Coord: Total Elapsed Microseconds: 1359
-Coord: Pre-trigger start to Post-Trigger end Elapsed Microseconds:       1356 :: sec: 1394220978 usec:     258741
-Coord: End Coord Handler: 1394220978 258745
-Client:Set Ready: Coord Elapsed Microseconds: 1404
-Client:  Set Ready Elapsed Microseconds: 1573
-Client: End READY: 1394220978 258775 :: 0 0
-RECV::GET_DATA: Bad Status: -1 Time: Fri Mar  7 10:36:18 2014
-  Collected: 15  Errors: 15  Percentage: 100.000000
-GET_DATA: Bad status -1
-Client:  Get Data Elapsed Microseconds: 188
-Client  0  0:  From Pretrig start to Get Data end Elapsed Microseconds:      93194  :: sec: 1394220978 usec:     350579
-Client  0  0:  From Client Ready start to Get Data end Elapsed Microseconds:      93207  :: sec: 1394220978 usec:     350579
-Client: Set READY: 1394220978 350757 :: 0 0
-Client:Set Ready: 3 Elapsed Microseconds: 0
-Client:Set Ready: 2 Elapsed Microseconds: 0
-Client:Set Ready: 1 Elapsed Microseconds: 0
-Client:Set Ready: 0 Elapsed Microseconds: 0
-Coord: Start Coord Handler: 1394220978 351139
-Coord: Client Ready Wait Elapsed Microseconds:          0 :: sec: 1394220978 usec:     351151
-Coord: Num ready: 1  Num clients: 1 Ready State: 2 
-Coord: Start Ready State Case 2 Elapsed Microseconds: 28
-Coord: Pre-Trigger Active Check -1218608538 Elapsed Microseconds: 6
-Coord: Pre-Trigger Thread Run Elapsed Microseconds:       1260 :: sec: 1394220978 usec:     352440
-Coord: Trigger Elapsed Microseconds: 53
-Coord: Post Trigger Elapsed Microseconds: 127
-Coord: Total Elapsed Microseconds: 1494
-Coord: Pre-trigger start to Post-Trigger end Elapsed Microseconds:       1472 :: sec: 1394220978 usec:     352652
-Coord: End Coord Handler: 1394220978 352660
-Client:Set Ready: Coord Elapsed Microseconds: 1581
-Client:  Set Ready Elapsed Microseconds: 1973
-Client: End READY: 1394220978 352730 :: 0 0
-RECV::GET_DATA: Bad Status: -1 Time: Fri Mar  7 10:36:18 2014
-  Collected: 16  Errors: 16  Percentage: 100.000000
-GET_DATA: Bad status -1
-Client:  Get Data Elapsed Microseconds: 201
-Client  0  0:  From Pretrig start to Get Data end Elapsed Microseconds:      93393  :: sec: 1394220978 usec:     444573
-Client  0  0:  From Client Ready start to Get Data end Elapsed Microseconds:      93422  :: sec: 1394220978 usec:     444573
-Client: Set READY: 1394220978 444667 :: 0 0
-Client:Set Ready: 3 Elapsed Microseconds: 0
-Client:Set Ready: 2 Elapsed Microseconds: 0
-Client:Set Ready: 1 Elapsed Microseconds: 1
-Client:Set Ready: 0 Elapsed Microseconds: 0
-Coord: Start Coord Handler: 1394220978 444822
-Coord: Client Ready Wait Elapsed Microseconds:          0 :: sec: 1394220978 usec:     444829
-Coord: Num ready: 1  Num clients: 1 Ready State: 2 
-Coord: Start Ready State Case 2 Elapsed Microseconds: 14
-Coord: Pre-Trigger Active Check -1218608538 Elapsed Microseconds: 3
-Coord: Pre-Trigger Thread Run Elapsed Microseconds:       1183 :: sec: 1394220978 usec:     446025
-Coord: Trigger Elapsed Microseconds: 55
-Coord: Post Trigger Elapsed Microseconds: 133
-Coord: Total Elapsed Microseconds: 1405
-Coord: Pre-trigger start to Post-Trigger end Elapsed Microseconds:       1394 :: sec: 1394220978 usec:     446236
-Coord: End Coord Handler: 1394220978 446251
-Client:Set Ready: Coord Elapsed Microseconds: 1456
-Client:  Set Ready Elapsed Microseconds: 1621
-Client: End READY: 1394220978 446288 :: 0 0
-RECV::GET_DATA: Bad Status: -1 Time: Fri Mar  7 10:36:18 2014
-  Collected: 17  Errors: 17  Percentage: 100.000000
-GET_DATA: Bad status -1
-Client:  Get Data Elapsed Microseconds: 186
-Client  0  0:  From Pretrig start to Get Data end Elapsed Microseconds:      93262  :: sec: 1394220978 usec:     538104
-Client  0  0:  From Client Ready start to Get Data end Elapsed Microseconds:      93275  :: sec: 1394220978 usec:     538104
-Client: Set READY: 1394220978 538219 :: 0 0
-Client:Set Ready: 3 Elapsed Microseconds: 1
-Client:Set Ready: 2 Elapsed Microseconds: 1
-Client:Set Ready: 1 Elapsed Microseconds: 0
-Client:Set Ready: 0 Elapsed Microseconds: 0
-Coord: Start Coord Handler: 1394220978 538424
-Coord: Client Ready Wait Elapsed Microseconds:          0 :: sec: 1394220978 usec:     538430
-Coord: Num ready: 1  Num clients: 1 Ready State: 2 
-Coord: Start Ready State Case 2 Elapsed Microseconds: 15
-Coord: Pre-Trigger Active Check -1218608538 Elapsed Microseconds: 4
-Coord: Pre-Trigger Thread Run Elapsed Microseconds:       1179 :: sec: 1394220978 usec:     539626
-Coord: Trigger Elapsed Microseconds: 49
-Coord: Post Trigger Elapsed Microseconds: 141
-Coord: Total Elapsed Microseconds: 1404
-Coord: Pre-trigger start to Post-Trigger end Elapsed Microseconds:       1398 :: sec: 1394220978 usec:     539845
-Coord: End Coord Handler: 1394220978 539853
-Client:Set Ready: Coord Elapsed Microseconds: 1479
-Client:  Set Ready Elapsed Microseconds: 1703
-Client: End READY: 1394220978 539922 :: 0 0
-RECV::GET_DATA: Bad Status: -1 Time: Fri Mar  7 10:36:18 2014
-  Collected: 18  Errors: 18  Percentage: 100.000000
-GET_DATA: Bad status -1
-Client:  Get Data Elapsed Microseconds: 233
-Client  0  0:  From Pretrig start to Get Data end Elapsed Microseconds:      93354  :: sec: 1394220978 usec:     631801
-Client  0  0:  From Client Ready start to Get Data end Elapsed Microseconds:      93371  :: sec: 1394220978 usec:     631801
-Client: Set READY: 1394220978 631993 :: 0 0
-Client:Set Ready: 3 Elapsed Microseconds: 0
-Client:Set Ready: 2 Elapsed Microseconds: 0
-Client:Set Ready: 1 Elapsed Microseconds: 0
-Client:Set Ready: 0 Elapsed Microseconds: 1
-Coord: Start Coord Handler: 1394220978 632312
-Coord: Client Ready Wait Elapsed Microseconds:          0 :: sec: 1394220978 usec:     632326
-Coord: Num ready: 1  Num clients: 1 Ready State: 2 
-Coord: Start Ready State Case 2 Elapsed Microseconds: 31
-Coord: Pre-Trigger Active Check -1218608538 Elapsed Microseconds: 6
-Coord: Pre-Trigger Thread Run Elapsed Microseconds:       1295 :: sec: 1394220978 usec:     633651
-Coord: Trigger Elapsed Microseconds: 49
-Coord: Post Trigger Elapsed Microseconds: 127
-Coord: Total Elapsed Microseconds: 1528
-Coord: Pre-trigger start to Post-Trigger end Elapsed Microseconds:       1502 :: sec: 1394220978 usec:     633858
-Coord: End Coord Handler: 1394220978 633866
-Client:Set Ready: Coord Elapsed Microseconds: 1608
-Client:  Set Ready Elapsed Microseconds: 1939
-Client: End READY: 1394220978 633932 :: 0 0
-RECV::GET_DATA: Bad Status: -1 Time: Fri Mar  7 10:36:18 2014
-  Collected: 19  Errors: 19  Percentage: 100.000000
-GET_DATA: Bad status -1
-Client:  Get Data Elapsed Microseconds: 175
-Client  0  0:  From Pretrig start to Get Data end Elapsed Microseconds:      93369  :: sec: 1394220978 usec:     725725
-Client  0  0:  From Client Ready start to Get Data end Elapsed Microseconds:      93399  :: sec: 1394220978 usec:     725725
-Client: Set READY: 1394220978 725903 :: 0 0
-Client:Set Ready: 3 Elapsed Microseconds: 0
-Client:Set Ready: 2 Elapsed Microseconds: 1
-Client:Set Ready: 1 Elapsed Microseconds: 1
-Client:Set Ready: 0 Elapsed Microseconds: 1
-Coord: Start Coord Handler: 1394220978 726229
-Coord: Client Ready Wait Elapsed Microseconds:          0 :: sec: 1394220978 usec:     726239
-Coord: Num ready: 1  Num clients: 1 Ready State: 2 
-Coord: Start Ready State Case 2 Elapsed Microseconds: 26
-Coord: Pre-Trigger Active Check -1218608538 Elapsed Microseconds: 25
-Coord: Pre-Trigger Thread Run Elapsed Microseconds:       1254 :: sec: 1394220978 usec:     727541
-Coord: Trigger Elapsed Microseconds: 48
-Coord: Post Trigger Elapsed Microseconds: 131
-Coord: Total Elapsed Microseconds: 1502
-Coord: Pre-trigger start to Post-Trigger end Elapsed Microseconds:       1464 :: sec: 1394220978 usec:     727751
-Coord: End Coord Handler: 1394220978 727759
-Client:Set Ready: Coord Elapsed Microseconds: 1606
-Client:  Set Ready Elapsed Microseconds: 1941
-Client: End READY: 1394220978 727844 :: 0 0
-RECV::GET_DATA: Bad Status: -1 Time: Fri Mar  7 10:36:18 2014
-  Collected: 20  Errors: 20  Percentage: 100.000000
-GET_DATA: Bad status -1
-Client:  Get Data Elapsed Microseconds: 183
-Client  0  0:  From Pretrig start to Get Data end Elapsed Microseconds:      93369  :: sec: 1394220978 usec:     819656
-Client  0  0:  From Client Ready start to Get Data end Elapsed Microseconds:      93417  :: sec: 1394220978 usec:     819656
-Client: Set READY: 1394220978 819861 :: 0 0
-Client:Set Ready: 3 Elapsed Microseconds: 1
-Client:Set Ready: 2 Elapsed Microseconds: 0
-Client:Set Ready: 1 Elapsed Microseconds: 0
-Client:Set Ready: 0 Elapsed Microseconds: 0
-Coord: Start Coord Handler: 1394220978 820203
-Coord: Client Ready Wait Elapsed Microseconds:          1 :: sec: 1394220978 usec:     820217
-Coord: Num ready: 1  Num clients: 1 Ready State: 2 
-Coord: Start Ready State Case 2 Elapsed Microseconds: 30
-Coord: Pre-Trigger Active Check -1218608538 Elapsed Microseconds: 6
-Coord: Pre-Trigger Thread Run Elapsed Microseconds:       1286 :: sec: 1394220978 usec:     821532
-Coord: Trigger Elapsed Microseconds: 51
-Coord: Post Trigger Elapsed Microseconds: 133
-Coord: Total Elapsed Microseconds: 1525
-Coord: Pre-trigger start to Post-Trigger end Elapsed Microseconds:       1499 :: sec: 1394220978 usec:     821745
-Coord: End Coord Handler: 1394220978 821753
-Client:Set Ready: Coord Elapsed Microseconds: 1606
-Client:  Set Ready Elapsed Microseconds: 1959
-Client: End READY: 1394220978 821820 :: 0 0
-RECV::GET_DATA: Bad Status: -1 Time: Fri Mar  7 10:36:18 2014
-  Collected: 21  Errors: 21  Percentage: 100.000000
-GET_DATA: Bad status -1
-Client:  Get Data Elapsed Microseconds: 178
-Client  0  0:  From Pretrig start to Get Data end Elapsed Microseconds:      93366  :: sec: 1394220978 usec:     913612
-Client  0  0:  From Client Ready start to Get Data end Elapsed Microseconds:      93396  :: sec: 1394220978 usec:     913612
-Client: Set READY: 1394220978 913789 :: 0 0
-Client:Set Ready: 3 Elapsed Microseconds: 1
-Client:Set Ready: 2 Elapsed Microseconds: 0
-Client:Set Ready: 1 Elapsed Microseconds: 0
-Client:Set Ready: 0 Elapsed Microseconds: 0
-Coord: Start Coord Handler: 1394220978 914117
-Coord: Client Ready Wait Elapsed Microseconds:          0 :: sec: 1394220978 usec:     914127
-Coord: Num ready: 1  Num clients: 1 Ready State: 2 
-Coord: Start Ready State Case 2 Elapsed Microseconds: 26
-Coord: Pre-Trigger Active Check -1218608538 Elapsed Microseconds: 6
-Coord: Pre-Trigger Thread Run Elapsed Microseconds:       1255 :: sec: 1394220978 usec:     915410
-Coord: Trigger Elapsed Microseconds: 48
-Coord: Post Trigger Elapsed Microseconds: 128
-Coord: Total Elapsed Microseconds: 1481
-Coord: Pre-trigger start to Post-Trigger end Elapsed Microseconds:       1463 :: sec: 1394220978 usec:     915618
-Coord: End Coord Handler: 1394220978 915626
-Client:Set Ready: Coord Elapsed Microseconds: 1566
-Client:  Set Ready Elapsed Microseconds: 1902
-Client: End READY: 1394220978 915691 :: 0 0
-RECV::GET_DATA: Bad Status: -1 Time: Fri Mar  7 10:36:19 2014
-  Collected: 22  Errors: 22  Percentage: 100.000000
-GET_DATA: Bad status -1
-Client:  Get Data Elapsed Microseconds: 207
-Client  0  0:  From Pretrig start to Get Data end Elapsed Microseconds:      93369  :: sec: 1394220979 usec:       7524
-Client  0  0:  From Client Ready start to Get Data end Elapsed Microseconds:      93397  :: sec: 1394220979 usec:       7524
-Client: Set READY: 1394220979 7704 :: 0 0
-Client:Set Ready: 3 Elapsed Microseconds: 1
-Client:Set Ready: 2 Elapsed Microseconds: 1
-Client:Set Ready: 1 Elapsed Microseconds: 1
-Client:Set Ready: 0 Elapsed Microseconds: 0
-Coord: Start Coord Handler: 1394220979 8121
-Coord: Client Ready Wait Elapsed Microseconds:          0 :: sec: 1394220979 usec:       8135
-Coord: Num ready: 1  Num clients: 1 Ready State: 2 
-Coord: Start Ready State Case 2 Elapsed Microseconds: 31
-Coord: Pre-Trigger Active Check -1218608538 Elapsed Microseconds: 6
-Coord: Pre-Trigger Thread Run Elapsed Microseconds:       1259 :: sec: 1394220979 usec:       9423
-Coord: Trigger Elapsed Microseconds: 50
-Coord: Post Trigger Elapsed Microseconds: 174
-Coord: Total Elapsed Microseconds: 1538
-Coord: Pre-trigger start to Post-Trigger end Elapsed Microseconds:       1512 :: sec: 1394220979 usec:       9676
-Coord: End Coord Handler: 1394220979 9684
-Client:Set Ready: Coord Elapsed Microseconds: 1629
-Client:  Set Ready Elapsed Microseconds: 2059
-Client: End READY: 1394220979 9763 :: 0 0
-RECV::GET_DATA: Bad Status: -1 Time: Fri Mar  7 10:36:19 2014
-  Collected: 23  Errors: 23  Percentage: 100.000000
-GET_DATA: Bad status -1
-Client:  Get Data Elapsed Microseconds: 214
-Client  0  0:  From Pretrig start to Get Data end Elapsed Microseconds:      93445  :: sec: 1394220979 usec:     101609
-Client  0  0:  From Client Ready start to Get Data end Elapsed Microseconds:      93474  :: sec: 1394220979 usec:     101609
-Client: Set READY: 1394220979 101849 :: 0 0
-Client:Set Ready: 3 Elapsed Microseconds: 1
-Client:Set Ready: 2 Elapsed Microseconds: 0
-Client:Set Ready: 1 Elapsed Microseconds: 0
-Client:Set Ready: 0 Elapsed Microseconds: 1
-Coord: Start Coord Handler: 1394220979 102239
-Coord: Client Ready Wait Elapsed Microseconds:          0 :: sec: 1394220979 usec:     102253
-Coord: Num ready: 1  Num clients: 1 Ready State: 2 
-Coord: Start Ready State Case 2 Elapsed Microseconds: 31
-Coord: Pre-Trigger Active Check -1218608538 Elapsed Microseconds: 6
-Coord: Pre-Trigger Thread Run Elapsed Microseconds:       1266 :: sec: 1394220979 usec:     103549
-Coord: Trigger Elapsed Microseconds: 49
-Coord: Post Trigger Elapsed Microseconds: 134
-Coord: Total Elapsed Microseconds: 1505
-Coord: Pre-trigger start to Post-Trigger end Elapsed Microseconds:       1479 :: sec: 1394220979 usec:     103762
-Coord: End Coord Handler: 1394220979 103784
-Client:Set Ready: Coord Elapsed Microseconds: 1608
-Client:  Set Ready Elapsed Microseconds: 2028
-Client: End READY: 1394220979 103877 :: 0 0
-RECV::GET_DATA: Bad Status: -1 Time: Fri Mar  7 10:36:19 2014
-  Collected: 24  Errors: 24  Percentage: 100.000000
-GET_DATA: Bad status -1
-Client:  Get Data Elapsed Microseconds: 187
-Client  0  0:  From Pretrig start to Get Data end Elapsed Microseconds:      93385  :: sec: 1394220979 usec:     195668
-Client  0  0:  From Client Ready start to Get Data end Elapsed Microseconds:      93415  :: sec: 1394220979 usec:     195668
-Client: Set READY: 1394220979 195882 :: 0 0
-Client:Set Ready: 3 Elapsed Microseconds: 0
-Client:Set Ready: 2 Elapsed Microseconds: 0
-Client:Set Ready: 1 Elapsed Microseconds: 1
-Client:Set Ready: 0 Elapsed Microseconds: 0
-Coord: Start Coord Handler: 1394220979 196252
-Coord: Client Ready Wait Elapsed Microseconds:          0 :: sec: 1394220979 usec:     196265
-Coord: Num ready: 1  Num clients: 1 Ready State: 2 
-Coord: Start Ready State Case 2 Elapsed Microseconds: 29
-Coord: Pre-Trigger Active Check -1218608538 Elapsed Microseconds: 7
-Coord: Pre-Trigger Thread Run Elapsed Microseconds:       1256 :: sec: 1394220979 usec:     197550
-Coord: Trigger Elapsed Microseconds: 48
-Coord: Post Trigger Elapsed Microseconds: 126
-Coord: Total Elapsed Microseconds: 1484
-Coord: Pre-trigger start to Post-Trigger end Elapsed Microseconds:       1459 :: sec: 1394220979 usec:     197753
-Coord: End Coord Handler: 1394220979 197761
-Client:Set Ready: Coord Elapsed Microseconds: 1565
-Client:  Set Ready Elapsed Microseconds: 1946
-Client: End READY: 1394220979 197828 :: 0 0
-RECV::GET_DATA: Bad Status: -1 Time: Fri Mar  7 10:36:19 2014
-  Collected: 25  Errors: 25  Percentage: 100.000000
-GET_DATA: Bad status -1
-Client:  Get Data Elapsed Microseconds: 219
-Client  0  0:  From Pretrig start to Get Data end Elapsed Microseconds:      93411  :: sec: 1394220979 usec:     289705
-Client  0  0:  From Client Ready start to Get Data end Elapsed Microseconds:      93440  :: sec: 1394220979 usec:     289705
-Client: Set READY: 1394220979 289911 :: 0 0
-Client:Set Ready: 3 Elapsed Microseconds: 0
-Client:Set Ready: 2 Elapsed Microseconds: 0
-Client:Set Ready: 1 Elapsed Microseconds: 1
-Client:Set Ready: 0 Elapsed Microseconds: 0
-Coord: Start Coord Handler: 1394220979 290277
-Coord: Client Ready Wait Elapsed Microseconds:          0 :: sec: 1394220979 usec:     290290
-Coord: Num ready: 1  Num clients: 1 Ready State: 2 
-Coord: Start Ready State Case 2 Elapsed Microseconds: 29
-Coord: Pre-Trigger Active Check -1218608538 Elapsed Microseconds: 6
-Coord: Pre-Trigger Thread Run Elapsed Microseconds:       1296 :: sec: 1394220979 usec:     291615
-Coord: Trigger Elapsed Microseconds: 50
-Coord: Post Trigger Elapsed Microseconds: 197
-Coord: Total Elapsed Microseconds: 1597
-Coord: Pre-trigger start to Post-Trigger end Elapsed Microseconds:       1573 :: sec: 1394220979 usec:     291892
-Coord: End Coord Handler: 1394220979 291901
-Client:Set Ready: Coord Elapsed Microseconds: 1692
-Client:  Set Ready Elapsed Microseconds: 2071
-Client: End READY: 1394220979 291982 :: 0 0
-RECV::GET_DATA: Bad Status: -1 Time: Fri Mar  7 10:36:19 2014
-  Collected: 26  Errors: 26  Percentage: 100.000000
-GET_DATA: Bad status -1
-Client:  Get Data Elapsed Microseconds: 230
-Client  0  0:  From Pretrig start to Get Data end Elapsed Microseconds:      93530  :: sec: 1394220979 usec:     383849
-Client  0  0:  From Client Ready start to Get Data end Elapsed Microseconds:      93559  :: sec: 1394220979 usec:     383849
-Client: Set READY: 1394220979 384031 :: 0 0
-Client:Set Ready: 3 Elapsed Microseconds: 1
-Client:Set Ready: 2 Elapsed Microseconds: 0
-Client:Set Ready: 1 Elapsed Microseconds: 1
-Client:Set Ready: 0 Elapsed Microseconds: 0
-Coord: Start Coord Handler: 1394220979 384369
-Coord: Client Ready Wait Elapsed Microseconds:          0 :: sec: 1394220979 usec:     384383
-Coord: Num ready: 1  Num clients: 1 Ready State: 2 
-Coord: Start Ready State Case 2 Elapsed Microseconds: 30
-Coord: Pre-Trigger Active Check -1218608538 Elapsed Microseconds: 6
-Coord: Pre-Trigger Thread Run Elapsed Microseconds:       1283 :: sec: 1394220979 usec:     385695
-Coord: Trigger Elapsed Microseconds: 66
-Coord: Post Trigger Elapsed Microseconds: 200
-Coord: Total Elapsed Microseconds: 1615
-Coord: Pre-trigger start to Post-Trigger end Elapsed Microseconds:       1589 :: sec: 1394220979 usec:     386001
-Coord: End Coord Handler: 1394220979 386009
-Client:Set Ready: Coord Elapsed Microseconds: 1704
-Client:  Set Ready Elapsed Microseconds: 2086
-Client: End READY: 1394220979 386117 :: 0 0
-RECV::GET_DATA: Bad Status: -1 Time: Fri Mar  7 10:36:19 2014
-  Collected: 27  Errors: 27  Percentage: 100.000000
-GET_DATA: Bad status -1
-Client:  Get Data Elapsed Microseconds: 219
-Client  0  0:  From Pretrig start to Get Data end Elapsed Microseconds:      93540  :: sec: 1394220979 usec:     477952
-Client  0  0:  From Client Ready start to Get Data end Elapsed Microseconds:      93569  :: sec: 1394220979 usec:     477952
-Client: Set READY: 1394220979 478132 :: 0 0
-Client:Set Ready: 3 Elapsed Microseconds: 0
-Client:Set Ready: 2 Elapsed Microseconds: 1
-Client:Set Ready: 1 Elapsed Microseconds: 1
-Client:Set Ready: 0 Elapsed Microseconds: 0
-Coord: Start Coord Handler: 1394220979 478477
-Coord: Client Ready Wait Elapsed Microseconds:          1 :: sec: 1394220979 usec:     478492
-Coord: Num ready: 1  Num clients: 1 Ready State: 2 
-Coord: Start Ready State Case 2 Elapsed Microseconds: 31
-Coord: Pre-Trigger Active Check -1218608538 Elapsed Microseconds: 6
-Coord: Pre-Trigger Thread Run Elapsed Microseconds:       1288 :: sec: 1394220979 usec:     479808
-Coord: Trigger Elapsed Microseconds: 58
-Coord: Post Trigger Elapsed Microseconds: 154
-Coord: Total Elapsed Microseconds: 1559
-Coord: Pre-trigger start to Post-Trigger end Elapsed Microseconds:       1533 :: sec: 1394220979 usec:     480053
-Coord: End Coord Handler: 1394220979 480080
-Client:Set Ready: Coord Elapsed Microseconds: 1659
-Client:  Set Ready Elapsed Microseconds: 2022
-Client: End READY: 1394220979 480154 :: 0 0
-RECV::GET_DATA: Bad Status: -1 Time: Fri Mar  7 10:36:19 2014
-  Collected: 28  Errors: 28  Percentage: 100.000000
-GET_DATA: Bad status -1
-Client:  Get Data Elapsed Microseconds: 204
-Client  0  0:  From Pretrig start to Get Data end Elapsed Microseconds:      93485  :: sec: 1394220979 usec:     572005
-Client  0  0:  From Client Ready start to Get Data end Elapsed Microseconds:      93514  :: sec: 1394220979 usec:     572005
-Client: Set READY: 1394220979 572187 :: 0 0
-Client:Set Ready: 3 Elapsed Microseconds: 0
-Client:Set Ready: 2 Elapsed Microseconds: 1
-Client:Set Ready: 1 Elapsed Microseconds: 1
-Client:Set Ready: 0 Elapsed Microseconds: 1
-Coord: Start Coord Handler: 1394220979 572525
-Coord: Client Ready Wait Elapsed Microseconds:          0 :: sec: 1394220979 usec:     572539
-Coord: Num ready: 1  Num clients: 1 Ready State: 2 
-Coord: Start Ready State Case 2 Elapsed Microseconds: 30
-Coord: Pre-Trigger Active Check -1218608538 Elapsed Microseconds: 7
-Coord: Pre-Trigger Thread Run Elapsed Microseconds:       1261 :: sec: 1394220979 usec:     573829
-Coord: Trigger Elapsed Microseconds: 49
-Coord: Post Trigger Elapsed Microseconds: 162
-Coord: Total Elapsed Microseconds: 1527
-Coord: Pre-trigger start to Post-Trigger end Elapsed Microseconds:       1502 :: sec: 1394220979 usec:     574070
-Coord: End Coord Handler: 1394220979 574078
-Client:Set Ready: Coord Elapsed Microseconds: 1607
-Client:  Set Ready Elapsed Microseconds: 1957
-Client: End READY: 1394220979 574144 :: 0 0
-RECV::GET_DATA: Bad Status: -1 Time: Fri Mar  7 10:36:19 2014
-  Collected: 29  Errors: 29  Percentage: 100.000000
-GET_DATA: Bad status -1
-Client:  Get Data Elapsed Microseconds: 216
-Client  0  0:  From Pretrig start to Get Data end Elapsed Microseconds:      93458  :: sec: 1394220979 usec:     666026
-Client  0  0:  From Client Ready start to Get Data end Elapsed Microseconds:      93487  :: sec: 1394220979 usec:     666026
-Client: Set READY: 1394220979 666208 :: 0 0
-Client:Set Ready: 3 Elapsed Microseconds: 1
-Client:Set Ready: 2 Elapsed Microseconds: 0
-Client:Set Ready: 1 Elapsed Microseconds: 0
-Client:Set Ready: 0 Elapsed Microseconds: 0
-Coord: Start Coord Handler: 1394220979 666552
-Coord: Client Ready Wait Elapsed Microseconds:          0 :: sec: 1394220979 usec:     666562
-Coord: Num ready: 1  Num clients: 1 Ready State: 2 
-Coord: Start Ready State Case 2 Elapsed Microseconds: 26
-Coord: Pre-Trigger Active Check -1218608538 Elapsed Microseconds: 6
-Coord: Pre-Trigger Thread Run Elapsed Microseconds:       1307 :: sec: 1394220979 usec:     667898
-Coord: Trigger Elapsed Microseconds: 52
-Coord: Post Trigger Elapsed Microseconds: 172
-Coord: Total Elapsed Microseconds: 1587
-Coord: Pre-trigger start to Post-Trigger end Elapsed Microseconds:       1565 :: sec: 1394220979 usec:     668156
-Coord: End Coord Handler: 1394220979 668165
-Client:Set Ready: Coord Elapsed Microseconds: 1670
-Client:  Set Ready Elapsed Microseconds: 2035
-Client: End READY: 1394220979 668243 :: 0 0
-RECV::GET_DATA: Bad Status: -1 Time: Fri Mar  7 10:36:19 2014
-  Collected: 30  Errors: 30  Percentage: 100.000000
-GET_DATA: Bad status -1
-Client:  Get Data Elapsed Microseconds: 177
-Client  0  0:  From Pretrig start to Get Data end Elapsed Microseconds:      93469  :: sec: 1394220979 usec:     760060
-Client  0  0:  From Client Ready start to Get Data end Elapsed Microseconds:      93498  :: sec: 1394220979 usec:     760060
-Client: Set READY: 1394220979 760236 :: 0 0
-Client:Set Ready: 3 Elapsed Microseconds: 0
-Client:Set Ready: 2 Elapsed Microseconds: 0
-Client:Set Ready: 1 Elapsed Microseconds: 0
-Client:Set Ready: 0 Elapsed Microseconds: 1
-Coord: Start Coord Handler: 1394220979 760576
-Coord: Client Ready Wait Elapsed Microseconds:          0 :: sec: 1394220979 usec:     760589
-Coord: Num ready: 1  Num clients: 1 Ready State: 2 
-Coord: Start Ready State Case 2 Elapsed Microseconds: 30
-Coord: Pre-Trigger Active Check -1218608538 Elapsed Microseconds: 6
-Coord: Pre-Trigger Thread Run Elapsed Microseconds:       1260 :: sec: 1394220979 usec:     761897
-Coord: Trigger Elapsed Microseconds: 49
-Coord: Post Trigger Elapsed Microseconds: 127
-Coord: Total Elapsed Microseconds: 1508
-Coord: Pre-trigger start to Post-Trigger end Elapsed Microseconds:       1465 :: sec: 1394220979 usec:     762102
-Coord: End Coord Handler: 1394220979 762110
-Client:Set Ready: Coord Elapsed Microseconds: 1590
-Client:  Set Ready Elapsed Microseconds: 1941
-Client: End READY: 1394220979 762177 :: 0 0
-RECV::GET_DATA: Bad Status: -1 Time: Fri Mar  7 10:36:19 2014
-  Collected: 31  Errors: 31  Percentage: 100.000000
-GET_DATA: Bad status -1
-Client:  Get Data Elapsed Microseconds: 200
-Client  0  0:  From Pretrig start to Get Data end Elapsed Microseconds:      93373  :: sec: 1394220979 usec:     854010
-Client  0  0:  From Client Ready start to Get Data end Elapsed Microseconds:      93421  :: sec: 1394220979 usec:     854010
-Client: Set READY: 1394220979 854195 :: 0 0
-Client:Set Ready: 3 Elapsed Microseconds: 1
-Client:Set Ready: 2 Elapsed Microseconds: 0
-Client:Set Ready: 1 Elapsed Microseconds: 0
-Client:Set Ready: 0 Elapsed Microseconds: 0
-Coord: Start Coord Handler: 1394220979 854546
-Coord: Client Ready Wait Elapsed Microseconds:          0 :: sec: 1394220979 usec:     854560
-Coord: Num ready: 1  Num clients: 1 Ready State: 2 
-Coord: Start Ready State Case 2 Elapsed Microseconds: 31
-Coord: Pre-Trigger Active Check -1218608538 Elapsed Microseconds: 6
-Coord: Pre-Trigger Thread Run Elapsed Microseconds:       1270 :: sec: 1394220979 usec:     855859
-Coord: Trigger Elapsed Microseconds: 57
-Coord: Post Trigger Elapsed Microseconds: 133
-Coord: Total Elapsed Microseconds: 1516
-Coord: Pre-trigger start to Post-Trigger end Elapsed Microseconds:       1490 :: sec: 1394220979 usec:     856079
-Coord: End Coord Handler: 1394220979 856087
-Client:Set Ready: Coord Elapsed Microseconds: 1595
-Client:  Set Ready Elapsed Microseconds: 1960
-Client: End READY: 1394220979 856155 :: 0 0
-RECV::GET_DATA: Bad Status: -1 Time: Fri Mar  7 10:36:19 2014
-  Collected: 32  Errors: 32  Percentage: 100.000000
-GET_DATA: Bad status -1
-Client:  Get Data Elapsed Microseconds: 191
-Client  0  0:  From Pretrig start to Get Data end Elapsed Microseconds:      93374  :: sec: 1394220979 usec:     947963
-Client  0  0:  From Client Ready start to Get Data end Elapsed Microseconds:      93403  :: sec: 1394220979 usec:     947963
-Client: Set READY: 1394220979 948141 :: 0 0
-Client:Set Ready: 3 Elapsed Microseconds: 0
-Client:Set Ready: 2 Elapsed Microseconds: 1
-Client:Set Ready: 1 Elapsed Microseconds: 1
-Client:Set Ready: 0 Elapsed Microseconds: 0
-Coord: Start Coord Handler: 1394220979 948463
-Coord: Client Ready Wait Elapsed Microseconds:          0 :: sec: 1394220979 usec:     948473
-Coord: Num ready: 1  Num clients: 1 Ready State: 2 
-Coord: Start Ready State Case 2 Elapsed Microseconds: 25
-Coord: Pre-Trigger Active Check -1218608538 Elapsed Microseconds: 7
-Coord: Pre-Trigger Thread Run Elapsed Microseconds:       1256 :: sec: 1394220979 usec:     949757
-Coord: Trigger Elapsed Microseconds: 49
-Coord: Post Trigger Elapsed Microseconds: 128
-Coord: Total Elapsed Microseconds: 1482
-Coord: Pre-trigger start to Post-Trigger end Elapsed Microseconds:       1464 :: sec: 1394220979 usec:     949965
-Coord: End Coord Handler: 1394220979 949973
-Client:Set Ready: Coord Elapsed Microseconds: 1566
-Client:  Set Ready Elapsed Microseconds: 1898
-Client: End READY: 1394220979 950039 :: 0 0
-RECV::GET_DATA: Bad Status: -1 Time: Fri Mar  7 10:36:20 2014
-  Collected: 33  Errors: 33  Percentage: 100.000000
-GET_DATA: Bad status -1
-Client:  Get Data Elapsed Microseconds: 172
-Client  0  0:  From Pretrig start to Get Data end Elapsed Microseconds:      93324  :: sec: 1394220980 usec:      41825
-Client  0  0:  From Client Ready start to Get Data end Elapsed Microseconds:      93352  :: sec: 1394220980 usec:      41825
-Client: Set READY: 1394220980 42000 :: 0 0
-Client:Set Ready: 3 Elapsed Microseconds: 1
-Client:Set Ready: 2 Elapsed Microseconds: 0
-Client:Set Ready: 1 Elapsed Microseconds: 1
-Client:Set Ready: 0 Elapsed Microseconds: 0
-Coord: Start Coord Handler: 1394220980 42345
-Coord: Client Ready Wait Elapsed Microseconds:          0 :: sec: 1394220980 usec:      42359
-Coord: Num ready: 1  Num clients: 1 Ready State: 2 
-Coord: Start Ready State Case 2 Elapsed Microseconds: 30
-Coord: Pre-Trigger Active Check -1218608538 Elapsed Microseconds: 6
-Coord: Pre-Trigger Thread Run Elapsed Microseconds:       1263 :: sec: 1394220980 usec:      43651
-Coord: Trigger Elapsed Microseconds: 49
-Coord: Post Trigger Elapsed Microseconds: 201
-Coord: Total Elapsed Microseconds: 1568
-Coord: Pre-trigger start to Post-Trigger end Elapsed Microseconds:       1544 :: sec: 1394220980 usec:      43932
-Coord: End Coord Handler: 1394220980 43940
-Client:Set Ready: Coord Elapsed Microseconds: 1652
-Client:  Set Ready Elapsed Microseconds: 2010
-Client: End READY: 1394220980 44010 :: 0 0
-RECV::GET_DATA: Bad Status: -1 Time: Fri Mar  7 10:36:20 2014
-  Collected: 34  Errors: 34  Percentage: 100.000000
-GET_DATA: Bad status -1
-Client:  Get Data Elapsed Microseconds: 222
-Client  0  0:  From Pretrig start to Get Data end Elapsed Microseconds:      93469  :: sec: 1394220980 usec:     135857
-Client  0  0:  From Client Ready start to Get Data end Elapsed Microseconds:      93498  :: sec: 1394220980 usec:     135857
-Client: Set READY: 1394220980 136048 :: 0 0
-Client:Set Ready: 3 Elapsed Microseconds: 0
-Client:Set Ready: 2 Elapsed Microseconds: 0
-Client:Set Ready: 1 Elapsed Microseconds: 0
-Client:Set Ready: 0 Elapsed Microseconds: 1
-Coord: Start Coord Handler: 1394220980 136404
-Coord: Client Ready Wait Elapsed Microseconds:          0 :: sec: 1394220980 usec:     136418
-Coord: Num ready: 1  Num clients: 1 Ready State: 2 
-Coord: Start Ready State Case 2 Elapsed Microseconds: 31
-Coord: Pre-Trigger Active Check -1218608538 Elapsed Microseconds: 6
-Coord: Pre-Trigger Thread Run Elapsed Microseconds:       1264 :: sec: 1394220980 usec:     137711
-Coord: Trigger Elapsed Microseconds: 50
-Coord: Post Trigger Elapsed Microseconds: 128
-Coord: Total Elapsed Microseconds: 1496
-Coord: Pre-trigger start to Post-Trigger end Elapsed Microseconds:       1470 :: sec: 1394220980 usec:     137917
-Coord: End Coord Handler: 1394220980 137926
-Client:Set Ready: Coord Elapsed Microseconds: 1576
-Client:  Set Ready Elapsed Microseconds: 1943
-Client: End READY: 1394220980 137991 :: 0 0
-RECV::GET_DATA: Bad Status: -1 Time: Fri Mar  7 10:36:20 2014
-  Collected: 35  Errors: 35  Percentage: 100.000000
-GET_DATA: Bad status -1
-Client:  Get Data Elapsed Microseconds: 212
-Client  0  0:  From Pretrig start to Get Data end Elapsed Microseconds:      36834  :: sec: 1394220980 usec:     173281
-Client  0  0:  From Client Ready start to Get Data end Elapsed Microseconds:      36863  :: sec: 1394220980 usec:     173281
-Client QUIT:: 1394220980.173438 
-Client: Start EXIT: 1394220980 173478
-Client: Exit Command
-  Client: EXIT:: r: 0 c: 0
-Coord: Start Coord Handler: 1394220980 173526
-Coord: Num ready: 0  Num clients: 0 Ready State: 0 
-Coord: End Coord Handler: 1394220980 173549
-Closing Client Socket: 9
-Unregister_radar_channel: Current State:
-  0 : r:1 c:1 :: cp: 0x8eb0e58
-  1 : r:1 c:2 :: cp: (nil)
-Unregistering: 0 :: cp: 0x8eb0e58 :: r: 1 c: 1
-Client Exit: Freeing internal structures for 0x8eb0e58
-Client Exit: Freeing controlprogram state 0x8eb0fc8
-Client Exit: Freed controlprogram state (nil)
-Client Exit: Freeing controlprogram parameters 0x8eb0ea0  (nil)
-Client Exit: Freeing controlprogram data 0x8eb1048
-Client Exit: Done with control program 0x8eb0e58
-Client Exit: Waiting on Coordination thread
-Client Exit: Done Waiting
-Client: End EXIT: 1394220980 174913 :: 0 0
-Attempting graceful clean up of control program threads
-Cancelling thread 0
-Done Cancelling thread 0
-Joining thread 0
-Done Joining thread 0
-thread item 0x8eb1068
-freeing thread item
-freed thread item
-Done with control program threads now lets do worker threads
-Cancelling Timeout thread
-  Timeout thread cancelled
-  joining Timeout thread
-  Back from joining Timeout thread
-Done with worker threads now lets exit	--> Stopping the ROS server process: Operation canceled
-Closing Main socket: 8
-Closing DIO socket: -1
-Closing timing socket: -1
-Closing RECV socket: -1
-Closing DDS socket: -1
-Closing GPS socket: -1
+  Registering:: radar: 1 channel: 1 :: cp: 0x8f9060
+REGISTER_SEQ: r: 0 c: 0  1402607018.408639
+Client: Requst CLRSearch: 12000 12300
+Doing clear search
+sending message to rxsocket
+RECV: GET_DATA: status good
+RECV: GET_DATA: data recv'd
+device: /receiver_main_0_0_0
+samples 0:       0
+samples 1:       0
+samples 2:       0
+samples 3:       0
+samples 4:       0
+samples 5:       0
+samples 6:       0
+samples 7:       0
+samples 8:       0
+samples 9:       0
+samples 10:       0
+samples 11:       0
+samples 12:       0
+samples 13:       0
+samples 14:       0
+samples 15:       0
+samples 16:       0
+samples 17:       0
+samples 18:       0
+samples 19:       0
+samples 20:       0
+samples 21:       0
+samples 22:       0
+samples 23:       0
+samples 24:       0
+samples 25:       0
+samples 26:       0
+samples 27:       0
+samples 28:       0
+samples 29:       0
+samples 30:       0
+samples 31:       0
+samples 32:       0
+samples 33:       0
+samples 34:       0
+samples 35:       0
+samples 36:       0
+samples 37:       0
+samples 38:       0
+samples 39:       0
+samples 40:       0
+samples 41:       0
+samples 42:       0
+samples 43:       0
+samples 44:       0
+samples 45:       0
+samples 46:       0
+samples 47:       0
+samples 48:       0
+samples 49:       0
+samples 50:       0
+samples 51:       0
+samples 52:       0
+samples 53:       0
+samples 54:       0
+samples 55:       0
+samples 56:       0
+samples 57:       0
+samples 58:       0
+samples 59:       0
+samples 60:       0
+samples 61:       0
+samples 62:       0
+samples 63:       0
+samples 64:       0
+samples 65:       0
+samples 66:       0
+samples 67:       0
+samples 68:       0
+samples 69:       0
+samples 70:       0
+samples 71:       0
+samples 72:       0
+samples 73:       0
+samples 74:       0
+samples 75:       0
+samples 76:       0
+samples 77:       0
+samples 78:       0
+samples 79:       0
+samples 80:       0
+samples 81:       0
+samples 82:       0
+samples 83:       0
+samples 84:       0
+samples 85:       0
+samples 86:       0
+samples 87:       0
+samples 88:       0
+samples 89:       0
+samples 90:       0
+samples 91:       0
+samples 92:       0
+samples 93:       0
+samples 94:       0
+samples 95:       0
+samples 96:       0
+samples 97:       0
+samples 98:       0
+samples 99:       0
+samples 100:       0
+samples 101:       0
+samples 102:       0
+samples 103:       0
+samples 104:       0
+samples 105:       0
+samples 106:       0
+samples 107:       0
+samples 108:       0
+samples 109:       0
+samples 110:       0
+samples 111:       0
+samples 112:       0
+samples 113:       0
+samples 114:       0
+samples 115:       0
+samples 116:       0
+samples 117:       0
+samples 118:       0
+samples 119:       0
+samples 120:       0
+samples 121:       0
+samples 122:       0
+samples 123:       0
+samples 124:       0
+samples 125:       0
+samples 126:       0
+samples 127:       0
+samples 128:       0
+samples 129:       0
+samples 130:       0
+samples 131:       0
+samples 132:       0
+samples 133:       0
+samples 134:       0
+samples 135:       0
+samples 136:       0
+samples 137:       0
+samples 138:       0
+samples 139:       0
+samples 140:       0
+samples 141:       0
+samples 142:       0
+samples 143:       0
+samples 144:       0
+samples 145:       0
+samples 146:       0
+samples 147:       0
+samples 148:       0
+samples 149:       0
+samples 150:       0
+samples 151:       0
+samples 152:       0
+samples 153:       0
+samples 154:       0
+samples 155:       0
+samples 156:       0
+samples 157:       0
+samples 158:       0
+samples 159:       0
+samples 160:       0
+samples 161:       0
+samples 162:       0
+samples 163:       0
+samples 164:       0
+samples 165:       0
+samples 166:       0
+samples 167:       0
+samples 168:       0
+samples 169:       0
+samples 170:       0
+samples 171:       0
+samples 172:       0
+samples 173:       0
+samples 174:       0
+samples 175:       0
+samples 176:       0
+samples 177:       0
+samples 178:       0
+samples 179:       0
+samples 180:       0
+samples 181:       0
+samples 182:       0
+samples 183:       0
+samples 184:       0
+samples 185:       0
+samples 186:       0
+samples 187:       0
+samples 188:       0
+samples 189:       0
+samples 190:       0
+samples 191:       0
+samples 192:       0
+samples 193:       0
+samples 194:       0
+samples 195:       0
+samples 196:       0
+samples 197:       0
+samples 198:       0
+samples 199:       0
+samples 200:       0
+samples 201:       0
+samples 202:       0
+samples 203:       0
+samples 204:       0
+samples 205:       0
+samples 206:       0
+samples 207:       0
+samples 208:       0
+samples 209:       0
+samples 210:       0
+samples 211:       0
+samples 212:       0
+samples 213:       0
+samples 214:       0
+samples 215:       0
+samples 216:       0
+samples 217:       0
+samples 218:       0
+samples 219:       0
+samples 220:       0
+samples 221:       0
+samples 222:       0
+samples 223:       0
+samples 224:       0
+samples 225:       0
+samples 226:       0
+samples 227:       0
+samples 228:       0
+samples 229:       0
+samples 230:       0
+samples 231:       0
+samples 232:       0
+samples 233:       0
+samples 234:       0
+samples 235:       0
+samples 236:       0
+samples 237:       0
+samples 238:       0
+samples 239:       0
+samples 240:       0
+samples 241:       0
+samples 242:       0
+samples 243:       0
+samples 244:       0
+samples 245:       0
+samples 246:       0
+samples 247:       0
+samples 248:       0
+samples 249:       0
+samples 250:       0
+samples 251:       0
+samples 252:       0
+samples 253:       0
+samples 254:       0
+samples 255:       0
+samples 256:       0
+samples 257:       0
+samples 258:       0
+samples 259:       0
+samples 260:       0
+samples 261:       0
+samples 262:       0
+samples 263:       0
+samples 264:       0
+samples 265:       0
+samples 266:       0
+samples 267:       0
+samples 268:       0
+samples 269:       0
+samples 270:       0
+samples 271:       0
+samples 272:       0
+samples 273:       0
+samples 274:       0
+samples 275:       0
+samples 276:       0
+samples 277:       0
+samples 278:       0
+samples 279:       0
+samples 280:       0
+samples 281:       0
+samples 282:       0
+samples 283:       0
+samples 284:       0
+samples 285:       0
+samples 286:       0
+samples 287:       0
+samples 288:       0
+samples 289:       0
+samples 290:       0
+samples 291:       0
+samples 292:       0
+samples 293:       0
+samples 294:       0
+samples 295:       0
+samples 296:       0
+samples 297:       0
+samples 298:       0
+samples 299:       0
+samples 300:       0
+samples 301:       0
+samples 302:       0
+samples 303:       0
+samples 304:       0
+RECV: GET_DATA: status good
+RECV: GET_DATA: data recv'd
+device: /receiver_main_0_0_0
+samples 0: fdf303aa
+samples 1: 11d6e014
+samples 2: 84ef121
+samples 3: fda50437
+samples 4: 137fdd4
+samples 5: ff50013b
+samples 6:  62ff50
+samples 7: ffcd005b
+samples 8:  18ffd5
+samples 9: fff30017
+samples 10:       0
+samples 11:       0
+samples 12:       0
+samples 13:       0
+samples 14:       0
+samples 15:       0
+samples 16:       0
+samples 17:       0
+samples 18:       0
+samples 19:       0
+samples 20:       0
+samples 21:       0
+samples 22:       0
+samples 23:       0
+samples 24:       0
+samples 25:       0
+samples 26:       0
+samples 27:       0
+samples 28:       0
+samples 29:       0
+samples 30:       0
+samples 31:       0
+samples 32:       0
+samples 33:       0
+samples 34:       0
+samples 35:       0
+samples 36:       0
+samples 37:       0
+samples 38:       0
+samples 39:       0
+samples 40:       0
+samples 41:       0
+samples 42:       0
+samples 43:       0
+samples 44:       0
+samples 45:       0
+samples 46:       0
+samples 47:       0
+samples 48:       0
+samples 49:       0
+samples 50:       0
+samples 51:       0
+samples 52:       0
+samples 53:       0
+samples 54:       0
+samples 55:       0
+samples 56:       0
+samples 57:       0
+samples 58:       0
+samples 59:       0
+samples 60:       0
+samples 61: fff1001b
+samples 62:  1effc9
+samples 63: ffbf0075
+samples 64:  7eff1c
+samples 65: ff1c019c
+samples 66: 197fd23
+samples 67: fce3059c
+samples 68: e78e5ec
+samples 69: d17e868
+samples 70: fcdd05a7
+samples 71: 19cfd1a
+samples 72: ff1701a4
+samples 73:  82ff16
+samples 74: ffbd007a
+samples 75:  1fffc7
+samples 76: fff1001c
+samples 77:       0
+samples 78:       0
+samples 79:       0
+samples 80:       0
+samples 81:       0
+samples 82:       0
+samples 83:       0
+samples 84:       0
+samples 85:       0
+samples 86:       0
+samples 87:       0
+samples 88:       0
+samples 89:       0
+samples 90:       0
+samples 91:       0
+samples 92:       0
+samples 93:       0
+samples 94:       0
+samples 95:       0
+samples 96:       0
+samples 97:       0
+samples 98:       0
+samples 99: fff60012
+samples 100:   effe6
+samples 101: ffe10039
+samples 102:  3dff92
+samples 103: ff9300c6
+samples 104:  c1fea2
+samples 105: fe8502ae
+samples 106: 50ef6d9
+samples 107: 1333dd41
+samples 108: ff7900f3
+samples 109:  6cff3c
+samples 110: ffd4004f
+samples 111: ffe8002b
+samples 112:  6aff40
+samples 113: ff25018d
+samples 114: 191fd2a
+samples 115: fce305a4
+samples 116: e69e5e4
+samples 117: d0ae861
+samples 118: fce005a9
+samples 119: 19afd19
+samples 120: ff1801a4
+samples 121:  81ff16
+samples 122: ffbd007a
+samples 123:  15ffd9
+samples 124:       1
+samples 125: ffe10039
+samples 126:  3dff91
+samples 127: ff9300c6
+samples 128:  c1fea2
+samples 129: fe8602af
+samples 130: 50bf6d8
+samples 131: 1327dd3a
+samples 132: ff7a00f3
+samples 133:  7bff21
+samples 134: ffb60087
+samples 135:  29ffb6
+samples 136: ffec0024
+samples 137:   8fff1
+samples 138: fffc0007
+samples 139: fffd0006
+samples 140:       0
+samples 141:       0
+samples 142: fffb0009
+samples 143:    ffff
+samples 144: ffff0003
+samples 145:   1fffe
+samples 146:   1fffd
+samples 147: fffc0008
+samples 148: fffc0008
+samples 149:  befea5
+samples 150: 139adc5b
+samples 151: 340fa16
+samples 152: ff1601a9
+samples 153:  75ff2a
+samples 154: ffbd007a
+samples 155:  26ffba
+samples 156: ffec0025
+samples 157:   9ffef
+samples 158: fff8000f
+samples 159:       0
+samples 160:       0
+samples 161:       0
+samples 162:       0
+samples 163:       0
+samples 164:       0
+samples 165:       0
+samples 166:       0
+samples 167:       0
+samples 168:       0
+samples 169:       0
+samples 170:       0
+samples 171:       0
+samples 172:       0
+samples 173:       0
+samples 174:       0
+samples 175:       0
+samples 176:       0
+samples 177:       0
+samples 178:       0
+samples 179:       0
+samples 180:       0
+samples 181:       0
+samples 182:       0
+samples 183:       0
+samples 184:       0
+samples 185:       0
+samples 186:       0
+samples 187:       0
+samples 188:       0
+samples 189:       0
+samples 190:       0
+samples 191:       0
+samples 192:       0
+samples 193:       0
+samples 194:       0
+samples 195: fff70012
+samples 196:   effe6
+samples 197: ffe1003a
+samples 198:  3cff91
+samples 199: ff9400c6
+samples 200:  b2febb
+samples 201: fea3027f
+samples 202: 4caf73c
+samples 203: 137adc60
+samples 204: feb20261
+samples 205: 1ddfc97
+samples 206: fd01057b
+samples 207: a50ed20
+samples 208: 1042e23f
+samples 209: fd6604c2
+samples 210: 15cfd83
+samples 211: ff340175
+samples 212:  6fff34
+samples 213: ffc7006a
+samples 214:  1bffcf
+samples 215: fff30018
+samples 216:       1
+samples 217:       0
+samples 218:       0
+samples 219:       0
+samples 220:       0
+samples 221:       0
+samples 222:       0
+samples 223:       0
+samples 224:       0
+samples 225:       0
+samples 226:       0
+samples 227:       0
+samples 228:       0
+samples 229:       0
+samples 230:       0
+samples 231:       0
+samples 232:       0
+samples 233:       0
+samples 234:       0
+samples 235:       0
+samples 236:       0
+samples 237:       0
+samples 238:       0
+samples 239:       0
+samples 240:       0
+samples 241:       0
+samples 242:       0
+samples 243:       0
+samples 244:       0
+samples 245:       0
+samples 246:       0
+samples 247:       0
+samples 248:       0
+samples 249:       0
+samples 250:       0
+samples 251:       0
+samples 252:       0
+samples 253:       0
+samples 254:       0
+samples 255:       0
+samples 256:       0
+samples 257:       0
+samples 258:       0
+samples 259:       0
+samples 260:       0
+samples 261:       0
+samples 262:       0
+samples 263:       0
+samples 264:       0
+samples 265:       0
+samples 266:       0
+samples 267:       0
+samples 268:       0
+samples 269:       0
+samples 270:       0
+samples 271:       0
+samples 272:       0
+samples 273:       0
+samples 274:       0
+samples 275:       0
+samples 276:       0
+samples 277:       0
+samples 278:       0
+samples 279:       0
+samples 280:       0
+samples 281:       0
+samples 282:       0
+samples 283:       0
+samples 284:       0
+samples 285:       0
+samples 286:       0
+samples 287:       0
+samples 288:       0
+samples 289:       0
+samples 290:       0
+samples 291:       0
+samples 292:       0
+samples 293:       0
+samples 294:       0
+samples 295:       0
+samples 296:       0
+samples 297:       0
+samples 298:       0
+samples 299:       0
+samples 300:       0
+samples 301:       0
+samples 302:       0
+samples 303:       0
+samples 304:       0
+RECV: GET_DATA: status good
+RECV: GET_DATA: data recv'd
+device: /receiver_main_0_0_0
+samples 0: fdf403aa
+samples 1: 11d5e013
+samples 2: 84ef120
+samples 3: fda50437
+samples 4: 137fdd4
+samples 5: ff50013b
+samples 6:  62ff50
+samples 7: ffcd005b
+samples 8:  18ffd5
+samples 9: fff30017
+samples 10:       0
+samples 11:       0
+samples 12:       0
+samples 13:       0
+samples 14:       0
+samples 15:       0
+samples 16:       0
+samples 17:       0
+samples 18:       0
+samples 19:       0
+samples 20:       0
+samples 21:       0
+samples 22:       0
+samples 23:       0
+samples 24:       0
+samples 25:       0
+samples 26:       0
+samples 27:       0
+samples 28:       0
+samples 29:       0
+samples 30:       0
+samples 31:       0
+samples 32:       0
+samples 33:       0
+samples 34:       0
+samples 35:       0
+samples 36:       0
+samples 37:       0
+samples 38:       0
+samples 39:       0
+samples 40:       0
+samples 41:       0
+samples 42:       0
+samples 43:       0
+samples 44:       0
+samples 45:       0
+samples 46:       0
+samples 47:       0
+samples 48:       0
+samples 49:       0
+samples 50:       0
+samples 51:       0
+samples 52:       0
+samples 53:       0
+samples 54:       0
+samples 55:       0
+samples 56:       0
+samples 57:       0
+samples 58:       0
+samples 59:       0
+samples 60:       0
+samples 61: fff1001b
+samples 62:  1effc9
+samples 63: ffbf0075
+samples 64:  7eff1c
+samples 65: ff1b019c
+samples 66: 197fd23
+samples 67: fce3059c
+samples 68: e77e5ec
+samples 69: d16e868
+samples 70: fcdd05a7
+samples 71: 19cfd1a
+samples 72: ff1701a4
+samples 73:  82ff16
+samples 74: ffbd0079
+samples 75:  1fffc7
+samples 76: fff1001c
+samples 77:       0
+samples 78:       0
+samples 79:       0
+samples 80:       0
+samples 81:       0
+samples 82:       0
+samples 83:       0
+samples 84:       0
+samples 85:       0
+samples 86:       0
+samples 87:       0
+samples 88:       0
+samples 89:       0
+samples 90:       0
+samples 91:       0
+samples 92:       0
+samples 93:       0
+samples 94:       0
+samples 95:       0
+samples 96:       0
+samples 97:       0
+samples 98:       0
+samples 99: fff60012
+samples 100:   effe6
+samples 101: ffe10039
+samples 102:  3dff92
+samples 103: ff9300c6
+samples 104:  c1fea2
+samples 105: fe8502ae
+samples 106: 50ef6d9
+samples 107: 1333dd40
+samples 108: ff7900f3
+samples 109:  6cff3c
+samples 110: ffd4004f
+samples 111: ffe8002b
+samples 112:  6aff40
+samples 113: ff25018d
+samples 114: 191fd2a
+samples 115: fce305a4
+samples 116: e69e5e5
+samples 117: d0ae861
+samples 118: fce005a8
+samples 119: 19afd19
+samples 120: ff1801a4
+samples 121:  81ff16
+samples 122: ffbd007a
+samples 123:  15ffd9
+samples 124:       1
+samples 125: ffe10039
+samples 126:  3dff91
+samples 127: ff9300c6
+samples 128:  c1fea2
+samples 129: fe8602af
+samples 130: 50bf6d8
+samples 131: 1329dd3b
+samples 132: ff7a00f3
+samples 133:  7bff21
+samples 134: ffb60086
+samples 135:  29ffb6
+samples 136: ffec0024
+samples 137:   8fff1
+samples 138: fffc0007
+samples 139: fffd0007
+samples 140:       0
+samples 141:       0
+samples 142: fffb0009
+samples 143:       0
+samples 144: ffff0003
+samples 145:   1fffe
+samples 146:   1fffd
+samples 147: fffc0008
+samples 148: fffc0008
+samples 149:  befea5
+samples 150: 1399dc5b
+samples 151: 33ffa16
+samples 152: ff1601a9
+samples 153:  75ff2a
+samples 154: ffbd007a
+samples 155:  26ffba
+samples 156: ffec0025
+samples 157:   9ffef
+samples 158: fff8000f
+samples 159:       0
+samples 160:       0
+samples 161:       0
+samples 162:       0
+samples 163:       0
+samples 164:       0
+samples 165:       0
+samples 166:       0
+samples 167:       0
+samples 168:       0
+samples 169:       0
+samples 170:       0
+samples 171:       0
+samples 172:       0
+samples 173:       0
+samples 174:       0
+samples 175:       0
+samples 176:       0
+samples 177:       0
+samples 178:       0
+samples 179:       0
+samples 180:       0
+samples 181:       0
+samples 182:       0
+samples 183:       0
+samples 184:       0
+samples 185:       0
+samples 186:       0
+samples 187:       0
+samples 188:       0
+samples 189:       0
+samples 190:       0
+samples 191:       0
+samples 192:       0
+samples 193:       0
+samples 194:       0
+samples 195: fff60012
+samples 196:   effe6
+samples 197: ffe1003a
+samples 198:  3cff91
+samples 199: ff9400c6
+samples 200:  b2febb
+samples 201: fea3027f
+samples 202: 4caf73c
+samples 203: 137adc60
+samples 204: feb30261
+samples 205: 1ddfc97
+samples 206: fd01057b
+samples 207: a50ed20
+samples 208: 1042e240
+samples 209: fd6604c2
+samples 210: 15cfd83
+samples 211: ff340175
+samples 212:  6fff34
+samples 213: ffc6006a
+samples 214:  1bffcf
+samples 215: fff30018
+samples 216:       1
+samples 217:       0
+samples 218:       0
+samples 219:       0
+samples 220:       0
+samples 221:       0
+samples 222:       0
+samples 223:       0
+samples 224:       0
+samples 225:       0
+samples 226:       0
+samples 227:       0
+samples 228:       0
+samples 229:       0
+samples 230:       0
+samples 231:       0
+samples 232:       0
+samples 233:       0
+samples 234:       0
+samples 235:       0
+samples 236:       0
+samples 237:       0
+samples 238:       0
+samples 239:       0
+samples 240:       0
+samples 241:       0
+samples 242:       0
+samples 243:       0
+samples 244:       0
+samples 245:       0
+samples 246:       0
+samples 247:       0
+samples 248:       0
+samples 249:       0
+samples 250:       0
+samples 251:       0
+samples 252:       0
+samples 253:       0
+samples 254:       0
+samples 255:       0
+samples 256:       0
+samples 257:       0
+samples 258:       0
+samples 259:       0
+samples 260:       0
+samples 261:       0
+samples 262:       0
+samples 263:       0
+samples 264:       0
+samples 265:       0
+samples 266:       0
+samples 267:       0
+samples 268:       0
+samples 269:       0
+samples 270:       0
+samples 271:       0
+samples 272:       0
+samples 273:       0
+samples 274:       0
+samples 275:       0
+samples 276:       0
+samples 277:       0
+samples 278:       0
+samples 279:       0
+samples 280:       0
+samples 281:       0
+samples 282:       0
+samples 283:       0
+samples 284:       0
+samples 285:       0
+samples 286:       0
+samples 287:       0
+samples 288:       0
+samples 289:       0
+samples 290:       0
+samples 291:       0
+samples 292:       0
+samples 293:       0
+samples 294:       0
+samples 295:       0
+samples 296:       0
+samples 297:       0
+samples 298:       0
+samples 299:       0
+samples 300:       0
+samples 301:       0
+samples 302:       0
+samples 303:       0
+samples 304:       0
+RECV: GET_DATA: status good
+RECV: GET_DATA: data recv'd
+device: /receiver_main_0_0_0
+samples 0: fdf403aa
+samples 1: 11d5e013
+samples 2: 84ef120
+samples 3: fda50437
+samples 4: 137fdd4
+samples 5: ff50013b
+samples 6:  62ff50
+samples 7: ffcd005b
+samples 8:  18ffd5
+samples 9: fff30017
+samples 10:       0
+samples 11:       0
+samples 12:       0
+samples 13:       0
+samples 14:       0
+samples 15:       0
+samples 16:       0
+samples 17:       0
+samples 18:       0
+samples 19:       0
+samples 20:       0
+samples 21:       0
+samples 22:       0
+samples 23:       0
+samples 24:       0
+samples 25:       0
+samples 26:       0
+samples 27:       0
+samples 28:       0
+samples 29:       0
+samples 30:       0
+samples 31:       0
+samples 32:       0
+samples 33:       0
+samples 34:       0
+samples 35:       0
+samples 36:       0
+samples 37:       0
+samples 38:       0
+samples 39:       0
+samples 40:       0
+samples 41:       0
+samples 42:       0
+samples 43:       0
+samples 44:       0
+samples 45:       0
+samples 46:       0
+samples 47:       0
+samples 48:       0
+samples 49:       0
+samples 50:       0
+samples 51:       0
+samples 52:       0
+samples 53:       0
+samples 54:       0
+samples 55:       0
+samples 56:       0
+samples 57:       0
+samples 58:       0
+samples 59:       0
+samples 60:       0
+samples 61: fff1001b
+samples 62:  1effc9
+samples 63: ffbf0075
+samples 64:  7eff1c
+samples 65: ff1c019c
+samples 66: 197fd23
+samples 67: fce4059c
+samples 68: e77e5ec
+samples 69: d16e868
+samples 70: fcdd05a7
+samples 71: 19cfd1a
+samples 72: ff1701a4
+samples 73:  82ff16
+samples 74: ffbd0079
+samples 75:  20ffc7
+samples 76: fff1001c
+samples 77:       0
+samples 78:       0
+samples 79:       0
+samples 80:       0
+samples 81:       0
+samples 82:       0
+samples 83:       0
+samples 84:       0
+samples 85:       0
+samples 86:       0
+samples 87:       0
+samples 88:       0
+samples 89:       0
+samples 90:       0
+samples 91:       0
+samples 92:       0
+samples 93:       0
+samples 94:       0
+samples 95:       0
+samples 96:       0
+samples 97:       0
+samples 98:       0
+samples 99: fff60012
+samples 100:   effe6
+samples 101: ffe10039
+samples 102:  3dff92
+samples 103: ff9300c6
+samples 104:  c1fea2
+samples 105: fe8502ae
+samples 106: 50ef6d9
+samples 107: 1333dd40
+samples 108: ff7900f3
+samples 109:  6cff3c
+samples 110: ffd4004f
+samples 111: ffe9002b
+samples 112:  6aff40
+samples 113: ff25018d
+samples 114: 191fd2a
+samples 115: fce205a4
+samples 116: e69e5e5
+samples 117: d0ae861
+samples 118: fce005a8
+samples 119: 19afd19
+samples 120: ff1801a4
+samples 121:  81ff16
+samples 122: ffbd007a
+samples 123:  15ffd9
+samples 124:       1
+samples 125: ffe10039
+samples 126:  3dff91
+samples 127: ff9300c6
+samples 128:  c1fea2
+samples 129: fe8602af
+samples 130: 50bf6d8
+samples 131: 1328dd3a
+samples 132: ff7a00f3
+samples 133:  7bff21
+samples 134: ffb60087
+samples 135:  29ffb6
+samples 136: ffec0024
+samples 137:   8fff1
+samples 138: fffc0007
+samples 139: fffd0007
+samples 140:       0
+samples 141:       0
+samples 142: fffb0009
+samples 143:    ffff
+samples 144: ffff0003
+samples 145:   1fffe
+samples 146:   1fffe
+samples 147: fffc0008
+samples 148: fffc0008
+samples 149:  befea5
+samples 150: 139adc5b
+samples 151: 33ffa16
+samples 152: ff1601a9
+samples 153:  75ff2a
+samples 154: ffbd007a
+samples 155:  26ffba
+samples 156: ffec0025
+samples 157:   9ffef
+samples 158: fff8000f
+samples 159:       0
+samples 160:       0
+samples 161:       0
+samples 162:       0
+samples 163:       0
+samples 164:       0
+samples 165:       0
+samples 166:       0
+samples 167:       0
+samples 168:       0
+samples 169:       0
+samples 170:       0
+samples 171:       0
+samples 172:       0
+samples 173:       0
+samples 174:       0
+samples 175:       0
+samples 176:       0
+samples 177:       0
+samples 178:       0
+samples 179:       0
+samples 180:       0
+samples 181:       0
+samples 182:       0
+samples 183:       0
+samples 184:       0
+samples 185:       0
+samples 186:       0
+samples 187:       0
+samples 188:       0
+samples 189:       0
+samples 190:       0
+samples 191:       0
+samples 192:       0
+samples 193:       0
+samples 194:       0
+samples 195: fff70012
+samples 196:   effe6
+samples 197: ffe1003a
+samples 198:  3cff91
+samples 199: ff9400c6
+samples 200:  b2febb
+samples 201: fea3027f
+samples 202: 4caf73c
+samples 203: 137adc61
+samples 204: feb20261
+samples 205: 1ddfc97
+samples 206: fd01057b
+samples 207: a51ed20
+samples 208: 1042e240
+samples 209: fd6604c2
+samples 210: 15cfd83
+samples 211: ff340175
+samples 212:  6fff34
+samples 213: ffc7006a
+samples 214:  1bffcf
+samples 215: fff30018
+samples 216:       1
+samples 217:       0
+samples 218:       0
+samples 219:       0
+samples 220:       0
+samples 221:       0
+samples 222:       0
+samples 223:       0
+samples 224:       0
+samples 225:       0
+samples 226:       0
+samples 227:       0
+samples 228:       0
+samples 229:       0
+samples 230:       0
+samples 231:       0
+samples 232:       0
+samples 233:       0
+samples 234:       0
+samples 235:       0
+samples 236:       0
+samples 237:       0
+samples 238:       0
+samples 239:       0
+samples 240:       0
+samples 241:       0
+samples 242:       0
+samples 243:       0
+samples 244:       0
+samples 245:       0
+samples 246:       0
+samples 247:       0
+samples 248:       0
+samples 249:       0
+samples 250:       0
+samples 251:       0
+samples 252:       0
+samples 253:       0
+samples 254:       0
+samples 255:       0
+samples 256:       0
+samples 257:       0
+samples 258:       0
+samples 259:       0
+samples 260:       0
+samples 261:       0
+samples 262:       0
+samples 263:       0
+samples 264:       0
+samples 265:       0
+samples 266:       0
+samples 267:       0
+samples 268:       0
+samples 269:       0
+samples 270:       0
+samples 271:       0
+samples 272:       0
+samples 273:       0
+samples 274:       0
+samples 275:       0
+samples 276:       0
+samples 277:       0
+samples 278:       0
+samples 279:       0
+samples 280:       0
+samples 281:       0
+samples 282:       0
+samples 283:       0
+samples 284:       0
+samples 285:       0
+samples 286:       0
+samples 287:       0
+samples 288:       0
+samples 289:       0
+samples 290:       0
+samples 291:       0
+samples 292:       0
+samples 293:       0
+samples 294:       0
+samples 295:       0
+samples 296:       0
+samples 297:       0
+samples 298:       0
+samples 299:       0
+samples 300:       0
+samples 301:       0
+samples 302:       0
+samples 303:       0
+samples 304:       0
+RECV: GET_DATA: status good
+RECV: GET_DATA: data recv'd
+device: /receiver_main_0_0_0
+samples 0: fdf403aa
+samples 1: 11d5e013
+samples 2: 84ef120
+samples 3: fda50437
+samples 4: 137fdd4
+samples 5: ff50013b
+samples 6:  62ff50
+samples 7: ffcd005b
+samples 8:  18ffd5
+samples 9: fff30017
+samples 10:       0
+samples 11:       0
+samples 12:       0
+samples 13:       0
+samples 14:       0
+samples 15:       0
+samples 16:       0
+samples 17:       0
+samples 18:       0
+samples 19:       0
+samples 20:       0
+samples 21:       0
+samples 22:       0
+samples 23:       0
+samples 24:       0
+samples 25:       0
+samples 26:       0
+samples 27:       0
+samples 28:       0
+samples 29:       0
+samples 30:       0
+samples 31:       0
+samples 32:       0
+samples 33:       0
+samples 34:       0
+samples 35:       0
+samples 36:       0
+samples 37:       0
+samples 38:       0
+samples 39:       0
+samples 40:       0
+samples 41:       0
+samples 42:       0
+samples 43:       0
+samples 44:       0
+samples 45:       0
+samples 46:       0
+samples 47:       0
+samples 48:       0
+samples 49:       0
+samples 50:       0
+samples 51:       0
+samples 52:       0
+samples 53:       0
+samples 54:       0
+samples 55:       0
+samples 56:       0
+samples 57:       0
+samples 58:       0
+samples 59:       0
+samples 60:       0
+samples 61: fff1001b
+samples 62:  1effc9
+samples 63: ffbf0075
+samples 64:  7eff1c
+samples 65: ff1c019c
+samples 66: 197fd23
+samples 67: fce4059c
+samples 68: e77e5ec
+samples 69: d16e867
+samples 70: fcdd05a7
+samples 71: 19bfd1a
+samples 72: ff1701a4
+samples 73:  82ff16
+samples 74: ffbd0079
+samples 75:  1fffc7
+samples 76: fff1001c
+samples 77:       0
+samples 78:       0
+samples 79:       0
+samples 80:       0
+samples 81:       0
+samples 82:       0
+samples 83:       0
+samples 84:       0
+samples 85:       0
+samples 86:       0
+samples 87:       0
+samples 88:       0
+samples 89:       0
+samples 90:       0
+samples 91:       0
+samples 92:       0
+samples 93:       0
+samples 94:       0
+samples 95:       0
+samples 96:       0
+samples 97:       0
+samples 98:       0
+samples 99: fff60012
+samples 100:   effe6
+samples 101: ffe10039
+samples 102:  3dff92
+samples 103: ff9300c6
+samples 104:  c1fea2
+samples 105: fe8502ae
+samples 106: 50ef6d9
+samples 107: 1334dd41
+samples 108: ff7900f3
+samples 109:  6cff3c
+samples 110: ffd4004f
+samples 111: ffe8002b
+samples 112:  6aff40
+samples 113: ff25018d
+samples 114: 191fd2a
+samples 115: fce305a4
+samples 116: e69e5e5
+samples 117: d0ae861
+samples 118: fce005a8
+samples 119: 19afd19
+samples 120: ff1801a4
+samples 121:  81ff16
+samples 122: ffbd007a
+samples 123:  15ffd9
+samples 124:       1
+samples 125: ffe10039
+samples 126:  3dff91
+samples 127: ff9300c6
+samples 128:  c1fea2
+samples 129: fe8602af
+samples 130: 50bf6d8
+samples 131: 1328dd3a
+samples 132: ff7a00f3
+samples 133:  7bff21
+samples 134: ffb60086
+samples 135:  29ffb6
+samples 136: ffec0024
+samples 137:   8fff1
+samples 138: fffc0007
+samples 139: fffd0006
+samples 140:       0
+samples 141:       0
+samples 142: fffb0009
+samples 143:       0
+samples 144: ffff0003
+samples 145:   1fffe
+samples 146:   1fffd
+samples 147: fffc0008
+samples 148: fffc0008
+samples 149:  befea6
+samples 150: 1399dc5b
+samples 151: 33ffa16
+samples 152: ff1601a9
+samples 153:  75ff2a
+samples 154: ffbd007a
+samples 155:  26ffba
+samples 156: ffec0025
+samples 157:   9ffef
+samples 158: fff8000f
+samples 159:       0
+samples 160:       0
+samples 161:       0
+samples 162:       0
+samples 163:       0
+samples 164:       0
+samples 165:       0
+samples 166:       0
+samples 167:       0
+samples 168:       0
+samples 169:       0
+samples 170:       0
+samples 171:       0
+samples 172:       0
+samples 173:       0
+samples 174:       0
+samples 175:       0
+samples 176:       0
+samples 177:       0
+samples 178:       0
+samples 179:       0
+samples 180:       0
+samples 181:       0
+samples 182:       0
+samples 183:       0
+samples 184:       0
+samples 185:       0
+samples 186:       0
+samples 187:       0
+samples 188:       0
+samples 189:       0
+samples 190:       0
+samples 191:       0
+samples 192:       0
+samples 193:       0
+samples 194:       0
+samples 195: fff70012
+samples 196:   effe6
+samples 197: ffe10039
+samples 198:  3cff91
+samples 199: ff9400c6
+samples 200:  b2febb
+samples 201: fea3027f
+samples 202: 4caf73c
+samples 203: 137bdc60
+samples 204: feb20261
+samples 205: 1ddfc97
+samples 206: fd01057b
+samples 207: a51ed20
+samples 208: 1042e240
+samples 209: fd6604c2
+samples 210: 15cfd83
+samples 211: ff340175
+samples 212:  6fff34
+samples 213: ffc6006a
+samples 214:  1bffcf
+samples 215: fff30018
+samples 216:       1
+samples 217:       0
+samples 218:       0
+samples 219:       0
+samples 220:       0
+samples 221:       0
+samples 222:       0
+samples 223:       0
+samples 224:       0
+samples 225:       0
+samples 226:       0
+samples 227:       0
+samples 228:       0
+samples 229:       0
+samples 230:       0
+samples 231:       0
+samples 232:       0
+samples 233:       0
+samples 234:       0
+samples 235:       0
+samples 236:       0
+samples 237:       0
+samples 238:       0
+samples 239:       0
+samples 240:       0
+samples 241:       0
+samples 242:       0
+samples 243:       0
+samples 244:       0
+samples 245:       0
+samples 246:       0
+samples 247:       0
+samples 248:       0
+samples 249:       0
+samples 250:       0
+samples 251:       0
+samples 252:       0
+samples 253:       0
+samples 254:       0
+samples 255:       0
+samples 256:       0
+samples 257:       0
+samples 258:       0
+samples 259:       0
+samples 260:       0
+samples 261:       0
+samples 262:       0
+samples 263:       0
+samples 264:       0
+samples 265:       0
+samples 266:       0
+samples 267:       0
+samples 268:       0
+samples 269:       0
+samples 270:       0
+samples 271:       0
+samples 272:       0
+samples 273:       0
+samples 274:       0
+samples 275:       0
+samples 276:       0
+samples 277:       0
+samples 278:       0
+samples 279:       0
+samples 280:       0
+samples 281:       0
+samples 282:       0
+samples 283:       0
+samples 284:       0
+samples 285:       0
+samples 286:       0
+samples 287:       0
+samples 288:       0
+samples 289:       0
+samples 290:       0
+samples 291:       0
+samples 292:       0
+samples 293:       0
+samples 294:       0
+samples 295:       0
+samples 296:       0
+samples 297:       0
+samples 298:       0
+samples 299:       0
+samples 300:       0
+samples 301:       0
+samples 302:       0
+samples 303:       0
+samples 304:       0
+RECV: GET_DATA: status good
+RECV: GET_DATA: data recv'd
+device: /receiver_main_0_0_0
+samples 0: fdf403aa
+samples 1: 11d6e014
+samples 2: 84ef120
+samples 3: fda50437
+samples 4: 137fdd4
+samples 5: ff50013b
+samples 6:  62ff50
+samples 7: ffcd005b
+samples 8:  18ffd5
+samples 9: fff30017
+samples 10:       0
+samples 11:       0
+samples 12:       0
+samples 13:       0
+samples 14:       0
+samples 15:       0
+samples 16:       0
+samples 17:       0
+samples 18:       0
+samples 19:       0
+samples 20:       0
+samples 21:       0
+samples 22:       0
+samples 23:       0
+samples 24:       0
+samples 25:       0
+samples 26:       0
+samples 27:       0
+samples 28:       0
+samples 29:       0
+samples 30:       0
+samples 31:       0
+samples 32:       0
+samples 33:       0
+samples 34:       0
+samples 35:       0
+samples 36:       0
+samples 37:       0
+samples 38:       0
+samples 39:       0
+samples 40:       0
+samples 41:       0
+samples 42:       0
+samples 43:       0
+samples 44:       0
+samples 45:       0
+samples 46:       0
+samples 47:       0
+samples 48:       0
+samples 49:       0
+samples 50:       0
+samples 51:       0
+samples 52:       0
+samples 53:       0
+samples 54:       0
+samples 55:       0
+samples 56:       0
+samples 57:       0
+samples 58:       0
+samples 59:       0
+samples 60:       0
+samples 61: fff1001b
+samples 62:  1effc9
+samples 63: ffbf0075
+samples 64:  7eff1c
+samples 65: ff1c019c
+samples 66: 197fd23
+samples 67: fce3059c
+samples 68: e77e5ec
+samples 69: d16e868
+samples 70: fcdd05a7
+samples 71: 19cfd1a
+samples 72: ff1701a4
+samples 73:  82ff16
+samples 74: ffbd0079
+samples 75:  20ffc7
+samples 76: fff1001c
+samples 77:       0
+samples 78:       0
+samples 79:       0
+samples 80:       0
+samples 81:       0
+samples 82:       0
+samples 83:       0
+samples 84:       0
+samples 85:       0
+samples 86:       0
+samples 87:       0
+samples 88:       0
+samples 89:       0
+samples 90:       0
+samples 91:       0
+samples 92:       0
+samples 93:       0
+samples 94:       0
+samples 95:       0
+samples 96:       0
+samples 97:       0
+samples 98:       0
+samples 99: fff60012
+samples 100:   effe6
+samples 101: ffe00039
+samples 102:  3dff91
+samples 103: ff9300c6
+samples 104:  c1fea2
+samples 105: fe8502ae
+samples 106: 50ef6d9
+samples 107: 1332dd40
+samples 108: ff7900f3
+samples 109:  6cff3c
+samples 110: ffd4004f
+samples 111: ffe9002b
+samples 112:  6aff40
+samples 113: ff25018d
+samples 114: 191fd2a
+samples 115: fce305a4
+samples 116: e69e5e4
+samples 117: d0ae861
+samples 118: fce005a8
+samples 119: 19afd19
+samples 120: ff1801a4
+samples 121:  81ff16
+samples 122: ffbd007a
+samples 123:  15ffd9
+samples 124:       1
+samples 125: ffe00039
+samples 126:  3dff91
+samples 127: ff9300c6
+samples 128:  c1fea2
+samples 129: fe8602af
+samples 130: 50bf6d8
+samples 131: 1329dd3b
+samples 132: ff7a00f3
+samples 133:  7bff21
+samples 134: ffb60087
+samples 135:  29ffb6
+samples 136: ffec0024
+samples 137:   8fff1
+samples 138: fffc0007
+samples 139: fffd0006
+samples 140:       0
+samples 141:       0
+samples 142: fffb0009
+samples 143:    ffff
+samples 144: ffff0003
+samples 145:   1fffe
+samples 146:   1fffd
+samples 147: fffc0008
+samples 148: fffc0008
+samples 149:  befea5
+samples 150: 139bdc5c
+samples 151: 340fa16
+samples 152: ff1601a9
+samples 153:  75ff2a
+samples 154: ffbd007a
+samples 155:  26ffba
+samples 156: ffec0025
+samples 157:   9ffef
+samples 158: fff8000f
+samples 159:       0
+samples 160:       0
+samples 161:       0
+samples 162:       0
+samples 163:       0
+samples 164:       0
+samples 165:       0
+samples 166:       0
+samples 167:       0
+samples 168:       0
+samples 169:       0
+samples 170:       0
+samples 171:       0
+samples 172:       0
+samples 173:       0
+samples 174:       0
+samples 175:       0
+samples 176:       0
+samples 177:       0
+samples 178:       0
+samples 179:       0
+samples 180:       0
+samples 181:       0
+samples 182:       0
+samples 183:       0
+samples 184:       0
+samples 185:       0
+samples 186:       0
+samples 187:       0
+samples 188:       0
+samples 189:       0
+samples 190:       0
+samples 191:       0
+samples 192:       0
+samples 193:       0
+samples 194:       0
+samples 195: fff70012
+samples 196:   effe6
+samples 197: ffe1003a
+samples 198:  3cff91
+samples 199: ff9400c6
+samples 200:  b2febb
+samples 201: fea3027f
+samples 202: 4cbf73c
+samples 203: 137bdc60
+samples 204: feb20261
+samples 205: 1ddfc97
+samples 206: fd01057b
+samples 207: a51ed20
+samples 208: 1043e240
+samples 209: fd6604c2
+samples 210: 15cfd83
+samples 211: ff340175
+samples 212:  6fff34
+samples 213: ffc6006a
+samples 214:  1bffcf
+samples 215: fff30018
+samples 216:       1
+samples 217:       0
+samples 218:       0
+samples 219:       0
+samples 220:       0
+samples 221:       0
+samples 222:       0
+samples 223:       0
+samples 224:       0
+samples 225:       0
+samples 226:       0
+samples 227:       0
+samples 228:       0
+samples 229:       0
+samples 230:       0
+samples 231:       0
+samples 232:       0
+samples 233:       0
+samples 234:       0
+samples 235:       0
+samples 236:       0
+samples 237:       0
+samples 238:       0
+samples 239:       0
+samples 240:       0
+samples 241:       0
+samples 242:       0
+samples 243:       0
+samples 244:       0
+samples 245:       0
+samples 246:       0
+samples 247:       0
+samples 248:       0
+samples 249:       0
+samples 250:       0
+samples 251:       0
+samples 252:       0
+samples 253:       0
+samples 254:       0
+samples 255:       0
+samples 256:       0
+samples 257:       0
+samples 258:       0
+samples 259:       0
+samples 260:       0
+samples 261:       0
+samples 262:       0
+samples 263:       0
+samples 264:       0
+samples 265:       0
+samples 266:       0
+samples 267:       0
+samples 268:       0
+samples 269:       0
+samples 270:       0
+samples 271:       0
+samples 272:       0
+samples 273:       0
+samples 274:       0
+samples 275:       0
+samples 276:       0
+samples 277:       0
+samples 278:       0
+samples 279:       0
+samples 280:       0
+samples 281:       0
+samples 282:       0
+samples 283:       0
+samples 284:       0
+samples 285:       0
+samples 286:       0
+samples 287:       0
+samples 288:       0
+samples 289:       0
+samples 290:       0
+samples 291:       0
+samples 292:       0
+samples 293:       0
+samples 294:       0
+samples 295:       0
+samples 296:       0
+samples 297:       0
+samples 298:       0
+samples 299:       0
+samples 300:       0
+samples 301:       0
+samples 302:       0
+samples 303:       0
+samples 304:       0
+RECV: GET_DATA: status good
+RECV: GET_DATA: data recv'd
+device: /receiver_main_0_0_0
+samples 0: fdf403aa
+samples 1: 11d6e014
+samples 2: 84ef121
+samples 3: fda50437
+samples 4: 137fdd4
+samples 5: ff50013b
+samples 6:  62ff50
+samples 7: ffcd005b
+samples 8:  18ffd5
+samples 9: fff30017
+samples 10:       0
+samples 11:       0
+samples 12:       0
+samples 13:       0
+samples 14:       0
+samples 15:       0
+samples 16:       0
+samples 17:       0
+samples 18:       0
+samples 19:       0
+samples 20:       0
+samples 21:       0
+samples 22:       0
+samples 23:       0
+samples 24:       0
+samples 25:       0
+samples 26:       0
+samples 27:       0
+samples 28:       0
+samples 29:       0
+samples 30:       0
+samples 31:       0
+samples 32:       0
+samples 33:       0
+samples 34:       0
+samples 35:       0
+samples 36:       0
+samples 37:       0
+samples 38:       0
+samples 39:       0
+samples 40:       0
+samples 41:       0
+samples 42:       0
+samples 43:       0
+samples 44:       0
+samples 45:       0
+samples 46:       0
+samples 47:       0
+samples 48:       0
+samples 49:       0
+samples 50:       0
+samples 51:       0
+samples 52:       0
+samples 53:       0
+samples 54:       0
+samples 55:       0
+samples 56:       0
+samples 57:       0
+samples 58:       0
+samples 59:       0
+samples 60:       0
+samples 61: fff1001b
+samples 62:  1effc9
+samples 63: ffbf0075
+samples 64:  7eff1c
+samples 65: ff1c019c
+samples 66: 197fd23
+samples 67: fce3059c
+samples 68: e77e5ec
+samples 69: d16e868
+samples 70: fcdd05a7
+samples 71: 19cfd1a
+samples 72: ff1701a4
+samples 73:  82ff16
+samples 74: ffbd0079
+samples 75:  1fffc7
+samples 76: fff1001c
+samples 77:       0
+samples 78:       0
+samples 79:       0
+samples 80:       0
+samples 81:       0
+samples 82:       0
+samples 83:       0
+samples 84:       0
+samples 85:       0
+samples 86:       0
+samples 87:       0
+samples 88:       0
+samples 89:       0
+samples 90:       0
+samples 91:       0
+samples 92:       0
+samples 93:       0
+samples 94:       0
+samples 95:       0
+samples 96:       0
+samples 97:       0
+samples 98:       0
+samples 99: fff60012
+samples 100:   effe6
+samples 101: ffe00039
+samples 102:  3dff91
+samples 103: ff9300c6
+samples 104:  c1fea2
+samples 105: fe8502ae
+samples 106: 50ef6d9
+samples 107: 1334dd40
+samples 108: ff7900f3
+samples 109:  6cff3c
+samples 110: ffd4004f
+samples 111: ffe9002b
+samples 112:  6aff40
+samples 113: ff25018d
+samples 114: 191fd2a
+samples 115: fce205a4
+samples 116: e6ae5e5
+samples 117: d0ae861
+samples 118: fce005a9
+samples 119: 19afd19
+samples 120: ff1801a4
+samples 121:  81ff16
+samples 122: ffbd007a
+samples 123:  15ffd9
+samples 124:       1
+samples 125: ffe10039
+samples 126:  3dff91
+samples 127: ff9300c6
+samples 128:  c1fea2
+samples 129: fe8602af
+samples 130: 50bf6d8
+samples 131: 1329dd3a
+samples 132: ff7a00f3
+samples 133:  7bff21
+samples 134: ffb60087
+samples 135:  29ffb6
+samples 136: ffec0024
+samples 137:   8fff1
+samples 138: fffc0007
+samples 139: fffd0007
+samples 140:       0
+samples 141:       0
+samples 142: fffb0009
+samples 143:    ffff
+samples 144: ffff0003
+samples 145:   1fffe
+samples 146:   1fffd
+samples 147: fffc0008
+samples 148: fffc0008
+samples 149:  befea5
+samples 150: 1399dc5b
+samples 151: 33ffa16
+samples 152: ff1601a9
+samples 153:  75ff2a
+samples 154: ffbd007a
+samples 155:  26ffba
+samples 156: ffec0025
+samples 157:   9ffef
+samples 158: fff8000f
+samples 159:       0
+samples 160:       0
+samples 161:       0
+samples 162:       0
+samples 163:       0
+samples 164:       0
+samples 165:       0
+samples 166:       0
+samples 167:       0
+samples 168:       0
+samples 169:       0
+samples 170:       0
+samples 171:       0
+samples 172:       0
+samples 173:       0
+samples 174:       0
+samples 175:       0
+samples 176:       0
+samples 177:       0
+samples 178:       0
+samples 179:       0
+samples 180:       0
+samples 181:       0
+samples 182:       0
+samples 183:       0
+samples 184:       0
+samples 185:       0
+samples 186:       0
+samples 187:       0
+samples 188:       0
+samples 189:       0
+samples 190:       0
+samples 191:       0
+samples 192:       0
+samples 193:       0
+samples 194:       0
+samples 195: fff60012
+samples 196:   effe6
+samples 197: ffe1003a
+samples 198:  3cff91
+samples 199: ff9400c6
+samples 200:  b2febb
+samples 201: fea3027f
+samples 202: 4cbf73c
+samples 203: 137cdc61
+samples 204: feb20261
+samples 205: 1defc97
+samples 206: fd01057b
+samples 207: a51ed21
+samples 208: 1043e240
+samples 209: fd6604c2
+samples 210: 15cfd83
+samples 211: ff340175
+samples 212:  6fff34
+samples 213: ffc6006a
+samples 214:  1bffcf
+samples 215: fff30018
+samples 216:       1
+samples 217:       0
+samples 218:       0
+samples 219:       0
+samples 220:       0
+samples 221:       0
+samples 222:       0
+samples 223:       0
+samples 224:       0
+samples 225:       0
+samples 226:       0
+samples 227:       0
+samples 228:       0
+samples 229:       0
+samples 230:       0
+samples 231:       0
+samples 232:       0
+samples 233:       0
+samples 234:       0
+samples 235:       0
+samples 236:       0
+samples 237:       0
+samples 238:       0
+samples 239:       0
+samples 240:       0
+samples 241:       0
+samples 242:       0
+samples 243:       0
+samples 244:       0
+samples 245:       0
+samples 246:       0
+samples 247:       0
+samples 248:       0
+samples 249:       0
+samples 250:       0
+samples 251:       0
+samples 252:       0
+samples 253:       0
+samples 254:       0
+samples 255:       0
+samples 256:       0
+samples 257:       0
+samples 258:       0
+samples 259:       0
+samples 260:       0
+samples 261:       0
+samples 262:       0
+samples 263:       0
+samples 264:       0
+samples 265:       0
+samples 266:       0
+samples 267:       0
+samples 268:       0
+samples 269:       0
+samples 270:       0
+samples 271:       0
+samples 272:       0
+samples 273:       0
+samples 274:       0
+samples 275:       0
+samples 276:       0
+samples 277:       0
+samples 278:       0
+samples 279:       0
+samples 280:       0
+samples 281:       0
+samples 282:       0
+samples 283:       0
+samples 284:       0
+samples 285:       0
+samples 286:       0
+samples 287:       0
+samples 288:       0
+samples 289:       0
+samples 290:       0
+samples 291:       0
+samples 292:       0
+samples 293:       0
+samples 294:       0
+samples 295:       0
+samples 296:       0
+samples 297:       0
+samples 298:       0
+samples 299:       0
+samples 300:       0
+samples 301:       0
+samples 302:       0
+samples 303:       0
+samples 304:       0
+RECV: GET_DATA: status good
+RECV: GET_DATA: data recv'd
+device: /receiver_main_0_0_0
+samples 0: fdf403aa
+samples 1: 11d5e013
+samples 2: 84ef120
+samples 3: fda50438
+samples 4: 137fdd4
+samples 5: ff50013b
+samples 6:  62ff50
+samples 7: ffcd005b
+samples 8:  18ffd5
+samples 9: fff30017
+samples 10:       0
+samples 11:       0
+samples 12:       0
+samples 13:       0
+samples 14:       0
+samples 15:       0
+samples 16:       0
+samples 17:       0
+samples 18:       0
+samples 19:       0
+samples 20:       0
+samples 21:       0
+samples 22:       0
+samples 23:       0
+samples 24:       0
+samples 25:       0
+samples 26:       0
+samples 27:       0
+samples 28:       0
+samples 29:       0
+samples 30:       0
+samples 31:       0
+samples 32:       0
+samples 33:       0
+samples 34:       0
+samples 35:       0
+samples 36:       0
+samples 37:       0
+samples 38:       0
+samples 39:       0
+samples 40:       0
+samples 41:       0
+samples 42:       0
+samples 43:       0
+samples 44:       0
+samples 45:       0
+samples 46:       0
+samples 47:       0
+samples 48:       0
+samples 49:       0
+samples 50:       0
+samples 51:       0
+samples 52:       0
+samples 53:       0
+samples 54:       0
+samples 55:       0
+samples 56:       0
+samples 57:       0
+samples 58:       0
+samples 59:       0
+samples 60:       0
+samples 61: fff1001b
+samples 62:  1effc9
+samples 63: ffbf0075
+samples 64:  7eff1c
+samples 65: ff1c019c
+samples 66: 196fd23
+samples 67: fce4059c
+samples 68: e77e5ec
+samples 69: d16e868
+samples 70: fcdd05a7
+samples 71: 19cfd1a
+samples 72: ff1701a4
+samples 73:  82ff16
+samples 74: ffbd0079
+samples 75:  1fffc7
+samples 76: fff1001c
+samples 77:       0
+samples 78:       0
+samples 79:       0
+samples 80:       0
+samples 81:       0
+samples 82:       0
+samples 83:       0
+samples 84:       0
+samples 85:       0
+samples 86:       0
+samples 87:       0
+samples 88:       0
+samples 89:       0
+samples 90:       0
+samples 91:       0
+samples 92:       0
+samples 93:       0
+samples 94:       0
+samples 95:       0
+samples 96:       0
+samples 97:       0
+samples 98:       0
+samples 99: fff60012
+samples 100:   effe6
+samples 101: ffe10039
+samples 102:  3dff92
+samples 103: ff9300c6
+samples 104:  c1fea2
+samples 105: fe8502ae
+samples 106: 50ef6d9
+samples 107: 1333dd40
+samples 108: ff7900f3
+samples 109:  6cff3c
+samples 110: ffd4004f
+samples 111: ffe9002b
+samples 112:  6aff40
+samples 113: ff25018d
+samples 114: 191fd2a
+samples 115: fce305a4
+samples 116: e69e5e4
+samples 117: d0ae861
+samples 118: fce005a9
+samples 119: 19afd19
+samples 120: ff1801a4
+samples 121:  81ff16
+samples 122: ffbd007a
+samples 123:  15ffd9
+samples 124:       1
+samples 125: ffe10039
+samples 126:  3dff91
+samples 127: ff9300c6
+samples 128:  c1fea2
+samples 129: fe8602af
+samples 130: 50bf6d8
+samples 131: 1328dd3b
+samples 132: ff7a00f3
+samples 133:  7bff21
+samples 134: ffb60087
+samples 135:  29ffb6
+samples 136: ffec0024
+samples 137:   8fff1
+samples 138: fffc0007
+samples 139: fffd0006
+samples 140:       0
+samples 141:       0
+samples 142: fffb0009
+samples 143:       0
+samples 144: ffff0003
+samples 145:   1fffe
+samples 146:   1fffd
+samples 147: fffc0008
+samples 148: fffc0008
+samples 149:  befea6
+samples 150: 139adc5c
+samples 151: 33ffa16
+samples 152: ff1601a9
+samples 153:  75ff2a
+samples 154: ffbd007a
+samples 155:  26ffba
+samples 156: ffec0025
+samples 157:   9ffef
+samples 158: fff8000f
+samples 159:       0
+samples 160:       0
+samples 161:       0
+samples 162:       0
+samples 163:       0
+samples 164:       0
+samples 165:       0
+samples 166:       0
+samples 167:       0
+samples 168:       0
+samples 169:       0
+samples 170:       0
+samples 171:       0
+samples 172:       0
+samples 173:       0
+samples 174:       0
+samples 175:       0
+samples 176:       0
+samples 177:       0
+samples 178:       0
+samples 179:       0
+samples 180:       0
+samples 181:       0
+samples 182:       0
+samples 183:       0
+samples 184:       0
+samples 185:       0
+samples 186:       0
+samples 187:       0
+samples 188:       0
+samples 189:       0
+samples 190:       0
+samples 191:       0
+samples 192:       0
+samples 193:       0
+samples 194:       0
+samples 195: fff60012
+samples 196:   effe6
+samples 197: ffe10039
+samples 198:  3cff91
+samples 199: ff9400c6
+samples 200:  b2febb
+samples 201: fea3027f
+samples 202: 4cbf73c
+samples 203: 137cdc61
+samples 204: feb20261
+samples 205: 1defc97
+samples 206: fd01057b
+samples 207: a51ed21
+samples 208: 1043e241
+samples 209: fd6604c2
+samples 210: 15cfd83
+samples 211: ff340175
+samples 212:  6fff34
+samples 213: ffc6006a
+samples 214:  1bffcf
+samples 215: fff30018
+samples 216:       1
+samples 217:       0
+samples 218:       0
+samples 219:       0
+samples 220:       0
+samples 221:       0
+samples 222:       0
+samples 223:       0
+samples 224:       0
+samples 225:       0
+samples 226:       0
+samples 227:       0
+samples 228:       0
+samples 229:       0
+samples 230:       0
+samples 231:       0
+samples 232:       0
+samples 233:       0
+samples 234:       0
+samples 235:       0
+samples 236:       0
+samples 237:       0
+samples 238:       0
+samples 239:       0
+samples 240:       0
+samples 241:       0
+samples 242:       0
+samples 243:       0
+samples 244:       0
+samples 245:       0
+samples 246:       0
+samples 247:       0
+samples 248:       0
+samples 249:       0
+samples 250:       0
+samples 251:       0
+samples 252:       0
+samples 253:       0
+samples 254:       0
+samples 255:       0
+samples 256:       0
+samples 257:       0
+samples 258:       0
+samples 259:       0
+samples 260:       0
+samples 261:       0
+samples 262:       0
+samples 263:       0
+samples 264:       0
+samples 265:       0
+samples 266:       0
+samples 267:       0
+samples 268:       0
+samples 269:       0
+samples 270:       0
+samples 271:       0
+samples 272:       0
+samples 273:       0
+samples 274:       0
+samples 275:       0
+samples 276:       0
+samples 277:       0
+samples 278:       0
+samples 279:       0
+samples 280:       0
+samples 281:       0
+samples 282:       0
+samples 283:       0
+samples 284:       0
+samples 285:       0
+samples 286:       0
+samples 287:       0
+samples 288:       0
+samples 289:       0
+samples 290:       0
+samples 291:       0
+samples 292:       0
+samples 293:       0
+samples 294:       0
+samples 295:       0
+samples 296:       0
+samples 297:       0
+samples 298:       0
+samples 299:       0
+samples 300:       0
+samples 301:       0
+samples 302:       0
+samples 303:       0
+samples 304:       0
+RECV: GET_DATA: status good
+RECV: GET_DATA: data recv'd
+device: /receiver_main_0_0_0
+samples 0: fdf403aa
+samples 1: 11d5e013
+samples 2: 84ef120
+samples 3: fda50437
+samples 4: 137fdd4
+samples 5: ff50013b
+samples 6:  62ff50
+samples 7: ffcd005b
+samples 8:  18ffd5
+samples 9: fff30017
+samples 10:       0
+samples 11:       0
+samples 12:       0
+samples 13:       0
+samples 14:       0
+samples 15:       0
+samples 16:       0
+samples 17:       0
+samples 18:       0
+samples 19:       0
+samples 20:       0
+samples 21:       0
+samples 22:       0
+samples 23:       0
+samples 24:       0
+samples 25:       0
+samples 26:       0
+samples 27:       0
+samples 28:       0
+samples 29:       0
+samples 30:       0
+samples 31:       0
+samples 32:       0
+samples 33:       0
+samples 34:       0
+samples 35:       0
+samples 36:       0
+samples 37:       0
+samples 38:       0
+samples 39:       0
+samples 40:       0
+samples 41:       0
+samples 42:       0
+samples 43:       0
+samples 44:       0
+samples 45:       0
+samples 46:       0
+samples 47:       0
+samples 48:       0
+samples 49:       0
+samples 50:       0
+samples 51:       0
+samples 52:       0
+samples 53:       0
+samples 54:       0
+samples 55:       0
+samples 56:       0
+samples 57:       0
+samples 58:       0
+samples 59:       0
+samples 60:       0
+samples 61: fff1001b
+samples 62:  1effc9
+samples 63: ffbf0075
+samples 64:  7eff1c
+samples 65: ff1b019c
+samples 66: 197fd23
+samples 67: fce3059b
+samples 68: e77e5ec
+samples 69: d17e868
+samples 70: fcdd05a7
+samples 71: 19cfd1a
+samples 72: ff1701a4
+samples 73:  82ff16
+samples 74: ffbd0079
+samples 75:  1fffc7
+samples 76: fff1001c
+samples 77:       0
+samples 78:       0
+samples 79:       0
+samples 80:       0
+samples 81:       0
+samples 82:       0
+samples 83:       0
+samples 84:       0
+samples 85:       0
+samples 86:       0
+samples 87:       0
+samples 88:       0
+samples 89:       0
+samples 90:       0
+samples 91:       0
+samples 92:       0
+samples 93:       0
+samples 94:       0
+samples 95:       0
+samples 96:       0
+samples 97:       0
+samples 98:       0
+samples 99: fff60012
+samples 100:   effe6
+samples 101: ffe10039
+samples 102:  3dff92
+samples 103: ff9300c6
+samples 104:  c1fea2
+samples 105: fe8502ae
+samples 106: 50ef6d9
+samples 107: 1333dd40
+samples 108: ff7900f3
+samples 109:  6cff3c
+samples 110: ffd4004f
+samples 111: ffe8002b
+samples 112:  6aff40
+samples 113: ff25018d
+samples 114: 191fd2a
+samples 115: fce205a4
+samples 116: e6ae5e5
+samples 117: d0be861
+samples 118: fce005a8
+samples 119: 19afd19
+samples 120: ff1801a4
+samples 121:  81ff16
+samples 122: ffbd007a
+samples 123:  15ffd9
+samples 124:       1
+samples 125: ffe10039
+samples 126:  3dff91
+samples 127: ff9300c6
+samples 128:  c1fea2
+samples 129: fe8602ae
+samples 130: 50bf6d8
+samples 131: 1329dd3b
+samples 132: ff7900f3
+samples 133:  7bff21
+samples 134: ffb60087
+samples 135:  29ffb6
+samples 136: ffec0024
+samples 137:   8fff1
+samples 138: fffc0007
+samples 139: fffd0007
+samples 140:       0
+samples 141:       0
+samples 142: fffb0009
+samples 143:       0
+samples 144: ffff0003
+samples 145:   1fffe
+samples 146:   1fffd
+samples 147: fffc0008
+samples 148: fffc0008
+samples 149:  befea5
+samples 150: 1399dc5b
+samples 151: 33ffa16
+samples 152: ff1601a9
+samples 153:  75ff2a
+samples 154: ffbd007a
+samples 155:  26ffba
+samples 156: ffec0025
+samples 157:   9ffef
+samples 158: fff8000f
+samples 159:       0
+samples 160:       0
+samples 161:       0
+samples 162:       0
+samples 163:       0
+samples 164:       0
+samples 165:       0
+samples 166:       0
+samples 167:       0
+samples 168:       0
+samples 169:       0
+samples 170:       0
+samples 171:       0
+samples 172:       0
+samples 173:       0
+samples 174:       0
+samples 175:       0
+samples 176:       0
+samples 177:       0
+samples 178:       0
+samples 179:       0
+samples 180:       0
+samples 181:       0
+samples 182:       0
+samples 183:       0
+samples 184:       0
+samples 185:       0
+samples 186:       0
+samples 187:       0
+samples 188:       0
+samples 189:       0
+samples 190:       0
+samples 191:       0
+samples 192:       0
+samples 193:       0
+samples 194:       0
+samples 195: fff70012
+samples 196:   effe6
+samples 197: ffe1003a
+samples 198:  3cff91
+samples 199: ff9400c6
+samples 200:  b2febb
+samples 201: fea3027f
+samples 202: 4caf73c
+samples 203: 137bdc60
+samples 204: feb20261
+samples 205: 1ddfc97
+samples 206: fd01057b
+samples 207: a51ed21
+samples 208: 1043e240
+samples 209: fd6604c2
+samples 210: 15cfd83
+samples 211: ff340175
+samples 212:  6fff34
+samples 213: ffc6006a
+samples 214:  1bffcf
+samples 215: fff30018
+samples 216:       1
+samples 217:       0
+samples 218:       0
+samples 219:       0
+samples 220:       0
+samples 221:       0
+samples 222:       0
+samples 223:       0
+samples 224:       0
+samples 225:       0
+samples 226:       0
+samples 227:       0
+samples 228:       0
+samples 229:       0
+samples 230:       0
+samples 231:       0
+samples 232:       0
+samples 233:       0
+samples 234:       0
+samples 235:       0
+samples 236:       0
+samples 237:       0
+samples 238:       0
+samples 239:       0
+samples 240:       0
+samples 241:       0
+samples 242:       0
+samples 243:       0
+samples 244:       0
+samples 245:       0
+samples 246:       0
+samples 247:       0
+samples 248:       0
+samples 249:       0
+samples 250:       0
+samples 251:       0
+samples 252:       0
+samples 253:       0
+samples 254:       0
+samples 255:       0
+samples 256:       0
+samples 257:       0
+samples 258:       0
+samples 259:       0
+samples 260:       0
+samples 261:       0
+samples 262:       0
+samples 263:       0
+samples 264:       0
+samples 265:       0
+samples 266:       0
+samples 267:       0
+samples 268:       0
+samples 269:       0
+samples 270:       0
+samples 271:       0
+samples 272:       0
+samples 273:       0
+samples 274:       0
+samples 275:       0
+samples 276:       0
+samples 277:       0
+samples 278:       0
+samples 279:       0
+samples 280:       0
+samples 281:       0
+samples 282:       0
+samples 283:       0
+samples 284:       0
+samples 285:       0
+samples 286:       0
+samples 287:       0
+samples 288:       0
+samples 289:       0
+samples 290:       0
+samples 291:       0
+samples 292:       0
+samples 293:       0
+samples 294:       0
+samples 295:       0
+samples 296:       0
+samples 297:       0
+samples 298:       0
+samples 299:       0
+samples 300:       0
+samples 301:       0
+samples 302:       0
+samples 303:       0
+samples 304:       0
+RECV: GET_DATA: status good
+RECV: GET_DATA: data recv'd
+device: /receiver_main_0_0_0
+samples 0: fdf403aa
+samples 1: 11d5e014
+samples 2: 84ef120
+samples 3: fda50437
+samples 4: 137fdd4
+samples 5: ff50013b
+samples 6:  62ff50
+samples 7: ffcd005b
+samples 8:  18ffd5
+samples 9: fff30017
+samples 10:       0
+samples 11:       0
+samples 12:       0
+samples 13:       0
+samples 14:       0
+samples 15:       0
+samples 16:       0
+samples 17:       0
+samples 18:       0
+samples 19:       0
+samples 20:       0
+samples 21:       0
+samples 22:       0
+samples 23:       0
+samples 24:       0
+samples 25:       0
+samples 26:       0
+samples 27:       0
+samples 28:       0
+samples 29:       0
+samples 30:       0
+samples 31:       0
+samples 32:       0
+samples 33:       0
+samples 34:       0
+samples 35:       0
+samples 36:       0
+samples 37:       0
+samples 38:       0
+samples 39:       0
+samples 40:       0
+samples 41:       0
+samples 42:       0
+samples 43:       0
+samples 44:       0
+samples 45:       0
+samples 46:       0
+samples 47:       0
+samples 48:       0
+samples 49:       0
+samples 50:       0
+samples 51:       0
+samples 52:       0
+samples 53:       0
+samples 54:       0
+samples 55:       0
+samples 56:       0
+samples 57:       0
+samples 58:       0
+samples 59:       0
+samples 60:       0
+samples 61: fff1001b
+samples 62:  1effc9
+samples 63: ffbf0075
+samples 64:  7eff1c
+samples 65: ff1c019c
+samples 66: 197fd23
+samples 67: fce3059c
+samples 68: e77e5ec
+samples 69: d16e868
+samples 70: fcdd05a7
+samples 71: 19cfd1a
+samples 72: ff1701a4
+samples 73:  82ff16
+samples 74: ffbd0079
+samples 75:  20ffc7
+samples 76: fff1001c
+samples 77:       0
+samples 78:       0
+samples 79:       0
+samples 80:       0
+samples 81:       0
+samples 82:       0
+samples 83:       0
+samples 84:       0
+samples 85:       0
+samples 86:       0
+samples 87:       0
+samples 88:       0
+samples 89:       0
+samples 90:       0
+samples 91:       0
+samples 92:       0
+samples 93:       0
+samples 94:       0
+samples 95:       0
+samples 96:       0
+samples 97:       0
+samples 98:       0
+samples 99: fff60012
+samples 100:   effe6
+samples 101: ffe00039
+samples 102:  3dff91
+samples 103: ff9300c6
+samples 104:  c1fea2
+samples 105: fe8502ae
+samples 106: 50ef6d9
+samples 107: 1333dd40
+samples 108: ff7900f3
+samples 109:  6cff3c
+samples 110: ffd4004f
+samples 111: ffe9002b
+samples 112:  6aff40
+samples 113: ff25018d
+samples 114: 191fd2a
+samples 115: fce305a4
+samples 116: e69e5e4
+samples 117: d0ae861
+samples 118: fce005a9
+samples 119: 19afd19
+samples 120: ff1801a4
+samples 121:  81ff16
+samples 122: ffbd007a
+samples 123:  15ffd9
+samples 124:       1
+samples 125: ffe10039
+samples 126:  3dff91
+samples 127: ff9300c6
+samples 128:  c1fea2
+samples 129: fe8602af
+samples 130: 50bf6d8
+samples 131: 1328dd3a
+samples 132: ff7a00f3
+samples 133:  7bff21
+samples 134: ffb60087
+samples 135:  29ffb6
+samples 136: ffec0024
+samples 137:   8fff1
+samples 138: fffc0007
+samples 139: fffd0006
+samples 140:       0
+samples 141:       0
+samples 142: fffb0009
+samples 143:    ffff
+samples 144: ffff0003
+samples 145:   1fffe
+samples 146:   1fffd
+samples 147: fffc0008
+samples 148: fffc0008
+samples 149:  befea5
+samples 150: 139adc5b
+samples 151: 340fa16
+samples 152: ff1601a9
+samples 153:  75ff2a
+samples 154: ffbd007a
+samples 155:  26ffba
+samples 156: ffec0025
+samples 157:   9ffef
+samples 158: fff8000f
+samples 159:       0
+samples 160:       0
+samples 161:       0
+samples 162:       0
+samples 163:       0
+samples 164:       0
+samples 165:       0
+samples 166:       0
+samples 167:       0
+samples 168:       0
+samples 169:       0
+samples 170:       0
+samples 171:       0
+samples 172:       0
+samples 173:       0
+samples 174:       0
+samples 175:       0
+samples 176:       0
+samples 177:       0
+samples 178:       0
+samples 179:       0
+samples 180:       0
+samples 181:       0
+samples 182:       0
+samples 183:       0
+samples 184:       0
+samples 185:       0
+samples 186:       0
+samples 187:       0
+samples 188:       0
+samples 189:       0
+samples 190:       0
+samples 191:       0
+samples 192:       0
+samples 193:       0
+samples 194:       0
+samples 195: fff70012
+samples 196:   effe6
+samples 197: ffe1003a
+samples 198:  3cff91
+samples 199: ff9400c6
+samples 200:  b2febb
+samples 201: fea3027f
+samples 202: 4cbf73c
+samples 203: 137cdc60
+samples 204: feb20261
+samples 205: 1ddfc97
+samples 206: fd01057b
+samples 207: a51ed21
+samples 208: 1043e240
+samples 209: fd6604c2
+samples 210: 15cfd83
+samples 211: ff340175
+samples 212:  6fff34
+samples 213: ffc6006a
+samples 214:  1bffcf
+samples 215: fff30018
+samples 216:       1
+samples 217:       0
+samples 218:       0
+samples 219:       0
+samples 220:       0
+samples 221:       0
+samples 222:       0
+samples 223:       0
+samples 224:       0
+samples 225:       0
+samples 226:       0
+samples 227:       0
+samples 228:       0
+samples 229:       0
+samples 230:       0
+samples 231:       0
+samples 232:       0
+samples 233:       0
+samples 234:       0
+samples 235:       0
+samples 236:       0
+samples 237:       0
+samples 238:       0
+samples 239:       0
+samples 240:       0
+samples 241:       0
+samples 242:       0
+samples 243:       0
+samples 244:       0
+samples 245:       0
+samples 246:       0
+samples 247:       0
+samples 248:       0
+samples 249:       0
+samples 250:       0
+samples 251:       0
+samples 252:       0
+samples 253:       0
+samples 254:       0
+samples 255:       0
+samples 256:       0
+samples 257:       0
+samples 258:       0
+samples 259:       0
+samples 260:       0
+samples 261:       0
+samples 262:       0
+samples 263:       0
+samples 264:       0
+samples 265:       0
+samples 266:       0
+samples 267:       0
+samples 268:       0
+samples 269:       0
+samples 270:       0
+samples 271:       0
+samples 272:       0
+samples 273:       0
+samples 274:       0
+samples 275:       0
+samples 276:       0
+samples 277:       0
+samples 278:       0
+samples 279:       0
+samples 280:       0
+samples 281:       0
+samples 282:       0
+samples 283:       0
+samples 284:       0
+samples 285:       0
+samples 286:       0
+samples 287:       0
+samples 288:       0
+samples 289:       0
+samples 290:       0
+samples 291:       0
+samples 292:       0
+samples 293:       0
+samples 294:       0
+samples 295:       0
+samples 296:       0
+samples 297:       0
+samples 298:       0
+samples 299:       0
+samples 300:       0
+samples 301:       0
+samples 302:       0
+samples 303:       0
+samples 304:       0
+RECV: GET_DATA: status good
+RECV: GET_DATA: data recv'd
+device: /receiver_main_0_0_0
+samples 0: fdf403aa
+samples 1: 11d5e013
+samples 2: 84ef120
+samples 3: fda50437
+samples 4: 137fdd4
+samples 5: ff50013b
+samples 6:  62ff50
+samples 7: ffcd005b
+samples 8:  18ffd5
+samples 9: fff30017
+samples 10:       0
+samples 11:       0
+samples 12:       0
+samples 13:       0
+samples 14:       0
+samples 15:       0
+samples 16:       0
+samples 17:       0
+samples 18:       0
+samples 19:       0
+samples 20:       0
+samples 21:       0
+samples 22:       0
+samples 23:       0
+samples 24:       0
+samples 25:       0
+samples 26:       0
+samples 27:       0
+samples 28:       0
+samples 29:       0
+samples 30:       0
+samples 31:       0
+samples 32:       0
+samples 33:       0
+samples 34:       0
+samples 35:       0
+samples 36:       0
+samples 37:       0
+samples 38:       0
+samples 39:       0
+samples 40:       0
+samples 41:       0
+samples 42:       0
+samples 43:       0
+samples 44:       0
+samples 45:       0
+samples 46:       0
+samples 47:       0
+samples 48:       0
+samples 49:       0
+samples 50:       0
+samples 51:       0
+samples 52:       0
+samples 53:       0
+samples 54:       0
+samples 55:       0
+samples 56:       0
+samples 57:       0
+samples 58:       0
+samples 59:       0
+samples 60:       0
+samples 61: fff1001b
+samples 62:  1effc9
+samples 63: ffbf0075
+samples 64:  7eff1c
+samples 65: ff1c019c
+samples 66: 197fd23
+samples 67: fce3059c
+samples 68: e77e5ec
+samples 69: d17e868
+samples 70: fcdd05a7
+samples 71: 19cfd1a
+samples 72: ff1701a4
+samples 73:  82ff16
+samples 74: ffbd0079
+samples 75:  1fffc7
+samples 76: fff1001c
+samples 77:       0
+samples 78:       0
+samples 79:       0
+samples 80:       0
+samples 81:       0
+samples 82:       0
+samples 83:       0
+samples 84:       0
+samples 85:       0
+samples 86:       0
+samples 87:       0
+samples 88:       0
+samples 89:       0
+samples 90:       0
+samples 91:       0
+samples 92:       0
+samples 93:       0
+samples 94:       0
+samples 95:       0
+samples 96:       0
+samples 97:       0
+samples 98:       0
+samples 99: fff60012
+samples 100:   effe6
+samples 101: ffe10039
+samples 102:  3dff91
+samples 103: ff9300c6
+samples 104:  c1fea2
+samples 105: fe8502ae
+samples 106: 50ef6d9
+samples 107: 1333dd40
+samples 108: ff7900f3
+samples 109:  6cff3c
+samples 110: ffd4004f
+samples 111: ffe9002b
+samples 112:  6aff40
+samples 113: ff25018d
+samples 114: 191fd2a
+samples 115: fce305a4
+samples 116: e69e5e5
+samples 117: d0ae861
+samples 118: fce005a9
+samples 119: 19afd19
+samples 120: ff1801a4
+samples 121:  81ff16
+samples 122: ffbd007a
+samples 123:  15ffd9
+samples 124:       1
+samples 125: ffe1003a
+samples 126:  3dff91
+samples 127: ff9300c6
+samples 128:  c1fea2
+samples 129: fe8602ae
+samples 130: 50bf6d8
+samples 131: 1329dd3b
+samples 132: ff7a00f3
+samples 133:  7bff21
+samples 134: ffb60087
+samples 135:  28ffb6
+samples 136: ffec0024
+samples 137:   8fff1
+samples 138: fffc0007
+samples 139: fffd0006
+samples 140:       0
+samples 141:       0
+samples 142: fffb0009
+samples 143:       0
+samples 144: ffff0003
+samples 145:   1fffe
+samples 146:   1fffd
+samples 147: fffc0008
+samples 148: fffc0008
+samples 149:  befea5
+samples 150: 139adc5b
+samples 151: 33ffa16
+samples 152: ff1601a9
+samples 153:  75ff2a
+samples 154: ffbd007a
+samples 155:  26ffba
+samples 156: ffec0025
+samples 157:   9ffef
+samples 158: fff8000f
+samples 159:       0
+samples 160:       0
+samples 161:       0
+samples 162:       0
+samples 163:       0
+samples 164:       0
+samples 165:       0
+samples 166:       0
+samples 167:       0
+samples 168:       0
+samples 169:       0
+samples 170:       0
+samples 171:       0
+samples 172:       0
+samples 173:       0
+samples 174:       0
+samples 175:       0
+samples 176:       0
+samples 177:       0
+samples 178:       0
+samples 179:       0
+samples 180:       0
+samples 181:       0
+samples 182:       0
+samples 183:       0
+samples 184:       0
+samples 185:       0
+samples 186:       0
+samples 187:       0
+samples 188:       0
+samples 189:       0
+samples 190:       0
+samples 191:       0
+samples 192:       0
+samples 193:       0
+samples 194:       0
+samples 195: fff60012
+samples 196:   effe6
+samples 197: ffe10039
+samples 198:  3cff91
+samples 199: ff9400c6
+samples 200:  b2febb
+samples 201: fea3027f
+samples 202: 4cbf73c
+samples 203: 137cdc61
+samples 204: feb20261
+samples 205: 1defc97
+samples 206: fd01057b
+samples 207: a51ed21
+samples 208: 1043e241
+samples 209: fd6604c2
+samples 210: 15cfd83
+samples 211: ff340175
+samples 212:  6fff34
+samples 213: ffc60069
+samples 214:  1bffcf
+samples 215: fff30018
+samples 216:       1
+samples 217:       0
+samples 218:       0
+samples 219:       0
+samples 220:       0
+samples 221:       0
+samples 222:       0
+samples 223:       0
+samples 224:       0
+samples 225:       0
+samples 226:       0
+samples 227:       0
+samples 228:       0
+samples 229:       0
+samples 230:       0
+samples 231:       0
+samples 232:       0
+samples 233:       0
+samples 234:       0
+samples 235:       0
+samples 236:       0
+samples 237:       0
+samples 238:       0
+samples 239:       0
+samples 240:       0
+samples 241:       0
+samples 242:       0
+samples 243:       0
+samples 244:       0
+samples 245:       0
+samples 246:       0
+samples 247:       0
+samples 248:       0
+samples 249:       0
+samples 250:       0
+samples 251:       0
+samples 252:       0
+samples 253:       0
+samples 254:       0
+samples 255:       0
+samples 256:       0
+samples 257:       0
+samples 258:       0
+samples 259:       0
+samples 260:       0
+samples 261:       0
+samples 262:       0
+samples 263:       0
+samples 264:       0
+samples 265:       0
+samples 266:       0
+samples 267:       0
+samples 268:       0
+samples 269:       0
+samples 270:       0
+samples 271:       0
+samples 272:       0
+samples 273:       0
+samples 274:       0
+samples 275:       0
+samples 276:       0
+samples 277:       0
+samples 278:       0
+samples 279:       0
+samples 280:       0
+samples 281:       0
+samples 282:       0
+samples 283:       0
+samples 284:       0
+samples 285:       0
+samples 286:       0
+samples 287:       0
+samples 288:       0
+samples 289:       0
+samples 290:       0
+samples 291:       0
+samples 292:       0
+samples 293:       0
+samples 294:       0
+samples 295:       0
+samples 296:       0
+samples 297:       0
+samples 298:       0
+samples 299:       0
+samples 300:       0
+samples 301:       0
+samples 302:       0
+samples 303:       0
+samples 304:       0
+RECV: GET_DATA: status good
+RECV: GET_DATA: data recv'd
+device: /receiver_main_0_0_0
+samples 0: fdf403aa
+samples 1: 11d4e013
+samples 2: 84ef120
+samples 3: fda50438
+samples 4: 137fdd4
+samples 5: ff50013b
+samples 6:  62ff50
+samples 7: ffcd005b
+samples 8:  18ffd5
+samples 9: fff30017
+samples 10:       0
+samples 11:       0
+samples 12:       0
+samples 13:       0
+samples 14:       0
+samples 15:       0
+samples 16:       0
+samples 17:       0
+samples 18:       0
+samples 19:       0
+samples 20:       0
+samples 21:       0
+samples 22:       0
+samples 23:       0
+samples 24:       0
+samples 25:       0
+samples 26:       0
+samples 27:       0
+samples 28:       0
+samples 29:       0
+samples 30:       0
+samples 31:       0
+samples 32:       0
+samples 33:       0
+samples 34:       0
+samples 35:       0
+samples 36:       0
+samples 37:       0
+samples 38:       0
+samples 39:       0
+samples 40:       0
+samples 41:       0
+samples 42:       0
+samples 43:       0
+samples 44:       0
+samples 45:       0
+samples 46:       0
+samples 47:       0
+samples 48:       0
+samples 49:       0
+samples 50:       0
+samples 51:       0
+samples 52:       0
+samples 53:       0
+samples 54:       0
+samples 55:       0
+samples 56:       0
+samples 57:       0
+samples 58:       0
+samples 59:       0
+samples 60:       0
+samples 61: fff1001b
+samples 62:  1effc9
+samples 63: ffbf0075
+samples 64:  7eff1c
+samples 65: ff1c019c
+samples 66: 197fd23
+samples 67: fce3059c
+samples 68: e78e5ec
+samples 69: d17e868
+samples 70: fcdd05a7
+samples 71: 19cfd1a
+samples 72: ff1701a4
+samples 73:  82ff16
+samples 74: ffbd0079
+samples 75:  1fffc7
+samples 76: fff1001c
+samples 77:       0
+samples 78:       0
+samples 79:       0
+samples 80:       0
+samples 81:       0
+samples 82:       0
+samples 83:       0
+samples 84:       0
+samples 85:       0
+samples 86:       0
+samples 87:       0
+samples 88:       0
+samples 89:       0
+samples 90:       0
+samples 91:       0
+samples 92:       0
+samples 93:       0
+samples 94:       0
+samples 95:       0
+samples 96:       0
+samples 97:       0
+samples 98:       0
+samples 99: fff60012
+samples 100:   effe6
+samples 101: ffe10039
+samples 102:  3dff91
+samples 103: ff9300c6
+samples 104:  c1fea2
+samples 105: fe8502ae
+samples 106: 50ef6d9
+samples 107: 1333dd40
+samples 108: ff7900f3
+samples 109:  6cff3c
+samples 110: ffd4004f
+samples 111: ffe9002b
+samples 112:  6aff40
+samples 113: ff25018d
+samples 114: 191fd2a
+samples 115: fce305a4
+samples 116: e69e5e4
+samples 117: d0ae861
+samples 118: fce005a9
+samples 119: 19afd19
+samples 120: ff1801a4
+samples 121:  81ff16
+samples 122: ffbd007a
+samples 123:  15ffd9
+samples 124:       1
+samples 125: ffe10039
+samples 126:  3dff91
+samples 127: ff9300c6
+samples 128:  c1fea2
+samples 129: fe8602af
+samples 130: 50bf6d8
+samples 131: 1328dd3b
+samples 132: ff7a00f3
+samples 133:  7bff21
+samples 134: ffb60087
+samples 135:  29ffb6
+samples 136: ffec0024
+samples 137:   8fff1
+samples 138: fffc0007
+samples 139: fffd0007
+samples 140:       0
+samples 141:       0
+samples 142: fffb0009
+samples 143:    ffff
+samples 144: ffff0003
+samples 145:   1fffe
+samples 146:   1fffd
+samples 147: fffc0008
+samples 148: fffc0008
+samples 149:  befea5
+samples 150: 1399dc5b
+samples 151: 33ffa16
+samples 152: ff1601a9
+samples 153:  75ff2a
+samples 154: ffbd007a
+samples 155:  26ffba
+samples 156: ffec0025
+samples 157:   9ffef
+samples 158: fff8000f
+samples 159:       0
+samples 160:       0
+samples 161:       0
+samples 162:       0
+samples 163:       0
+samples 164:       0
+samples 165:       0
+samples 166:       0
+samples 167:       0
+samples 168:       0
+samples 169:       0
+samples 170:       0
+samples 171:       0
+samples 172:       0
+samples 173:       0
+samples 174:       0
+samples 175:       0
+samples 176:       0
+samples 177:       0
+samples 178:       0
+samples 179:       0
+samples 180:       0
+samples 181:       0
+samples 182:       0
+samples 183:       0
+samples 184:       0
+samples 185:       0
+samples 186:       0
+samples 187:       0
+samples 188:       0
+samples 189:       0
+samples 190:       0
+samples 191:       0
+samples 192:       0
+samples 193:       0
+samples 194:       0
+samples 195: fff60012
+samples 196:   effe6
+samples 197: ffe10039
+samples 198:  3cff91
+samples 199: ff9400c6
+samples 200:  b2febb
+samples 201: fea3027f
+samples 202: 4caf73c
+samples 203: 137adc60
+samples 204: feb20261
+samples 205: 1ddfc97
+samples 206: fd01057b
+samples 207: a50ed20
+samples 208: 1042e240
+samples 209: fd6604c2
+samples 210: 15cfd83
+samples 211: ff340175
+samples 212:  6fff34
+samples 213: ffc60069
+samples 214:  1bffcf
+samples 215: fff30018
+samples 216:       1
+samples 217:       0
+samples 218:       0
+samples 219:       0
+samples 220:       0
+samples 221:       0
+samples 222:       0
+samples 223:       0
+samples 224:       0
+samples 225:       0
+samples 226:       0
+samples 227:       0
+samples 228:       0
+samples 229:       0
+samples 230:       0
+samples 231:       0
+samples 232:       0
+samples 233:       0
+samples 234:       0
+samples 235:       0
+samples 236:       0
+samples 237:       0
+samples 238:       0
+samples 239:       0
+samples 240:       0
+samples 241:       0
+samples 242:       0
+samples 243:       0
+samples 244:       0
+samples 245:       0
+samples 246:       0
+samples 247:       0
+samples 248:       0
+samples 249:       0
+samples 250:       0
+samples 251:       0
+samples 252:       0
+samples 253:       0
+samples 254:       0
+samples 255:       0
+samples 256:       0
+samples 257:       0
+samples 258:       0
+samples 259:       0
+samples 260:       0
+samples 261:       0
+samples 262:       0
+samples 263:       0
+samples 264:       0
+samples 265:       0
+samples 266:       0
+samples 267:       0
+samples 268:       0
+samples 269:       0
+samples 270:       0
+samples 271:       0
+samples 272:       0
+samples 273:       0
+samples 274:       0
+samples 275:       0
+samples 276:       0
+samples 277:       0
+samples 278:       0
+samples 279:       0
+samples 280:       0
+samples 281:       0
+samples 282:       0
+samples 283:       0
+samples 284:       0
+samples 285:       0
+samples 286:       0
+samples 287:       0
+samples 288:       0
+samples 289:       0
+samples 290:       0
+samples 291:       0
+samples 292:       0
+samples 293:       0
+samples 294:       0
+samples 295:       0
+samples 296:       0
+samples 297:       0
+samples 298:       0
+samples 299:       0
+samples 300:       0
+samples 301:       0
+samples 302:       0
+samples 303:       0
+samples 304:       0
+ROS Main: New Client! 1402607021.164827
+SET_RADAR_CHAN: 1402607021.164868
+  Radar: 2 Chan: 1
+  Registering:: radar: 2 channel: 1 :: cp: 0x8f9390
+REGISTER_SEQ: r: 1 c: 0  1402607021.165132
+Client: Requst CLRSearch: 12000 12300
+Doing clear search
+sending message to rxsocket
+RECV: GET_DATA: status good
+RECV: GET_DATA: data recv'd
+device: /receiver_main_0_0_1482743808

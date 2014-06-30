@@ -27,13 +27,15 @@ void *timing_ready_controlprogram(struct ControlProgram *arg)
    pthread_exit(NULL);
 };
 
-void *timing_end_controlprogram(void *arg)
+void *timing_end_controlprogram(struct ControlProgram *control_program)
 {
   struct DriverMsg msg;
   pthread_mutex_lock(&timing_comm_lock);
   msg.type=TIMING_CtrlProg_END;
   msg.status=1;
   send_data(timingsock, &msg, sizeof(struct DriverMsg));
+  send_data(timingsock, control_program->parameters, sizeof(struct ControlPRM));
+  recv_data(timingsock, &msg, sizeof(struct DriverMsg));
   pthread_mutex_unlock(&timing_comm_lock);
    pthread_exit(NULL);
 };

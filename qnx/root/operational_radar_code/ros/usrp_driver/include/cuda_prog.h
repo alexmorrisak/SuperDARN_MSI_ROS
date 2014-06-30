@@ -7,7 +7,7 @@ void rx_process_gpu(
     size_t nants,
     float rf_sample_rate,
     float client_sample_rate,
-    float *center_freqs // center frequencies
+    float* rx_freqs // rx frequencies
 );
  void tx_process_gpu(
     float* input_bb,//input vector (same tx sequence for all frequencies, antennas)

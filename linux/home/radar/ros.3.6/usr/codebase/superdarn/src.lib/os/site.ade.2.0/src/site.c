@@ -34,6 +34,11 @@
 #define REAL_BUF_OFFSET 0
 #define IMAG_BUF_OFFSET 1
 #define USEC 1000000.0
+
+int port=0;
+int sock=0;
+char server[256]="127.0.0.1";
+
 int ADE_exit_flag=0;
 char channame[5]="\0";
 
@@ -541,6 +546,7 @@ int SiteAdeIntegrate(int (*lags)[2]) {
   /* phase code declarations */
   int n,nsamp, *code,   Iout, Qout;
   uint32 uQ32,uI32;
+  debug =1;
   if (debug) {
     fprintf(stderr,"ADE SiteIntegrate: start\n");
   }
@@ -754,6 +760,11 @@ usleep(usecs);
     if (debug) 
         fprintf(stderr,"ADE GET_DATA: samples %d status %d\n",dprm.samples,dprm.status);
       
+    if(dprm.samples > 1000 || dprm.samples < 0){
+        fprintf(stderr,"Whoa, bad number of samples..%i\n",dprm.samples);
+        dprm.samples =0;
+        sleep(1);
+    }
     if(dprm.status==0) {
       if (debug) {
         fprintf(stderr,"ADE GET_DATA: rdata.main: uint32: %ld array: %ld\n",sizeof(uint32),sizeof(uint32)*dprm.samples);
@@ -912,6 +923,15 @@ usleep(usecs);
        }
       }  
 
+      /*
+      for(n=0;n<nsamp;n++){
+        Q=(ntohl(rdata.main[n]) & 0xffff0000) >> 16;
+        I=ntohl(rdata.main[n]) & 0x0000ffff;
+        rdata.main[n] = ~rdata.main[n] + 1;
+        fprintf(stderr,"%8x\n", (unsigned int) rdata.main[n]);
+      }
+      */
+
       if(f_diagnostic_ascii!=NULL) {
         fprintf(f_diagnostic_ascii,"Sequence : Raw Data : START\n");
         fprintf(f_diagnostic_ascii,"  nsamp: %8d\n",nsamp);
@@ -923,6 +943,7 @@ usleep(usecs);
            }
           Q=(short)((rdata.back[n] & 0xffff0000) >> 16);
           I=(short)(rdata.back[n] & 0x0000ffff);
+          fprintf(stderr,"%8d %8d %8d\n", I, Q, (int)sqrt(I*I+Q*Q));
           if(f_diagnostic_ascii!=NULL) {
             fprintf(f_diagnostic_ascii,"%8d %8d %8d\n", I, Q, (int)sqrt(I*I+Q*Q));
           }
@@ -1028,6 +1049,9 @@ usleep(usecs);
         memmove(dest,rdata.back,dprm.samples*sizeof(uint32));
       } else {
         fprintf(stderr,"IQ Buffer overrun in SiteIntegrate\n");
+        fprintf(stderr,"IQBUFSIZE: %i\n", IQBUFSIZE);
+        fprintf(stderr,"iqoff: %i\n", iqoff);
+        fprintf(stderr,"dprm.samples: %i\n", dprm.samples);
         fflush(stderr);
       }
       iqsze+=dprm.samples*sizeof(uint32)*2;  /*  Total of number bytes so far copied into samples array */
@@ -1037,9 +1061,11 @@ usleep(usecs);
         fprintf(stderr," [  n  ] :: [  I  ] [  Q  ]\n");
         nsamp=(int)dprm.samples;
         for(n=0;n<(nsamp);n++){
+          rdata.main[n] = ~rdata.main[n] + 1; /*Not sure why need to calculate 2's complement to get the correct values..*/
           Q=((rdata.main)[n] & 0xffff0000) >> 16;
           I=(rdata.main)[n] & 0x0000ffff;
-          fprintf(stderr," %7d :: %7d %7d\n",n,(int)I,(int)Q);
+          fprintf(stderr," %7d :: %7d %7d\n",n,(uint)I,(uint)Q);
+          /*fprintf(stderr," %7d :: %7x\n",n,(unsigned int) rdata.main[n]);*/
         }
         dest = (void *)(samples);
         dest += iqoff;

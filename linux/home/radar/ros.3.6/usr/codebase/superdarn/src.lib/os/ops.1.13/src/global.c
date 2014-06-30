@@ -73,7 +73,7 @@ int protatten=DEFAULT_PROT_ATTEN;
 
 unsigned char command[128];
 
-int debug=0;
+int debug=1;
 
 int rnum=1;
 int cnum=1;
