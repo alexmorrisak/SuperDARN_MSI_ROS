@@ -12,6 +12,7 @@ itself to parallelization, so it is performed on an Nvidia GPU.*/
 #include <math.h>
 #include <stdio.h>
 #include <sys/types.h>
+#include <unistd.h>
 
 #define TEST 0
 #define NRFSAMPS 5000

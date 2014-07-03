@@ -795,21 +795,29 @@ void *receiver_controlprogram_get_data(struct ControlProgram *arg)
 
         msg.type=RECV_GET_DATA;
         msg.status=1;
+        printf("Entering RECV_GET_DATA radar %i channel %i\n", arg->parameters->radar, arg->parameters->channel);
         send_data(timingsock, &msg, sizeof(struct DriverMsg));
         send_data(timingsock, arg->parameters, sizeof(struct ControlPRM));
-        recv_data(timingsock,&arg->data->status,sizeof(arg->data->status));
+        rval = recv_data(timingsock,&arg->data->status,sizeof(arg->data->status));
       } else {
         arg->data->status=error_flag;
         arg->data->samples=0;
       }      
-      if (arg->data->status==0 ) {
+      if (arg->data->status==0 & rval>0) {
         printf("RECV: GET_DATA: status good\n");
-        recv_data(timingsock,&arg->data->shm_memory,sizeof(arg->data->shm_memory));
-        recv_data(timingsock,&arg->data->frame_header,sizeof(arg->data->frame_header));
-        recv_data(timingsock,&arg->data->bufnum,sizeof(arg->data->bufnum));
-        recv_data(timingsock,&arg->data->samples,sizeof(arg->data->samples));
-        recv_data(timingsock,&arg->main_address,sizeof(arg->main_address));
-        recv_data(timingsock,&arg->back_address,sizeof(arg->back_address));
+        //printf("rval: %i\n",rval);
+        rval=recv_data(timingsock,&arg->data->shm_memory,sizeof(arg->data->shm_memory));
+        printf("shm_memory %i rval: %i\n", arg->data->shm_memory, rval);
+        rval=recv_data(timingsock,&arg->data->frame_header,sizeof(arg->data->frame_header));
+        printf("frame_header %i rval: %i\n", arg->data->frame_header, rval);
+        rval=recv_data(timingsock,&arg->data->bufnum,sizeof(arg->data->bufnum));
+        printf("bufnum %i rval: %i\n", arg->data->bufnum, rval);
+        rval=recv_data(timingsock,&arg->data->samples,sizeof(arg->data->samples));
+        printf("samples %i rval: %i\n", arg->data->samples, rval);
+        rval=recv_data(timingsock,&arg->main_address,sizeof(arg->main_address));
+        printf("main_address %u rval: %i\n", arg->main_address, rval);
+        rval=recv_data(timingsock,&arg->back_address,sizeof(arg->back_address));
+        printf("back_address %u rval: %i\n", arg->back_address, rval);
         printf("RECV: GET_DATA: data recv'd\n");
         r=arg->parameters->radar-1;
         c=arg->parameters->channel-1;
@@ -819,7 +827,7 @@ void *receiver_controlprogram_get_data(struct ControlProgram *arg)
         //printf("RECV: GET_DATA: frame header %d\n",arg->data->frame_header);
         //printf("RECV: GET_DATA: shm flag %d\n",arg->data->shm_memory);
         if(arg->data->shm_memory) {
-          //printf("RECV: GET_DATA: set up shm memory space\n");
+          printf("RECV: GET_DATA: set up shm memory space\n");
           sprintf(shm_device,"/receiver_main_%d_%d_%d",r,c,b);
 	      printf("device: %s\n", shm_device);
           printf("opening device\n");
