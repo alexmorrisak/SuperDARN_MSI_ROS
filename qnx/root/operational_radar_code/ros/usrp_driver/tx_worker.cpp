@@ -16,9 +16,9 @@ extern int verbose;
 int debug=0;
 
 /***********************************************************************
- * transmit_worker function
+ * tx_worker function
  **********************************************************************/
-void transmit_worker(
+void tx_worker(
     uhd::tx_streamer::sptr tx_stream,
     std::vector<std::complex<short> *>& pulse_seq_ptrs,
     int sequence_length,
@@ -37,13 +37,12 @@ void transmit_worker(
     if (debug) std::cout << "pointer values: " << std::endl;
     for (int i=0; i<pulse_seq_ptrs.size(); i++){
         temp_ptrs[i] = pulse_seq_ptrs.at(i);
-        std::cout << temp_ptrs[i] << std::endl;
+        //std::cout << temp_ptrs[i] << std::endl;
     }
-    //for (int i=0; i<sequence_length; i++){
 
     size_t nacc_samps = 0;
-    size_t spb = 10*tx_stream->get_max_num_samps();
-    //size_t spb = tx_stream->get_max_num_samps()/2;
+    //size_t spb = 10*tx_stream->get_max_num_samps();
+    size_t spb = tx_stream->get_max_num_samps()/2;
 
     //Now go for it!
     int ipacket =0;

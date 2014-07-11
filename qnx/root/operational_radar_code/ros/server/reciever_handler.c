@@ -17,6 +17,8 @@
 #include "global_server_variables.h"
 #include "iniparser.h"
 
+#define MAX_SAMPLES 262144
+
 extern int recvsock;
 extern int timingsock;
 extern int verbose;
@@ -50,6 +52,7 @@ int compare_structs(const void *a, const void *b){
 void *receiver_rxfe_settings(void *arg) {
 
   struct DriverMsg msg;
+  memset(&msg, 0, sizeof(msg));
   struct SiteSettings *site_settings;
 
   site_settings=arg;
@@ -714,6 +717,7 @@ void *receiver_end_controlprogram(struct ControlProgram *arg)
 void *receiver_ready_controlprogram(struct ControlProgram *arg)
 {
   struct DriverMsg msg;
+  memset(&msg,0,sizeof(msg));
   pthread_mutex_lock(&recv_comm_lock);
   if (arg!=NULL) {
      if (arg->state->pulseseqs[arg->parameters->current_pulseseq_index]!=NULL) {
@@ -731,11 +735,13 @@ void *receiver_ready_controlprogram(struct ControlProgram *arg)
 void *receiver_pretrigger(void *arg)
 {
   struct DriverMsg msg;
+  memset(&msg,0,sizeof(msg));
   pthread_mutex_lock(&recv_comm_lock);
 
    msg.type=RECV_PRETRIGGER;
    msg.status=1;
    send_data(recvsock, &msg, sizeof(struct DriverMsg));
+   printf("RECV_PRETRIGGER: recvsock: %i\n", recvsock);
    recv_data(recvsock, &msg, sizeof(struct DriverMsg));
    pthread_mutex_unlock(&recv_comm_lock);
    pthread_exit(NULL);
@@ -757,6 +763,7 @@ void *receiver_posttrigger(void *arg)
 
 void *receiver_controlprogram_get_data(struct ControlProgram *arg)
 {
+  int i;
   struct DriverMsg msg;
   struct timeval t0,t1,t3;
   char *timestr;
@@ -790,8 +797,11 @@ void *receiver_controlprogram_get_data(struct ControlProgram *arg)
       collection_count++;
       if (error_flag==0) {
         arg->data->samples=arg->parameters->number_of_samples;
+        printf("munmap on main and back\n");
         if(arg->main!=NULL) munmap(arg->main,sizeof(unsigned int)*arg->data->samples);
+        //if(arg->main!=NULL) munmap(arg->main,MAX_SAMPLES*4);
         if(arg->back!=NULL) munmap(arg->back,sizeof(unsigned int)*arg->data->samples);
+        //if(arg->back!=NULL) munmap(arg->back,MAX_SAMPLES*4);
 
         msg.type=RECV_GET_DATA;
         msg.status=1;
@@ -814,10 +824,14 @@ void *receiver_controlprogram_get_data(struct ControlProgram *arg)
         printf("bufnum %i rval: %i\n", arg->data->bufnum, rval);
         rval=recv_data(timingsock,&arg->data->samples,sizeof(arg->data->samples));
         printf("samples %i rval: %i\n", arg->data->samples, rval);
-        rval=recv_data(timingsock,&arg->main_address,sizeof(arg->main_address));
-        printf("main_address %u rval: %i\n", arg->main_address, rval);
-        rval=recv_data(timingsock,&arg->back_address,sizeof(arg->back_address));
-        printf("back_address %u rval: %i\n", arg->back_address, rval);
+        //rval=recv_data(timingsock,&arg->main_address,sizeof(arg->main_address));
+        //rval=recv_data(timingsock,&arg->main,sizeof(arg->main));
+        //printf("main_address %u rval: %i\n", arg->main_address, rval);
+        printf("main_address %u rval: %i\n", arg->main, rval);
+        //rval=recv_data(timingsock,&arg->back_address,sizeof(arg->back_address));
+        //rval=recv_data(timingsock,&arg->back,sizeof(arg->back));
+        //printf("back_address %u rval: %i\n", arg->back_address, rval);
+        printf("back_address %u rval: %i\n", arg->back, rval);
         printf("RECV: GET_DATA: data recv'd\n");
         r=arg->parameters->radar-1;
         c=arg->parameters->channel-1;
@@ -826,6 +840,7 @@ void *receiver_controlprogram_get_data(struct ControlProgram *arg)
         //printf("RECV: GET_DATA: samples %d\n",arg->data->samples);
         //printf("RECV: GET_DATA: frame header %d\n",arg->data->frame_header);
         //printf("RECV: GET_DATA: shm flag %d\n",arg->data->shm_memory);
+      printf("error_flag: %i\n", error_flag);
         if(arg->data->shm_memory) {
           printf("RECV: GET_DATA: set up shm memory space\n");
           sprintf(shm_device,"/receiver_main_%d_%d_%d",r,c,b);
@@ -835,12 +850,25 @@ void *receiver_controlprogram_get_data(struct ControlProgram *arg)
           shm_fd=shm_open(shm_device,O_RDONLY,S_IRUSR | S_IWUSR);
 	  int errorint;
           if (shm_fd == -1) {errorint = errno; fprintf(stderr,"shm_open error\n");}
-	  fprintf(stderr, "error number: %d\n",errorint);              
+	  //fprintf(stderr, "error number: %d\n",errorint);              
+          //rval = ftruncate(shm_fd,MAX_SAMPLES*4);
+          rval = ftruncate(shm_fd,arg->data->samples * sizeof(uint32_t));
           arg->main=mmap(0,sizeof(unsigned int)*arg->data->samples,PROT_READ,MAP_SHARED,shm_fd,0);
+          //arg->main=mmap(0,MAX_SAMPLES*4,PROT_READ,MAP_SHARED,shm_fd,0);
+            //for (i=0; i<arg->data->samples; i++){
+            //    printf("%i %i\n", i, arg->main[i]);
+            //}
           close(shm_fd);
-          sprintf(shm_device,"receiver_back_%d_%d_%d",r,c,b);
+          sprintf(shm_device,"/receiver_back_%d_%d_%d",r,c,b);
+	      printf("device: %s\n", shm_device);
           shm_fd=shm_open(shm_device,O_RDONLY,S_IRUSR | S_IWUSR);
+          //rval = ftruncate(shm_fd,MAX_SAMPLES*4);
+          rval = ftruncate(shm_fd,arg->data->samples * sizeof(uint32_t));
           arg->back=mmap(0,sizeof(unsigned int)*arg->data->samples,PROT_READ,MAP_SHARED,shm_fd,0);
+          //arg->back=mmap(0,MAX_SAMPLES*4,PROT_READ,MAP_SHARED,shm_fd,0);
+            //for (i=0; i<arg->data->samples; i++){
+            //    printf("%i %i\n", i, arg->back[i]);
+            //}
           close(shm_fd);
           //printf("RECV: GET_DATA: end set up shm memory space\n");
 
@@ -849,11 +877,13 @@ void *receiver_controlprogram_get_data(struct ControlProgram *arg)
           //printf("RECV: GET_DATA: set up non-shm memory space\n");
           arg->main =mmap( 0, sizeof(unsigned int)*arg->data->samples, 
                         PROT_READ|PROT_NOCACHE, MAP_PHYS, NOFD, 
-                            arg->main_address+sizeof(unsigned int)*arg->data->frame_header);
+                            //arg->main_address+sizeof(unsigned int)*arg->data->frame_header);
+                            arg->main+sizeof(unsigned int)*arg->data->frame_header);
 //                            arg->main_address);
           arg->back =mmap( 0, sizeof(unsigned int)*arg->data->samples, 
                         PROT_READ|PROT_NOCACHE, MAP_PHYS, NOFD, 
-                        arg->back_address+sizeof(unsigned int)*arg->data->frame_header);
+                        //arg->back_address+sizeof(unsigned int)*arg->data->frame_header);
+                        arg->back+sizeof(unsigned int)*arg->data->frame_header);
 //                            arg->back_address);
 #else
           arg->main=NULL;
@@ -874,11 +904,16 @@ void *receiver_controlprogram_get_data(struct ControlProgram *arg)
         fflush(stderr);
       }
 
+      printf("error_flag: %i\n", error_flag);
+      printf("size of struct DriverMsg: %i\n", sizeof(struct DriverMsg));
       if (error_flag==0) {
-        //printf("RECV: GET_DATA: recv RosMsg\n");
-        recv_data(recvsock, &msg, sizeof(struct DriverMsg));
+        printf("RECV: GET_DATA: recv RosMsg\n");
+        rval=recv_data(timingsock, &msg, sizeof(struct DriverMsg));
+        printf("recv_data() rval: %i\n", rval);
+        if (rval<=0) {printf("\nERROR in recv_data()\n%s!!\n\n",strerror(errno));}
       }
       //printf("RECV: GET_DATA: unlock comm lock\n");
+      //rval=recv_data(timingsock, &msg, sizeof(struct DriverMsg));
       pthread_mutex_unlock(&recv_comm_lock);
     }
   }

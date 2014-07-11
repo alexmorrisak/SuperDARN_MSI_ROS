@@ -77,6 +77,7 @@ struct ControlProgram* find_registered_controlprogram_by_radar_channel(int radar
 struct ControlPRM controlprogram_fill_parameters(struct ControlProgram *control_program)
 {
   struct ControlPRM control_parameters;      
+  memset(&control_parameters,0,sizeof(control_parameters));
   struct ControlProgram *cp,*best[MAX_RADARS];      
   int priority=99; //Lowest priority wins-- its like golf
   int r,c;
@@ -241,9 +242,11 @@ struct ControlProgram *control_init() {
        control_program->clrfreqsearch.start=0;
        control_program->clrfreqsearch.end=0;
        control_program->parameters=malloc(sizeof(struct ControlPRM));
+       memset(control_program->parameters,0,sizeof(struct ControlPRM));
        control_program->state=malloc(sizeof(struct ControlState));
        control_program->radarinfo=malloc(sizeof(struct RadarPRM));
        control_program->data=malloc(sizeof(struct DataPRM));
+       memset(control_program->data,0,sizeof(control_program->data));
        control_program->main=NULL;
        control_program->back=NULL;
        control_program->main_address=NULL;
@@ -825,6 +828,7 @@ control_program);
             recv_data(socket,&tprm, sizeof(struct SeqPRM)); // requested pulseseq
             pthread_mutex_lock(&controlprogram_list_lock);
             control_program->state->pulseseqs[tprm.index]=malloc(sizeof(struct TSGbuf));
+            memset(control_program->state->pulseseqs[tprm.index],0,sizeof(struct TSGbuf));
             control_program->parameters->current_pulseseq_index=tprm.index;
             control_program->state->pulseseqs[tprm.index]->len=tprm.len;
             control_program->state->pulseseqs[tprm.index]->step=tprm.step;

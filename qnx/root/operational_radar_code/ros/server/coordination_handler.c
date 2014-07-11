@@ -121,6 +121,7 @@ void *coordination_handler(struct ControlProgram *control_program)
           }
 
           if(verbose > 1 ) gettimeofday(&t2,NULL);
+          i=0;
           if (verbose > 1) { 
               elapsed=(t2.tv_sec-t1.tv_sec)*1E6;
               elapsed+=(t2.tv_usec-t1.tv_usec);
@@ -129,8 +130,10 @@ void *coordination_handler(struct ControlProgram *control_program)
  
           gettimeofday(&t_pre_start,NULL);
           i=0;
+          printf("Starting reciever pretrigger\n");
           rc = pthread_create(&threads[i], NULL, (void *) &receiver_pretrigger, NULL);
             pthread_join(threads[i],NULL);
+          printf("Done with receiver pretrigger\n");
           i++;
           rc = pthread_create(&threads[i], NULL, (void *) &dds_pretrigger, NULL);
             pthread_join(threads[i],NULL);
@@ -138,8 +141,10 @@ void *coordination_handler(struct ControlProgram *control_program)
           rc = pthread_create(&threads[i], NULL, (void *) &DIO_pretrigger, NULL);
             pthread_join(threads[i],NULL);
           i++;
+          printf("Starting timing pretrigger\n");
           rc = pthread_create(&threads[i], NULL, (void *) &timing_pretrigger, NULL);
             pthread_join(threads[i],NULL);
+          printf("Done with timing pretrigger\n");
           for (;i>=0;i--) {
             pthread_join(threads[i],NULL);
           }

@@ -170,7 +170,9 @@ int recv_data(int fd,void *buf,size_t buflen)
 {
      int cc=0,total=0;
      while (buflen > 0) {
-          cc = recv(fd, buf, buflen, MSG_NOSIGNAL);
+          //printf("buflen: %i\n", buflen);
+          cc = recv(fd, buf, buflen, MSG_NOSIGNAL|MSG_WAITALL);
+          //cc = recv(fd, buf, buflen, MSG_NOSIGNAL);
           if (cc == -1) {
                return cc;
           }

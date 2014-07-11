@@ -47,7 +47,7 @@ int tx_mix_upsample(
     float usrp_center_freq, //Center frequency of USRP
     std::vector<float> center_freqs, //list of center frequencies to mix up (down) to
     float time_delay); //time delay between each antenna in nanoseconds
-void transmit_worker(
+void tx_worker(
     uhd::tx_streamer::sptr tx_stream,
     std::vector<std::complex<short> *>& pulse_seq_ptrs,
     int sequence_length,

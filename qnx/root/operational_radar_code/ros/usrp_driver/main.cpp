@@ -3,6 +3,7 @@
 #include <sys/types.h>
 #include <sys/un.h>
 #include <sys/socket.h>
+#include <string.h>
 //#ifdef __QNX__
 //  #include <hw/inout.h>
 //  #include <sys/socket.h>
@@ -75,8 +76,8 @@
 #define NRADARS 2
 
 dictionary *Site_INI;
-int sock=0,msgsock=0;
-int verbose=-10;
+int sock=0,msgsock=0,tmp=0;
+int verbose=0;
 int configured=1;
 int		writingFIFO=0, dma_count=0, under_flag=0,empty_flag=0,IRQ, intid;
 int		max_seq_count=0, xfercount=0, totransfer=0;
@@ -158,7 +159,7 @@ int main(){
 	//socket and message passing variables
 	char	datacode;
 	int	rval;
-        fd_set rfds,efds;
+    fd_set rfds,efds;
 
 	//counter and temporary variables
 	int	i,j,r,c,buf,index,offset_pad;
@@ -265,20 +266,33 @@ int main(){
 	}
 
 
-	//Set Tx and Rx sample rates
-	std::cout << boost::format("Setting TX Rate: %f kHz...") % (1e3/STATE_TIME) << std::endl;
-	float txrate=TXRATE;
-	usrp->set_tx_rate(txrate);
+	//Set Tx sample rate and center frequency
+	usrp->set_tx_rate(TXRATE);
     usrp->set_tx_freq(TXFREQ);
-	std::cout << boost::format("Actual TX Rate: %f kHz...") % (usrp->get_tx_rate()/1e3) << std::endl << std::endl;
-	txrate = usrp->get_tx_rate();
-	//Set Rx sample rate
-	float rxrate=RXRATE;
-	std::cout << boost::format("Setting RX Rate: %f kHz...") % (rxrate) << std::endl;
-	usrp->set_rx_rate(rxrate);
+	if (verbose) std::cout << boost::format("TX Rate: %f kHz...") % (usrp->get_tx_rate()/1e3) << std::endl;
+	if (verbose) std::cout << boost::format("TX Freq: %f Hz...") % (usrp->get_tx_freq()/1e3) << std::endl;
+    float txrate = usrp->get_tx_rate();
+    if ((int)txrate != (int)TXRATE) {
+        std::cerr << "Requested Tx sample rate not accepted by USRP.  Exiting..." << std::endl; 
+        exit(EXIT_FAILURE);
+    }
+    if ((int)usrp->get_tx_freq() != (int)TXFREQ) {
+        std::cerr << "Requested Tx center freq not accepted by USRP.  Exiting..." << std::endl; 
+        exit(EXIT_FAILURE);
+    }
+	//Set Rx sample rate and center frequency
+	usrp->set_rx_rate(RXRATE);
     usrp->set_rx_freq(RXFREQ);
-	std::cout << boost::format("Actual RX Rate: %f kHz...") % (usrp->get_rx_rate()/1e3) << std::endl << std::endl;
-	rxrate = usrp->get_rx_rate();
+	if (verbose) std::cout << boost::format("RX Rate: %f kHz...") % (usrp->get_rx_rate()/1e3) << std::endl;
+	if (verbose) std::cout << boost::format("RX Freq: %f kHz...") % (usrp->get_rx_freq()/1e3) << std::endl;
+    if ((int)usrp->get_rx_rate() != (int)RXRATE) {
+        std::cerr << "Requested Rx sample rate not accepted by USRP.  Exiting..." << std::endl; 
+        exit(EXIT_FAILURE);
+    }
+    if ((int)usrp->get_rx_freq() != (int)RXFREQ) {
+        std::cerr << "Requested Rx center freq not accepted by USRP.  Exiting..." << std::endl; 
+        exit(EXIT_FAILURE);
+    }
 
 	//create a transmit streamer
 	//linearly map channels (index0 = channel0, index1 = channel1, ...)
@@ -291,7 +305,6 @@ int main(){
 	//linearly map channels (index0 = channel0, index1 = channel1, ...)
 	uhd::stream_args_t rx_stream_args("sc16", "sc16"); //use int16_t for receiving
 	for (size_t rx_chan = 0; rx_chan < usrp->get_rx_num_channels(); rx_chan++){
-	    std::cout << "rx channel: " << rx_chan << std::endl;
 	    rx_stream_args.channels.push_back(rx_chan); //linear mapping
 	}
 	uhd::rx_streamer::sptr rx_stream = usrp->get_rx_stream(rx_stream_args);
@@ -428,14 +441,19 @@ int main(){
            if ( FD_ISSET(msgsock,&rfds) && rval>0 ) {
             if (verbose>1) std::cout << "Socket data is ready to be read\n";
 		    if (verbose > 1) std::cout << msgsock << " Recv Msg\n";
-            rval=recv_data(msgsock,&msg,sizeof(struct DriverMsg));
+            if (recv_data(msgsock, &msg, sizeof(struct DriverMsg)) <= 0){
+                std::cerr << "Error in send data. " << strerror(errno) << std::endl;
+            }
             datacode=msg.type;
 		    if (verbose > 1) std::cout << "\nmsg code is " <<  datacode << "\n";
 		   switch( datacode ){
 		      case TIMING_REGISTER_SEQ:
 		        if (verbose > 0) std::cout << "\nRegister new sequence for usrp driver\n";
 		        msg.status=0;
-                rval=recv_data(msgsock,&client,sizeof(struct ControlPRM));
+                //rval=recv_data(msgsock,&client,sizeof(struct ControlPRM));
+                if (recv_data(msgsock, &client, sizeof(struct ControlPRM)) <= 0){
+                    std::cerr << "Error in send data. " << strerror(errno) << std::endl;
+                }
                 r=client.radar-1; 
                 c=client.channel-1; 
 
@@ -445,11 +463,13 @@ int main(){
 			    if (verbose > 1) std::cout << "Radar: " << client.radar <<
 				    " Channel: " << client.channel << " Beamnum: " << client.tbeam <<
 				    " Status: " << msg.status << "\n";
-		        rval=recv_data(msgsock,&index,sizeof(index));
+		        //rval=recv_data(msgsock,&index,sizeof(index));
+                if (recv_data(msgsock, &index, sizeof(index)) <= 0){
+                    std::cerr << "Error in send data. " << strerror(errno) << std::endl;
+                }
 		        if (verbose > 1) std::cout << "Requested index: " << r << " " << c << " " << index << "\n";
 		        if (verbose > 1) std::cout << "Attempting Free on pulseseq: " << pulseseqs[r][c][index];
                 if (pulseseqs[r][c][index]!=NULL) {
-                    std::cout << "Doing this..\n";
                     if (pulseseqs[r][c][index]->rep!=NULL){
 				        free(pulseseqs[r][c][index]->rep);
                         pulseseqs[r][c][index]->rep=NULL;
@@ -464,31 +484,49 @@ int main(){
 		        if (verbose > 1) std::cout << "Done Free - Attempting Malloc\n";	
                 pulseseqs[r][c][index]=(TSGbuf*) malloc(sizeof(struct TSGbuf));
 		        if (verbose > 1) std::cout << "Finished malloc\n";
-                rval=recv_data(msgsock,pulseseqs[r][c][index], sizeof(struct TSGbuf)); // requested pulseseq
+                //rval=recv_data(msgsock,pulseseqs[r][c][index], sizeof(struct TSGbuf)); // requested pulseseq
+                if (recv_data(msgsock, pulseseqs[r][c][index], sizeof(struct TSGbuf)) <= 0){
+                    std::cerr << "Error in send data. " << strerror(errno) << std::endl;
+                }
                 pulseseqs[r][c][index]->rep=
                   (unsigned char*) malloc(sizeof(unsigned char)*pulseseqs[r][c][index]->len);
                 pulseseqs[r][c][index]->code=
                   (unsigned char*) malloc(sizeof(unsigned char)*pulseseqs[r][c][index]->len);
-                rval=recv_data(msgsock,pulseseqs[r][c][index]->rep, 
-                  sizeof(unsigned char)*pulseseqs[r][c][index]->len);
-                rval=recv_data(msgsock,pulseseqs[r][c][index]->code, 
-                  sizeof(unsigned char)*pulseseqs[r][c][index]->len);
+                //rval=recv_data(msgsock,pulseseqs[r][c][index]->rep, 
+                //  sizeof(unsigned char)*pulseseqs[r][c][index]->len);
+                if (recv_data(msgsock, pulseseqs[r][c][index]->rep,
+                    sizeof(unsigned char)*pulseseqs[r][c][index]->len) <= 0){
+                        std::cerr << "Error in send data. " << strerror(errno) << std::endl;
+                }
+                //rval=recv_data(msgsock,pulseseqs[r][c][index]->code, 
+                //  sizeof(unsigned char)*pulseseqs[r][c][index]->len);
+                if (recv_data(msgsock, pulseseqs[r][c][index]->code,
+                    sizeof(unsigned char)*pulseseqs[r][c][index]->len) <= 0){
+                        std::cerr << "Error in send data. " << strerror(errno) << std::endl;
+                }
 			    if (verbose > 1) std::cout << "Pulseseq length: " << pulseseqs[r][c][index]->len << "\n";
                 old_seq_id=-10;
                 old_pulse_index[r][c]=-1;
                 new_seq_id=-1;
-                rval=send_data(msgsock, &msg, sizeof(struct DriverMsg));
+                if (send_data(msgsock, &msg, sizeof(struct DriverMsg)) <= 0){
+                    std::cerr << "Error in send data. " << strerror(errno) << std::endl;
+                }
                 break;
 
 		      case TIMING_CtrlProg_END:
-		        rval=recv_data(msgsock,&client,sizeof(struct ControlPRM));
+		        //rval=recv_data(msgsock,&client,sizeof(struct ControlPRM));
+                if (recv_data(msgsock, &client,sizeof(struct ControlPRM)) <= 0){
+                    std::cerr << "Error in send data. " << strerror(errno) << std::endl;
+                }
 		        if (verbose > 0) printf("A client is done. Radar: %i, Channel: %i\n", client.radar-1, client.channel-1);
                 r=client.radar-1;
                 c=client.channel-1;
                 tx.unregister_client(r,c);
                 rx.unregister_client(r,c);
                 msg.status=0;
-                rval=send_data(msgsock, &msg, sizeof(struct DriverMsg));
+                if (send_data(msgsock, &msg, sizeof(struct DriverMsg)) <= 0){
+                    std::cerr << "Error in send data. " << strerror(errno) << std::endl;
+                }
                 old_seq_id=-10;
                 new_seq_id=-1;
                 break;
@@ -497,12 +535,13 @@ int main(){
                 //numclients = 0;
 		        if (verbose > 1) printf("\nAsking to set up timing info for client that is ready %i\n",numclients);
                 msg.status=0;
-		        rval=recv_data(msgsock,&client,sizeof(struct ControlPRM));
+		        //rval=recv_data(msgsock,&client,sizeof(struct ControlPRM));
+                if (recv_data(msgsock, &client,sizeof(struct ControlPRM)) <= 0){
+                    std::cerr << "Error in send data. " << strerror(errno) << std::endl;
+                }
                 r=client.radar-1; 
                 c=client.channel-1; 
 
-                std::cout << "baseband samplerate: " << client.baseband_samplerate << std::endl;
-                std::cout << "baseband samplerate: " << client.number_of_samples << std::endl;
                 rx.ready_client(
                     client.radar-1,
                     client.channel-1,
@@ -515,7 +554,6 @@ int main(){
                     clients[ready_index[r][c]]=client;
                 } 
                 else {
-                    //std::cout << "Shoot! There should only be one client!!\n";
                     clients[numclients]=client;
                     ready_index[r][c]=numclients;
                     numclients=(numclients+1);
@@ -570,7 +608,9 @@ int main(){
 		        if (verbose > 1) std::cout << "\nclient ready\n";
                 numclients=numclients % maxclients;
                 old_pulse_index[r][c]=index;
-                rval=send_data(msgsock, &msg, sizeof(struct DriverMsg));
+                if (send_data(msgsock, &msg, sizeof(struct DriverMsg)) <= 0){
+                    std::cerr << "Error in send data. " << strerror(errno) << std::endl;
+                }
                 break; 
 
             case TIMING_PRETRIGGER:
@@ -610,9 +650,8 @@ int main(){
 			        }
                     if (verbose > -1) std::cout << "Calculating Master sequence " << old_seq_id << " " << new_seq_id << "\n";
                     max_seq_count=0;
-			        printf("numclients: %i\n",numclients);
 
-				    tx_osr = round(txrate * ((float)STATE_TIME*1e-6));
+				    tx_osr = round(TXRATE * ((float)STATE_TIME*1e-6));
 
                     //if (verbose > -1){
 				    //    std::cout << "tx rate: " << usrp->get_tx_rate() << "\n";
@@ -629,14 +668,6 @@ int main(){
                     }
                     //for (int iradar=0; iradar<tx.get_num_radars(); iradar++) {
                     for (int iradar=0; iradar<1; iradar++) {
-                        //int iclient = iradar;
-                        //if (iradar+1 > numclients) iclient = numclients-1;
-                        //tx_bb_vecs[i].resize(ntx_antennas);
-                        //tx_rf_vecs[i].resize(ntx_antennas);
-                        //for (int iant=0; iant<ntx_antennas; iant++){
-                        //    tx_rf_vecs[i][iant].resize(tx_osr*seq_count[r][c]);
-                        //    //std::cout << "tx rf vec size: " << tx_rf_vecs[0][i].size() << std::endl;
-                        //}
                         int iclient=0;
                         r=clients[iclient].radar-1;
                         c=clients[iclient].channel-1;
@@ -648,7 +679,6 @@ int main(){
 			        		"length: " << seq_count[r][c] << "\n";
                         tx_bb_vecs[iclient].clear();
                         tx_bb_vecs[iclient].resize(max_seq_count,0);
-                        std::cout << "tx bb vecs size: " << tx_bb_vecs[iclient].size() << std::endl;
                         if (iclient==0) {
                             printf("Initializing master buffer\n");
 			                for (j=0;j<seq_count[r][c];j++) {
@@ -763,14 +793,11 @@ int main(){
                     for (int iclient=0; iclient<1; iclient++){
                         filter_taps.resize(50e3/clients[iclient].trise,
                             std::complex<float>(clients[iclient].trise/50.e3/2./(float)tx.get_num_clients(),0));
-                        std::cout << clients[iclient].trise << std::endl;
-                        std::cout << filter_taps.size() << std::endl;
-                        std::cout << "signal length: " << tx_bb_vecs[iclient].size() << std::endl;
-                        for (int j=0; j<tx_bb_vecs[iclient].size(); j++){
-                            if (tx_bb_vecs[iclient][j] != std::complex<float>(0,0) && j%10 == 0) 
-                                std::cout << iclient << " " << j << " " << tx_bb_vecs[iclient][j] << std::endl;
-                        }
-                        std::cout << filter_taps.size() << std::endl;
+                        //for (int j=0; j<tx_bb_vecs[iclient].size(); j++){
+                        //    if (tx_bb_vecs[iclient][j] != std::complex<float>(0,0) && j%10 == 0) 
+                        //        std::cout << iclient << " " << j << " " << tx_bb_vecs[iclient][j] << std::endl;
+                        //}
+                        //std::cout << filter_taps.size() << std::endl;
 			            _convolve(&tx_bb_vecs[iclient].front(), 
                             tx_bb_vecs[iclient].size(), 
                             &filter_taps.front(),
@@ -789,37 +816,15 @@ int main(){
 
 			    if (new_beam != old_beam) { //Re-calculate the RF sample vectors for new beam direction.  BB samples are the same.
 			    	for(size_t chan = 0; chan < usrp->get_rx_num_channels(); chan++) {
-			    	        usrp->set_rx_rate(rxrate, chan);
+			    	        usrp->set_rx_rate(RXRATE, chan);
 			                usrp->set_rx_freq(RXFREQ, chan);
-			    	        if(verbose>1)
-						std::cout << boost::format("RX rate set to: %f MHz...") % 
-								(usrp->get_rx_rate(chan)/1e6) << std::endl;
-						std::cout << boost::format("RX freq set to: %f MHz...") % 
-								(usrp->get_rx_freq(chan)/1e6) << std::endl;
 			    	}
 			    	for(size_t chan=0; chan<ntx_antennas; chan++) {
-			    	        usrp->set_tx_rate(txrate, chan);
+			    	        usrp->set_tx_rate(TXRATE, chan);
 			                usrp->set_tx_freq(TXFREQ, chan);
-			    	        if(verbose>1)
-						std::cout << boost::format("TX rate set to: %f MHz...") % 
-								(usrp->get_rx_rate(chan)/1e6) << std::endl;
-						std::cout << boost::format("TX freq set to: %f MHz...") % 
-								(usrp->get_tx_freq(chan)/1e6) << std::endl;
 			    	}
 
                     rx_process_threads.join_all(); //Make sure rx processing is done so that we have exclusive access to the GPU
-
-                    clock_gettime(CLOCK_MONOTONIC, &tx0);
-			        //tx_bb_vecs.clear();
-                    //tx_bb_vecs.resize(ntx_antennas);
-			        //tx_rf_vecs.clear();
-					//tx_rf_vecs.resize(ntx_antennas);
-                    //tx_rf_vec_ptrs.resize(ntx_antennas);
-                    //for (int iant=0; iant<ntx_antennas; iant++){
-                    //    tx_rf_vecs[iant].resize(tx_osr*max_seq_count);
-                    //    //tx_rf_vec_ptrs[iant] = &tx_rf_vecs[iant].front();
-                    //}
-
 
                     clock_gettime(CLOCK_MONOTONIC, &tx0);
                     for (int iradar=0; iradar<NRADARS; iradar++){ //Deal with each antenna channel for each radar
@@ -831,47 +836,23 @@ int main(){
                             for (int i=1; i<NRADARS; i++){
                                 tx_bb_vecs[i].clear();
                                 tx_bb_vecs[i].resize(tx_bb_vecs[0].size(), 0);
-                                //tx_freqs.push_back(0);
                             }
                         }
-                        //if (tx.get_num_clients(iradar) != 0){
-                        //    float* bb_ptr = tx.get_bb_vec_ptr(iradar);
-                        //    for (int i=0; i<tx.get_num_bb_samples(); i+=10){
-                        //        std::cout << i << " " << bb_ptr[i] << std::endl;
-                        //    }
-                        //}
-
                         
                         tx.set_rf_vec_size(tx_osr*max_seq_count);
-                        std::cout << "num bb samps: " << tx.get_num_bb_samples() << std::endl;
-                        std::cout << "num rf samps: " << tx.get_num_rf_samples() << std::endl;
-                        std::cout << "rf vec ptrs: " << tx.get_rf_vec_ptrs(iradar) << std::endl;
-                        std::cout << "num rf samps: " << tx.get_num_rf_samples() << std::endl;
-                        for (int i=0; i<tx.get_num_clients(iradar); i++){
-                            std::cout << "tx freqs: " << tx.get_freqs(iradar)[i] << std::endl;
-                        }
-                        //for (size_t i=0; i<tx.get_num_rf_samples(); i++){
-                        //    int16_t** rf_ptr = tx.get_rf_vec_ptrs(iradar);
-                        //    //std::cout << rf_ptr << std::endl;
-                        //    //std::cout << i << " " << rf_ptr[0] << std::endl;
-                        //}
-                        std::cout << "num clients: " << tx.get_num_clients(iradar) << std::endl;
-                        //std::cout << "tx freq: " << tx_freqs[iradar] << std::endl;
+
                         if (tx.get_num_clients(iradar) == 0){
-                            std::cout << "zeroing rf vector\n";
                             tx.zero_rf_vec(iradar);
                             continue;
                         }
-                        std::cout << "rf vec ptrs: " << tx.get_rf_vec_ptrs(iradar) << std::endl;
-                        //std::cout << (tx.get_rf_vec_ptrs(iradar))[0][0] << std::endl;
-                        std::cout << "about to enter tx_process_gpu\n";
+                        if(verbose>1)std::cout << "about to enter tx_process_gpu\n";
 				        tx_process_gpu(
                             tx.get_bb_vec_ptr(iradar),
                             tx.get_rf_vec_ptrs(iradar),
 				        	tx.get_num_bb_samples(),
 				        	tx.get_num_rf_samples(),
 				        	usrp->get_tx_freq(),
-                            txrate,
+                            TXRATE,
                             tx.get_freqs(iradar), // List of center frequencies for this radar
 				        	&time_delays.front(), // Vector of beam-forming-related time delays
                             tx.get_num_clients(iradar), // Number of channels for this radar [TODO] Numclients handles nradars but not nchannels yet
@@ -880,29 +861,7 @@ int main(){
 
                     clock_gettime(CLOCK_MONOTONIC, &tx1);
                     elapsed_t1 = (1e9*tx1.tv_sec+tx1.tv_nsec) - (1e9*tx0.tv_sec+tx0.tv_nsec);
-                    printf("\n\ntx mix upsample elapsed time: %.2f ms\n", elapsed_t1/1e6);
-			        //tx_vec_ptrs.resize(ntx_antennas);
-                    std::cout << "num clients: " << numclients << std::endl;
-                    //std::cout << "txrfvecs size: " << tx_rf_vecs.size() << std::endl;
-                    //for (size_t iant=0; iant<ntx_antennas; iant++){
-                    //    tx_vec_ptrs[iant] = &tx_rf_vecs[iant].front();
-                    //}
-                        
-			        //for(unsigned int iant=0;iant<ntx_antennas;iant++){
-			        //    for(unsigned int iclient=0;iclient<numclients;iclient++){
-                    //        std::cout << "index: " << iclient << " " << iclient << std::endl;
-			    	//        tx_vec_ptrs[iclient]=&tx_rf_vecs[iclient][0].front();
-                    //        std::cout << "tx_vec_ptr size: " <<  tx_vec_ptrs.size() << std::endl;
-                    //        std::cout << "tx_vec_ptr: " <<  tx_vec_ptrs[iclient] << std::endl;
-                    //    }
-			        //    for(unsigned int iclient=numclients;iclient<ntx_antennas;iclient++){
-                    //        std::cout << "index: " << iclient << " " << iclient%2 << std::endl;
-                    //        std::cout << "tx_rf_vecs size: " <<  tx_rf_vecs.size() << std::endl;
-                    //        std::cout << "iclient mod 2: " <<  iclient%2 << std::endl;
-                    //        std::cout << "tx_vec_ptr: " <<  tx_vec_ptrs[iclient] << std::endl;
-			    	//        tx_vec_ptrs[iclient]=&tx_rf_vecs[iclient%2][0].front();
-                    //    }
-                    //}
+                    if (verbose) printf("\n\ntx mix upsample elapsed time: %.2f ms\n", elapsed_t1/1e6);
 			    }
 
                 if (new_seq_id < 0 ) {
@@ -914,18 +873,25 @@ int main(){
                 new_seq_id=-1;
 			    old_beam = new_beam;
 
-                send_data(msgsock, &bad_transmit_times.length, sizeof(bad_transmit_times.length));
-                send_data(msgsock, bad_transmit_times.start_usec, 
-                          sizeof(unsigned int)*bad_transmit_times.length);
-                send_data(msgsock, bad_transmit_times.duration_usec, 
-                          sizeof(unsigned int)*bad_transmit_times.length);
-
+                if (send_data(msgsock, &bad_transmit_times.length, sizeof(bad_transmit_times.length)) <= 0){
+                    std::cerr << "Error in send data. " << strerror(errno) << std::endl;
+                }
+                if (send_data(msgsock, bad_transmit_times.start_usec, sizeof(uint32_t)*bad_transmit_times.length) <= 0){
+                    std::cerr << "Error in send data. " << strerror(errno) << std::endl;
+                }
+                if (send_data(msgsock, bad_transmit_times.duration_usec, sizeof(uint32_t)*bad_transmit_times.length) <= 0){
+                    std::cerr << "Error in send data. " << strerror(errno) << std::endl;
+                }
 			    msg.status=0;
                 if (verbose > 1)  std::cout << "Ending Pretrigger Setup\n";
-                rval=send_data(msgsock, &msg, sizeof(struct DriverMsg));
+                if (send_data(msgsock, &msg, sizeof(struct DriverMsg)) <= 0){
+                    std::cerr << "Error in send data. " << strerror(errno) << std::endl;
+                }
+
                 gettimeofday(&t6,NULL);
                 elapsed=(t6.tv_sec-t0.tv_sec)*1E6;
                 elapsed+=(t6.tv_usec-t0.tv_usec);
+
                 if (verbose > 1) {
                   std::cout << "Timing Pretrigger Elapsed Microseconds: " << elapsed << "\n";
                 }
@@ -947,7 +913,7 @@ int main(){
 			        if (verbose > 1){
 			  	        std::cout << "client baseband sample rate: " << client.baseband_samplerate << std::endl;
 			  	        std::cout << "nsamples: " << rx.get_num_rf_samples() << std::endl;
-			  	        std::cout << "Usrp sample rate: " << rxrate << std::endl;
+			  	        std::cout << "Usrp sample rate: " << RXRATE << std::endl;
 			        }
 
 			        //Start the receive stream thread
@@ -973,16 +939,18 @@ int main(){
 			         	&rx_thread_status));
 
 			         //call function to start tx stream simultaneously with rx stream
-		             tx_threads.create_thread(boost::bind(transmit_worker,
+		             tx_threads.create_thread(boost::bind(tx_worker,
                         tx_stream,
                         tx_vec_ptrs,
                         tx.get_num_rf_samples(),
                         start_time));
                 }
-                tx_threads.join_all();
+                //tx_threads.join_all();
                 //receive_threads.join_all();
 
-                rval=send_data(msgsock, &msg, sizeof(struct DriverMsg));
+                if (send_data(msgsock, &msg, sizeof(struct DriverMsg)) <= 0){
+                    std::cerr << "Error in send data. " << strerror(errno) << std::endl;
+                }
 
                 gettimeofday(&t6,NULL);
                 elapsed=(t6.tv_sec-t0.tv_sec)*1E6;
@@ -998,7 +966,9 @@ int main(){
                 msg.status=0;
                 if (verbose > 1) std::cout << "Read msg struct from tcp socket!\n";
                 if (verbose > 1 ) std::cout << "End Timing Card GPS trigger\n";
-                rval=send_data(msgsock, &msg, sizeof(struct DriverMsg));
+                if (send_data(msgsock, &msg, sizeof(struct DriverMsg)) <= 0){
+                    std::cerr << "Error in send data. " << strerror(errno) << std::endl;
+                }
                 break;
 
 		    case TIMING_WAIT:
@@ -1009,7 +979,9 @@ int main(){
                 //dead_flag=0;
                 
                 if (verbose > 1)  std::cout << "Ending Wait \n\n";
-                rval=send_data(msgsock, &msg, sizeof(struct DriverMsg));
+                if (send_data(msgsock, &msg, sizeof(struct DriverMsg)) <= 0){
+                    std::cerr << "Error in send data. " << strerror(errno) << std::endl;
+                }
 
 			    break;
 
@@ -1017,22 +989,25 @@ int main(){
                 //receive_threads.join_all();
                 nactiveclients=numclients;
                 numclients=0;
-                std::cout << "Post trigger.  Un-readying all clients\n\n";
+                if (verbose > 1) std::cout << "Post trigger.  Un-readying all clients\n\n";
                 for (r=0;r<MAX_RADARS;r++){
                     for (c=0;c<MAX_CHANNELS;c++){
                         ready_index[r][c]=-1;
                     }
                 }
-                rval=send_data(msgsock, &msg, sizeof(struct DriverMsg));
+                if (send_data(msgsock, &msg, sizeof(struct DriverMsg)) <= 0){
+                    std::cerr << "Error in send data. " << strerror(errno) << std::endl;
+                }
                 break;
 
             case RECV_GET_DATA:
 			    if (verbose>1) std::cout << "RECV_GET_DATA: Waiting on all threads.." << std::endl;
 
-                //tx_threads.join_all();
-			    //receive_threads.join_all();
+                tx_threads.join_all();
+			    receive_threads.join_all();
 			    rx_process_threads.join_all();
                 gettimeofday(&t0,NULL);
+			    //rx_thread_status=-1;
 
 			    gettimeofday(&t6,NULL);
                 elapsed=(t6.tv_sec-t1.tv_sec)*1E6;
@@ -1041,7 +1016,6 @@ int main(){
 			    	elapsed << " usec" << std::endl;
                 elapsed=(t6.tv_sec-t0.tv_sec)*1E6;
 
-			    rx_status_flag=-1;
 			    if (rx_thread_status==-1){
 			    	std::cerr << "Error, bad status from Rx thread!!\n";
 			    	rx_status_flag=-1;
@@ -1051,46 +1025,51 @@ int main(){
 			    	if (verbose>1) printf("Status okay!!\n");
 			    }
 
-		        rval=recv_data(msgsock,&client,sizeof(struct ControlPRM));
-                rval=send_data(msgsock,&rx_status_flag, sizeof(int));
+		        //rval=recv_data(msgsock,&client,sizeof(struct ControlPRM));
+                if (recv_data(msgsock, &client,sizeof(struct ControlPRM)) <= 0){
+                    std::cerr << "Error in send data. " << strerror(errno) << std::endl;
+                }
+                if (rval < 1) std::cerr << "\n!!!\n\nRVAL: " << rval << "\n\n" << std::endl;
+                if (send_data(msgsock, &rx_status_flag, sizeof(int)) <= 0){
+                    std::cerr << "Error in send data. " << strerror(errno) << std::endl;
+                }
 
 			    if (verbose>1)std::cout << "Client asking for rx samples (Radar,Channel): " <<
 			    	client.radar << " " << client.channel << std::endl;
 			    get_data_t0 = usrp->get_time_now();
 			    r = client.radar-1; c = client.channel-1;
 	
-                std::cout << "numclients: " << rx.get_num_clients() << std::endl;
-
-                std::cout << r << " " << c << std::endl;
-                std::cout << rx.get_rf_dptr(r) << std::endl;
-                std::cout << rx.get_bb_dptr(r) << std::endl;
-                std::cout << rx.get_num_rf_samples() << std::endl;
-                std::cout << rx.get_num_bb_samples() << std::endl;
-                std::cout << rx.get_num_clients(r) << std::endl;
-                std::cout << rx.get_num_ants_per_radar() << std::endl;
-                std::cout << (float) rxrate << std::endl;
-                std::cout << (float) client.baseband_samplerate << std::endl;
-                std::cout << rx.get_freqs(r) << std::endl;
-                if (verbose) std::cout << "about to enter rx_process_gpu()\n";
-			    rx_process_threads.create_thread(boost::bind(rx_process_gpu,
-                    rx.get_rf_dptr(r),
-                    rx.get_bb_dptr(r),
-                    rx.get_num_rf_samples(),
-                    rx.get_num_bb_samples(),
-			    	rx.get_num_clients(r),
-			    	rx.get_num_ants_per_radar(),
-			    	(float) rxrate,
-			    	(float) client.baseband_samplerate,
-                    rx.get_freqs(r)));
+                //std::cout << r << " " << c << std::endl;
+                //std::cout << rx.get_rf_dptr(r) << std::endl;
+                //std::cout << rx.get_bb_dptr(r) << std::endl;
+                //std::cout << rx.get_num_rf_samples() << std::endl;
+                //std::cout << rx.get_num_bb_samples() << std::endl;
+                //std::cout << rx.get_num_clients(r) << std::endl;
+                //std::cout << rx.get_num_ants_per_radar() << std::endl;
+                //std::cout << (float) RXRATE << std::endl;
+                //std::cout << (float) client.baseband_samplerate << std::endl;
+                //std::cout << rx.get_freqs(r) << std::endl;
+                if (verbose>1) std::cout << "about to enter rx_process_gpu()\n";
+                if (rx_thread_status==0){
+			        rx_process_threads.create_thread(boost::bind(rx_process_gpu,
+                        rx.get_rf_dptr(r),
+                        rx.get_bb_dptr(r),
+                        rx.get_num_rf_samples(),
+                        rx.get_num_bb_samples(),
+			        	rx.get_num_clients(r),
+			        	rx.get_num_ants_per_radar(),
+			        	(float) RXRATE,
+			        	(float) client.baseband_samplerate,
+                        rx.get_freqs(r)));
+                }
                 
 
-                //rx_process_threads.join_all();
-                printf("iseq: %i\n", iseq);
-                std::cout << "set_bb_vec_ptrs: " << r << " " << c << std::endl;
+                rx_process_threads.join_all();
+                if (verbose>1) printf("iseq: %i\n", iseq);
+                if (verbose>1)std::cout << "set_bb_vec_ptrs: " << r << " " << c << std::endl;
                 rx.set_bb_vec_ptrs(r,c, &bb_vec_ptrs);
 			    if(rx_status_flag == 0){
 			      if(verbose>1)std::cout << "Repackaging RX data.." << std::endl;
-                  std::cout << "nactiveclients: " << nactiveclients << std::endl;
 
                   gettimeofday(&t1,NULL);
 			      for(int i=0;i<client.number_of_samples;i++){
@@ -1104,13 +1083,13 @@ int main(){
 
                     //Rx:
 			    	if(verbose>100){
-                            printf("%i\t",i);
-                            for (size_t ifreq=0; ifreq<rx.get_num_clients(); ifreq++){
-                                printf("%5.0f, ",std::abs(shared_main_addresses[r][c][0][i]));
-                                printf("%5.0f \t ",360. / M_PI * std::arg(shared_main_addresses[r][c][0][i]));
-                                //printf("%5.0f, ",std::abs(bb_vec_ptrs[MAIN_INPUT][i]));
-                                //printf("%5.0f \t ",360. / M_PI * std::arg(bb_vec_ptrs[MAIN_INPUT][i]));
-                            }
+                            //printf("%i\t",i);
+                            //for (size_t ifreq=0; ifreq<rx.get_num_clients(); ifreq++){
+                                //printf("%5.0f, ",std::abs(shared_main_addresses[r][c][0][i]));
+                                //printf("%5.0f \t ",360. / M_PI * std::arg(shared_main_addresses[r][c][0][i]));
+                                printf("%5.0f, ",std::abs(bb_vec_ptrs[MAIN_INPUT][i]));
+                                printf("%5.0f \t ",360. / M_PI * std::arg(bb_vec_ptrs[MAIN_INPUT][i]));
+                            //}
                             printf("\n");
 			    	}
 			    	//if(verbose>100){
@@ -1129,7 +1108,7 @@ int main(){
                     std::cout << "Data sent: Elapsed Microseconds: " << elapsed << "\n";
                   }
 
-			      //iseq++;
+			      iseq++;
 			      
 			      r=client.radar-1;
 			      c=client.channel-1;
@@ -1139,26 +1118,32 @@ int main(){
 			        std::cout << "r: " << r << "\tc: " << c << std::endl;
 			      }
 			      shm_memory=1; // Flag used to indicate to client if shared memory (mmap()) is used. 1 for yes.
-			      rval=send_data(msgsock,&shm_memory,sizeof(shm_memory));
+                  if (send_data(msgsock, &shm_memory, sizeof(shm_memory)) <= 0){
+                      std::cerr << "Error in send data. " << strerror(errno) << std::endl;
+                  }
 			      frame_offset=0;  // The GC316 cards normally produce rx data w/ a header of length 2 samples. 0 for usrp.
-			      rval=send_data(msgsock,&frame_offset,sizeof(frame_offset));
+                  if (send_data(msgsock, &frame_offset, sizeof(frame_offset)) <= 0){
+                      std::cerr << "Error in send data. " << strerror(errno) << std::endl;
+                  }
 			      dma_buffer=0; // Flag used to indicate to client if DMA tranfer is used. 1 for yes.
-			      rval=send_data(msgsock,&dma_buffer,sizeof(dma_buffer));
+                  if (send_data(msgsock, &dma_buffer, sizeof(dma_buffer)) <= 0){
+                      std::cerr << "Error in send data. " << strerror(errno) << std::endl;
+                  }
 			      nrx_samples=client.number_of_samples;
-			      rval=send_data(msgsock,&nrx_samples,sizeof(nrx_samples));
+                  if (send_data(msgsock, &client.number_of_samples, sizeof(client.number_of_samples)) <= 0){
+                      std::cerr << "Error in send data. " << strerror(errno) << std::endl;
+                  }
 			      
 			      if(IMAGING==0){
-                    if(verbose > 1 ) std::cout << "Sending shared addresses..: " << 
+                    if(verbose > 1 ) std::cout << "Using shared memory addresses..: " << 
 			        shared_main_addresses[r][c][0] << "\t" << shared_back_addresses[r][c][0] << std::endl;
-			      	rval=send_data(msgsock,&shared_main_addresses[r][c][0],sizeof(unsigned int));
-			      	//rval=send_data(msgsock,&shared_main_addresses[r][c][0],sizeof(uint32_t**));
-			      	rval=send_data(msgsock,&shared_back_addresses[r][c][0],sizeof(unsigned int));
-			      	//rval=send_data(msgsock,&shared_back_addresses[r][c][0],sizeof(uint32_t**));
 			      }
 			      if (verbose>1)std::cout << "Send data to client successful" << std::endl;
 			      msg.status = rx_status_flag;
-			      rval=send_data(msgsock,&msg,sizeof(DriverMsg));
 			    }
+                if (send_data(msgsock, &msg, sizeof(struct DriverMsg)) <= 0){
+                    std::cerr << "Error in send data. " << strerror(errno) << std::endl;
+                }
                 rx_status_flag=0;
                 gettimeofday(&t6,NULL);
                 elapsed=(t6.tv_sec-t0.tv_sec)*1E6;
@@ -1174,7 +1159,6 @@ int main(){
                 if (verbose > 1) {
                   std::cout << "RECV_GET_DATA Elapsed Microseconds: " << elapsed << "\n";
                 }
-                usleep(10000);
 			    break;
 
             case RECV_CLRFREQ:
@@ -1183,8 +1167,14 @@ int main(){
 			    rx_process_threads.join_all();
 
 			    if(verbose > 1) std::cout << "Doing clear frequency search!!!" << std::endl;
-			    rval=recv_data(msgsock,&clrfreq_parameters,sizeof(struct CLRFreqPRM));
-			    rval=recv_data(msgsock,&client,sizeof(struct ControlPRM));
+			    //rval=recv_data(msgsock,&clrfreq_parameters,sizeof(struct CLRFreqPRM));
+                if (recv_data(msgsock, &clrfreq_parameters,sizeof(struct CLRFreqPRM)) <= 0){
+                    std::cerr << "Error in send data. " << strerror(errno) << std::endl;
+                }
+			    //rval=recv_data(msgsock,&client,sizeof(struct ControlPRM));
+                if (recv_data(msgsock, &client,sizeof(struct ControlPRM)) <= 0){
+                    std::cerr << "Error in send data. " << strerror(errno) << std::endl;
+                }
                 //printf("RECV_CLRFREQ for radar %i channel %i",client.radar, client.channel);
 			    if (verbose) printf("Doing clear frequency search for radar %d, channel %d\n",client.radar,client.channel);
 			    nave=0;
@@ -1256,8 +1246,12 @@ int main(){
 			    pwr2 = &pwr[(int)unusable_sideband];
 
 			    if(verbose > 0 ) printf("Send clrfreq data back\n");
-                            rval=send_data(msgsock, &clrfreq_parameters, sizeof(struct CLRFreqPRM));
-                            rval=send_data(msgsock, &usable_bandwidth, sizeof(int));
+                            if (send_data(msgsock, &clrfreq_parameters, sizeof(struct CLRFreqPRM)) <= 0){
+                                std::cerr << "Error in send data. " << strerror(errno) << std::endl;
+                            }
+                            if (send_data(msgsock, &usable_bandwidth, sizeof(int)) <= 0){
+                                std::cerr << "Error in send data. " << strerror(errno) << std::endl;
+                            }
                             if(verbose > 1 ) {
 			    	printf("  final values\n");
                             	printf("  start: %d\n",clrfreq_parameters.start);
@@ -1268,8 +1262,12 @@ int main(){
                 //for (int i=0; i<usable_bandwidth; i++){
                 //    std::cout << pwr2[i] << std::endl;
                 //}
-                rval=send_data(msgsock, pwr2, sizeof(double)*usable_bandwidth);  //freq order power
-                rval=send_data(msgsock, &msg, sizeof(struct DriverMsg));
+                if (send_data(msgsock, pwr2, sizeof(double)*usable_bandwidth) <= 0){
+                    std::cerr << "Error in send data. " << strerror(errno) << std::endl;
+                }
+                if (send_data(msgsock, &msg, sizeof(struct DriverMsg)) <= 0){
+                    std::cerr << "Error in send data. " << strerror(errno) << std::endl;
+                }
 
 			    //clr_fd = fopen("/tmp/clr_data.txt","a+");
 			    //for(int i=0;i<usable_bandwidth;i++){
