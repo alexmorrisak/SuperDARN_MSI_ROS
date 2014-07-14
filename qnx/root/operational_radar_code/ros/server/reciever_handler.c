@@ -23,6 +23,7 @@ extern int recvsock;
 extern int timingsock;
 extern int verbose;
 extern pthread_mutex_t recv_comm_lock, thread_list_lock;
+extern pthread_mutex_t timing_comm_lock;
 extern int *ready_state_pointer;
 extern struct Thread_List_Item *controlprogram_threads;
 extern struct BlackList *blacklist;
@@ -56,7 +57,7 @@ void *receiver_rxfe_settings(void *arg) {
   struct SiteSettings *site_settings;
 
   site_settings=arg;
-  pthread_mutex_lock(&recv_comm_lock);
+  pthread_mutex_lock(&timing_comm_lock);
 //  printf("RECV_rxfe_settins\n");
   if (site_settings!=NULL) {
     msg.type=RECV_RXFE_SETTINGS;
@@ -67,7 +68,7 @@ void *receiver_rxfe_settings(void *arg) {
     send_data(recvsock, &site_settings->if_settings, sizeof(struct RXFESettings));
     recv_data(recvsock, &msg, sizeof(struct DriverMsg));                                    
   }                                                                                        
-  pthread_mutex_unlock(&recv_comm_lock);
+  pthread_mutex_unlock(&timing_comm_lock);
 }                                                           
 
 void receiver_assign_frequency(struct ControlProgram *arg){
@@ -701,7 +702,7 @@ void receiver_exit(void *arg)
 void *receiver_end_controlprogram(struct ControlProgram *arg)
 {
   struct DriverMsg msg;
-  pthread_mutex_lock(&recv_comm_lock);
+  pthread_mutex_lock(&timing_comm_lock);
   if (arg!=NULL) {
      if (arg->state->pulseseqs[arg->parameters->current_pulseseq_index]!=NULL) {
        msg.type=RECV_CtrlProg_END;
@@ -710,7 +711,7 @@ void *receiver_end_controlprogram(struct ControlProgram *arg)
        send_data(recvsock, arg->parameters, sizeof(struct ControlPRM));
      }
   }
-  pthread_mutex_unlock(&recv_comm_lock);
+  pthread_mutex_unlock(&timing_comm_lock);
   pthread_exit(NULL);
 };
 
@@ -718,7 +719,7 @@ void *receiver_ready_controlprogram(struct ControlProgram *arg)
 {
   struct DriverMsg msg;
   memset(&msg,0,sizeof(msg));
-  pthread_mutex_lock(&recv_comm_lock);
+  pthread_mutex_lock(&timing_comm_lock);
   if (arg!=NULL) {
      if (arg->state->pulseseqs[arg->parameters->current_pulseseq_index]!=NULL) {
        msg.type=RECV_CtrlProg_READY;
@@ -728,7 +729,7 @@ void *receiver_ready_controlprogram(struct ControlProgram *arg)
        recv_data(recvsock, &msg, sizeof(struct DriverMsg));
      } 
   }
-  pthread_mutex_unlock(&recv_comm_lock);
+  pthread_mutex_unlock(&timing_comm_lock);
   pthread_exit(NULL);
 };
 
@@ -736,14 +737,14 @@ void *receiver_pretrigger(void *arg)
 {
   struct DriverMsg msg;
   memset(&msg,0,sizeof(msg));
-  pthread_mutex_lock(&recv_comm_lock);
+  pthread_mutex_lock(&timing_comm_lock);
 
    msg.type=RECV_PRETRIGGER;
    msg.status=1;
    send_data(recvsock, &msg, sizeof(struct DriverMsg));
    printf("RECV_PRETRIGGER: recvsock: %i\n", recvsock);
    recv_data(recvsock, &msg, sizeof(struct DriverMsg));
-   pthread_mutex_unlock(&recv_comm_lock);
+   pthread_mutex_unlock(&timing_comm_lock);
    pthread_exit(NULL);
 
 };
@@ -751,13 +752,13 @@ void *receiver_pretrigger(void *arg)
 void *receiver_posttrigger(void *arg)
 {
   struct DriverMsg msg;
-  pthread_mutex_lock(&recv_comm_lock);
+  pthread_mutex_lock(&timing_comm_lock);
 
    msg.type=RECV_POSTTRIGGER;
    msg.status=1;
    send_data(recvsock, &msg, sizeof(struct DriverMsg));
    recv_data(recvsock, &msg, sizeof(struct DriverMsg));
-   pthread_mutex_unlock(&recv_comm_lock);
+   pthread_mutex_unlock(&timing_comm_lock);
    pthread_exit(NULL);
 };
 
@@ -793,7 +794,7 @@ void *receiver_controlprogram_get_data(struct ControlProgram *arg)
           usleep(1);
         }
       } 
-      pthread_mutex_lock(&recv_comm_lock);
+      pthread_mutex_lock(&timing_comm_lock);
       collection_count++;
       if (error_flag==0) {
         arg->data->samples=arg->parameters->number_of_samples;
@@ -813,6 +814,7 @@ void *receiver_controlprogram_get_data(struct ControlProgram *arg)
         arg->data->status=error_flag;
         arg->data->samples=0;
       }      
+      printf("arg->data->status: %i, rval: %i\n", arg->data->status, rval);
       if (arg->data->status==0 & rval>0) {
         printf("RECV: GET_DATA: status good\n");
         //printf("rval: %i\n",rval);
@@ -909,12 +911,11 @@ void *receiver_controlprogram_get_data(struct ControlProgram *arg)
       if (error_flag==0) {
         printf("RECV: GET_DATA: recv RosMsg\n");
         rval=recv_data(timingsock, &msg, sizeof(struct DriverMsg));
-        printf("recv_data() rval: %i\n", rval);
         if (rval<=0) {printf("\nERROR in recv_data()\n%s!!\n\n",strerror(errno));}
       }
       //printf("RECV: GET_DATA: unlock comm lock\n");
       //rval=recv_data(timingsock, &msg, sizeof(struct DriverMsg));
-      pthread_mutex_unlock(&recv_comm_lock);
+      pthread_mutex_unlock(&timing_comm_lock);
     }
   }
   pthread_exit(NULL);
@@ -938,7 +939,7 @@ void *receiver_clrfreq(struct ControlProgram *arg)
 
 //  fprintf(stdout,"CLRFREQ: %d %d\n",arg->parameters->radar-1,arg->parameters->channel-1);
 //  fprintf(stdout," FFT FREQ: %d %d\n",arg->clrfreqsearch.start,arg->clrfreqsearch.end);
-  pthread_mutex_lock(&recv_comm_lock);
+  pthread_mutex_lock(&timing_comm_lock);
   gettimeofday(&t0,NULL);
 
   /* Check to see if Clr search request falls within full scan parameters */
@@ -1046,7 +1047,7 @@ void *receiver_clrfreq(struct ControlProgram *arg)
   //printf(" Start Freq: %lf\n",arg->state->fft_array[0].freq);
   if (pwr!=NULL) free(pwr);
   pwr=NULL;
-  pthread_mutex_unlock(&recv_comm_lock);
+  pthread_mutex_unlock(&timing_comm_lock);
   pthread_exit(NULL);
 
 }

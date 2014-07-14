@@ -77,7 +77,8 @@
 
 dictionary *Site_INI;
 int sock=0,msgsock=0,tmp=0;
-int verbose=0;
+int verbose=10;
+int double_buf=0;
 int configured=1;
 int		writingFIFO=0, dma_count=0, under_flag=0,empty_flag=0,IRQ, intid;
 int		max_seq_count=0, xfercount=0, totransfer=0;
@@ -89,11 +90,12 @@ int tr_event=0, scope_event=0;
 pthread_t int_thread;
 void graceful_cleanup(int signum)
 {
-  char path[256];
-  sprintf(path, "%s", "rostiming");
+  //char path[256];
+  //sprintf(path, "%s", "rostiming");
+  //std::cout << "Unlinking Unix Socket: " << path << "\n";
+  std::cout << "Closing msgsock and sock\n";
   close(msgsock);
   close(sock);
-  std::cout << "Unlinking Unix Socket: " << path << "\n";
   //unlink(path);
 
   exit(0);
@@ -168,16 +170,16 @@ int main(){
 	int	step;
 	int	tempcode;
     struct timeval t0,t6;
-    struct timeval t1,t2;
+    struct timeval t1;
     unsigned long elapsed;
 
 	// function-specific message variables
-    int     numclients=0,nactiveclients=0;
+    int     numclients=0;
     struct  DriverMsg msg;
 
 	// timing related variables
 	struct	timespec cpu_start, cpu_stop;
-	struct	timespec tx0,tx1,tx2;
+	struct	timespec tx0,tx1;
     float elapsed_t1;
 
 	// usrp-timing related variables
@@ -198,6 +200,8 @@ int main(){
 
     tx_data tx(NUNITS,NUNITS);
     rx_data rx(NUNITS,2*NUNITS,RXFREQ, RXRATE);
+    //tx_data tx(1,NUNITS);
+    //rx_data rx(1,NUNITS,RXFREQ, RXRATE);
 
 	// Swing buffered.
 	unsigned int iseq=0;
@@ -211,6 +215,7 @@ int main(){
 	args = "addr0=192.168.10.2";
 	txsubdev = "A:A";
 	rxsubdev = "A:A A:B";
+	rxsubdev = "A:A";
 
 	clock_gettime(CLOCK_REALTIME, &cpu_start);
 
@@ -397,7 +402,7 @@ int main(){
 	int32_t rx_status_flag;
 	int32_t frame_offset;
 	int32_t dma_buffer;
-	int32_t nrx_samples;
+	//int32_t nrx_samples;
 	int32_t shm_memory;
 	while(true){
         rval=1;
@@ -419,8 +424,13 @@ int main(){
            //tv.tv_sec = 5;
            //tv.tv_usec = 0;
 		   if (verbose > 1) std::cout << msgsock << " Entering Select\n";
-           rval = select(msgsock+1, &rfds, NULL, &efds, NULL);
-           //rval = select(msgsock+1, &rfds, NULL, &efds, &tv); //Actually implement the timeout (AFM)
+           //rval = select(msgsock+1, &rfds, NULL, &efds, NULL);
+           if (select(msgsock+1, &rfds, NULL, &efds, NULL) < 0){
+               std::cerr << "Error in select. " << strerror(errno) << std::endl;
+           }
+           if (recv(msgsock, &buf, sizeof(int), MSG_PEEK) <= 0){
+               std::cerr << "Error in recv data. " << strerror(errno) << std::endl;
+           }
 		   if (verbose > 1) std::cout << msgsock << " Leaving Select " << rval << "\n";
            /* tv value might be modified -- Don’t rely on the value of tv now! */
            if (FD_ISSET(msgsock,&efds)){
@@ -428,7 +438,10 @@ int main(){
             break;
            }
            if (rval == -1) perror("select()");
-           rval=recv(msgsock, &buf, sizeof(int), MSG_PEEK); 
+           //rval=recv(msgsock, &buf, sizeof(int), MSG_PEEK); 
+           if (recv(msgsock, &buf, sizeof(int), MSG_PEEK) <= 0){
+               std::cerr << "Error in recv data. " << strerror(errno) << std::endl;
+           }
            if (verbose>1) std::cout << msgsock << " PEEK Recv Msg " << rval << "\n";
 		   if (rval==0) {
             if (verbose > 1) std::cout << "Remote Msgsock " << msgsock << " client disconnected ...closing\n";
@@ -442,7 +455,7 @@ int main(){
             if (verbose>1) std::cout << "Socket data is ready to be read\n";
 		    if (verbose > 1) std::cout << msgsock << " Recv Msg\n";
             if (recv_data(msgsock, &msg, sizeof(struct DriverMsg)) <= 0){
-                std::cerr << "Error in send data. " << strerror(errno) << std::endl;
+                std::cerr << "Error in recv data. " << strerror(errno) << std::endl;
             }
             datacode=msg.type;
 		    if (verbose > 1) std::cout << "\nmsg code is " <<  datacode << "\n";
@@ -452,12 +465,14 @@ int main(){
 		        msg.status=0;
                 //rval=recv_data(msgsock,&client,sizeof(struct ControlPRM));
                 if (recv_data(msgsock, &client, sizeof(struct ControlPRM)) <= 0){
-                    std::cerr << "Error in send data. " << strerror(errno) << std::endl;
+                    std::cerr << "Error in recv data. " << strerror(errno) << std::endl;
                 }
                 r=client.radar-1; 
                 c=client.channel-1; 
 
+                if (verbose>1) std::cout << "Registering rx client\n";
                 rx.register_client(client);
+                if (verbose>1) std::cout << "Registering tx client\n";
                 tx.register_client(client);
 
 			    if (verbose > 1) std::cout << "Radar: " << client.radar <<
@@ -465,7 +480,7 @@ int main(){
 				    " Status: " << msg.status << "\n";
 		        //rval=recv_data(msgsock,&index,sizeof(index));
                 if (recv_data(msgsock, &index, sizeof(index)) <= 0){
-                    std::cerr << "Error in send data. " << strerror(errno) << std::endl;
+                    std::cerr << "Error in recv data. " << strerror(errno) << std::endl;
                 }
 		        if (verbose > 1) std::cout << "Requested index: " << r << " " << c << " " << index << "\n";
 		        if (verbose > 1) std::cout << "Attempting Free on pulseseq: " << pulseseqs[r][c][index];
@@ -486,7 +501,7 @@ int main(){
 		        if (verbose > 1) std::cout << "Finished malloc\n";
                 //rval=recv_data(msgsock,pulseseqs[r][c][index], sizeof(struct TSGbuf)); // requested pulseseq
                 if (recv_data(msgsock, pulseseqs[r][c][index], sizeof(struct TSGbuf)) <= 0){
-                    std::cerr << "Error in send data. " << strerror(errno) << std::endl;
+                    std::cerr << "Error in recv data. " << strerror(errno) << std::endl;
                 }
                 pulseseqs[r][c][index]->rep=
                   (unsigned char*) malloc(sizeof(unsigned char)*pulseseqs[r][c][index]->len);
@@ -496,13 +511,13 @@ int main(){
                 //  sizeof(unsigned char)*pulseseqs[r][c][index]->len);
                 if (recv_data(msgsock, pulseseqs[r][c][index]->rep,
                     sizeof(unsigned char)*pulseseqs[r][c][index]->len) <= 0){
-                        std::cerr << "Error in send data. " << strerror(errno) << std::endl;
+                        std::cerr << "Error in recv data. " << strerror(errno) << std::endl;
                 }
                 //rval=recv_data(msgsock,pulseseqs[r][c][index]->code, 
                 //  sizeof(unsigned char)*pulseseqs[r][c][index]->len);
                 if (recv_data(msgsock, pulseseqs[r][c][index]->code,
                     sizeof(unsigned char)*pulseseqs[r][c][index]->len) <= 0){
-                        std::cerr << "Error in send data. " << strerror(errno) << std::endl;
+                        std::cerr << "Error in recv data. " << strerror(errno) << std::endl;
                 }
 			    if (verbose > 1) std::cout << "Pulseseq length: " << pulseseqs[r][c][index]->len << "\n";
                 old_seq_id=-10;
@@ -516,7 +531,7 @@ int main(){
 		      case TIMING_CtrlProg_END:
 		        //rval=recv_data(msgsock,&client,sizeof(struct ControlPRM));
                 if (recv_data(msgsock, &client,sizeof(struct ControlPRM)) <= 0){
-                    std::cerr << "Error in send data. " << strerror(errno) << std::endl;
+                    std::cerr << "Error in recv data. " << strerror(errno) << std::endl;
                 }
 		        if (verbose > 0) printf("A client is done. Radar: %i, Channel: %i\n", client.radar-1, client.channel-1);
                 r=client.radar-1;
@@ -537,7 +552,7 @@ int main(){
                 msg.status=0;
 		        //rval=recv_data(msgsock,&client,sizeof(struct ControlPRM));
                 if (recv_data(msgsock, &client,sizeof(struct ControlPRM)) <= 0){
-                    std::cerr << "Error in send data. " << strerror(errno) << std::endl;
+                    std::cerr << "Error in recv data. " << strerror(errno) << std::endl;
                 }
                 r=client.radar-1; 
                 c=client.channel-1; 
@@ -573,7 +588,7 @@ int main(){
                 //client_freqs[0]= (1000*client.tfreq-RXFREQ);
                 //std::cout << "rx_freqs: " << client_freqs[0] << std::endl;
                 time_delays.resize(tx.get_num_clients());
-                for (int i=0; i< tx.get_num_clients(); i++)
+                for (size_t i=0; i< tx.get_num_clients(); i++)
 			        time_delays[i] = 10 * (16/2-client.tbeam); // 10 ns per antenna per beam
 
                 index=client.current_pulseseq_index; 
@@ -827,17 +842,17 @@ int main(){
                     rx_process_threads.join_all(); //Make sure rx processing is done so that we have exclusive access to the GPU
 
                     clock_gettime(CLOCK_MONOTONIC, &tx0);
-                    for (int iradar=0; iradar<NRADARS; iradar++){ //Deal with each antenna channel for each radar
+                    for (int iradar=0; iradar<tx.get_num_radars(); iradar++){ //Deal with each antenna channel for each radar
                         /*This handles the mapping from client number to antenna number(s).
                          * Make adjustments based on single-site vs. dual-site radars, IP
                          * address mapping, etc. */
 
-                        if (numclients == 1){
-                            for (int i=1; i<NRADARS; i++){
-                                tx_bb_vecs[i].clear();
-                                tx_bb_vecs[i].resize(tx_bb_vecs[0].size(), 0);
-                            }
-                        }
+                        //if (tx.get_num_clients() == 1){
+                        //    for (int i=1; i<NRADARS; i++){
+                        //        tx_bb_vecs[i].clear();
+                        //        tx_bb_vecs[i].resize(tx_bb_vecs[0].size(), 0);
+                        //    }
+                        //}
                         
                         tx.set_rf_vec_size(tx_osr*max_seq_count);
 
@@ -873,6 +888,7 @@ int main(){
                 new_seq_id=-1;
 			    old_beam = new_beam;
 
+                std::cout << "bad_transmit_times.length: " <<  bad_transmit_times.length << std::endl;
                 if (send_data(msgsock, &bad_transmit_times.length, sizeof(bad_transmit_times.length)) <= 0){
                     std::cerr << "Error in send data. " << strerror(errno) << std::endl;
                 }
@@ -987,7 +1003,7 @@ int main(){
 
             case TIMING_POSTTRIGGER:
                 //receive_threads.join_all();
-                nactiveclients=numclients;
+                //nactiveclients=numclients;
                 numclients=0;
                 if (verbose > 1) std::cout << "Post trigger.  Un-readying all clients\n\n";
                 for (r=0;r<MAX_RADARS;r++){
@@ -1027,7 +1043,7 @@ int main(){
 
 		        //rval=recv_data(msgsock,&client,sizeof(struct ControlPRM));
                 if (recv_data(msgsock, &client,sizeof(struct ControlPRM)) <= 0){
-                    std::cerr << "Error in send data. " << strerror(errno) << std::endl;
+                    std::cerr << "Error in recv data. " << strerror(errno) << std::endl;
                 }
                 if (rval < 1) std::cerr << "\n!!!\n\nRVAL: " << rval << "\n\n" << std::endl;
                 if (send_data(msgsock, &rx_status_flag, sizeof(int)) <= 0){
@@ -1064,7 +1080,7 @@ int main(){
                 }
                 
 
-                rx_process_threads.join_all();
+                if (double_buf==0) rx_process_threads.join_all();
                 if (verbose>1) printf("iseq: %i\n", iseq);
                 if (verbose>1)std::cout << "set_bb_vec_ptrs: " << r << " " << c << std::endl;
                 rx.set_bb_vec_ptrs(r,c, &bb_vec_ptrs);
@@ -1074,6 +1090,7 @@ int main(){
                   gettimeofday(&t1,NULL);
 			      for(int i=0;i<client.number_of_samples;i++){
 			      	// Assuming i-phase component comes first ..?
+                    //printf("i: %i\n",i);
 			      	shared_main_addresses[r][c][0][i] = (int32_t)
 			    		( ((int32_t) (bb_vec_ptrs[MAIN_INPUT][i].real()) << 16) & 0xffff0000)| 
 			    		( ((int32_t) (bb_vec_ptrs[MAIN_INPUT][i].imag()) ) & 0x0000ffff);
@@ -1129,7 +1146,7 @@ int main(){
                   if (send_data(msgsock, &dma_buffer, sizeof(dma_buffer)) <= 0){
                       std::cerr << "Error in send data. " << strerror(errno) << std::endl;
                   }
-			      nrx_samples=client.number_of_samples;
+			      //nrx_samples=client.number_of_samples;
                   if (send_data(msgsock, &client.number_of_samples, sizeof(client.number_of_samples)) <= 0){
                       std::cerr << "Error in send data. " << strerror(errno) << std::endl;
                   }
@@ -1169,11 +1186,11 @@ int main(){
 			    if(verbose > 1) std::cout << "Doing clear frequency search!!!" << std::endl;
 			    //rval=recv_data(msgsock,&clrfreq_parameters,sizeof(struct CLRFreqPRM));
                 if (recv_data(msgsock, &clrfreq_parameters,sizeof(struct CLRFreqPRM)) <= 0){
-                    std::cerr << "Error in send data. " << strerror(errno) << std::endl;
+                    std::cerr << "Error in recv data. " << strerror(errno) << std::endl;
                 }
 			    //rval=recv_data(msgsock,&client,sizeof(struct ControlPRM));
                 if (recv_data(msgsock, &client,sizeof(struct ControlPRM)) <= 0){
-                    std::cerr << "Error in send data. " << strerror(errno) << std::endl;
+                    std::cerr << "Error in recv data. " << strerror(errno) << std::endl;
                 }
                 //printf("RECV_CLRFREQ for radar %i channel %i",client.radar, client.channel);
 			    if (verbose) printf("Doing clear frequency search for radar %d, channel %d\n",client.radar,client.channel);
