@@ -4,13 +4,6 @@
 #include <sys/un.h>
 #include <sys/socket.h>
 #include <string.h>
-//#ifdef __QNX__
-//  #include <hw/inout.h>
-//  #include <sys/socket.h>
-//  #include <sys/neutrino.h>
-//  #include <netinet/in.h>
-//  #include <netinet/tcp.h>
-//#endif
 #include <signal.h>
 #include <netdb.h>
 #include <stdio.h>
@@ -65,20 +58,20 @@
 #define IMAGING 0 
 #define MAX_SAMPLES 262144 
 
-#define TXRATE 2.5e6
+#define TXRATE 5e6
 #define TXFREQ 12e6
 #define RXRATE 2.5e6
 #define RXFREQ 12e6
 
 #define MIMO 1
-#define NUNITS 2
+#define NUNITS 1
 
 #define NRADARS 2
 
 dictionary *Site_INI;
 int sock=0,msgsock=0,tmp=0;
 int verbose=10;
-int double_buf=0;
+int double_buf=1;
 int configured=1;
 int		writingFIFO=0, dma_count=0, under_flag=0,empty_flag=0,IRQ, intid;
 int		max_seq_count=0, xfercount=0, totransfer=0;
@@ -147,14 +140,9 @@ int main(){
 	int usable_bandwidth=0;
     struct TRTimes bad_transmit_times;
 
-	//unsigned int *shared_main_addresses[MAX_RADARS][MAX_CHANNELS][MAX_INPUTS]; //Only a single channel buffer for now.. (AFM 10 March 2014)
-	uint32_t *shared_main_addresses[MAX_RADARS][MAX_CHANNELS][MAX_INPUTS]; //Only a single channel buffer for now.. (AFM 10 March 2014)
-	//uint64_t *shared_main_addresses[MAX_RADARS][MAX_CHANNELS][MAX_INPUTS]; //Only a single channel buffer for now.. (AFM 10 March 2014)
-	//unsigned int *shared_back_addresses[MAX_RADARS][MAX_CHANNELS][MAX_INPUTS]; 
+	uint32_t *shared_main_addresses[MAX_RADARS][MAX_CHANNELS][MAX_INPUTS];
 	uint32_t *shared_back_addresses[MAX_RADARS][MAX_CHANNELS][MAX_INPUTS]; 
-	//uint64_t *shared_back_addresses[MAX_RADARS][MAX_CHANNELS][MAX_INPUTS]; 
 	
-	//uint64_t main_address=0,back_address=0;
 	char shm_device[80];
 	int shm_fd=0;
 
@@ -196,12 +184,26 @@ int main(){
 	std::vector<sc16 *> rx_vec_ptrs;
     std::vector<std::complex<float>* > bb_vec_ptrs;
 
+    std::vector<std::complex<float> > beamform_main;
+    std::vector<std::complex<float> > beamform_back;
+
 	int tx_osr;
 
-    tx_data tx(NUNITS,NUNITS);
-    rx_data rx(NUNITS,2*NUNITS,RXFREQ, RXRATE);
-    //tx_data tx(1,NUNITS);
-    //rx_data rx(1,NUNITS,RXFREQ, RXRATE);
+    /* Example single-site radar configuration, imaging*/
+    //tx_data tx(1,16);
+    //rx_data rx(1,20,RXFREQ, RXRATE);
+    /* Example dual-site radar configuration, imaging*/
+    //tx_data tx(2,32);
+    //rx_data rx(2,40,RXFREQ, RXRATE);
+    /* Example single-site radar configuration, non-imaging*/
+    //tx_data tx(1,1);
+    //rx_data rx(1,2,RXFREQ, RXRATE);
+    /* Example dual-site radar configuration, non-imaging*/
+    //tx_data tx(2,2);
+    //rx_data rx(2,4,RXFREQ, RXRATE);
+    /* For testing*/
+    tx_data tx(1, NUNITS, TXFREQ, TXRATE);
+    rx_data rx(1, 2*NUNITS, RXFREQ, RXRATE);
 
 	// Swing buffered.
 	unsigned int iseq=0;
@@ -215,7 +217,7 @@ int main(){
 	args = "addr0=192.168.10.2";
 	txsubdev = "A:A";
 	rxsubdev = "A:A A:B";
-	rxsubdev = "A:A";
+	//rxsubdev = "A:A";
 
 	clock_gettime(CLOCK_REALTIME, &cpu_start);
 
@@ -260,12 +262,18 @@ int main(){
 			std::cout << "Using external clock reference..\n";
 			usrp->set_clock_source("external", 0);
 			usrp->set_clock_source("external", 1);
-			
-			//set time on the master (mboard 0)
+
+            /*Poll the usrp(s), waiting for the a PPS signal to occur */
+            const uhd::time_spec_t last_pps_time = usrp->get_time_last_pps();
+            while (last_pps_time == usrp->get_time_last_pps()) {
+                usleep(5e4);
+            }
+            /* Now that a PPS has occured, we have 
+             * almost one full second to sync all the devices */
 			usrp->set_time_next_pps(uhd::time_spec_t(0.0), 0);
 			usrp->set_time_next_pps(uhd::time_spec_t(0.0), 1);
 			
-			//sleep a bit while the slave locks its time to the master
+			//Sleep a bit while the USRP's lock to the external reference
 			boost::this_thread::sleep(boost::posix_time::milliseconds(1100));
 		}
 	}
@@ -323,21 +331,22 @@ int main(){
             sprintf(shm_device,"/receiver_main_%d_%d_%d",r,c,0);
             shm_unlink(shm_device);
             shm_fd=shm_open(shm_device,O_RDWR|O_CREAT,S_IRUSR | S_IWUSR);
-		    int rval = ftruncate(shm_fd,MAX_SAMPLES*4);
-		    if (rval==-1) std::cerr << "ftruncate error!!\n";
-            //shared_main_addresses[r][c][0]=(uint *)mmap(0,MAX_SAMPLES*4,PROT_READ|PROT_WRITE,MAP_SHARED,shm_fd,0);
+		    if (ftruncate(shm_fd,MAX_SAMPLES*4) != 0){
+		        std::cerr << "ftruncate error!!\n";
+            }
             shared_main_addresses[r][c][0]=(uint32_t *)mmap(0,MAX_SAMPLES*4,PROT_READ|PROT_WRITE,MAP_SHARED,shm_fd,0);
-            //shared_main_addresses[r][c][0]=(uint64_t *)mmap(0,MAX_SAMPLES*4,PROT_READ|PROT_WRITE,MAP_SHARED,shm_fd,0);
             close(shm_fd);
+
             sprintf(shm_device,"/receiver_back_%d_%d_%d",r,c,0);
             shm_unlink(shm_device);
             shm_fd=shm_open(shm_device,O_RDWR|O_CREAT,S_IRUSR | S_IWUSR);
-            rval = ftruncate(shm_fd, MAX_SAMPLES*4);
-		    if (rval==-1) std::cerr << "ftruncate error!!\n";
-            //shared_back_addresses[r][c][0]=(uint *)mmap(0,MAX_SAMPLES*4,PROT_READ|PROT_WRITE,MAP_SHARED,shm_fd,0);
+		    if (ftruncate(shm_fd,MAX_SAMPLES*4) != 0){
+		        std::cerr << "ftruncate error!!\n";
+            }
             shared_back_addresses[r][c][0]=(uint32_t *)mmap(0,MAX_SAMPLES*4,PROT_READ|PROT_WRITE,MAP_SHARED,shm_fd,0);
-            //shared_back_addresses[r][c][0]=(uint64_t *)mmap(0,MAX_SAMPLES*4,PROT_READ|PROT_WRITE,MAP_SHARED,shm_fd,0);
             close(shm_fd);
+            
+            // For testing..
             for (i=0;i<MAX_SAMPLES;i++) {
                 shared_main_addresses[r][c][0][i]=i;
                 shared_back_addresses[r][c][0][i]=i;
@@ -352,7 +361,7 @@ int main(){
    signal(SIGTERM, graceful_cleanup);
 
     Site_INI=NULL;
-	//temp=_open_ini_file();
+    //temp=_open_ini_file();
    //if(temp < 0 ) {
    //        std::cerr << "Error opening Site ini file, exiting driver\n";
    //        exit(temp);
@@ -392,7 +401,6 @@ int main(){
 	//printf("Done binding socket: %i \n", sock);
         //sock=server_unixsocket("/tmp/rostiming",0);
 	listen(sock, 5);
-	uhd::time_spec_t tstart;
 
     //Create thread groups
 	boost::thread_group receive_threads;
@@ -557,13 +565,8 @@ int main(){
                 r=client.radar-1; 
                 c=client.channel-1; 
 
-                rx.ready_client(
-                    client.radar-1,
-                    client.channel-1,
-                    client.number_of_samples, 
-                    client.rfreq, 
-                    client.baseband_samplerate);
-
+                rx.ready_client(client);
+                //tx.ready_client(max_seq_count, 1./STATE_TIME);
                 
                 if ((ready_index[r][c]>=0) && (ready_index[r][c] <maxclients) ) {
                     clients[ready_index[r][c]]=client;
@@ -577,16 +580,6 @@ int main(){
 			    if (verbose > 1) std::cout << "Radar: " << client.radar << " Channel: " << client.channel <<
 					" Beamnum: " << client.tbeam << " Status: " << msg.status << "\n";
 
-			    // Calculate time delay for beamforming
-                //tx_freqs.clear();
-                //tx_freqs.push_back(1e3*client.tfreq);
-                //tx_freqs[0] = (1000*client.tfreq);
-                //for (size_t i=0; i<tx_freqs.size(); i++)
-                //    std::cout << "tx_freqs: " << tx_freqs[i] << std::endl;
-                //client_freqs.resize(1);
-                //client_freqs.resize(1);
-                //client_freqs[0]= (1000*client.tfreq-RXFREQ);
-                //std::cout << "rx_freqs: " << client_freqs[0] << std::endl;
                 time_delays.resize(tx.get_num_clients());
                 for (size_t i=0; i< tx.get_num_clients(); i++)
 			        time_delays[i] = 10 * (16/2-client.tbeam); // 10 ns per antenna per beam
@@ -694,6 +687,7 @@ int main(){
 			        		"length: " << seq_count[r][c] << "\n";
                         tx_bb_vecs[iclient].clear();
                         tx_bb_vecs[iclient].resize(max_seq_count,0);
+                        if (verbose) std::cout << "max_seq_count: " << max_seq_count << std::endl;
                         if (iclient==0) {
                             printf("Initializing master buffer\n");
 			                for (j=0;j<seq_count[r][c];j++) {
@@ -731,70 +725,86 @@ int main(){
                     dds_trigger=0;
                     rx_trigger=0;
 
+                    /* Handle logic bit timing */
 			        for(int i=0;i<max_seq_count;i++){
-                        if ((master_buf[i] & 0x00010000)==0x00010000) {
-                          /* JDS: use tx as AM gate for mimic recv sample for external freq gen */
-                          //if(tx_offset > 0) {
-                          //  temp=tx_offset/STATE_TIME;
-                          //  master_buf[i+temp]|= 0x04 ; 
-                          //}
-                          if (tr_event==0) { 
-                            if (verbose > 1 ) std::cout << "Master TR sample start: " << i << " " << master_buf[i] << "\n";
-                            bad_transmit_times.length++;
-                            if(bad_transmit_times.length > 0){ 
-                              if(bad_transmit_times.length < MAX_PULSES) { 
+                        /* Handle Tx-Rx Signal logic */
+                        if ((master_buf[i] & 0x00010000)==0x00010000) { // TR gate logic on
+                            /* JDS: use tx as AM gate for mimic recv sample for external freq gen */
+                            //if(tx_offset > 0) {
+                            //  temp=tx_offset/STATE_TIME;
+                            //  master_buf[i+temp]|= 0x04 ; 
+                            //}
+                            if (tr_event==0) { 
+                              bad_transmit_times.length++;
+                              if (verbose > 1 ) std::cout << "Master TR sample start: " << i << " " << master_buf[i] << "\n";
+
+                              if (bad_transmit_times.length > 0 && bad_transmit_times.length < MAX_PULSES){ 
                                 (bad_transmit_times.start_usec)[bad_transmit_times.length-1]=i*STATE_TIME;
                                 (bad_transmit_times.duration_usec)[bad_transmit_times.length-1]=STATE_TIME;
-                              } else {
-                                std::cout << "Too many transmit pulses\n";
+                              }
+                              else {
+                                std::cerr << "Error in number of transmit pulses\n";
+                                exit(EXIT_FAILURE);
                               } 
+                            } 
+                            else {
+                                (bad_transmit_times.duration_usec)[bad_transmit_times.length-1]+=STATE_TIME;
                             }
-                          } else {
-                              (bad_transmit_times.duration_usec)[bad_transmit_times.length-1]+=STATE_TIME;
-                          }
-                          tr_event=1;
-                        } else {
-                          if(tr_event==1) 
-                            if (verbose > 1 ) std::cout << "Master TR sample end: " << i << " " << master_buf[i] << "\n";
-                          tr_event=0;
+                            tr_event=1;
                         }
-                        if ((master_buf[i] & 0x01)==0x01) {
-                          if (scope_event==0) { 
-                            if (verbose > 1 ) std::cout << "Scope Sync sample start: " << i << " " << master_buf[i] << "\n";
-                            scope_start=i;
-                          }
-                          scope_event=1;
-                        } else {
-                          if (scope_event==1) 
-                            if (verbose > 1 ) std::cout << "Scope Sync sample end: " << i << " " << master_buf[i] << "\n";
-                          scope_event=0;
+                        else { // TR gate logic off
+                            if(tr_event==1 && verbose > 1){
+                                std::cout << "Master TR sample end: " << i << " " << master_buf[i] << "\n";
+                            }
+                            tr_event=0;
                         }
-                        }
-                        if (scope_start>-1) { 
-                          //dds_trigger=scope_start+(int)((double)dds_offset/((double)STATE_TIME+0.5));
-                          //rx_trigger=scope_start+(int)((double)rx_offset/((double)STATE_TIME+0.5));
-                          //if (verbose > 1 ) {
-                          //  std::cout << "---> Scope Sync in Master " << max_seq_count << " at " << scope_start << "\n";
-                          //  std::cout << "---> DDS Trigger in Master " << max_seq_count << " at " << dds_trigger << "\n"; 
-                          //  std::cout << "---> Rx Trigger in Master " << max_seq_count << " at " << rx_trigger << "\n"; 
-                          //} 
-                        } else {
-                          //if (verbose > 1 ) std::cout << "XXX> Scope Sync not in Master " << max_seq_count << "\n";
-                          //dds_trigger=0;
-                          //rx_trigger=0;
-                        }
-                        if((dds_trigger>=0) && (dds_trigger<max_seq_count)) {
-                          //master_buf[dds_trigger]|=0x4000;                            
-                        }
-                        if((rx_trigger>=0) && (rx_trigger<max_seq_count)) {
-                          //master_buf[rx_trigger]|=0x8000;                            
-                        }
-                    
-	                  if (verbose > 1) std::cout << "seq length: " << max_seq_count << " state step: " <<
-			    		STATE_TIME*1e-6 << " time: " << (STATE_TIME*1E-6*max_seq_count) << "\n";
 
-			          if (verbose > 1) std::cout << "Max Seq Count: " << max_seq_count << "\n";
-                      if (verbose > 1) std::cout << "END FIFO Stamps\n";
+                        /* Handle Scope Sync Signal logic */
+                        if ((master_buf[i] & 0x01)==0x01) { // Scope signal logic on
+                            if (scope_event==0) { 
+                                if (verbose > 1 ) std::cout << "Scope Sync sample start: " << i << " " << master_buf[i] << "\n";
+                                scope_start=i;
+                            }
+                            scope_event=1;
+                        }
+                        else {
+                            if (scope_event==1 && verbose > 1){
+                                std::cout << "Scope Sync sample end: " << i << " " << master_buf[i] << "\n";
+                            }
+                            scope_event=0;
+                        }
+                    }
+
+                    /* The following is leftover from the old timing card code.  Might be useful reference
+                     * if we want to add other logic signals besides scope-sync and tr gate */
+                    /*
+                    if (scope_start>-1) { 
+                      //dds_trigger=scope_start+(int)((double)dds_offset/((double)STATE_TIME+0.5));
+                      //rx_trigger=scope_start+(int)((double)rx_offset/((double)STATE_TIME+0.5));
+                      //if (verbose > 1 ) {
+                      //  std::cout << "---> Scope Sync in Master " << max_seq_count << " at " << scope_start << "\n";
+                      //  std::cout << "---> DDS Trigger in Master " << max_seq_count << " at " << dds_trigger << "\n"; 
+                      //  std::cout << "---> Rx Trigger in Master " << max_seq_count << " at " << rx_trigger << "\n"; 
+                      //} 
+                    }
+                    else {
+                      //if (verbose > 1 ) std::cout << "XXX> Scope Sync not in Master " << max_seq_count << "\n";
+                      //dds_trigger=0;
+                      //rx_trigger=0;
+                    }
+                    if((dds_trigger>=0) && (dds_trigger<max_seq_count)) {
+                      //master_buf[dds_trigger]|=0x4000;                            
+                    }
+                    if((rx_trigger>=0) && (rx_trigger<max_seq_count)) {
+                      //master_buf[rx_trigger]|=0x8000;                            
+                    }
+                    
+	                if (verbose > 1) std::cout << "seq length: " << max_seq_count << " state step: " <<
+			    	  STATE_TIME*1e-6 << " time: " << (STATE_TIME*1E-6*max_seq_count) << "\n";
+
+			        if (verbose > 1) std::cout << "Max Seq Count: " << max_seq_count << "\n";
+                    if (verbose > 1) std::cout << "END FIFO Stamps\n";
+                    */
 
                     //std::cout << client.trise << std::endl;
                     /*Calculate taps for Gaussian filter*/
@@ -805,9 +815,11 @@ int main(){
 			        //		-1*(alpha)*pow((((float)i-(filter_table_len-1)/2)/filter_table_len),2))/filter_table_len;
 			        //}
                     //for (int iclient=0; iclient<numclients; iclient++){
+                      //std::cout << "num tx clients: " << tx.get_num_clients() << std::endl;
                     for (int iclient=0; iclient<1; iclient++){
-                        filter_taps.resize(50e3/clients[iclient].trise,
-                            std::complex<float>(clients[iclient].trise/50.e3/2./(float)tx.get_num_clients(),0));
+                        filter_taps.resize(25e3/clients[iclient].trise);
+                        filter_taps.assign(filter_taps.size(),
+                            std::complex<float>(clients[iclient].trise/25.e3/(float)tx.get_num_clients(),0));
                         //for (int j=0; j<tx_bb_vecs[iclient].size(); j++){
                         //    if (tx_bb_vecs[iclient][j] != std::complex<float>(0,0) && j%10 == 0) 
                         //        std::cout << iclient << " " << j << " " << tx_bb_vecs[iclient][j] << std::endl;
@@ -834,7 +846,7 @@ int main(){
 			    	        usrp->set_rx_rate(RXRATE, chan);
 			                usrp->set_rx_freq(RXFREQ, chan);
 			    	}
-			    	for(size_t chan=0; chan<ntx_antennas; chan++) {
+			    	for(size_t chan=0; chan < usrp->get_tx_num_channels(); chan++) {
 			    	        usrp->set_tx_rate(TXRATE, chan);
 			                usrp->set_tx_freq(TXFREQ, chan);
 			    	}
@@ -842,21 +854,10 @@ int main(){
                     rx_process_threads.join_all(); //Make sure rx processing is done so that we have exclusive access to the GPU
 
                     clock_gettime(CLOCK_MONOTONIC, &tx0);
-                    for (int iradar=0; iradar<tx.get_num_radars(); iradar++){ //Deal with each antenna channel for each radar
-                        /*This handles the mapping from client number to antenna number(s).
-                         * Make adjustments based on single-site vs. dual-site radars, IP
-                         * address mapping, etc. */
+                    tx.set_rf_vec_size(tx_osr*max_seq_count);
+                    for (int iradar=0; iradar<tx.get_num_radars(); iradar++){ //Deal with each radar at the site
 
-                        //if (tx.get_num_clients() == 1){
-                        //    for (int i=1; i<NRADARS; i++){
-                        //        tx_bb_vecs[i].clear();
-                        //        tx_bb_vecs[i].resize(tx_bb_vecs[0].size(), 0);
-                        //    }
-                        //}
-                        
-                        tx.set_rf_vec_size(tx_osr*max_seq_count);
-
-                        if (tx.get_num_clients(iradar) == 0){
+                        if (tx.get_num_clients(iradar) == 0){ 
                             tx.zero_rf_vec(iradar);
                             continue;
                         }
@@ -870,7 +871,7 @@ int main(){
                             TXRATE,
                             tx.get_freqs(iradar), // List of center frequencies for this radar
 				        	&time_delays.front(), // Vector of beam-forming-related time delays
-                            tx.get_num_clients(iradar), // Number of channels for this radar [TODO] Numclients handles nradars but not nchannels yet
+                            tx.get_num_clients(iradar), // Number of channels for this radar
                             tx.get_num_ants_per_radar()); //number of antennas per radar
                     }
 
@@ -888,7 +889,9 @@ int main(){
                 new_seq_id=-1;
 			    old_beam = new_beam;
 
-                std::cout << "bad_transmit_times.length: " <<  bad_transmit_times.length << std::endl;
+                if (verbose > 2){
+                    std::cout << "bad_transmit_times.length: " <<  bad_transmit_times.length << std::endl;
+                }
                 if (send_data(msgsock, &bad_transmit_times.length, sizeof(bad_transmit_times.length)) <= 0){
                     std::cerr << "Error in send data. " << strerror(errno) << std::endl;
                 }
@@ -921,11 +924,10 @@ int main(){
                 msg.status=0;
 
                 if(configured) {
-			        //First wait for any existing receiver threads..
+			        //First make sure sure we're done receiving the last pulse sequence
 			        if (verbose > 1) std::cout << "Waiting on thread.." << std::endl;
 			        receive_threads.join_all();
 			  
-		       	    //Adjust the number of samples to receive to account for sample rate conversion
 			        if (verbose > 1){
 			  	        std::cout << "client baseband sample rate: " << client.baseband_samplerate << std::endl;
 			  	        std::cout << "nsamples: " << rx.get_num_rf_samples() << std::endl;
@@ -936,17 +938,14 @@ int main(){
 			        if(verbose>1) std::cout << "About to start rx thread..\n";
 			        rx_thread_status=0;
 			        gettimeofday(&t0,NULL);
-			        tstart = usrp->get_time_now();
 	
                     rx.set_rf_vec_ptrs(&rx_vec_ptrs);
                     tx.set_rf_vec_ptrs(&tx_vec_ptrs);
 
-			        uhd::time_spec_t start_time = usrp->get_time_now() + 0.02;
+			        uhd::time_spec_t start_time = usrp->get_time_now() + 0.01;
                     gettimeofday(&t1,NULL);
 		            receive_threads.create_thread(boost::bind(recv_and_hold,
-                        bad_transmit_times.start_usec,
-                        bad_transmit_times.duration_usec,
-                        bad_transmit_times.length,
+                        &bad_transmit_times,
 			         	usrp,
 			         	rx_stream,
 			         	rx_vec_ptrs,
@@ -959,7 +958,7 @@ int main(){
                         tx_stream,
                         tx_vec_ptrs,
                         tx.get_num_rf_samples(),
-                        start_time));
+                        start_time+20e-6));
                 }
                 //tx_threads.join_all();
                 //receive_threads.join_all();
@@ -1041,7 +1040,6 @@ int main(){
 			    	if (verbose>1) printf("Status okay!!\n");
 			    }
 
-		        //rval=recv_data(msgsock,&client,sizeof(struct ControlPRM));
                 if (recv_data(msgsock, &client,sizeof(struct ControlPRM)) <= 0){
                     std::cerr << "Error in recv data. " << strerror(errno) << std::endl;
                 }
@@ -1055,17 +1053,21 @@ int main(){
 			    get_data_t0 = usrp->get_time_now();
 			    r = client.radar-1; c = client.channel-1;
 	
-                //std::cout << r << " " << c << std::endl;
-                //std::cout << rx.get_rf_dptr(r) << std::endl;
-                //std::cout << rx.get_bb_dptr(r) << std::endl;
-                //std::cout << rx.get_num_rf_samples() << std::endl;
-                //std::cout << rx.get_num_bb_samples() << std::endl;
-                //std::cout << rx.get_num_clients(r) << std::endl;
-                //std::cout << rx.get_num_ants_per_radar() << std::endl;
-                //std::cout << (float) RXRATE << std::endl;
-                //std::cout << (float) client.baseband_samplerate << std::endl;
-                //std::cout << rx.get_freqs(r) << std::endl;
-                if (verbose>1) std::cout << "about to enter rx_process_gpu()\n";
+                if (verbose > 2){
+                    std::cout << r << " " << c << std::endl;
+                    std::cout << rx.get_rf_dptr(r) << std::endl;
+                    std::cout << rx.get_bb_dptr(r) << std::endl;
+                    std::cout << rx.get_num_rf_samples() << std::endl;
+                    std::cout << rx.get_num_bb_samples() << std::endl;
+                    std::cout << rx.get_num_clients(r) << std::endl;
+                    std::cout << rx.get_num_ants_per_radar() << std::endl;
+                    std::cout << (float) RXRATE << std::endl;
+                    std::cout << (float) client.baseband_samplerate << std::endl;
+                    for (size_t i=0; i<rx.get_num_clients(r); i++){
+                        std::cout << (rx.get_freqs(r))[i] << std::endl;
+                    }
+                }
+                if (verbose>1) std::cout << "About to enter rx_process_gpu()\n";
                 if (rx_thread_status==0){
 			        rx_process_threads.create_thread(boost::bind(rx_process_gpu,
                         rx.get_rf_dptr(r),
@@ -1079,11 +1081,28 @@ int main(){
                         rx.get_freqs(r)));
                 }
                 
-
                 if (double_buf==0) rx_process_threads.join_all();
+
                 if (verbose>1) printf("iseq: %i\n", iseq);
                 if (verbose>1)std::cout << "set_bb_vec_ptrs: " << r << " " << c << std::endl;
-                rx.set_bb_vec_ptrs(r,c, &bb_vec_ptrs);
+
+                rx.set_bb_vec_ptrs(r,c, &bb_vec_ptrs,double_buf);
+
+                beamform_main.resize(rx.get_num_ants_per_radar(), 1);
+                beamform_back.resize(rx.get_num_ants_per_radar(), 1);
+                rx_beamform(
+                    shared_main_addresses[r][c][0],
+			      	shared_back_addresses[r][c][0],
+                    &bb_vec_ptrs,
+                    //rx.get_num_ants_per_radar()/2,
+                    //rx.get_num_ants_per_radar()/2,
+                    1,
+                    1,
+                    rx.get_num_bb_samples(),
+                    &beamform_main,
+                    &beamform_back);
+
+
 			    if(rx_status_flag == 0){
 			      if(verbose>1)std::cout << "Repackaging RX data.." << std::endl;
 
@@ -1091,12 +1110,12 @@ int main(){
 			      for(int i=0;i<client.number_of_samples;i++){
 			      	// Assuming i-phase component comes first ..?
                     //printf("i: %i\n",i);
-			      	shared_main_addresses[r][c][0][i] = (int32_t)
-			    		( ((int32_t) (bb_vec_ptrs[MAIN_INPUT][i].real()) << 16) & 0xffff0000)| 
-			    		( ((int32_t) (bb_vec_ptrs[MAIN_INPUT][i].imag()) ) & 0x0000ffff);
-			      	shared_back_addresses[r][c][0][i] = (int32_t)
-			    		( ((int32_t) (bb_vec_ptrs[BACK_INPUT][i].real()) << 16) & 0xffff0000)| 
-			    		( ((int32_t) (bb_vec_ptrs[BACK_INPUT][i].imag()) ) & 0x0000ffff);
+			      	//shared_main_addresses[r][c][0][i] = (int32_t)
+			    	//	( ((int32_t) (bb_vec_ptrs[MAIN_INPUT][i].real()) << 16) & 0xffff0000)| 
+			    	//	( ((int32_t) (bb_vec_ptrs[MAIN_INPUT][i].imag()) ) & 0x0000ffff);
+			      	//shared_back_addresses[r][c][0][i] = (int32_t)
+			    	//	( ((int32_t) (bb_vec_ptrs[BACK_INPUT][i].real()) << 16) & 0xffff0000)| 
+			    	//	( ((int32_t) (bb_vec_ptrs[BACK_INPUT][i].imag()) ) & 0x0000ffff);
 
                     //Rx:
 			    	if(verbose>100){

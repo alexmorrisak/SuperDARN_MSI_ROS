@@ -85,7 +85,7 @@ void *timing_pretrigger(void *arg)
   //printf("TIMING: PRETRIGGER: free end\n");
   //printf("TIMING: PRETRIGGER: recv bad_transmit times object\n");
   rval=recv_data(timingsock, &bad_transmit_times.length, sizeof(bad_transmit_times.length));
-  if (rval<=0) {printf("\nERROR in recv_data()!!\n\n");}
+  if (rval<=0) {printf("\nERROR in recv_data()!!%s\n\n",strerror(errno));}
   printf("TIMING: PRETRIGGER: length %d %i\n",bad_transmit_times.length, rval);
   if (bad_transmit_times.length>0) {
     //printf("TIMING: PRETRIGGER: Mallocs start\n");
@@ -106,11 +106,10 @@ void *timing_pretrigger(void *arg)
 
   //printf("TIMING: PRETRIGGER: recv duration usec object %i\n", rval);
   rval=recv_data(timingsock, (uint32_t*)bad_transmit_times.duration_usec, sizeof(uint32_t)*bad_transmit_times.length);
-  if (rval<=0) {printf("\nERROR in recv_data()!!\n\n");}
   //send_data(timingsock, &rval,sizeof(int));
   //printf("TIMING: PRETRIGGER: recv msg %i\n",rval);
   rval=recv_data(timingsock, &msg, sizeof(struct DriverMsg));
-  if (rval<=0) {printf("\nERROR in recv_data()!!\n\n");}
+  if (rval<=0) {printf("\nERROR in recv_data()!!%s\n\n",strerror(errno));}
 
   printf("TIMING: PRETRIGGER: done recv msg %i\n",rval);
   pthread_mutex_unlock(&timing_comm_lock);

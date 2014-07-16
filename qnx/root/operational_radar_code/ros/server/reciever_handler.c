@@ -735,6 +735,7 @@ void *receiver_ready_controlprogram(struct ControlProgram *arg)
 
 void *receiver_pretrigger(void *arg)
 {
+  int rval;
   struct DriverMsg msg;
   memset(&msg,0,sizeof(msg));
   pthread_mutex_lock(&timing_comm_lock);
@@ -743,7 +744,8 @@ void *receiver_pretrigger(void *arg)
    msg.status=1;
    send_data(recvsock, &msg, sizeof(struct DriverMsg));
    printf("RECV_PRETRIGGER: recvsock: %i\n", recvsock);
-   recv_data(recvsock, &msg, sizeof(struct DriverMsg));
+   rval=recv_data(recvsock, &msg, sizeof(struct DriverMsg));
+   if (rval<=0) {printf("\nERROR in recv_data()\n%s!!\n\n",strerror(errno));}
    pthread_mutex_unlock(&timing_comm_lock);
    pthread_exit(NULL);
 
@@ -810,6 +812,7 @@ void *receiver_controlprogram_get_data(struct ControlProgram *arg)
         send_data(timingsock, &msg, sizeof(struct DriverMsg));
         send_data(timingsock, arg->parameters, sizeof(struct ControlPRM));
         rval = recv_data(timingsock,&arg->data->status,sizeof(arg->data->status));
+        if (rval<=0) {printf("\nERROR in recv_data()\n%s!!\n\n",strerror(errno));}
       } else {
         arg->data->status=error_flag;
         arg->data->samples=0;
@@ -819,12 +822,16 @@ void *receiver_controlprogram_get_data(struct ControlProgram *arg)
         printf("RECV: GET_DATA: status good\n");
         //printf("rval: %i\n",rval);
         rval=recv_data(timingsock,&arg->data->shm_memory,sizeof(arg->data->shm_memory));
+        if (rval<=0) {printf("\nERROR in recv_data()\n%s!!\n\n",strerror(errno));}
         printf("shm_memory %i rval: %i\n", arg->data->shm_memory, rval);
         rval=recv_data(timingsock,&arg->data->frame_header,sizeof(arg->data->frame_header));
+        if (rval<=0) {printf("\nERROR in recv_data()\n%s!!\n\n",strerror(errno));}
         printf("frame_header %i rval: %i\n", arg->data->frame_header, rval);
         rval=recv_data(timingsock,&arg->data->bufnum,sizeof(arg->data->bufnum));
+        if (rval<=0) {printf("\nERROR in recv_data()\n%s!!\n\n",strerror(errno));}
         printf("bufnum %i rval: %i\n", arg->data->bufnum, rval);
         rval=recv_data(timingsock,&arg->data->samples,sizeof(arg->data->samples));
+        if (rval<=0) {printf("\nERROR in recv_data()\n%s!!\n\n",strerror(errno));}
         printf("samples %i rval: %i\n", arg->data->samples, rval);
         //rval=recv_data(timingsock,&arg->main_address,sizeof(arg->main_address));
         //rval=recv_data(timingsock,&arg->main,sizeof(arg->main));

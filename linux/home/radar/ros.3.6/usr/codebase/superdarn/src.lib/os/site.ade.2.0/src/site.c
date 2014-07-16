@@ -760,7 +760,7 @@ usleep(usecs);
     if (debug) 
         fprintf(stderr,"ADE GET_DATA: samples %d status %d\n",dprm.samples,dprm.status);
       
-    if(dprm.samples > 1000 || dprm.samples < 0){
+    if(dprm.samples > 10000 || dprm.samples < 0){
         fprintf(stderr,"Whoa, bad number of samples..%i\n",dprm.samples);
         dprm.samples =0;
         sleep(1);

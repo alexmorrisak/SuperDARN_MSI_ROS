@@ -68,8 +68,8 @@ __global__ void interpolate_and_multiply(
             irf_samples[threadIdx.x] += irf_samples[threadIdx.x + i*blockDim.x];
             qrf_samples[threadIdx.x] += qrf_samples[threadIdx.x + i*blockDim.x];
         }
-        outdata[blockIdx.y][2*outInx] = (int16_t) (0.95*32768*irf_samples[threadIdx.x]) & 0xfffe;
-        outdata[blockIdx.y][2*outInx+1] = (int16_t) (0.95*32768*qrf_samples[threadIdx.x]) & 0xfffe;
+        outdata[blockIdx.y][2*outInx] = (int16_t) (0.95*32768*irf_samples[threadIdx.x]);
+        outdata[blockIdx.y][2*outInx+1] = (int16_t) (0.95*32768*qrf_samples[threadIdx.x]);
     }
     
 }

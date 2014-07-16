@@ -4,10 +4,20 @@ void _convolve(
     std::complex<float>* taps,
     unsigned int taps_len
 );
+void rx_beamform(
+    uint32_t* client_main,
+    uint32_t* client_back,
+    std::vector<std::complex<float> *>* bb_vec_ptrs,
+    size_t nants_main,
+    size_t nants_back,
+    size_t nsamps,
+    std::vector<std::complex<float> >* beamform_main,
+    std::vector<std::complex<float> >* beamform_back);
 void recv_and_hold(
-    unsigned int* trtimes,
-    unsigned int* trdurations,
-    unsigned int npulses,
+    //unsigned int* trtimes,
+    //unsigned int* trdurations,
+    //unsigned int npulses,
+    struct TRTimes* trtimes,
     uhd::usrp::multi_usrp::sptr usrp,
     uhd::rx_streamer::sptr rx_stream,
     std::vector<std::complex<short> *> client_buff_ptrs,

@@ -66,7 +66,7 @@ __global__ void multiply_and_add(float ***samples, float ***odata, float **filte
      // parallel reduce samples (could unroll loop for speedup?)
      // Do this as long as the reduction is a power of 2
      unsigned int s, rem;
-     s = blockDim.x / blockDim.y;
+     s = blockDim.x;// / blockDim.y;
      rem = blockDim.x % 2;
      while(s > 0 && rem == 0){
         s /= 2;
@@ -216,14 +216,14 @@ void rx_process_gpu(
     //std::vector<float> center_freqs, // center frequencies
     //std::vector<float> bws // bandwidth of each center frequency
 ){
-    int trblshoot = 0;
+    int debug = 0;
     struct timespec t0, t1;
     struct timespec tick, tock;
     float elapsed_t, elapsed_proc_t;
     int dmrate = nrf_samples / nbb_samples;
     int dmrate0 = dmrate;
     //nants *= 10;
-    if (trblshoot) printf("Entered rx_process_gpu()\n");
+    if (debug) printf("Entered rx_process_gpu()\n");
 
 
     //if (dmrate*nfreqs > MAX_BLOCK_SIZE){
@@ -245,6 +245,8 @@ void rx_process_gpu(
     double radfreq0[nfreqs];
     for (size_t i=0;i<nfreqs;i++){
 	    radfreq0[i] = double (2*M_PI* rx_freqs[i]) / rf_sample_rate;
+        if (debug) printf("radfreq0[%i]: %f\n", i, radfreq0[i]);
+        if (debug) printf("rx_freqs[%i]: %f\n", i, rx_freqs[i]);
     }
 
     /*Rectangular-window for coarse filtering.  
@@ -280,7 +282,7 @@ void rx_process_gpu(
 
 
 
-    if (trblshoot) printf("Allocating and copying filter tap data\n");
+    if (debug) printf("Allocating and copying filter tap data\n");
     /*Allocate device memory for filter taps and copy data into it*/
     float *taps_dptr[nfreqs];// = (float*) malloc(nfreqs*sizeof(float*));
     float* taps_ptrs[nfreqs];
@@ -301,7 +303,7 @@ void rx_process_gpu(
          nfreqs*sizeof(float*),
          cudaMemcpyHostToDevice);
 
-    if (trblshoot) printf("Allocating and copying input data\n");
+    if (debug) printf("Allocating and copying input data\n");
     /*Allocate device memory for input data and copy data into it*/
     /* TODO: this should be a function in recv_and_hold(); i.e. data
     should be ready to rock by the time this function is called*/
@@ -315,7 +317,7 @@ void rx_process_gpu(
         //cudaMemset(indata_vp_d[iant], 0, ntaps0*sizeof(int16_t));
         //cudaMemset(indata_vp_d[iant]+2*nrf_samples+ntaps0, 0, ntaps0*sizeof(int16_t));
         //indata_vp_d[iant] += dmrate0;
-        if (trblshoot) printf("rf data to GPU. nrfsamples: %i\n", nrf_samples);
+        if (debug) printf("rf data to GPU. nrfsamples: %i\n", nrf_samples);
         cudaMemcpy(
                 indata_vp_d[iant] + ntaps0,
                 rx_buff_ptrs[iant], 
@@ -323,14 +325,14 @@ void rx_process_gpu(
                 cudaMemcpyHostToDevice);
         indata_p2vp_h[iant] = indata_vp_d[iant] + dmrate0;
     }
-    if (trblshoot) printf("rf data ptrs to GPU\n");
+    if (debug) printf("rf data ptrs to GPU\n");
     cudaMemcpy(
             indata_p2vp_d,
             indata_p2vp_h,
             nants*sizeof(int16_t*),
             cudaMemcpyHostToDevice);
         
-    if (trblshoot) printf("Allocating output data\n");
+    if (debug) printf("Allocating output data\n");
     /*Allocate device memory for output data*/
     float* outdata_vp_d[nfreqs][nants];// = malloc(nfreqs*sizeof(float*));
     float* outdata_vp_h[nfreqs][nants];// = (float**) malloc(nants*sizeof(float*));// = (float**) malloc(nfreqs*sizeof(float*));
@@ -365,7 +367,7 @@ void rx_process_gpu(
     dim3 dimGrid(nrf_samples/dmrate0+1,nants,1);
     dim3 dimBlock(ntaps0/2,nfreqs,1);
 
-    if (trblshoot){
+    if (debug){
         printf("nrfsamples: %i\n", nrf_samples);
         printf("decimation rate 0: %i\n", dmrate0);
         printf("nimtsamples: %i\n", nrf_samples/dmrate0);
@@ -396,7 +398,7 @@ void rx_process_gpu(
     /* Uncomment the following to take a sneak-peak at the intermediate stage data*/
 
     
-    if (trblshoot>1 | TEST==1){
+    if (debug>1 | TEST==1){
         float* vps[nfreqs][nants];
         for (int ifreq=0; ifreq<nfreqs; ifreq++){
             for (int iant=0; iant<nants; iant++){
@@ -413,7 +415,7 @@ void rx_process_gpu(
             for (int iant=0; iant<nants; iant++){
                 if (iant ==0){
                     for (int isamp=0; isamp < nrf_samples/dmrate0; isamp++){
-                        printf("%i, %i, (%.1f, %.1f)\n", ifreq, iant, vps[ifreq][iant][2*isamp], vps[ifreq][iant][2*isamp+1]);
+                        printf("%i, %i, %i: (%.1f, %.1f)\n", ifreq, iant, isamp, vps[ifreq][iant][2*isamp], vps[ifreq][iant][2*isamp+1]);
                     }
                 }
             }
@@ -488,8 +490,8 @@ void rx_process_gpu(
                 filter_taps1[ifreq][i][1] = 0; //Q-component is zero
                 //printf("filter tap %i: %f\n", i, filter_taps1[ifreq][i][0]);
         }
+        filter_taps1[ifreq][ntaps1/2][0]=1./ntaps1; //handle the divide-by-zero condition
     }
-    filter_taps1[0][ntaps1/2][0]=1./ntaps1; //handle the divide-by-zero condition
 
     /*Allocate device memory for filter taps and copy data into it*/
     cudaFree(taps_ptr_dptr);
@@ -539,7 +541,7 @@ void rx_process_gpu(
             nfreqs*sizeof(float**),
             cudaMemcpyHostToDevice);
 
-    if (trblshoot){
+    if (debug){
         printf("nimtsamples: %i\n", nrf_samples/dmrate0);
         printf("nbbsamples: %i\n", nbb_samples);
         printf("decimation rate 1: %i\n", dmrate1);
@@ -576,13 +578,13 @@ void rx_process_gpu(
             cudaMemcpyDeviceToHost);
 
         /* Uncomment the following to get a peak at the output samples*/
-        if (trblshoot > 1 | TEST==1){
+        if (debug > 1 | TEST==1){
             for(int i=0;i<nbb_samples;i+=1){
-                    if (iant == 0){
+                    //if (iant == 0){
                     printf("output %i, %i, %i: (%i, %i)\n",ifreq, iant, i,
                          (int) client_buff_ptr[ifreq][iant][2*i],
                          (int) client_buff_ptr[ifreq][iant][2*i+1]);
-                    }
+                    //}
             }
         }
 

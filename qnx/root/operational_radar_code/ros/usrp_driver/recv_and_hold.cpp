@@ -9,6 +9,7 @@
 #include <boost/thread.hpp>
 #include <thread>
 #include <math.h>
+#include <control_program.h>
 
 #define NTHREADS 2
 
@@ -22,9 +23,10 @@ extern int verbose;
  * own thread context so that it does not block the execution in main()
  **********************************************************************/
 void recv_and_hold(
-    unsigned int* trtimes,
-    unsigned int* trdurations,
-    unsigned int npulses,
+    //unsigned int* trtimes,
+    //unsigned int* trdurations,
+    //unsigned int npulses,
+    struct TRTimes* trtimes,
     uhd::usrp::multi_usrp::sptr usrp,
     uhd::rx_streamer::sptr rx_stream,
     std::vector<std::complex<int16_t> *> client_buff_ptrs,
@@ -66,11 +68,12 @@ void recv_and_hold(
     //    std::cout << i << " " << trtimes[i] << " " << trdurations[i] << std::endl;
     //}
     //std::cout << "Sending out TR logic signals\n";
-    for (int i=0; i<npulses; i++){
-        usrp->set_command_time(uhd::time_spec_t(start_time.get_real_secs()+1e-6*trtimes[i]));
+    for (int i=0; i<trtimes->length; i++){
+        //usrp->set_command_time(uhd::time_spec_t(start_time.get_real_secs()+1e-6*trtimes[i]));
+        usrp->set_command_time(uhd::time_spec_t(start_time.get_real_secs()+1e-6*trtimes->start_usec[i]));
         usrp->set_gpio_attr("TXA","OUT",0x20,0x20);
 
-        usrp->set_command_time(start_time+1e-6*(trtimes[i]+trdurations[i]));
+        usrp->set_command_time(start_time+1e-6*(trtimes->start_usec[i]+trtimes->duration_usec[i]));
         usrp->set_gpio_attr("TXA","OUT",0x00,0x20);
     }
         
