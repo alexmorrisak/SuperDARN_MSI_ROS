@@ -1,6 +1,8 @@
 #include <control_program.h>
 
 class tx_data{
+    private:
+    struct TSGbuf pulseseqs[4];
     struct ControlPRM client;
     std::vector<ControlPRM> clients;
     size_t nclients; //number of clients registered to the usrp driver
@@ -20,8 +22,12 @@ class tx_data{
     ~tx_data();
     void add_client();
     void add_client(size_t radar);
-    void register_client(size_t radar, size_t channel);
     void register_client(struct ControlPRM new_client);
+    void register_seq(size_t index);
+    struct TSGbuf* get_seq_ptr(size_t index);
+    size_t get_seq_len(size_t index);
+    unsigned char* get_seq_rep_ptr(size_t index);
+    unsigned char* get_seq_code_ptr(size_t index);
     void unregister_client(size_t radar, size_t channel);
     void drop_client();
     void drop_client(size_t radar);
@@ -50,17 +56,18 @@ class rx_data{
     std::vector<ControlPRM> clients;
     int buf;
     size_t nclients; //number of clients registered to the usrp driver
-    std::vector<std::vector<std::vector<std::complex<float> > > > rx_bb_vecs[2]; //baseband data, rx_bb_vecs[2][nclients][nants][nbbsamp
+    std::vector<std::vector<std::vector<std::vector<std::complex<float> > > > > rx_bb_vecs[2]; //baseband data, rx_bb_vecs[2][nclients][nants][nbbsamp
     float bb_rate,rf_rate; //bb and rf sample rates
     float center_freq;
     size_t nbb_samples, nrf_samples;
     float minrate, mintime;
     std::vector<size_t> nclient_samples;  //Number of samples requested by each client
     std::vector<std::vector<std::complex<int16_t> > > rx_rf_vecs[2]; //rf data, rx_rf_vecs[2][nants][nrfsamps]
-    std::vector<int16_t*> rx_rf_vec_ptrs;
-    std::vector<std::vector<float*> > rx_bb_vec_ptrs;  //rx_bb_vec_ptrs[nclients][nants]
-    std::vector<float**> rx_bb_client_ptrs;  //rx_bb_client_ptrs[nclients]
+    std::vector<std::vector<int16_t*> > rx_rf_vec_ptrs;
+    std::vector<std::vector<std::vector<float*> > > rx_bb_vec_ptrs;  //rx_bb_vec_ptrs[nclients][nants]
+    std::vector<std::vector<float**> > rx_bb_client_ptrs;  //rx_bb_client_ptrs[nclients]
     std::vector<std::vector<float> > rx_freqs; //Vectors of receive frequencies, one vector for each radar
+    std::vector<std::vector<float> > rx_freq_offs; //Vectors of receive frequencies, one vector for each radar
     std::vector<float> rx_all_freqs; //Vectors of all receive frequencies
     std::vector<float> rx_rel_freqs; //Vectors of all receive frequencies
     std::vector<float> bandwidths; //Vectors of all receive bandwidths
@@ -84,7 +91,6 @@ class rx_data{
     size_t get_num_clients(size_t radar); //Get number of clients for that radar
     float* get_freqs(); //Get pointer to rx frequencies
     float* get_freqs(size_t radar);
-    void set_freqs(std::vector<float>& freq_vec); //Get pointer to rx frequencies
     size_t get_num_bb_samples(); //Get number of bb samples.  It is and must be the same for all clients!
     size_t get_num_rf_samples(); //Get number of rf samples.  It is and must be the same for all antenna channels!
     size_t get_num_ants_per_radar();
@@ -93,12 +99,6 @@ class rx_data{
         std::vector<std::complex<float> *>* bb_vec_ptrs,
         int double_buf);
     void set_rf_vec_ptrs(std::vector<std::complex<int16_t> *>* rf_vec_ptrs);
-    void rx_beamform(
-        uint32_t* client_samples,
-        std::vector<std::complex<float> *>* bb_vec_ptrs,
-        size_t nants,
-        size_t nsamps,
-        std::vector<std::complex<float> >* beamform_vector);
     int16_t** get_rf_dptr(size_t radar);
     float*** get_bb_dptr(size_t radar);
 };

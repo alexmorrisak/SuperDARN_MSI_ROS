@@ -216,8 +216,8 @@ int main(){
 	if(NUNITS==1)
 	args = "addr0=192.168.10.2";
 	txsubdev = "A:A";
-	rxsubdev = "A:A A:B";
-	//rxsubdev = "A:A";
+	rxsubdev = "A:A A:B"; //Use two rx channels per daughterboard
+	//rxsubdev = "A:A"; //Use one rx channel per daughterboard
 
 	clock_gettime(CLOCK_REALTIME, &cpu_start);
 
@@ -392,7 +392,9 @@ int main(){
     master_buf=(unsigned int*) malloc(MAX_TIME_SEQ_LEN*sizeof(int32_t));
 
 	clock_gettime(CLOCK_REALTIME, &cpu_stop);
-	if(verbose>1)std::cout << "Elapsed setup time: " << 1e-9*(cpu_stop.tv_nsec-cpu_start.tv_nsec) << " sec\n";
+	float elapsed_setup = 1e-9*(cpu_stop.tv_nsec-cpu_start.tv_nsec) + 
+        cpu_stop.tv_sec - cpu_stop.tv_sec;
+	if(verbose>1)std::cout << "Elapsed setup time: " << elapsed_setup << " sec\n";
 
     // OPEN TCP SOCKET AND START ACCEPTING CONNECTIONS 
 	if (verbose > 1) printf("timing host port: %i \n", TIMING_HOST_PORT);
@@ -471,14 +473,13 @@ int main(){
 		      case TIMING_REGISTER_SEQ:
 		        if (verbose > 0) std::cout << "\nRegister new sequence for usrp driver\n";
 		        msg.status=0;
-                //rval=recv_data(msgsock,&client,sizeof(struct ControlPRM));
                 if (recv_data(msgsock, &client, sizeof(struct ControlPRM)) <= 0){
                     std::cerr << "Error in recv data. " << strerror(errno) << std::endl;
                 }
                 r=client.radar-1; 
                 c=client.channel-1; 
 
-                if (verbose>1) std::cout << "Registering rx client\n";
+                if (verbose>1) std::cout << "Registering rx client radar " << r << " channel " << c << std::endl;
                 rx.register_client(client);
                 if (verbose>1) std::cout << "Registering tx client\n";
                 tx.register_client(client);
@@ -486,7 +487,6 @@ int main(){
 			    if (verbose > 1) std::cout << "Radar: " << client.radar <<
 				    " Channel: " << client.channel << " Beamnum: " << client.tbeam <<
 				    " Status: " << msg.status << "\n";
-		        //rval=recv_data(msgsock,&index,sizeof(index));
                 if (recv_data(msgsock, &index, sizeof(index)) <= 0){
                     std::cerr << "Error in recv data. " << strerror(errno) << std::endl;
                 }
@@ -505,29 +505,44 @@ int main(){
                     pulseseqs[r][c][index]=NULL;
                 }
 		        if (verbose > 1) std::cout << "Done Free - Attempting Malloc\n";	
-                pulseseqs[r][c][index]=(TSGbuf*) malloc(sizeof(struct TSGbuf));
+                //pulseseqs[r][c][index]=(TSGbuf*) malloc(sizeof(struct TSGbuf));
 		        if (verbose > 1) std::cout << "Finished malloc\n";
-                //rval=recv_data(msgsock,pulseseqs[r][c][index], sizeof(struct TSGbuf)); // requested pulseseq
-                if (recv_data(msgsock, pulseseqs[r][c][index], sizeof(struct TSGbuf)) <= 0){
+                if (recv_data(msgsock, tx.get_seq_ptr(index), sizeof(struct TSGbuf)) <= 0){
                     std::cerr << "Error in recv data. " << strerror(errno) << std::endl;
                 }
-                pulseseqs[r][c][index]->rep=
-                  (unsigned char*) malloc(sizeof(unsigned char)*pulseseqs[r][c][index]->len);
-                pulseseqs[r][c][index]->code=
-                  (unsigned char*) malloc(sizeof(unsigned char)*pulseseqs[r][c][index]->len);
-                //rval=recv_data(msgsock,pulseseqs[r][c][index]->rep, 
-                //  sizeof(unsigned char)*pulseseqs[r][c][index]->len);
-                if (recv_data(msgsock, pulseseqs[r][c][index]->rep,
-                    sizeof(unsigned char)*pulseseqs[r][c][index]->len) <= 0){
+                tx.register_seq(index);
+                //if (recv_data(msgsock, pulseseqs[r][c][index], sizeof(struct TSGbuf)) <= 0){
+                //    std::cerr << "Error in recv data. " << strerror(errno) << std::endl;
+                //}
+                //std::cout << "rep ptr: " << tx.get_seq_rep_ptr(index) << std::endl;
+                //std::cout << "code ptr: " << tx.get_seq_code_ptr(index) << std::endl;
+
+                //pulseseqs[r][c][index]->rep=
+                //  (unsigned char*) malloc(sizeof(unsigned char)*pulseseqs[r][c][index]->len);
+                //pulseseqs[r][c][index]->code=
+                //  (unsigned char*) malloc(sizeof(unsigned char)*pulseseqs[r][c][index]->len);
+                //if (recv_data(msgsock, tx.get_seq_rep_ptr(index),
+                if (recv_data(msgsock, tx.get_seq_ptr(index)->rep,
+                    sizeof(unsigned char)*tx.get_seq_len(index)) <= 0){
                         std::cerr << "Error in recv data. " << strerror(errno) << std::endl;
                 }
-                //rval=recv_data(msgsock,pulseseqs[r][c][index]->code, 
-                //  sizeof(unsigned char)*pulseseqs[r][c][index]->len);
-                if (recv_data(msgsock, pulseseqs[r][c][index]->code,
-                    sizeof(unsigned char)*pulseseqs[r][c][index]->len) <= 0){
+                //if (recv_data(msgsock, tx.get_seq_code_ptr(index),
+                if (recv_data(msgsock, tx.get_seq_ptr(index)->code,
+                    sizeof(unsigned char)*tx.get_seq_len(index)) <= 0){
                         std::cerr << "Error in recv data. " << strerror(errno) << std::endl;
                 }
-			    if (verbose > 1) std::cout << "Pulseseq length: " << pulseseqs[r][c][index]->len << "\n";
+                //for (int i=0; i<tx.get_seq_len(index); i++){
+                //    std::cout << "main code " << (int)(tx.get_seq_code_ptr(index)[i]) << std::endl;
+                //}
+                //if (recv_data(msgsock, pulseseqs[r][c][index]->rep,
+                //    sizeof(unsigned char)*pulseseqs[r][c][index]->len) <= 0){
+                //        std::cerr << "Error in recv data. " << strerror(errno) << std::endl;
+                //}
+                //if (recv_data(msgsock, pulseseqs[r][c][index]->code,
+                //    sizeof(unsigned char)*pulseseqs[r][c][index]->len) <= 0){
+                //        std::cerr << "Error in recv data. " << strerror(errno) << std::endl;
+                //}
+			    //if (verbose > 1) std::cout << "Pulseseq length: " << pulseseqs[r][c][index]->len << "\n";
                 old_seq_id=-10;
                 old_pulse_index[r][c]=-1;
                 new_seq_id=-1;
@@ -588,22 +603,29 @@ int main(){
 
                 if (index!=old_pulse_index[r][c]){
 			        if (verbose > -1) std::cout << "Need to unpack pulseseq " << r << " " << c << " " << index << "\n";
-			        if (verbose > -1) std::cout << "Pulseseq length: " << pulseseqs[r][c][index]->len << "\n";
+			        if (verbose > -1) std::cout << "Pulseseq length: " << tx.get_seq_ptr(index)->len << "\n";
                 
 			    // unpack the timing sequence
 			        seq_count[r][c]=0;
-                    step=(int)((double)pulseseqs[r][c][index]->step/(double)STATE_TIME+0.5);
+                    //step=(int)((double)pulseseqs[r][c][index]->step/(double)STATE_TIME+0.5);
+                    step=(int)((double)tx.get_seq_ptr(index)->step/(double)STATE_TIME+0.5);
+                    std::cout << "STEP: " << step << std::endl;
                             
                     //If DDS or RX Offset is negative pad the seq_buf iwith the maximum negative offset
-                    offset_pad=(int)((double)MIN(dds_offset,rx_offset)/((double)STATE_TIME+0.5))-2;
+                    //offset_pad=(int)((double)MIN(dds_offset,rx_offset)/((double)STATE_TIME+0.5))-2;
+                    offset_pad=0;
 			        if (verbose > -1) std::cout << "offset pad: " << offset_pad << "\n";	
                     for(int i=0;i>offset_pad;i--) {
                       seq_buf[r][c][seq_count[r][c]]=0;
                       seq_count[r][c]++;
                     }
-			        for(int i=0;i<pulseseqs[r][c][index]->len;i++){
-			        tempcode=_decodestate(r,c,(pulseseqs[r][c][index]->code)[i]);	
-			            for( j=0;j<step*(pulseseqs[r][c][index]->rep)[i];j++){
+			        tx.get_seq_code_ptr(index);
+			        //for(int i=0;i<pulseseqs[r][c][index]->len;i++){
+			        for(int i=0;i<tx.get_seq_ptr(index)->len;i++){
+			            //tempcode=_decodestate(r,c,(pulseseqs[r][c][index]->code)[i]);	
+			            tempcode=_decodestate(r,c,(tx.get_seq_ptr(index)->code)[i]);	
+			            //for( j=0;j<step*(pulseseqs[r][c][index]->rep)[i];j++){
+			            for( j=0;j<step*(tx.get_seq_rep_ptr(index))[i];j++){
 			                seq_buf[r][c][seq_count[r][c]]=tempcode;
 			                seq_count[r][c]++;
 			            }
@@ -670,6 +692,7 @@ int main(){
 					//tx_rf_vecs.push_back(std::vector<sc16>(tx_osr*max_seq_count,0));
 
                     tx_bb_vecs.resize(tx.get_num_radars());
+                    std::cout << "number of radars: " << tx.get_num_radars() << std::endl;
                     //for (int iclient=0; iclient<numclients; iclient++) {
                     if (numclients > tx.get_num_radars()){
                         numclients = tx.get_num_radars();
@@ -950,7 +973,7 @@ int main(){
 			         	rx_stream,
 			         	rx_vec_ptrs,
 			         	rx.get_num_rf_samples()/2,
-			         	start_time,
+			         	start_time+3e-4+5*STATE_TIME*1e-6,
 			         	&rx_thread_status));
 
 			         //call function to start tx stream simultaneously with rx stream

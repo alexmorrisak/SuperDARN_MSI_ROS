@@ -7,7 +7,7 @@ extern int verbose;
 
 class rx_data{
     private:
-    struct ControlPRM  client;
+    struct ControlPRM client;
     std::vector<ControlPRM> clients;
     int buf;
     size_t nclients; //number of clients registered to the usrp driver
@@ -43,14 +43,15 @@ class rx_data{
     size_t get_num_radars(); //Get number of radars
     size_t get_num_clients(); //Get total number of clients for all radars
     size_t get_num_clients(size_t radar); //Get number of clients for that radar
+    float* get_freqs();
+    float* get_freqs(size_t radar);
     size_t get_num_bb_samples(); //Get number of bb samples.  It is and must be the same for all clients!
     size_t get_num_rf_samples(); //Get number of rf samples.  It is and must be the same for all antenna channels!
     size_t get_num_ants_per_radar();
-    float* get_freqs();
-    float* get_freqs(size_t radar);
-    void set_bb_vec_ptrs(size_t radar, size_t channel, std::vector<std::complex<float> *>* bb_vec_ptrs,int double_buf); //Set pointers to bb vectors
-    //float* get_bb_vec_ptr(size_t radar);
-    //void set_rf_vec_size(size_t nrf_samples); //Allocate memory for rf vectors
+    void set_bb_vec_ptrs(size_t radar, 
+        size_t channel,
+        std::vector<std::complex<float> *>* bb_vec_ptrs,
+        int double_buf); //Set pointers to bb vectors
     void set_rf_vec_ptrs(std::vector<std::complex<int16_t> *>* rf_vec_ptrs);
     int16_t** get_rf_dptr(size_t radar);
     float*** get_bb_dptr(size_t radar);

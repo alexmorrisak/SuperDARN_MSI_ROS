@@ -7,6 +7,7 @@
 extern int verbose;
 
 class tx_data{
+    struct TSGbuf pulseseqs[4];
     struct ControlPRM client;
     std::vector<ControlPRM> clients;
     size_t nclients; //number of clients registered to the usrp driver
@@ -25,8 +26,12 @@ class tx_data{
     ~tx_data();
     void add_client();
     void add_client(size_t radar);
-    void register_client(size_t radar, size_t channel);
     void register_client(struct ControlPRM new_client);
+    void register_seq(size_t index);
+    struct TSGbuf* get_seq_ptr(size_t index);
+    size_t get_seq_len(size_t index);
+    unsigned char* get_seq_rep_ptr(size_t index);
+    unsigned char* get_seq_code_ptr(size_t index);
     void unregister_client(size_t radar, size_t channel);
     void drop_client();
     void drop_client(size_t radar);
@@ -66,16 +71,43 @@ void tx_data::add_client(size_t radar){
     tx_freqs[radar].resize(tx_freqs[radar].size()+1);
 }
 
-void tx_data::register_client(size_t radar, size_t channel){
-    tx_freqs[radar].resize(tx_freqs[radar].size()+1);
-    radmap.push_back(radar);
-    chanmap.push_back(channel);
-}
-
 void tx_data::register_client(struct ControlPRM new_client){
     tx_freqs[new_client.radar-1].resize(tx_freqs[new_client.radar-1].size()+1);
     radmap.push_back(new_client.radar-1);
     chanmap.push_back(new_client.channel-1);
+}
+
+void tx_data::register_seq(size_t index){
+    pulseseqs[index].rep = new unsigned char[pulseseqs[index].len];
+    pulseseqs[index].code = new unsigned char[pulseseqs[index].len];
+    std::cout << "tx_data::register_seq " << "step : " << pulseseqs[index].step << std::endl;
+    std::cout << "tx_data::register_seq " << "length : " << pulseseqs[index].len << std::endl;
+    //for (int i=0; i<pulseseqs[index].len; i++){
+    //    pulseseqs[index].code[i] = i % 128;
+    //    std::cout << "code " << i << ": " << (int) pulseseqs[index].code[i] << std::endl;
+    //}
+}
+
+struct TSGbuf* tx_data::get_seq_ptr(size_t index){
+    //std::cout << "tx_data::get_seq_ptr " << "step : " << pulseseqs[index].step << std::endl;
+    //std::cout << "tx_data::get_seq_ptr " << "length : " << pulseseqs[index].len << std::endl;
+    return &pulseseqs[index];
+}
+
+size_t tx_data::get_seq_len(size_t index){
+    return pulseseqs[index].len;
+}
+
+unsigned char* tx_data::get_seq_rep_ptr(size_t index){
+    return pulseseqs[index].rep;
+}
+
+unsigned char* tx_data::get_seq_code_ptr(size_t index){
+    //for (int i=0; i<pulseseqs[index].len; i++){
+    //    pulseseqs[index].code[i] = i % 128;
+    //    std::cout << "code " << i << ": " << (int) pulseseqs[index].code[i] << std::endl;
+    //}
+    return pulseseqs[index].code;
 }
 
 void tx_data::unregister_client(size_t radar, size_t channel){

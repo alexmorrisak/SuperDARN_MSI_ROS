@@ -483,7 +483,7 @@ void rx_process_gpu(
     they might not be.  Take care of that here if you like*/
     for (int ifreq=0; ifreq<nfreqs; ifreq++){
         for (int i=0;i<ntaps1;i++){
-                double x = 8*(2*M_PI*((float)i/ntaps1) - M_PI);
+                double x = 4*(2*M_PI*((float)i/ntaps1) - M_PI);
                 filter_taps1[ifreq][i][0] = (0.54-0.46*cos((2*M_PI*((float)(i)+0.5))/ntaps1))
                 	*sin(x)/(x);
                 //filter_taps1[ifreq][i][0] = 1./ntaps1; //Q-component is zero
