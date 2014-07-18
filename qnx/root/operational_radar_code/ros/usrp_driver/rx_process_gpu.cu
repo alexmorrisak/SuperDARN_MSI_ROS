@@ -144,7 +144,7 @@ __global__ void multiply_mix_add(int16_t **samples, float ***odata, float **filt
      // parallel reduce samples (could unroll loop for speedup?)
      // Do this as long as the reduction is a power of 2
      unsigned int s, rem;
-     s = blockDim.x;
+     s = blockDim.x/2;
      rem = blockDim.x % 2;
      while(s > 0 && rem == 0){
         s /= 2;
@@ -197,8 +197,10 @@ __global__ void multiply_mix_add(int16_t **samples, float ***odata, float **filt
 
         //deciding the output
         odata[threadIdx.y][blockIdx.y][output_idx] = (float) itemp[tid];
-        //odata[threadIdx.y][blockIdx.y][output_idx] = threadIdx.x;
+        //odata[threadIdx.y][blockIdx.y][output_idx] = 1.;
+        //odata[threadIdx.y][blockIdx.y][output_idx] = blockIdx.x;
         odata[threadIdx.y][blockIdx.y][output_idx+1] = (float) qtemp[tid];
+        //odata[threadIdx.y][blockIdx.y][output_idx+1] = 1.;
         //odata[threadIdx.y][blockIdx.y][output_idx+1] = 20;
      }
 }     
@@ -216,7 +218,8 @@ void rx_process_gpu(
     //std::vector<float> center_freqs, // center frequencies
     //std::vector<float> bws // bandwidth of each center frequency
 ){
-    int debug = 0;
+    //nrf_samples *= 2;
+    int debug = 10;
     struct timespec t0, t1;
     struct timespec tick, tock;
     float elapsed_t, elapsed_proc_t;
@@ -232,10 +235,15 @@ void rx_process_gpu(
     //    extra_stages=1;
     //}
     dmrate0 = 100;
-    int dmrate1 = 2*dmrate / dmrate0;
+    int dmrate1 = dmrate / dmrate0;
+    //dmrate0 *= 2;
         
     int ntaps0 = 2*dmrate0; //The coarse filter length is 2x the decimation rate
     int ntaps1 = 8*dmrate1; //The fine filter length is 8x the decimation rate
+    if (debug){
+        printf("Number of taps, first stage: %i\n", ntaps0);
+        printf("Number of taps, second stage: %i\n", ntaps1);
+    }
 
     float filter_taps0[nfreqs][ntaps0][2];
     float filter_taps1[nfreqs][ntaps1][2];
@@ -255,12 +263,12 @@ void rx_process_gpu(
     for (int i=0;i<ntaps0;i++){
             filter_taps0[0][i][0] = 1./ntaps0; //Q-component is zero
             //filter_taps0[0][i][0] = (0.54-0.46*cos((2*M_PI*((float)(i)+0.5))/ntaps0));
-            
             filter_taps0[0][i][1] = 0; //Q-component is zero
     }
 
     /*Mix each filter up(down) to the desired pass-band frequency.
     Use the first set of coefficients as the reference*/
+    printf("printing filter_taps0. ntaps: %i\n", ntaps0);
     double ftemp;
     for (size_t i=1;i<nfreqs;i++){
     	for (int j=0;j<ntaps0;j++){
@@ -269,6 +277,7 @@ void rx_process_gpu(
                 ftemp = filter_taps0[0][j][0];
     	        filter_taps0[i][j][0] = NCO0[i][j][0] * filter_taps0[0][j][0] - NCO0[i][j][1] * filter_taps0[0][j][1];
     	        filter_taps0[i][j][1] = NCO0[i][j][0] * filter_taps0[0][j][1] + NCO0[i][j][1] * ftemp;
+                printf("j: %i %i, %i\n",j,filter_taps0[i][j][0], filter_taps0[i][j][1]);
 	    }
     }
     /*Now go back to the first set of coefficients and modulate that*/
@@ -278,6 +287,7 @@ void rx_process_gpu(
             ftemp = filter_taps0[0][j][0];
             filter_taps0[0][j][0] = NCO0[0][j][0] * filter_taps0[0][j][0] - NCO0[0][j][1] * filter_taps0[0][j][1];
             filter_taps0[0][j][1] = NCO0[0][j][0] * filter_taps0[0][j][1] + NCO0[0][j][1] * ftemp;
+            printf("j: %i %f, %f\n",j,filter_taps0[0][j][0], filter_taps0[0][j][1]);
 	}
 
 
@@ -304,6 +314,17 @@ void rx_process_gpu(
          cudaMemcpyHostToDevice);
 
     if (debug) printf("Allocating and copying input data\n");
+    if (debug>1 | TEST==1){
+        printf("\nPrinting input data\n\n");
+        for (int iant=0; iant<nants; iant++){
+            if (iant ==0){
+                //for (int isamp=0; isamp < nrf_samples/dmrate0; isamp++){
+                for (int isamp=0; isamp < nrf_samples; isamp+=1000){
+                    printf("%i, %i: (%i, %i)\n", iant, isamp, rx_buff_ptrs[iant][2*isamp], rx_buff_ptrs[iant][2*isamp+1]);
+                }
+            }
+        }
+    }
     /*Allocate device memory for input data and copy data into it*/
     /* TODO: this should be a function in recv_and_hold(); i.e. data
     should be ready to rock by the time this function is called*/
@@ -365,7 +386,7 @@ void rx_process_gpu(
 
 
     dim3 dimGrid(nrf_samples/dmrate0+1,nants,1);
-    dim3 dimBlock(ntaps0/2,nfreqs,1);
+    dim3 dimBlock(ntaps0,nfreqs,1);
 
     if (debug){
         printf("nrfsamples: %i\n", nrf_samples);
@@ -414,7 +435,8 @@ void rx_process_gpu(
         for (int ifreq=0; ifreq<nfreqs; ifreq++){
             for (int iant=0; iant<nants; iant++){
                 if (iant ==0){
-                    for (int isamp=0; isamp < nrf_samples/dmrate0; isamp++){
+                    //for (int isamp=0; isamp < nrf_samples/dmrate0; isamp++){
+                    for (int isamp=0; isamp < nrf_samples/dmrate0; isamp+=10){
                         printf("%i, %i, %i: (%.1f, %.1f)\n", ifreq, iant, isamp, vps[ifreq][iant][2*isamp], vps[ifreq][iant][2*isamp+1]);
                     }
                 }
@@ -481,17 +503,36 @@ void rx_process_gpu(
     /* Calculate filtertaps for second filter stage
     The filters for each channel are probably the same but in certain applications
     they might not be.  Take care of that here if you like*/
+
+    /* Frequency roll-off filter */
     for (int ifreq=0; ifreq<nfreqs; ifreq++){
         for (int i=0;i<ntaps1;i++){
-                double x = 4*(2*M_PI*((float)i/ntaps1) - M_PI);
+                double x = 16*(2*M_PI*((float)i/ntaps1) - M_PI);
                 filter_taps1[ifreq][i][0] = (0.54-0.46*cos((2*M_PI*((float)(i)+0.5))/ntaps1))
                 	*sin(x)/(x);
-                //filter_taps1[ifreq][i][0] = 1./ntaps1; //Q-component is zero
-                filter_taps1[ifreq][i][1] = 0; //Q-component is zero
-                //printf("filter tap %i: %f\n", i, filter_taps1[ifreq][i][0]);
+                filter_taps1[ifreq][i][1] = 0.;
         }
-        filter_taps1[ifreq][ntaps1/2][0]=1./ntaps1; //handle the divide-by-zero condition
+        filter_taps1[ifreq][ntaps1/2][0]=1.; //handle the divide-by-zero condition
     }
+
+    /* Matched filter */
+    //for (int ifreq=0; ifreq<nfreqs; ifreq++){
+    //    for (int i=0;i<ntaps1;i++){
+    //            filter_taps1[ifreq][i][0] = 0.;
+    //            filter_taps1[ifreq][i][1] = 0.;
+    //    }
+    //    for (int i=ntaps1/2-dmrate1/8; i<ntaps1/2+dmrate1/8; i++){
+    //        filter_taps1[ifreq][i][0] = 4./dmrate1;
+    //    }
+    //}
+
+    if (debug>1){
+        printf("filter_taps1:\n");
+        for (int i=0;i<ntaps1;i++){
+            printf("%i: %f, %f\n", i, filter_taps1[0][i][0], filter_taps1[0][i][1]);
+        }
+    }
+        
 
     /*Allocate device memory for filter taps and copy data into it*/
     cudaFree(taps_ptr_dptr);
@@ -550,7 +591,8 @@ void rx_process_gpu(
     }
 
     dim3 dimGrid1(nbb_samples,nants,1);
-    dim3 dimBlock1(ntaps1/2,nfreqs,1);
+    //dim3 dimBlock1(ntaps1/2,nfreqs,1);
+    dim3 dimBlock1(ntaps1,nfreqs,1);
     
 
     clock_gettime(CLOCK_MONOTONIC, &t0);

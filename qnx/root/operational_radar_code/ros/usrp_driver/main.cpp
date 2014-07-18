@@ -60,7 +60,7 @@
 
 #define TXRATE 5e6
 #define TXFREQ 12e6
-#define RXRATE 2.5e6
+#define RXRATE 1e6
 #define RXFREQ 12e6
 
 #define MIMO 1
@@ -70,7 +70,7 @@
 
 dictionary *Site_INI;
 int sock=0,msgsock=0,tmp=0;
-int verbose=10;
+int verbose=0;
 int double_buf=1;
 int configured=1;
 int		writingFIFO=0, dma_count=0, under_flag=0,empty_flag=0,IRQ, intid;
@@ -190,20 +190,20 @@ int main(){
 	int tx_osr;
 
     /* Example single-site radar configuration, imaging*/
-    //tx_data tx(1,16);
+    //tx_data tx(1, 16, TXFREQ, TXRATE);
     //rx_data rx(1,20,RXFREQ, RXRATE);
     /* Example dual-site radar configuration, imaging*/
-    //tx_data tx(2,32);
+    //tx_data tx(2, 32, TXFREQ, TXRATE);
     //rx_data rx(2,40,RXFREQ, RXRATE);
     /* Example single-site radar configuration, non-imaging*/
-    //tx_data tx(1,1);
+    //tx_data tx(1, 1, TXFREQ, TXRATE);
     //rx_data rx(1,2,RXFREQ, RXRATE);
     /* Example dual-site radar configuration, non-imaging*/
-    //tx_data tx(2,2);
-    //rx_data rx(2,4,RXFREQ, RXRATE);
+    tx_data tx(2, 2, TXFREQ, TXRATE);
+    rx_data rx(2,4,RXFREQ, RXRATE);
     /* For testing*/
-    tx_data tx(1, NUNITS, TXFREQ, TXRATE);
-    rx_data rx(1, 2*NUNITS, RXFREQ, RXRATE);
+    //tx_data tx(1, NUNITS, TXFREQ, TXRATE);
+    //rx_data rx(1, 2*NUNITS, RXFREQ, RXRATE);
 
 	// Swing buffered.
 	unsigned int iseq=0;
@@ -972,8 +972,8 @@ int main(){
 			         	usrp,
 			         	rx_stream,
 			         	rx_vec_ptrs,
-			         	rx.get_num_rf_samples()/2,
-			         	start_time+3e-4+5*STATE_TIME*1e-6,
+			         	rx.get_num_rf_samples(),
+			         	start_time,
 			         	&rx_thread_status));
 
 			         //call function to start tx stream simultaneously with rx stream

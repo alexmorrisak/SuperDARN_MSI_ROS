@@ -119,7 +119,7 @@ void rx_data::unregister_client(size_t radar, size_t channel){
 void rx_data::ready_client(struct ControlPRM client){
     size_t c= -1;
     for (size_t i=0; i<radnum.size(); i++){
-        std::cout << "radar: " << client.radar << " channel: " << client.channel << std::endl;
+        //std::cout << "radar: " << client.radar << " channel: " << client.channel << std::endl;
         if (radnum[i] == client.radar-1 && channum[i] == client.channel-1){
             c = i;
             break;
@@ -139,7 +139,8 @@ void rx_data::ready_client(struct ControlPRM client){
     }
     bb_rate = minrate; //Perhaps add some checking for number "roundness"
     nbb_samples = (size_t) (mintime * (float)bb_rate); //Perhaps add some checking for number "roundness"
-    nrf_samples = (size_t) 2*(rf_rate * (float) nbb_samples / bb_rate);
+    //nrf_samples = (size_t) 2*(rf_rate * (float) nbb_samples / bb_rate);
+    nrf_samples = (size_t) (rf_rate * (float) nbb_samples / bb_rate);
     rx_freqs[client.radar-1][client.channel-1] = client.rfreq;
     rx_all_freqs[c] = client.rfreq;
     rx_rel_freqs[c] = 1e3*client.rfreq - center_freq;

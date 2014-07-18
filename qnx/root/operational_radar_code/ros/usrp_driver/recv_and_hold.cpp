@@ -23,9 +23,6 @@ extern int verbose;
  * own thread context so that it does not block the execution in main()
  **********************************************************************/
 void recv_and_hold(
-    //unsigned int* trtimes,
-    //unsigned int* trdurations,
-    //unsigned int npulses,
     struct TRTimes* trtimes,
     uhd::usrp::multi_usrp::sptr usrp,
     uhd::rx_streamer::sptr rx_stream,
@@ -44,7 +41,7 @@ void recv_and_hold(
     uhd::stream_cmd_t stream_cmd = uhd::stream_cmd_t::STREAM_MODE_NUM_SAMPS_AND_DONE;
     stream_cmd.num_samps = num_requested_samples;
     stream_cmd.stream_now = false;
-    stream_cmd.time_spec = start_time;
+    stream_cmd.time_spec = start_time+450e-6;
 
     //usleep(100000);
 
