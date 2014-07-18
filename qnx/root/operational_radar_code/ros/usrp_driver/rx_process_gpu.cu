@@ -30,7 +30,7 @@ itself to parallelization, so it is performed on an Nvidia GPU.*/
 
 __global__ void multiply_and_add(float ***samples, float ***odata, float **filter)
 {
-    __shared__ float itemp[1024];//Max number of threads in a block
+    __shared__ float itemp[1024];//Array size is max number of threads in a block
     __shared__ float qtemp[1024]; 
 
     unsigned int tid = threadIdx.y*blockDim.x+threadIdx.x;
@@ -43,7 +43,8 @@ __global__ void multiply_and_add(float ***samples, float ***odata, float **filte
     unsigned int output_idx = 2*blockIdx.x;
 
     // calculate index of sample from global memory samples array
-    tsamp = (blockIdx.x*blockDim.x)/4 + 4*threadIdx.x;
+    float stride = 1./8; // The number of filter taps is (1./stride) times the decimation rate
+    tsamp = stride*4*(blockIdx.x*blockDim.x) + 4*threadIdx.x;
 
     double i0 = (double) samples[threadIdx.y][blockIdx.y][tsamp];
     double q0 = (double) samples[threadIdx.y][blockIdx.y][tsamp+1];
@@ -67,7 +68,7 @@ __global__ void multiply_and_add(float ***samples, float ***odata, float **filte
      // Do this as long as the reduction is a power of 2
      unsigned int s, rem;
      s = blockDim.x;// / blockDim.y;
-     rem = blockDim.x % 2;
+     rem = s % 2;
      while(s > 0 && rem == 0){
         s /= 2;
         if (threadIdx.x < s) {
@@ -110,7 +111,9 @@ __global__ void multiply_mix_add(int16_t **samples, float ***odata, float **filt
     unsigned int output_idx = 2*blockIdx.x;
 
     // calculate index of sample from global memory samples array
-    tsamp = (blockIdx.x*blockDim.x) + 4*threadIdx.x;
+    //tsamp = (.5)*2*(blockIdx.x*blockDim.x) + 4*threadIdx.x;
+    float stride = 1./2; // The number of filter taps is (1./stride) times the decimation rate
+    tsamp = stride*4*(blockIdx.x*blockDim.x) + 4*threadIdx.x;
     //double i0 = (double) samples[blockIdx.y][tsamp];
     //double q0 = (double) samples[blockIdx.y][tsamp+1];
     //double i1 = (double) samples[blockIdx.y][tsamp+2];
@@ -144,7 +147,7 @@ __global__ void multiply_mix_add(int16_t **samples, float ***odata, float **filt
      // parallel reduce samples (could unroll loop for speedup?)
      // Do this as long as the reduction is a power of 2
      unsigned int s, rem;
-     s = blockDim.x/2;
+     s = blockDim.x;
      rem = blockDim.x % 2;
      while(s > 0 && rem == 0){
         s /= 2;
@@ -174,7 +177,9 @@ __global__ void multiply_mix_add(int16_t **samples, float ***odata, float **filt
      if(threadIdx.x == 0){
         for(unsigned int i=1; i<s; i++){
            itemp[tid] += itemp[tid + i];
+           //itemp[tid] += 1.;
            qtemp[tid] += qtemp[tid + i];
+           //qtemp[tid] += 1.;
         }
      }
      __syncthreads();
@@ -189,7 +194,7 @@ __global__ void multiply_mix_add(int16_t **samples, float ***odata, float **filt
 
         /*Phase remainder exists because the NCO oscillator 
         may not complete an exact 360% rotation in a filter window*/
-        double phi_rem = blockIdx.x*fmod((0.5*blockDim.x) * phase_inc, 2*M_PI);
+        double phi_rem = blockIdx.x*fmod((1*blockDim.x) * phase_inc, 2*M_PI);
 
         double ltemp = (double) itemp[tid];
         itemp[tid] = itemp[tid] * cos(phi_rem) - qtemp[tid] * sin(phi_rem);
@@ -197,7 +202,7 @@ __global__ void multiply_mix_add(int16_t **samples, float ***odata, float **filt
 
         //deciding the output
         odata[threadIdx.y][blockIdx.y][output_idx] = (float) itemp[tid];
-        //odata[threadIdx.y][blockIdx.y][output_idx] = 1.;
+        //odata[threadIdx.y][blockIdx.y][output_idx] = 69.;
         //odata[threadIdx.y][blockIdx.y][output_idx] = blockIdx.x;
         odata[threadIdx.y][blockIdx.y][output_idx+1] = (float) qtemp[tid];
         //odata[threadIdx.y][blockIdx.y][output_idx+1] = 1.;
@@ -218,28 +223,26 @@ void rx_process_gpu(
     //std::vector<float> center_freqs, // center frequencies
     //std::vector<float> bws // bandwidth of each center frequency
 ){
-    //nrf_samples *= 2;
-    int debug = 10;
+    int debug = 1;
     struct timespec t0, t1;
     struct timespec tick, tock;
     float elapsed_t, elapsed_proc_t;
     int dmrate = nrf_samples / nbb_samples;
-    int dmrate0 = dmrate;
-    //nants *= 10;
+    int dmrate0, dmrate1;
+
     if (debug) printf("Entered rx_process_gpu()\n");
 
-
-    //if (dmrate*nfreqs > MAX_BLOCK_SIZE){
-    //    dmrate0 = MAX_BLOCK_SIZE / nfreqs;
-    //    dmrate1 = dmrate / dmrate0;
-    //    extra_stages=1;
-    //}
-    dmrate0 = 100;
-    int dmrate1 = dmrate / dmrate0;
-    //dmrate0 *= 2;
+    dmrate0 = 50;
+    dmrate1 = dmrate / dmrate0;
         
     int ntaps0 = 2*dmrate0; //The coarse filter length is 2x the decimation rate
     int ntaps1 = 8*dmrate1; //The fine filter length is 8x the decimation rate
+    if (ntaps0 * nfreqs > 1024 || ntaps1 * nfreqs > 1024) {
+        fprintf(stderr,"Error! GPU resources exceeded. "
+            "Consider reducing the number of frequency channels or "
+            "recompiling the CUDA code with different block size\n Exiting..\n");
+        exit(EXIT_FAILURE);
+    }
     if (debug){
         printf("Number of taps, first stage: %i\n", ntaps0);
         printf("Number of taps, second stage: %i\n", ntaps1);
@@ -261,14 +264,14 @@ void rx_process_gpu(
     [TODO: design Kaiser (beta=5) or similar window for better performance.
     See Google drive doc SuperDARN_GPU_processing]*/
     for (int i=0;i<ntaps0;i++){
-            filter_taps0[0][i][0] = 1./ntaps0; //Q-component is zero
+            filter_taps0[0][i][0] = 1./ntaps0; //I-component is rectangle function
             //filter_taps0[0][i][0] = (0.54-0.46*cos((2*M_PI*((float)(i)+0.5))/ntaps0));
             filter_taps0[0][i][1] = 0; //Q-component is zero
     }
 
     /*Mix each filter up(down) to the desired pass-band frequency.
     Use the first set of coefficients as the reference*/
-    printf("printing filter_taps0. ntaps: %i\n", ntaps0);
+    if (debug>1) printf("printing filter_taps0. ntaps: %i\n", ntaps0);
     double ftemp;
     for (size_t i=1;i<nfreqs;i++){
     	for (int j=0;j<ntaps0;j++){
@@ -277,7 +280,7 @@ void rx_process_gpu(
                 ftemp = filter_taps0[0][j][0];
     	        filter_taps0[i][j][0] = NCO0[i][j][0] * filter_taps0[0][j][0] - NCO0[i][j][1] * filter_taps0[0][j][1];
     	        filter_taps0[i][j][1] = NCO0[i][j][0] * filter_taps0[0][j][1] + NCO0[i][j][1] * ftemp;
-                printf("j: %i %i, %i\n",j,filter_taps0[i][j][0], filter_taps0[i][j][1]);
+                if (debug>1) printf("j: %i %i, %i\n",j,filter_taps0[i][j][0], filter_taps0[i][j][1]);
 	    }
     }
     /*Now go back to the first set of coefficients and modulate that*/
@@ -287,7 +290,7 @@ void rx_process_gpu(
             ftemp = filter_taps0[0][j][0];
             filter_taps0[0][j][0] = NCO0[0][j][0] * filter_taps0[0][j][0] - NCO0[0][j][1] * filter_taps0[0][j][1];
             filter_taps0[0][j][1] = NCO0[0][j][0] * filter_taps0[0][j][1] + NCO0[0][j][1] * ftemp;
-            printf("j: %i %f, %f\n",j,filter_taps0[0][j][0], filter_taps0[0][j][1]);
+            if (debug>1) printf("j: %i %f, %f\n",j,filter_taps0[0][j][0], filter_taps0[0][j][1]);
 	}
 
 
@@ -319,7 +322,7 @@ void rx_process_gpu(
         for (int iant=0; iant<nants; iant++){
             if (iant ==0){
                 //for (int isamp=0; isamp < nrf_samples/dmrate0; isamp++){
-                for (int isamp=0; isamp < nrf_samples; isamp+=1000){
+                for (int isamp=0; isamp < nrf_samples; isamp+=100){
                     printf("%i, %i: (%i, %i)\n", iant, isamp, rx_buff_ptrs[iant][2*isamp], rx_buff_ptrs[iant][2*isamp+1]);
                 }
             }
@@ -385,8 +388,9 @@ void rx_process_gpu(
     //float output_buffer[NFREQS][NANTS][nbb_samples][2];// = (float*) malloc(nbb_samples*nants*nfreqs*2*sizeof(float));
 
 
-    dim3 dimGrid(nrf_samples/dmrate0+1,nants,1);
-    dim3 dimBlock(ntaps0,nfreqs,1);
+    //dim3 dimGrid(nrf_samples/dmrate0+1,nants,1);
+    dim3 dimGrid(nrf_samples/dmrate0,nants,1);
+    dim3 dimBlock(ntaps0/2,nfreqs,1);
 
     if (debug){
         printf("nrfsamples: %i\n", nrf_samples);
@@ -436,7 +440,7 @@ void rx_process_gpu(
             for (int iant=0; iant<nants; iant++){
                 if (iant ==0){
                     //for (int isamp=0; isamp < nrf_samples/dmrate0; isamp++){
-                    for (int isamp=0; isamp < nrf_samples/dmrate0; isamp+=10){
+                    for (int isamp=0; isamp < nrf_samples/dmrate0; isamp+=1){
                         printf("%i, %i, %i: (%.1f, %.1f)\n", ifreq, iant, isamp, vps[ifreq][iant][2*isamp], vps[ifreq][iant][2*isamp+1]);
                     }
                 }
@@ -505,26 +509,26 @@ void rx_process_gpu(
     they might not be.  Take care of that here if you like*/
 
     /* Frequency roll-off filter */
-    for (int ifreq=0; ifreq<nfreqs; ifreq++){
-        for (int i=0;i<ntaps1;i++){
-                double x = 16*(2*M_PI*((float)i/ntaps1) - M_PI);
-                filter_taps1[ifreq][i][0] = (0.54-0.46*cos((2*M_PI*((float)(i)+0.5))/ntaps1))
-                	*sin(x)/(x);
-                filter_taps1[ifreq][i][1] = 0.;
-        }
-        filter_taps1[ifreq][ntaps1/2][0]=1.; //handle the divide-by-zero condition
-    }
-
-    /* Matched filter */
     //for (int ifreq=0; ifreq<nfreqs; ifreq++){
     //    for (int i=0;i<ntaps1;i++){
-    //            filter_taps1[ifreq][i][0] = 0.;
+    //            double x = 8*(2*M_PI*((float)i/ntaps1) - M_PI);
+    //            filter_taps1[ifreq][i][0] = 0.1*(0.54-0.46*cos((2*M_PI*((float)(i)+0.5))/ntaps1))
+    //            	*sin(x)/(x);
     //            filter_taps1[ifreq][i][1] = 0.;
     //    }
-    //    for (int i=ntaps1/2-dmrate1/8; i<ntaps1/2+dmrate1/8; i++){
-    //        filter_taps1[ifreq][i][0] = 4./dmrate1;
-    //    }
+    //    filter_taps1[ifreq][ntaps1/2][0]=0.1*1.; //handle the divide-by-zero condition
     //}
+
+    /* Matched filter */
+    for (int ifreq=0; ifreq<nfreqs; ifreq++){
+        for (int i=0;i<ntaps1;i++){
+                filter_taps1[ifreq][i][0] = 0.;
+                filter_taps1[ifreq][i][1] = 0.;
+        }
+        for (int i=ntaps1/2-dmrate1/2; i<ntaps1/2+dmrate1/2; i++){
+            filter_taps1[ifreq][i][0] = 4./dmrate1;
+        }
+    }
 
     if (debug>1){
         printf("filter_taps1:\n");
@@ -591,8 +595,8 @@ void rx_process_gpu(
     }
 
     dim3 dimGrid1(nbb_samples,nants,1);
-    //dim3 dimBlock1(ntaps1/2,nfreqs,1);
-    dim3 dimBlock1(ntaps1,nfreqs,1);
+    dim3 dimBlock1(ntaps1/2,nfreqs,1);
+    //dim3 dimBlock1(ntaps1,nfreqs,1);
     
 
     clock_gettime(CLOCK_MONOTONIC, &t0);
@@ -623,9 +627,9 @@ void rx_process_gpu(
         if (debug > 1 | TEST==1){
             for(int i=0;i<nbb_samples;i+=1){
                     //if (iant == 0){
-                    printf("output %i, %i, %i: (%i, %i)\n",ifreq, iant, i,
-                         (int) client_buff_ptr[ifreq][iant][2*i],
-                         (int) client_buff_ptr[ifreq][iant][2*i+1]);
+                    printf("output %i, %i, %i: (%.0f, %.0f)\n",ifreq, iant, i,
+                         (float) client_buff_ptr[ifreq][iant][2*i],
+                         (float) client_buff_ptr[ifreq][iant][2*i+1]);
                     //}
             }
         }
@@ -673,7 +677,9 @@ int main(){
 
     for(int iant=0; iant<NANTS; iant++){
         for (int i=0;i<NRFSAMPS;i++){
-            fake_samples[iant*((NRFSAMPS)*2)+2*i] = i;//sin(M_PI*i/4);
+            fake_samples[iant*((NRFSAMPS)*2)+2*i] = 0;
+            if ((i-4000)/500 == 0)
+                fake_samples[iant*((NRFSAMPS)*2)+2*i] = 1000;
             fake_samples[iant*((NRFSAMPS)*2)+2*i+1] = 0;
             printf("fake_samples %i: %i\n", fake_samples[iant*((NRFSAMPS)*2)+2*i]);
         }

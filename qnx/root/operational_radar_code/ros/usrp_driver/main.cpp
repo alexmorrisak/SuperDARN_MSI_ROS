@@ -60,7 +60,7 @@
 
 #define TXRATE 5e6
 #define TXFREQ 12e6
-#define RXRATE 1e6
+#define RXRATE 5e6
 #define RXFREQ 12e6
 
 #define MIMO 1

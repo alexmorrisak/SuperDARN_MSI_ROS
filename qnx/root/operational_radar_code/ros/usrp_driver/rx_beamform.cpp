@@ -89,10 +89,12 @@ void rx_beamform(
         for (size_t isamp=0; isamp<nsamps; isamp++){
             int16_t temp_main[2] = {0,0};
             for (size_t iant=0; iant<nants_main; iant++){
-                temp_main[0] += (*bb_vec_ptrs)[iant][isamp].real() * (*beamform_main)[iant].real() -
-                    (*bb_vec_ptrs)[iant][isamp].imag() * (*beamform_main)[iant].imag();
-                temp_main[1] += (*bb_vec_ptrs)[iant][isamp].real() * (*beamform_main)[iant].imag() +
-                    (*bb_vec_ptrs)[iant][isamp].imag() * (*beamform_main)[iant].real();
+                temp_main[0] += 
+                    0.2*(*bb_vec_ptrs)[iant][isamp].real() * (*beamform_main)[iant].real() -
+                    0.2*(*bb_vec_ptrs)[iant][isamp].imag() * (*beamform_main)[iant].imag();
+                temp_main[1] += 
+                    0.2*(*bb_vec_ptrs)[iant][isamp].real() * (*beamform_main)[iant].imag() +
+                    0.2*(*bb_vec_ptrs)[iant][isamp].imag() * (*beamform_main)[iant].real();
             }
             client_main[isamp] = ((int32_t) (temp_main[0] << 16) & 0xffff0000) | ((int32_t) temp_main[1] & 0x0000ffff);
 
