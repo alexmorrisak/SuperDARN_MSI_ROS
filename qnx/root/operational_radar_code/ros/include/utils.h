@@ -5,7 +5,7 @@
 	extern "C" {
 #endif
 
-int tcpsocket(int port);
+//int tcpsocket(int port);
 int send_data(int fd,void  *buf,size_t buflen);
 int recv_data(int fd,void *buf,size_t buflen);
 

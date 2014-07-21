@@ -3,6 +3,14 @@
 class tx_data{
     private:
     struct TSGbuf pulseseqs[4];
+    std::vector<unsigned char> pulseseq_reps[4];
+    std::vector<unsigned char> pulseseq_codes[4];
+
+    int old_index;
+    std::vector<unsigned char> seq_buf[4];
+
+    std::vector<std::complex<float> > bb_vec;
+
     struct ControlPRM client;
     std::vector<ControlPRM> clients;
     size_t nclients; //number of clients registered to the usrp driver
@@ -23,11 +31,19 @@ class tx_data{
     void add_client();
     void add_client(size_t radar);
     void register_client(struct ControlPRM new_client);
-    void register_seq(size_t index);
+    void ready_client(struct ControlPRM* new_client);
+
     struct TSGbuf* get_seq_ptr(size_t index);
-    size_t get_seq_len(size_t index);
-    unsigned char* get_seq_rep_ptr(size_t index);
-    unsigned char* get_seq_code_ptr(size_t index);
+    void allocate_pulseseq_mem(size_t index);
+
+    void unpack_pulseseq(size_t index);
+    unsigned char* get_seqbuf_ptr(size_t index);
+    size_t get_seqbuf_len(size_t index);
+
+    void make_bb_vecs(int32_t trise);
+    //void add_freq(size_t radar, size_t channel, float freq);
+    void clear_freqs();
+
     void unregister_client(size_t radar, size_t channel);
     void drop_client();
     void drop_client(size_t radar);

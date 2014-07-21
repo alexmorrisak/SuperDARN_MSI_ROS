@@ -9,9 +9,9 @@
 #include <stdlib.h>
 #include <time.h>
 
-#ifdef __cplusplus
-	extern "C" {
-#endif
+//#ifdef __cplusplus
+//	extern "C" {
+//#endif
 
 extern int verbose;
 int tcpsocket(int port){
@@ -80,6 +80,6 @@ int tcpsocket(int port){
 }
 
 
-#ifdef __cplusplus
-	}
-#endif
+//#ifdef __cplusplus
+//	}
+//#endif
