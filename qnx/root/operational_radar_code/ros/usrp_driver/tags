@@ -464,7 +464,7 @@ Assoctable	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fft
 BACK	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc214_tcp_driver/main.c	49;"	d	file:
 BACK_INPUT	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/transponder/main.cpp	59;"	d	file:
 BACK_INPUT	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_backup/main.cpp	62;"	d	file:
-BACK_INPUT	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/main.cpp	57;"	d	file:
+BACK_INPUT	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/main.cpp	53;"	d	file:
 BAD	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/ddsserver_tcp_driver/include/ics660b.h	11;"	d
 BANK_LENGTH	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/ddsserver_tcp_driver/include/ics660b.h	37;"	d
 BANK_WIDTH	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/ddsserver_tcp_driver/include/ics660b.h	41;"	d
@@ -806,8 +806,8 @@ CLOCK_EXTERNAL	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros
 CLOCK_EXTERNAL	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gps_usrp_driver/include/_prog_conventions.h	10;"	d
 CLOCK_EXTERNAL	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/timing_tcp_driver/include/_prog_conventions.h	19;"	d
 CLOCK_EXTERNAL	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/transponder/include/_prog_conventions.h	19;"	d
+CLOCK_EXTERNAL	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_backup/_prog_conventions.h	19;"	d
 CLOCK_EXTERNAL	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_backup/include/_prog_conventions.h	19;"	d
-CLOCK_EXTERNAL	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/include/_prog_conventions.h	19;"	d
 CLOCK_FREQ	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/ddsserver_tcp_driver/include/ics660b.h	28;"	d
 CLOCK_INTERNAL	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/bc635_gps_tcp_driver/include/_prog_conventions.h	9;"	d
 CLOCK_INTERNAL	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.31/include/_prog_conventions.h	9;"	d
@@ -817,8 +817,8 @@ CLOCK_INTERNAL	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros
 CLOCK_INTERNAL	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gps_usrp_driver/include/_prog_conventions.h	9;"	d
 CLOCK_INTERNAL	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/timing_tcp_driver/include/_prog_conventions.h	18;"	d
 CLOCK_INTERNAL	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/transponder/include/_prog_conventions.h	18;"	d
+CLOCK_INTERNAL	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_backup/_prog_conventions.h	18;"	d
 CLOCK_INTERNAL	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_backup/include/_prog_conventions.h	18;"	d
-CLOCK_INTERNAL	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/include/_prog_conventions.h	18;"	d
 CLOCK_PERIOD	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/tsg/include/tsg.h	4;"	d
 CLOCK_SELECT	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/ddsserver_tcp_driver/include/ics660b.h	44;"	d
 CLRFreqPRM	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/include/control_program.h	/^struct CLRFreqPRM {$/;"	s
@@ -1053,7 +1053,7 @@ CPP_OBJECTS	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/us
 CPP_OBJECTS	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/Makefile	/^CPP_OBJECTS=$(CPP_SOURCES:.cpp=.o)$/;"	m
 CPP_SOURCES	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/transponder/Makefile	/^CPP_SOURCES=main.cpp convolve.cpp recv_to_buffer.cpp$/;"	m
 CPP_SOURCES	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_backup/Makefile	/^CPP_SOURCES=main.cpp convolve.cpp recv_clr_freq.cpp tx_mix_upsample.cpp recv_and_hold.cpp tx_worker.cpp$/;"	m
-CPP_SOURCES	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/Makefile	/^CPP_SOURCES=main.cpp convolve.cpp recv_clr_freq.cpp tx_mix_upsample.cpp recv_and_hold.cpp tx_worker.cpp \\$/;"	m
+CPP_SOURCES	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/Makefile	/^CPP_SOURCES=main.cpp convolve.cpp recv_clr_freq.cpp recv_and_hold.cpp tx_worker.cpp \\$/;"	m
 CPlus	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.2/genfft/c.ml	/^  | CPlus of c_ast list$/;"	C	type:c_ast
 CPlus	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.2/genfft/c.mli	/^  | CPlus of c_ast list$/;"	C	type:c_ast
 CTAGS	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.2/Makefile	/^CTAGS = ctags$/;"	m
@@ -1137,7 +1137,7 @@ C_OBJECTS	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp
 C_OBJECTS	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/Makefile	/^C_OBJECTS=$(C_SOURCES:.c=.o)$/;"	m
 C_SOURCES	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/transponder/Makefile	/^C_SOURCES=_dma.c _open_PLX9080.c _create_DMA_buff.c _decodestate.c _open_ini_file.c ..\/_tcpsocket.c ..\/utils.c $/;"	m
 C_SOURCES	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_backup/Makefile	/^C_SOURCES=_decodestate.c _open_ini_file.c ..\/_tcpsocket.c ..\/utils.c $/;"	m
-C_SOURCES	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/Makefile	/^C_SOURCES=_decodestate.c _open_ini_file.c ..\/_tcpsocket.c ..\/utils.c $/;"	m
+C_SOURCES	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/Makefile	/^C_SOURCES=$/;"	m
 Calling-FFTW-from-Fortran	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.2/doc/html/Calling-FFTW-from-Fortran.html	/^<a name="Calling-FFTW-from-Fortran"><\/a>$/;"	a
 Caveats-in-Using-Wisdom	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.2/doc/html/Caveats-in-Using-Wisdom.html	/^<a name="Caveats-in-Using-Wisdom"><\/a>$/;"	a
 Cell-Caveats	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.2/doc/html/Cell-Caveats.html	/^<a name="Cell-Caveats"><\/a>$/;"	a
@@ -3283,7 +3283,7 @@ IMAGING	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/phasin
 IMAGING	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/phasing_matrix_utils/write_card_memory.c	23;"	d	file:
 IMAGING	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/transponder/main.cpp	60;"	d	file:
 IMAGING	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_backup/main.cpp	63;"	d	file:
-IMAGING	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/main.cpp	58;"	d	file:
+IMAGING	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/main.cpp	54;"	d	file:
 IMASK_VALUE	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/ddsserver_tcp_driver/include/ics660b.h	25;"	d
 IMDCT	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.2/genfft/gen_mdct.ml	/^  | IMDCT$/;"	C	type:mode
 IMDCT_MP3	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.2/genfft/gen_mdct.ml	/^  | IMDCT_MP3$/;"	C	type:mode
@@ -4007,7 +4007,7 @@ MAINT	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2
 MAINT	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.2/tools/Makefile	/^MAINT = #$/;"	m
 MAIN_INPUT	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/transponder/main.cpp	58;"	d	file:
 MAIN_INPUT	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_backup/main.cpp	61;"	d	file:
-MAIN_INPUT	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/main.cpp	56;"	d	file:
+MAIN_INPUT	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/main.cpp	52;"	d	file:
 MAKEINFO	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.2/Makefile	/^MAKEINFO = ${SHELL} \/home\/alex\/SuperDARN_MSI_ROS\/qnx\/root\/operational_radar_code\/ros\/fftw-3.2.2\/missing --run makeinfo$/;"	m
 MAKEINFO	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.2/api/Makefile	/^MAKEINFO = ${SHELL} \/home\/alex\/SuperDARN_MSI_ROS\/qnx\/root\/operational_radar_code\/ros\/fftw-3.2.2\/missing --run makeinfo$/;"	m
 MAKEINFO	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.2/cell/Makefile	/^MAKEINFO = ${SHELL} \/home\/alex\/SuperDARN_MSI_ROS\/qnx\/root\/operational_radar_code\/ros\/fftw-3.2.2\/missing --run makeinfo$/;"	m
@@ -4050,6 +4050,7 @@ MASK	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.
 MATCHED	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc214_tcp_driver/setcard.c	11;"	d	file:
 MATCHED	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/include/gc314FS.h	15;"	d
 MAX	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/include/utils.h	2;"	d
+MAX	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/include/socket_utils.hpp	2;"	d
 MAXBUF	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.2/rdft/vrank3-transpose.c	112;"	d	file:
 MAXBUFSZ	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.2/kernel/buffered.c	28;"	d	file:
 MAXNAM	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.2/kernel/planner.c	40;"	d	file:
@@ -4073,7 +4074,7 @@ MAX_CARDS	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc21
 MAX_CARDS	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc316_tcp_driver/include/gc314FS_defines.h	1;"	d
 MAX_CARDS	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/transponder/main.cpp	57;"	d	file:
 MAX_CARDS	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_backup/main.cpp	60;"	d	file:
-MAX_CARDS	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/main.cpp	55;"	d	file:
+MAX_CARDS	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/main.cpp	51;"	d	file:
 MAX_CHANNELS	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/adak/site_data/site.h	10;"	d
 MAX_CHANNELS	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/mcm/site_data/site.h	10;"	d
 MAX_CHANNELS	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/include/site.h	10;"	d
@@ -4086,7 +4087,7 @@ MAX_ERROR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/incl
 MAX_INPUTS	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc316_tcp_driver/include/gc314FS_defines.h	2;"	d
 MAX_INPUTS	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/transponder/main.cpp	56;"	d	file:
 MAX_INPUTS	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_backup/main.cpp	59;"	d	file:
-MAX_INPUTS	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/main.cpp	54;"	d	file:
+MAX_INPUTS	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/main.cpp	50;"	d	file:
 MAX_N	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.2/cell/fftw-cell.h	23;"	d
 MAX_N	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.2/cell/fftw-cell.h	27;"	d
 MAX_NSPE	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.2/cell/fftw-cell.h	33;"	d
@@ -4094,7 +4095,8 @@ MAX_PLAN_LEN	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/f
 MAX_PULSES	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/timing_tcp_driver/main.c	26;"	d	file:
 MAX_PULSES	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/transponder/main.cpp	55;"	d	file:
 MAX_PULSES	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_backup/main.cpp	58;"	d	file:
-MAX_PULSES	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/main.cpp	53;"	d	file:
+MAX_PULSES	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/main.cpp	49;"	d	file:
+MAX_PULSES	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/tx_data.cpp	14;"	d	file:
 MAX_RADARS	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/adak/site_data/site.h	9;"	d
 MAX_RADARS	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/mcm/site_data/site.h	9;"	d
 MAX_RADARS	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/include/site.h	9;"	d
@@ -4105,7 +4107,7 @@ MAX_SAMPLES	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc
 MAX_SAMPLES	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/server/reciever_handler.c	20;"	d	file:
 MAX_SAMPLES	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/transponder/main.cpp	61;"	d	file:
 MAX_SAMPLES	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_backup/main.cpp	64;"	d	file:
-MAX_SAMPLES	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/main.cpp	59;"	d	file:
+MAX_SAMPLES	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/main.cpp	55;"	d	file:
 MAX_SECDIFF	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gps_tcp_driver/_refresh_state.c	38;"	d	file:
 MAX_SECDIFF	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gps_usrp_driver/_refresh_state.c	38;"	d	file:
 MAX_SEC_ERR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/bc635_gps_tcp_driver/_refresh_state.c	35;"	d	file:
@@ -4114,7 +4116,7 @@ MAX_TIME_SEQ_LEN	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/r
 MAX_TIME_SEQ_LEN	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/timing_tcp_driver/main.c	25;"	d	file:
 MAX_TIME_SEQ_LEN	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/transponder/main.cpp	54;"	d	file:
 MAX_TIME_SEQ_LEN	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_backup/main.cpp	57;"	d	file:
-MAX_TIME_SEQ_LEN	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/main.cpp	52;"	d	file:
+MAX_TIME_SEQ_LEN	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/main.cpp	48;"	d	file:
 MAX_TRANSMITTERS	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/adak/site_data/site.h	6;"	d
 MAX_TRANSMITTERS	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/mcm/site_data/site.h	6;"	d
 MAX_TRANSMITTERS	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/include/site.h	6;"	d
@@ -4124,7 +4126,7 @@ MAX_TSG	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/ddsser
 MAX_TSG	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/timing_tcp_driver/main.c	24;"	d	file:
 MAX_TSG	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/transponder/main.cpp	53;"	d	file:
 MAX_TSG	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_backup/main.cpp	56;"	d	file:
-MAX_TSG	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/main.cpp	51;"	d	file:
+MAX_TSG	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/main.cpp	47;"	d	file:
 MAX_UIO_MAPS	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/bc635_gps_tcp_driver/include/uio_helper.h	35;"	d
 MAX_UIO_MAPS	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gps_tcp_driver/include/uio_helper.h	35;"	d
 MAX_UIO_MAPS	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gps_usrp_driver/include/uio_helper.h	35;"	d
@@ -4136,8 +4138,9 @@ MDCT_WINDOW_SYM	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ro
 MERGE_EXPRESSION	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/latency_test/.qnx_internal.mk	/^MERGE_EXPRESSION= $(foreach a, $(1)_$(CPUDIR)$(2)$(DEBUG_SUFFIX) $(1)$(2)$(DEBUG_SUFFIX) \\$/;"	m
 MIMO	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/transponder/main.cpp	62;"	d	file:
 MIMO	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_backup/main.cpp	68;"	d	file:
-MIMO	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/main.cpp	66;"	d	file:
+MIMO	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/main.cpp	67;"	d	file:
 MIN	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/include/utils.h	1;"	d
+MIN	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/include/socket_utils.hpp	1;"	d
 MIN2	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/tsg/maketsg.c	121;"	d	file:
 MIN3	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/tsg/maketsg.c	123;"	d	file:
 MINBUFDIV	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.2/rdft/vrank3-transpose.c	111;"	d	file:
@@ -4464,7 +4467,7 @@ NO_VRANK_SPLITS	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ro
 NO_VRANK_SPLITSP	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.2/kernel/ifftw.h	634;"	d
 NO_VRECURSE	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.2/kernel/ifftw.h	/^     NO_VRECURSE = 0x0010,$/;"	e	enum:__anon153
 NO_VRECURSEP	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.2/kernel/ifftw.h	635;"	d
-NRADARS	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/main.cpp	69;"	d	file:
+NRADARS	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/main.cpp	70;"	d	file:
 NROFF	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.2/tools/Makefile	/^NROFF = nroff$/;"	m
 NSEC_PER_SEC	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/latency_test/latency_test.c	18;"	d	file:
 NTAPS	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/ddsserver_tcp_driver/include/ics660b.h	152;"	d
@@ -4476,11 +4479,10 @@ NTHREADS	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_
 NTHREADS	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/extras/recv_to_buffer.cpp	13;"	d	file:
 NTHREADS	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/extras/rx_mix_downsample.cpp	13;"	d	file:
 NTHREADS	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/recv_and_hold.cpp	14;"	d	file:
-NTHREADS	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/tx_mix_upsample.cpp	13;"	d	file:
 NTHREADS	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/tx_worker.cpp	13;"	d	file:
 NUMBER_OF_CARDS	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/include/gc314FS.h	4;"	d
 NUNITS	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_backup/main.cpp	69;"	d	file:
-NUNITS	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/main.cpp	67;"	d	file:
+NUNITS	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/main.cpp	68;"	d	file:
 NVALS	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/iniparser3.0b/src/dictionary.c	366;"	d	file:
 NVCC	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_backup/Makefile	/^NVCC=nvcc$/;"	m
 NVCC	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/Makefile	/^NVCC=nvcc$/;"	m
@@ -5271,613 +5273,511 @@ PLX9080_BIGEND	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros
 PLX9080_BIGEND	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/timing_tcp_driver/include/_regs_PLX9080.h	43;"	d
 PLX9080_BIGEND	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/transponder/include/_regs_PLX9080.h	43;"	d
 PLX9080_BIGEND	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_backup/include/_regs_PLX9080.h	43;"	d
-PLX9080_BIGEND	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/include/_regs_PLX9080.h	43;"	d
 PLX9080_CAP_PTR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.31/include/_regs_PLX9080.h	21;"	d
 PLX9080_CAP_PTR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.32.exp/include/_regs_PLX9080.h	21;"	d
 PLX9080_CAP_PTR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/timing_tcp_driver/include/_regs_PLX9080.h	21;"	d
 PLX9080_CAP_PTR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/transponder/include/_regs_PLX9080.h	21;"	d
 PLX9080_CAP_PTR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_backup/include/_regs_PLX9080.h	21;"	d
-PLX9080_CAP_PTR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/include/_regs_PLX9080.h	21;"	d
 PLX9080_CNTRL	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.31/include/_regs_PLX9080.h	74;"	d
 PLX9080_CNTRL	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.32.exp/include/_regs_PLX9080.h	74;"	d
 PLX9080_CNTRL	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/timing_tcp_driver/include/_regs_PLX9080.h	74;"	d
 PLX9080_CNTRL	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/transponder/include/_regs_PLX9080.h	74;"	d
 PLX9080_CNTRL	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_backup/include/_regs_PLX9080.h	74;"	d
-PLX9080_CNTRL	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/include/_regs_PLX9080.h	74;"	d
 PLX9080_DMAARB	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.31/include/_regs_PLX9080.h	91;"	d
 PLX9080_DMAARB	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.32.exp/include/_regs_PLX9080.h	91;"	d
 PLX9080_DMAARB	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/timing_tcp_driver/include/_regs_PLX9080.h	91;"	d
 PLX9080_DMAARB	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/transponder/include/_regs_PLX9080.h	91;"	d
 PLX9080_DMAARB	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_backup/include/_regs_PLX9080.h	91;"	d
-PLX9080_DMAARB	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/include/_regs_PLX9080.h	91;"	d
 PLX9080_DMACSR0	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.31/include/_regs_PLX9080.h	89;"	d
 PLX9080_DMACSR0	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.32.exp/include/_regs_PLX9080.h	89;"	d
 PLX9080_DMACSR0	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/timing_tcp_driver/include/_regs_PLX9080.h	89;"	d
 PLX9080_DMACSR0	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/transponder/include/_regs_PLX9080.h	89;"	d
 PLX9080_DMACSR0	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_backup/include/_regs_PLX9080.h	89;"	d
-PLX9080_DMACSR0	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/include/_regs_PLX9080.h	89;"	d
 PLX9080_DMACSR1	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.31/include/_regs_PLX9080.h	90;"	d
 PLX9080_DMACSR1	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.32.exp/include/_regs_PLX9080.h	90;"	d
 PLX9080_DMACSR1	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/timing_tcp_driver/include/_regs_PLX9080.h	90;"	d
 PLX9080_DMACSR1	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/transponder/include/_regs_PLX9080.h	90;"	d
 PLX9080_DMACSR1	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_backup/include/_regs_PLX9080.h	90;"	d
-PLX9080_DMACSR1	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/include/_regs_PLX9080.h	90;"	d
 PLX9080_DMADAC0	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.31/include/_regs_PLX9080.h	93;"	d
 PLX9080_DMADAC0	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.32.exp/include/_regs_PLX9080.h	93;"	d
 PLX9080_DMADAC0	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/timing_tcp_driver/include/_regs_PLX9080.h	93;"	d
 PLX9080_DMADAC0	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/transponder/include/_regs_PLX9080.h	93;"	d
 PLX9080_DMADAC0	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_backup/include/_regs_PLX9080.h	93;"	d
-PLX9080_DMADAC0	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/include/_regs_PLX9080.h	93;"	d
 PLX9080_DMADAC1	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.31/include/_regs_PLX9080.h	94;"	d
 PLX9080_DMADAC1	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.32.exp/include/_regs_PLX9080.h	94;"	d
 PLX9080_DMADAC1	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/timing_tcp_driver/include/_regs_PLX9080.h	94;"	d
 PLX9080_DMADAC1	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/transponder/include/_regs_PLX9080.h	94;"	d
 PLX9080_DMADAC1	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_backup/include/_regs_PLX9080.h	94;"	d
-PLX9080_DMADAC1	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/include/_regs_PLX9080.h	94;"	d
 PLX9080_DMADPR0	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.31/include/_regs_PLX9080.h	83;"	d
 PLX9080_DMADPR0	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.32.exp/include/_regs_PLX9080.h	83;"	d
 PLX9080_DMADPR0	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/timing_tcp_driver/include/_regs_PLX9080.h	83;"	d
 PLX9080_DMADPR0	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/transponder/include/_regs_PLX9080.h	83;"	d
 PLX9080_DMADPR0	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_backup/include/_regs_PLX9080.h	83;"	d
-PLX9080_DMADPR0	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/include/_regs_PLX9080.h	83;"	d
 PLX9080_DMADPR1	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.31/include/_regs_PLX9080.h	88;"	d
 PLX9080_DMADPR1	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.32.exp/include/_regs_PLX9080.h	88;"	d
 PLX9080_DMADPR1	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/timing_tcp_driver/include/_regs_PLX9080.h	88;"	d
 PLX9080_DMADPR1	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/transponder/include/_regs_PLX9080.h	88;"	d
 PLX9080_DMADPR1	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_backup/include/_regs_PLX9080.h	88;"	d
-PLX9080_DMADPR1	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/include/_regs_PLX9080.h	88;"	d
 PLX9080_DMALADR0	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.31/include/_regs_PLX9080.h	81;"	d
 PLX9080_DMALADR0	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.32.exp/include/_regs_PLX9080.h	81;"	d
 PLX9080_DMALADR0	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/timing_tcp_driver/include/_regs_PLX9080.h	81;"	d
 PLX9080_DMALADR0	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/transponder/include/_regs_PLX9080.h	81;"	d
 PLX9080_DMALADR0	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_backup/include/_regs_PLX9080.h	81;"	d
-PLX9080_DMALADR0	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/include/_regs_PLX9080.h	81;"	d
 PLX9080_DMALADR1	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.31/include/_regs_PLX9080.h	86;"	d
 PLX9080_DMALADR1	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.32.exp/include/_regs_PLX9080.h	86;"	d
 PLX9080_DMALADR1	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/timing_tcp_driver/include/_regs_PLX9080.h	86;"	d
 PLX9080_DMALADR1	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/transponder/include/_regs_PLX9080.h	86;"	d
 PLX9080_DMALADR1	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_backup/include/_regs_PLX9080.h	86;"	d
-PLX9080_DMALADR1	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/include/_regs_PLX9080.h	86;"	d
 PLX9080_DMAMODE0	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.31/include/_regs_PLX9080.h	79;"	d
 PLX9080_DMAMODE0	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.32.exp/include/_regs_PLX9080.h	79;"	d
 PLX9080_DMAMODE0	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/timing_tcp_driver/include/_regs_PLX9080.h	79;"	d
 PLX9080_DMAMODE0	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/transponder/include/_regs_PLX9080.h	79;"	d
 PLX9080_DMAMODE0	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_backup/include/_regs_PLX9080.h	79;"	d
-PLX9080_DMAMODE0	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/include/_regs_PLX9080.h	79;"	d
 PLX9080_DMAMODE1	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.31/include/_regs_PLX9080.h	84;"	d
 PLX9080_DMAMODE1	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.32.exp/include/_regs_PLX9080.h	84;"	d
 PLX9080_DMAMODE1	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/timing_tcp_driver/include/_regs_PLX9080.h	84;"	d
 PLX9080_DMAMODE1	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/transponder/include/_regs_PLX9080.h	84;"	d
 PLX9080_DMAMODE1	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_backup/include/_regs_PLX9080.h	84;"	d
-PLX9080_DMAMODE1	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/include/_regs_PLX9080.h	84;"	d
 PLX9080_DMAPADR0	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.31/include/_regs_PLX9080.h	80;"	d
 PLX9080_DMAPADR0	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.32.exp/include/_regs_PLX9080.h	80;"	d
 PLX9080_DMAPADR0	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/timing_tcp_driver/include/_regs_PLX9080.h	80;"	d
 PLX9080_DMAPADR0	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/transponder/include/_regs_PLX9080.h	80;"	d
 PLX9080_DMAPADR0	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_backup/include/_regs_PLX9080.h	80;"	d
-PLX9080_DMAPADR0	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/include/_regs_PLX9080.h	80;"	d
 PLX9080_DMAPADR1	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.31/include/_regs_PLX9080.h	85;"	d
 PLX9080_DMAPADR1	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.32.exp/include/_regs_PLX9080.h	85;"	d
 PLX9080_DMAPADR1	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/timing_tcp_driver/include/_regs_PLX9080.h	85;"	d
 PLX9080_DMAPADR1	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/transponder/include/_regs_PLX9080.h	85;"	d
 PLX9080_DMAPADR1	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_backup/include/_regs_PLX9080.h	85;"	d
-PLX9080_DMAPADR1	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/include/_regs_PLX9080.h	85;"	d
 PLX9080_DMASIZ0	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.31/include/_regs_PLX9080.h	82;"	d
 PLX9080_DMASIZ0	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.32.exp/include/_regs_PLX9080.h	82;"	d
 PLX9080_DMASIZ0	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/timing_tcp_driver/include/_regs_PLX9080.h	82;"	d
 PLX9080_DMASIZ0	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/transponder/include/_regs_PLX9080.h	82;"	d
 PLX9080_DMASIZ0	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_backup/include/_regs_PLX9080.h	82;"	d
-PLX9080_DMASIZ0	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/include/_regs_PLX9080.h	82;"	d
 PLX9080_DMASIZ1	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.31/include/_regs_PLX9080.h	87;"	d
 PLX9080_DMASIZ1	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.32.exp/include/_regs_PLX9080.h	87;"	d
 PLX9080_DMASIZ1	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/timing_tcp_driver/include/_regs_PLX9080.h	87;"	d
 PLX9080_DMASIZ1	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/transponder/include/_regs_PLX9080.h	87;"	d
 PLX9080_DMASIZ1	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_backup/include/_regs_PLX9080.h	87;"	d
-PLX9080_DMASIZ1	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/include/_regs_PLX9080.h	87;"	d
 PLX9080_DMATHR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.31/include/_regs_PLX9080.h	92;"	d
 PLX9080_DMATHR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.32.exp/include/_regs_PLX9080.h	92;"	d
 PLX9080_DMATHR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/timing_tcp_driver/include/_regs_PLX9080.h	92;"	d
 PLX9080_DMATHR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/transponder/include/_regs_PLX9080.h	92;"	d
 PLX9080_DMATHR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_backup/include/_regs_PLX9080.h	92;"	d
-PLX9080_DMATHR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/include/_regs_PLX9080.h	92;"	d
 PLX9080_DMCFGA	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.31/include/_regs_PLX9080.h	54;"	d
 PLX9080_DMCFGA	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.32.exp/include/_regs_PLX9080.h	54;"	d
 PLX9080_DMCFGA	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/timing_tcp_driver/include/_regs_PLX9080.h	54;"	d
 PLX9080_DMCFGA	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/transponder/include/_regs_PLX9080.h	54;"	d
 PLX9080_DMCFGA	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_backup/include/_regs_PLX9080.h	54;"	d
-PLX9080_DMCFGA	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/include/_regs_PLX9080.h	54;"	d
 PLX9080_DMDAC	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.31/include/_regs_PLX9080.h	58;"	d
 PLX9080_DMDAC	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.32.exp/include/_regs_PLX9080.h	58;"	d
 PLX9080_DMDAC	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/timing_tcp_driver/include/_regs_PLX9080.h	58;"	d
 PLX9080_DMDAC	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/transponder/include/_regs_PLX9080.h	58;"	d
 PLX9080_DMDAC	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_backup/include/_regs_PLX9080.h	58;"	d
-PLX9080_DMDAC	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/include/_regs_PLX9080.h	58;"	d
 PLX9080_DMLBAI	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.31/include/_regs_PLX9080.h	52;"	d
 PLX9080_DMLBAI	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.32.exp/include/_regs_PLX9080.h	52;"	d
 PLX9080_DMLBAI	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/timing_tcp_driver/include/_regs_PLX9080.h	52;"	d
 PLX9080_DMLBAI	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/transponder/include/_regs_PLX9080.h	52;"	d
 PLX9080_DMLBAI	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_backup/include/_regs_PLX9080.h	52;"	d
-PLX9080_DMLBAI	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/include/_regs_PLX9080.h	52;"	d
 PLX9080_DMLBAM	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.31/include/_regs_PLX9080.h	51;"	d
 PLX9080_DMLBAM	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.32.exp/include/_regs_PLX9080.h	51;"	d
 PLX9080_DMLBAM	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/timing_tcp_driver/include/_regs_PLX9080.h	51;"	d
 PLX9080_DMLBAM	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/transponder/include/_regs_PLX9080.h	51;"	d
 PLX9080_DMLBAM	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_backup/include/_regs_PLX9080.h	51;"	d
-PLX9080_DMLBAM	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/include/_regs_PLX9080.h	51;"	d
 PLX9080_DMPBAM	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.31/include/_regs_PLX9080.h	53;"	d
 PLX9080_DMPBAM	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.32.exp/include/_regs_PLX9080.h	53;"	d
 PLX9080_DMPBAM	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/timing_tcp_driver/include/_regs_PLX9080.h	53;"	d
 PLX9080_DMPBAM	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/transponder/include/_regs_PLX9080.h	53;"	d
 PLX9080_DMPBAM	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_backup/include/_regs_PLX9080.h	53;"	d
-PLX9080_DMPBAM	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/include/_regs_PLX9080.h	53;"	d
 PLX9080_DMRR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.31/include/_regs_PLX9080.h	50;"	d
 PLX9080_DMRR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.32.exp/include/_regs_PLX9080.h	50;"	d
 PLX9080_DMRR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/timing_tcp_driver/include/_regs_PLX9080.h	50;"	d
 PLX9080_DMRR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/transponder/include/_regs_PLX9080.h	50;"	d
 PLX9080_DMRR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_backup/include/_regs_PLX9080.h	50;"	d
-PLX9080_DMRR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/include/_regs_PLX9080.h	50;"	d
 PLX9080_EROMBA	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.31/include/_regs_PLX9080.h	48;"	d
 PLX9080_EROMBA	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.32.exp/include/_regs_PLX9080.h	48;"	d
 PLX9080_EROMBA	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/timing_tcp_driver/include/_regs_PLX9080.h	48;"	d
 PLX9080_EROMBA	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/transponder/include/_regs_PLX9080.h	48;"	d
 PLX9080_EROMBA	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_backup/include/_regs_PLX9080.h	48;"	d
-PLX9080_EROMBA	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/include/_regs_PLX9080.h	48;"	d
 PLX9080_EROMRR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.31/include/_regs_PLX9080.h	47;"	d
 PLX9080_EROMRR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.32.exp/include/_regs_PLX9080.h	47;"	d
 PLX9080_EROMRR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/timing_tcp_driver/include/_regs_PLX9080.h	47;"	d
 PLX9080_EROMRR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/transponder/include/_regs_PLX9080.h	47;"	d
 PLX9080_EROMRR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_backup/include/_regs_PLX9080.h	47;"	d
-PLX9080_EROMRR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/include/_regs_PLX9080.h	47;"	d
 PLX9080_HS_CNTL	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.31/include/_regs_PLX9080.h	31;"	d
 PLX9080_HS_CNTL	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.32.exp/include/_regs_PLX9080.h	31;"	d
 PLX9080_HS_CNTL	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/timing_tcp_driver/include/_regs_PLX9080.h	31;"	d
 PLX9080_HS_CNTL	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/transponder/include/_regs_PLX9080.h	31;"	d
 PLX9080_HS_CNTL	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_backup/include/_regs_PLX9080.h	31;"	d
-PLX9080_HS_CNTL	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/include/_regs_PLX9080.h	31;"	d
 PLX9080_HS_CSR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.31/include/_regs_PLX9080.h	33;"	d
 PLX9080_HS_CSR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.32.exp/include/_regs_PLX9080.h	33;"	d
 PLX9080_HS_CSR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/timing_tcp_driver/include/_regs_PLX9080.h	33;"	d
 PLX9080_HS_CSR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/transponder/include/_regs_PLX9080.h	33;"	d
 PLX9080_HS_CSR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_backup/include/_regs_PLX9080.h	33;"	d
-PLX9080_HS_CSR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/include/_regs_PLX9080.h	33;"	d
 PLX9080_HS_NEXT	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.31/include/_regs_PLX9080.h	32;"	d
 PLX9080_HS_NEXT	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.32.exp/include/_regs_PLX9080.h	32;"	d
 PLX9080_HS_NEXT	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/timing_tcp_driver/include/_regs_PLX9080.h	32;"	d
 PLX9080_HS_NEXT	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/transponder/include/_regs_PLX9080.h	32;"	d
 PLX9080_HS_NEXT	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_backup/include/_regs_PLX9080.h	32;"	d
-PLX9080_HS_NEXT	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/include/_regs_PLX9080.h	32;"	d
 PLX9080_IFHPR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.31/include/_regs_PLX9080.h	103;"	d
 PLX9080_IFHPR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.32.exp/include/_regs_PLX9080.h	103;"	d
 PLX9080_IFHPR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/timing_tcp_driver/include/_regs_PLX9080.h	103;"	d
 PLX9080_IFHPR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/transponder/include/_regs_PLX9080.h	103;"	d
 PLX9080_IFHPR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_backup/include/_regs_PLX9080.h	103;"	d
-PLX9080_IFHPR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/include/_regs_PLX9080.h	103;"	d
 PLX9080_IFTPR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.31/include/_regs_PLX9080.h	104;"	d
 PLX9080_IFTPR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.32.exp/include/_regs_PLX9080.h	104;"	d
 PLX9080_IFTPR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/timing_tcp_driver/include/_regs_PLX9080.h	104;"	d
 PLX9080_IFTPR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/transponder/include/_regs_PLX9080.h	104;"	d
 PLX9080_IFTPR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_backup/include/_regs_PLX9080.h	104;"	d
-PLX9080_IFTPR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/include/_regs_PLX9080.h	104;"	d
 PLX9080_INTCSR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.31/include/_regs_PLX9080.h	73;"	d
 PLX9080_INTCSR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.32.exp/include/_regs_PLX9080.h	73;"	d
 PLX9080_INTCSR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/timing_tcp_driver/include/_regs_PLX9080.h	73;"	d
 PLX9080_INTCSR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/transponder/include/_regs_PLX9080.h	73;"	d
 PLX9080_INTCSR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_backup/include/_regs_PLX9080.h	73;"	d
-PLX9080_INTCSR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/include/_regs_PLX9080.h	73;"	d
 PLX9080_IPHPR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.31/include/_regs_PLX9080.h	105;"	d
 PLX9080_IPHPR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.32.exp/include/_regs_PLX9080.h	105;"	d
 PLX9080_IPHPR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/timing_tcp_driver/include/_regs_PLX9080.h	105;"	d
 PLX9080_IPHPR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/transponder/include/_regs_PLX9080.h	105;"	d
 PLX9080_IPHPR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_backup/include/_regs_PLX9080.h	105;"	d
-PLX9080_IPHPR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/include/_regs_PLX9080.h	105;"	d
 PLX9080_IPTPR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.31/include/_regs_PLX9080.h	106;"	d
 PLX9080_IPTPR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.32.exp/include/_regs_PLX9080.h	106;"	d
 PLX9080_IPTPR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/timing_tcp_driver/include/_regs_PLX9080.h	106;"	d
 PLX9080_IPTPR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/transponder/include/_regs_PLX9080.h	106;"	d
 PLX9080_IPTPR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_backup/include/_regs_PLX9080.h	106;"	d
-PLX9080_IPTPR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/include/_regs_PLX9080.h	106;"	d
 PLX9080_IQP	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.31/include/_regs_PLX9080.h	99;"	d
 PLX9080_IQP	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.32.exp/include/_regs_PLX9080.h	99;"	d
 PLX9080_IQP	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/timing_tcp_driver/include/_regs_PLX9080.h	99;"	d
 PLX9080_IQP	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/transponder/include/_regs_PLX9080.h	99;"	d
 PLX9080_IQP	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_backup/include/_regs_PLX9080.h	99;"	d
-PLX9080_IQP	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/include/_regs_PLX9080.h	99;"	d
 PLX9080_L2PDBELL	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.31/include/_regs_PLX9080.h	72;"	d
 PLX9080_L2PDBELL	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.32.exp/include/_regs_PLX9080.h	72;"	d
 PLX9080_L2PDBELL	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/timing_tcp_driver/include/_regs_PLX9080.h	72;"	d
 PLX9080_L2PDBELL	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/transponder/include/_regs_PLX9080.h	72;"	d
 PLX9080_L2PDBELL	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_backup/include/_regs_PLX9080.h	72;"	d
-PLX9080_L2PDBELL	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/include/_regs_PLX9080.h	72;"	d
 PLX9080_LAS0BA	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.31/include/_regs_PLX9080.h	41;"	d
 PLX9080_LAS0BA	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.32.exp/include/_regs_PLX9080.h	41;"	d
 PLX9080_LAS0BA	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/timing_tcp_driver/include/_regs_PLX9080.h	41;"	d
 PLX9080_LAS0BA	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/transponder/include/_regs_PLX9080.h	41;"	d
 PLX9080_LAS0BA	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_backup/include/_regs_PLX9080.h	41;"	d
-PLX9080_LAS0BA	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/include/_regs_PLX9080.h	41;"	d
 PLX9080_LAS0RR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.31/include/_regs_PLX9080.h	40;"	d
 PLX9080_LAS0RR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.32.exp/include/_regs_PLX9080.h	40;"	d
 PLX9080_LAS0RR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/timing_tcp_driver/include/_regs_PLX9080.h	40;"	d
 PLX9080_LAS0RR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/transponder/include/_regs_PLX9080.h	40;"	d
 PLX9080_LAS0RR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_backup/include/_regs_PLX9080.h	40;"	d
-PLX9080_LAS0RR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/include/_regs_PLX9080.h	40;"	d
 PLX9080_LAS1BA	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.31/include/_regs_PLX9080.h	56;"	d
 PLX9080_LAS1BA	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.32.exp/include/_regs_PLX9080.h	56;"	d
 PLX9080_LAS1BA	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/timing_tcp_driver/include/_regs_PLX9080.h	56;"	d
 PLX9080_LAS1BA	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/transponder/include/_regs_PLX9080.h	56;"	d
 PLX9080_LAS1BA	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_backup/include/_regs_PLX9080.h	56;"	d
-PLX9080_LAS1BA	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/include/_regs_PLX9080.h	56;"	d
 PLX9080_LAS1RR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.31/include/_regs_PLX9080.h	55;"	d
 PLX9080_LAS1RR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.32.exp/include/_regs_PLX9080.h	55;"	d
 PLX9080_LAS1RR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/timing_tcp_driver/include/_regs_PLX9080.h	55;"	d
 PLX9080_LAS1RR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/transponder/include/_regs_PLX9080.h	55;"	d
 PLX9080_LAS1RR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_backup/include/_regs_PLX9080.h	55;"	d
-PLX9080_LAS1RR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/include/_regs_PLX9080.h	55;"	d
 PLX9080_LBRD0	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.31/include/_regs_PLX9080.h	49;"	d
 PLX9080_LBRD0	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.32.exp/include/_regs_PLX9080.h	49;"	d
 PLX9080_LBRD0	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/timing_tcp_driver/include/_regs_PLX9080.h	49;"	d
 PLX9080_LBRD0	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/transponder/include/_regs_PLX9080.h	49;"	d
 PLX9080_LBRD0	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_backup/include/_regs_PLX9080.h	49;"	d
-PLX9080_LBRD0	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/include/_regs_PLX9080.h	49;"	d
 PLX9080_LBRD1	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.31/include/_regs_PLX9080.h	57;"	d
 PLX9080_LBRD1	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.32.exp/include/_regs_PLX9080.h	57;"	d
 PLX9080_LBRD1	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/timing_tcp_driver/include/_regs_PLX9080.h	57;"	d
 PLX9080_LBRD1	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/transponder/include/_regs_PLX9080.h	57;"	d
 PLX9080_LBRD1	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_backup/include/_regs_PLX9080.h	57;"	d
-PLX9080_LBRD1	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/include/_regs_PLX9080.h	57;"	d
 PLX9080_LIMSC2	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.31/include/_regs_PLX9080.h	46;"	d
 PLX9080_LIMSC2	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.32.exp/include/_regs_PLX9080.h	46;"	d
 PLX9080_LIMSC2	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/timing_tcp_driver/include/_regs_PLX9080.h	46;"	d
 PLX9080_LIMSC2	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/transponder/include/_regs_PLX9080.h	46;"	d
 PLX9080_LIMSC2	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_backup/include/_regs_PLX9080.h	46;"	d
-PLX9080_LIMSC2	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/include/_regs_PLX9080.h	46;"	d
 PLX9080_LMISC1	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.31/include/_regs_PLX9080.h	44;"	d
 PLX9080_LMISC1	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.32.exp/include/_regs_PLX9080.h	44;"	d
 PLX9080_LMISC1	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/timing_tcp_driver/include/_regs_PLX9080.h	44;"	d
 PLX9080_LMISC1	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/transponder/include/_regs_PLX9080.h	44;"	d
 PLX9080_LMISC1	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_backup/include/_regs_PLX9080.h	44;"	d
-PLX9080_LMISC1	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/include/_regs_PLX9080.h	44;"	d
 PLX9080_MARBR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.31/include/_regs_PLX9080.h	42;"	d
 PLX9080_MARBR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.32.exp/include/_regs_PLX9080.h	42;"	d
 PLX9080_MARBR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/timing_tcp_driver/include/_regs_PLX9080.h	42;"	d
 PLX9080_MARBR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/transponder/include/_regs_PLX9080.h	42;"	d
 PLX9080_MARBR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_backup/include/_regs_PLX9080.h	42;"	d
-PLX9080_MARBR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/include/_regs_PLX9080.h	42;"	d
 PLX9080_MBOX0	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.31/include/_regs_PLX9080.h	63;"	d
 PLX9080_MBOX0	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.32.exp/include/_regs_PLX9080.h	63;"	d
 PLX9080_MBOX0	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/timing_tcp_driver/include/_regs_PLX9080.h	63;"	d
 PLX9080_MBOX0	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/transponder/include/_regs_PLX9080.h	63;"	d
 PLX9080_MBOX0	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_backup/include/_regs_PLX9080.h	63;"	d
-PLX9080_MBOX0	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/include/_regs_PLX9080.h	63;"	d
 PLX9080_MBOX1	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.31/include/_regs_PLX9080.h	64;"	d
 PLX9080_MBOX1	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.32.exp/include/_regs_PLX9080.h	64;"	d
 PLX9080_MBOX1	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/timing_tcp_driver/include/_regs_PLX9080.h	64;"	d
 PLX9080_MBOX1	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/transponder/include/_regs_PLX9080.h	64;"	d
 PLX9080_MBOX1	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_backup/include/_regs_PLX9080.h	64;"	d
-PLX9080_MBOX1	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/include/_regs_PLX9080.h	64;"	d
 PLX9080_MBOX2	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.31/include/_regs_PLX9080.h	65;"	d
 PLX9080_MBOX2	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.32.exp/include/_regs_PLX9080.h	65;"	d
 PLX9080_MBOX2	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/timing_tcp_driver/include/_regs_PLX9080.h	65;"	d
 PLX9080_MBOX2	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/transponder/include/_regs_PLX9080.h	65;"	d
 PLX9080_MBOX2	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_backup/include/_regs_PLX9080.h	65;"	d
-PLX9080_MBOX2	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/include/_regs_PLX9080.h	65;"	d
 PLX9080_MBOX3	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.31/include/_regs_PLX9080.h	66;"	d
 PLX9080_MBOX3	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.32.exp/include/_regs_PLX9080.h	66;"	d
 PLX9080_MBOX3	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/timing_tcp_driver/include/_regs_PLX9080.h	66;"	d
 PLX9080_MBOX3	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/transponder/include/_regs_PLX9080.h	66;"	d
 PLX9080_MBOX3	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_backup/include/_regs_PLX9080.h	66;"	d
-PLX9080_MBOX3	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/include/_regs_PLX9080.h	66;"	d
 PLX9080_MBOX4	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.31/include/_regs_PLX9080.h	67;"	d
 PLX9080_MBOX4	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.32.exp/include/_regs_PLX9080.h	67;"	d
 PLX9080_MBOX4	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/timing_tcp_driver/include/_regs_PLX9080.h	67;"	d
 PLX9080_MBOX4	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/transponder/include/_regs_PLX9080.h	67;"	d
 PLX9080_MBOX4	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_backup/include/_regs_PLX9080.h	67;"	d
-PLX9080_MBOX4	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/include/_regs_PLX9080.h	67;"	d
 PLX9080_MBOX5	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.31/include/_regs_PLX9080.h	68;"	d
 PLX9080_MBOX5	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.32.exp/include/_regs_PLX9080.h	68;"	d
 PLX9080_MBOX5	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/timing_tcp_driver/include/_regs_PLX9080.h	68;"	d
 PLX9080_MBOX5	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/transponder/include/_regs_PLX9080.h	68;"	d
 PLX9080_MBOX5	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_backup/include/_regs_PLX9080.h	68;"	d
-PLX9080_MBOX5	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/include/_regs_PLX9080.h	68;"	d
 PLX9080_MBOX6	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.31/include/_regs_PLX9080.h	69;"	d
 PLX9080_MBOX6	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.32.exp/include/_regs_PLX9080.h	69;"	d
 PLX9080_MBOX6	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/timing_tcp_driver/include/_regs_PLX9080.h	69;"	d
 PLX9080_MBOX6	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/transponder/include/_regs_PLX9080.h	69;"	d
 PLX9080_MBOX6	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_backup/include/_regs_PLX9080.h	69;"	d
-PLX9080_MBOX6	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/include/_regs_PLX9080.h	69;"	d
 PLX9080_MBOX7	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.31/include/_regs_PLX9080.h	70;"	d
 PLX9080_MBOX7	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.32.exp/include/_regs_PLX9080.h	70;"	d
 PLX9080_MBOX7	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/timing_tcp_driver/include/_regs_PLX9080.h	70;"	d
 PLX9080_MBOX7	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/transponder/include/_regs_PLX9080.h	70;"	d
 PLX9080_MBOX7	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_backup/include/_regs_PLX9080.h	70;"	d
-PLX9080_MBOX7	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/include/_regs_PLX9080.h	70;"	d
 PLX9080_MQCR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.31/include/_regs_PLX9080.h	101;"	d
 PLX9080_MQCR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.32.exp/include/_regs_PLX9080.h	101;"	d
 PLX9080_MQCR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/timing_tcp_driver/include/_regs_PLX9080.h	101;"	d
 PLX9080_MQCR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/transponder/include/_regs_PLX9080.h	101;"	d
 PLX9080_MQCR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_backup/include/_regs_PLX9080.h	101;"	d
-PLX9080_MQCR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/include/_regs_PLX9080.h	101;"	d
 PLX9080_OFHPR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.31/include/_regs_PLX9080.h	107;"	d
 PLX9080_OFHPR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.32.exp/include/_regs_PLX9080.h	107;"	d
 PLX9080_OFHPR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/timing_tcp_driver/include/_regs_PLX9080.h	107;"	d
 PLX9080_OFHPR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/transponder/include/_regs_PLX9080.h	107;"	d
 PLX9080_OFHPR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_backup/include/_regs_PLX9080.h	107;"	d
-PLX9080_OFHPR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/include/_regs_PLX9080.h	107;"	d
 PLX9080_OFTPR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.31/include/_regs_PLX9080.h	108;"	d
 PLX9080_OFTPR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.32.exp/include/_regs_PLX9080.h	108;"	d
 PLX9080_OFTPR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/timing_tcp_driver/include/_regs_PLX9080.h	108;"	d
 PLX9080_OFTPR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/transponder/include/_regs_PLX9080.h	108;"	d
 PLX9080_OFTPR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_backup/include/_regs_PLX9080.h	108;"	d
-PLX9080_OFTPR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/include/_regs_PLX9080.h	108;"	d
 PLX9080_OPHPR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.31/include/_regs_PLX9080.h	109;"	d
 PLX9080_OPHPR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.32.exp/include/_regs_PLX9080.h	109;"	d
 PLX9080_OPHPR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/timing_tcp_driver/include/_regs_PLX9080.h	109;"	d
 PLX9080_OPHPR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/transponder/include/_regs_PLX9080.h	109;"	d
 PLX9080_OPHPR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_backup/include/_regs_PLX9080.h	109;"	d
-PLX9080_OPHPR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/include/_regs_PLX9080.h	109;"	d
 PLX9080_OPQIM	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.31/include/_regs_PLX9080.h	98;"	d
 PLX9080_OPQIM	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.32.exp/include/_regs_PLX9080.h	98;"	d
 PLX9080_OPQIM	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/timing_tcp_driver/include/_regs_PLX9080.h	98;"	d
 PLX9080_OPQIM	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/transponder/include/_regs_PLX9080.h	98;"	d
 PLX9080_OPQIM	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_backup/include/_regs_PLX9080.h	98;"	d
-PLX9080_OPQIM	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/include/_regs_PLX9080.h	98;"	d
 PLX9080_OPQIS	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.31/include/_regs_PLX9080.h	97;"	d
 PLX9080_OPQIS	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.32.exp/include/_regs_PLX9080.h	97;"	d
 PLX9080_OPQIS	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/timing_tcp_driver/include/_regs_PLX9080.h	97;"	d
 PLX9080_OPQIS	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/transponder/include/_regs_PLX9080.h	97;"	d
 PLX9080_OPQIS	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_backup/include/_regs_PLX9080.h	97;"	d
-PLX9080_OPQIS	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/include/_regs_PLX9080.h	97;"	d
 PLX9080_OPTPR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.31/include/_regs_PLX9080.h	110;"	d
 PLX9080_OPTPR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.32.exp/include/_regs_PLX9080.h	110;"	d
 PLX9080_OPTPR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/timing_tcp_driver/include/_regs_PLX9080.h	110;"	d
 PLX9080_OPTPR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/transponder/include/_regs_PLX9080.h	110;"	d
 PLX9080_OPTPR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_backup/include/_regs_PLX9080.h	110;"	d
-PLX9080_OPTPR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/include/_regs_PLX9080.h	110;"	d
 PLX9080_OQP	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.31/include/_regs_PLX9080.h	100;"	d
 PLX9080_OQP	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.32.exp/include/_regs_PLX9080.h	100;"	d
 PLX9080_OQP	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/timing_tcp_driver/include/_regs_PLX9080.h	100;"	d
 PLX9080_OQP	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/transponder/include/_regs_PLX9080.h	100;"	d
 PLX9080_OQP	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_backup/include/_regs_PLX9080.h	100;"	d
-PLX9080_OQP	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/include/_regs_PLX9080.h	100;"	d
 PLX9080_P2LDBELL	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.31/include/_regs_PLX9080.h	71;"	d
 PLX9080_P2LDBELL	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.32.exp/include/_regs_PLX9080.h	71;"	d
 PLX9080_P2LDBELL	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/timing_tcp_driver/include/_regs_PLX9080.h	71;"	d
 PLX9080_P2LDBELL	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/transponder/include/_regs_PLX9080.h	71;"	d
 PLX9080_P2LDBELL	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_backup/include/_regs_PLX9080.h	71;"	d
-PLX9080_P2LDBELL	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/include/_regs_PLX9080.h	71;"	d
 PLX9080_PABTADR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.31/include/_regs_PLX9080.h	60;"	d
 PLX9080_PABTADR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.32.exp/include/_regs_PLX9080.h	60;"	d
 PLX9080_PABTADR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/timing_tcp_driver/include/_regs_PLX9080.h	60;"	d
 PLX9080_PABTADR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/transponder/include/_regs_PLX9080.h	60;"	d
 PLX9080_PABTADR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_backup/include/_regs_PLX9080.h	60;"	d
-PLX9080_PABTADR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/include/_regs_PLX9080.h	60;"	d
 PLX9080_PCIARB	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.31/include/_regs_PLX9080.h	59;"	d
 PLX9080_PCIARB	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.32.exp/include/_regs_PLX9080.h	59;"	d
 PLX9080_PCIARB	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/timing_tcp_driver/include/_regs_PLX9080.h	59;"	d
 PLX9080_PCIARB	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/transponder/include/_regs_PLX9080.h	59;"	d
 PLX9080_PCIARB	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_backup/include/_regs_PLX9080.h	59;"	d
-PLX9080_PCIARB	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/include/_regs_PLX9080.h	59;"	d
 PLX9080_PCIBAR0	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.31/include/_regs_PLX9080.h	11;"	d
 PLX9080_PCIBAR0	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.32.exp/include/_regs_PLX9080.h	11;"	d
 PLX9080_PCIBAR0	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/timing_tcp_driver/include/_regs_PLX9080.h	11;"	d
 PLX9080_PCIBAR0	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/transponder/include/_regs_PLX9080.h	11;"	d
 PLX9080_PCIBAR0	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_backup/include/_regs_PLX9080.h	11;"	d
-PLX9080_PCIBAR0	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/include/_regs_PLX9080.h	11;"	d
 PLX9080_PCIBAR1	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.31/include/_regs_PLX9080.h	12;"	d
 PLX9080_PCIBAR1	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.32.exp/include/_regs_PLX9080.h	12;"	d
 PLX9080_PCIBAR1	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/timing_tcp_driver/include/_regs_PLX9080.h	12;"	d
 PLX9080_PCIBAR1	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/transponder/include/_regs_PLX9080.h	12;"	d
 PLX9080_PCIBAR1	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_backup/include/_regs_PLX9080.h	12;"	d
-PLX9080_PCIBAR1	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/include/_regs_PLX9080.h	12;"	d
 PLX9080_PCIBAR2	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.31/include/_regs_PLX9080.h	13;"	d
 PLX9080_PCIBAR2	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.32.exp/include/_regs_PLX9080.h	13;"	d
 PLX9080_PCIBAR2	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/timing_tcp_driver/include/_regs_PLX9080.h	13;"	d
 PLX9080_PCIBAR2	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/transponder/include/_regs_PLX9080.h	13;"	d
 PLX9080_PCIBAR2	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_backup/include/_regs_PLX9080.h	13;"	d
-PLX9080_PCIBAR2	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/include/_regs_PLX9080.h	13;"	d
 PLX9080_PCIBAR3	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.31/include/_regs_PLX9080.h	14;"	d
 PLX9080_PCIBAR3	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.32.exp/include/_regs_PLX9080.h	14;"	d
 PLX9080_PCIBAR3	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/timing_tcp_driver/include/_regs_PLX9080.h	14;"	d
 PLX9080_PCIBAR3	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/transponder/include/_regs_PLX9080.h	14;"	d
 PLX9080_PCIBAR3	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_backup/include/_regs_PLX9080.h	14;"	d
-PLX9080_PCIBAR3	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/include/_regs_PLX9080.h	14;"	d
 PLX9080_PCIBAR4	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.31/include/_regs_PLX9080.h	15;"	d
 PLX9080_PCIBAR4	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.32.exp/include/_regs_PLX9080.h	15;"	d
 PLX9080_PCIBAR4	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/timing_tcp_driver/include/_regs_PLX9080.h	15;"	d
 PLX9080_PCIBAR4	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/transponder/include/_regs_PLX9080.h	15;"	d
 PLX9080_PCIBAR4	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_backup/include/_regs_PLX9080.h	15;"	d
-PLX9080_PCIBAR4	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/include/_regs_PLX9080.h	15;"	d
 PLX9080_PCIBAR5	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.31/include/_regs_PLX9080.h	16;"	d
 PLX9080_PCIBAR5	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.32.exp/include/_regs_PLX9080.h	16;"	d
 PLX9080_PCIBAR5	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/timing_tcp_driver/include/_regs_PLX9080.h	16;"	d
 PLX9080_PCIBAR5	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/transponder/include/_regs_PLX9080.h	16;"	d
 PLX9080_PCIBAR5	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_backup/include/_regs_PLX9080.h	16;"	d
-PLX9080_PCIBAR5	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/include/_regs_PLX9080.h	16;"	d
 PLX9080_PCIBISTR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.31/include/_regs_PLX9080.h	10;"	d
 PLX9080_PCIBISTR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.32.exp/include/_regs_PLX9080.h	10;"	d
 PLX9080_PCIBISTR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/timing_tcp_driver/include/_regs_PLX9080.h	10;"	d
 PLX9080_PCIBISTR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/transponder/include/_regs_PLX9080.h	10;"	d
 PLX9080_PCIBISTR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_backup/include/_regs_PLX9080.h	10;"	d
-PLX9080_PCIBISTR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/include/_regs_PLX9080.h	10;"	d
 PLX9080_PCICCR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.31/include/_regs_PLX9080.h	6;"	d
 PLX9080_PCICCR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.32.exp/include/_regs_PLX9080.h	6;"	d
 PLX9080_PCICCR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/timing_tcp_driver/include/_regs_PLX9080.h	6;"	d
 PLX9080_PCICCR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/transponder/include/_regs_PLX9080.h	6;"	d
 PLX9080_PCICCR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_backup/include/_regs_PLX9080.h	6;"	d
-PLX9080_PCICCR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/include/_regs_PLX9080.h	6;"	d
 PLX9080_PCICIS	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.31/include/_regs_PLX9080.h	17;"	d
 PLX9080_PCICIS	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.32.exp/include/_regs_PLX9080.h	17;"	d
 PLX9080_PCICIS	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/timing_tcp_driver/include/_regs_PLX9080.h	17;"	d
 PLX9080_PCICIS	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/transponder/include/_regs_PLX9080.h	17;"	d
 PLX9080_PCICIS	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_backup/include/_regs_PLX9080.h	17;"	d
-PLX9080_PCICIS	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/include/_regs_PLX9080.h	17;"	d
 PLX9080_PCICLSR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.31/include/_regs_PLX9080.h	7;"	d
 PLX9080_PCICLSR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.32.exp/include/_regs_PLX9080.h	7;"	d
 PLX9080_PCICLSR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/timing_tcp_driver/include/_regs_PLX9080.h	7;"	d
 PLX9080_PCICLSR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/transponder/include/_regs_PLX9080.h	7;"	d
 PLX9080_PCICLSR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_backup/include/_regs_PLX9080.h	7;"	d
-PLX9080_PCICLSR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/include/_regs_PLX9080.h	7;"	d
 PLX9080_PCIERBAR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.31/include/_regs_PLX9080.h	20;"	d
 PLX9080_PCIERBAR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.32.exp/include/_regs_PLX9080.h	20;"	d
 PLX9080_PCIERBAR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/timing_tcp_driver/include/_regs_PLX9080.h	20;"	d
 PLX9080_PCIERBAR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/transponder/include/_regs_PLX9080.h	20;"	d
 PLX9080_PCIERBAR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_backup/include/_regs_PLX9080.h	20;"	d
-PLX9080_PCIERBAR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/include/_regs_PLX9080.h	20;"	d
 PLX9080_PCIHIDR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.31/include/_regs_PLX9080.h	75;"	d
 PLX9080_PCIHIDR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.32.exp/include/_regs_PLX9080.h	75;"	d
 PLX9080_PCIHIDR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/timing_tcp_driver/include/_regs_PLX9080.h	75;"	d
 PLX9080_PCIHIDR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/transponder/include/_regs_PLX9080.h	75;"	d
 PLX9080_PCIHIDR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_backup/include/_regs_PLX9080.h	75;"	d
-PLX9080_PCIHIDR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/include/_regs_PLX9080.h	75;"	d
 PLX9080_PCIHREV	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.31/include/_regs_PLX9080.h	76;"	d
 PLX9080_PCIHREV	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.32.exp/include/_regs_PLX9080.h	76;"	d
 PLX9080_PCIHREV	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/timing_tcp_driver/include/_regs_PLX9080.h	76;"	d
 PLX9080_PCIHREV	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/transponder/include/_regs_PLX9080.h	76;"	d
 PLX9080_PCIHREV	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_backup/include/_regs_PLX9080.h	76;"	d
-PLX9080_PCIHREV	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/include/_regs_PLX9080.h	76;"	d
 PLX9080_PCIHTR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.31/include/_regs_PLX9080.h	9;"	d
 PLX9080_PCIHTR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.32.exp/include/_regs_PLX9080.h	9;"	d
 PLX9080_PCIHTR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/timing_tcp_driver/include/_regs_PLX9080.h	9;"	d
 PLX9080_PCIHTR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/transponder/include/_regs_PLX9080.h	9;"	d
 PLX9080_PCIHTR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_backup/include/_regs_PLX9080.h	9;"	d
-PLX9080_PCIHTR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/include/_regs_PLX9080.h	9;"	d
 PLX9080_PCIICR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.31/include/_regs_PLX9080.h	3;"	d
 PLX9080_PCIICR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.32.exp/include/_regs_PLX9080.h	3;"	d
 PLX9080_PCIICR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/timing_tcp_driver/include/_regs_PLX9080.h	3;"	d
 PLX9080_PCIICR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/transponder/include/_regs_PLX9080.h	3;"	d
 PLX9080_PCIICR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_backup/include/_regs_PLX9080.h	3;"	d
-PLX9080_PCIICR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/include/_regs_PLX9080.h	3;"	d
 PLX9080_PCIIDR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.31/include/_regs_PLX9080.h	2;"	d
 PLX9080_PCIIDR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.32.exp/include/_regs_PLX9080.h	2;"	d
 PLX9080_PCIIDR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/timing_tcp_driver/include/_regs_PLX9080.h	2;"	d
 PLX9080_PCIIDR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/transponder/include/_regs_PLX9080.h	2;"	d
 PLX9080_PCIIDR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_backup/include/_regs_PLX9080.h	2;"	d
-PLX9080_PCIIDR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/include/_regs_PLX9080.h	2;"	d
 PLX9080_PCIILR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.31/include/_regs_PLX9080.h	22;"	d
 PLX9080_PCIILR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.32.exp/include/_regs_PLX9080.h	22;"	d
 PLX9080_PCIILR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/timing_tcp_driver/include/_regs_PLX9080.h	22;"	d
 PLX9080_PCIILR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/transponder/include/_regs_PLX9080.h	22;"	d
 PLX9080_PCIILR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_backup/include/_regs_PLX9080.h	22;"	d
-PLX9080_PCIILR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/include/_regs_PLX9080.h	22;"	d
 PLX9080_PCIIPR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.31/include/_regs_PLX9080.h	23;"	d
 PLX9080_PCIIPR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.32.exp/include/_regs_PLX9080.h	23;"	d
 PLX9080_PCIIPR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/timing_tcp_driver/include/_regs_PLX9080.h	23;"	d
 PLX9080_PCIIPR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/transponder/include/_regs_PLX9080.h	23;"	d
 PLX9080_PCIIPR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_backup/include/_regs_PLX9080.h	23;"	d
-PLX9080_PCIIPR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/include/_regs_PLX9080.h	23;"	d
 PLX9080_PCILTR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.31/include/_regs_PLX9080.h	8;"	d
 PLX9080_PCILTR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.32.exp/include/_regs_PLX9080.h	8;"	d
 PLX9080_PCILTR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/timing_tcp_driver/include/_regs_PLX9080.h	8;"	d
 PLX9080_PCILTR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/transponder/include/_regs_PLX9080.h	8;"	d
 PLX9080_PCILTR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_backup/include/_regs_PLX9080.h	8;"	d
-PLX9080_PCILTR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/include/_regs_PLX9080.h	8;"	d
 PLX9080_PCIMGR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.31/include/_regs_PLX9080.h	24;"	d
 PLX9080_PCIMGR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.32.exp/include/_regs_PLX9080.h	24;"	d
 PLX9080_PCIMGR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/timing_tcp_driver/include/_regs_PLX9080.h	24;"	d
 PLX9080_PCIMGR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/transponder/include/_regs_PLX9080.h	24;"	d
 PLX9080_PCIMGR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_backup/include/_regs_PLX9080.h	24;"	d
-PLX9080_PCIMGR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/include/_regs_PLX9080.h	24;"	d
 PLX9080_PCIMLR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.31/include/_regs_PLX9080.h	25;"	d
 PLX9080_PCIMLR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.32.exp/include/_regs_PLX9080.h	25;"	d
 PLX9080_PCIMLR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/timing_tcp_driver/include/_regs_PLX9080.h	25;"	d
 PLX9080_PCIMLR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/transponder/include/_regs_PLX9080.h	25;"	d
 PLX9080_PCIMLR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_backup/include/_regs_PLX9080.h	25;"	d
-PLX9080_PCIMLR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/include/_regs_PLX9080.h	25;"	d
 PLX9080_PCIREV	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.31/include/_regs_PLX9080.h	5;"	d
 PLX9080_PCIREV	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.32.exp/include/_regs_PLX9080.h	5;"	d
 PLX9080_PCIREV	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/timing_tcp_driver/include/_regs_PLX9080.h	5;"	d
 PLX9080_PCIREV	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/transponder/include/_regs_PLX9080.h	5;"	d
 PLX9080_PCIREV	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_backup/include/_regs_PLX9080.h	5;"	d
-PLX9080_PCIREV	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/include/_regs_PLX9080.h	5;"	d
 PLX9080_PCISID	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.31/include/_regs_PLX9080.h	19;"	d
 PLX9080_PCISID	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.32.exp/include/_regs_PLX9080.h	19;"	d
 PLX9080_PCISID	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/timing_tcp_driver/include/_regs_PLX9080.h	19;"	d
 PLX9080_PCISID	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/transponder/include/_regs_PLX9080.h	19;"	d
 PLX9080_PCISID	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_backup/include/_regs_PLX9080.h	19;"	d
-PLX9080_PCISID	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/include/_regs_PLX9080.h	19;"	d
 PLX9080_PCISR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.31/include/_regs_PLX9080.h	4;"	d
 PLX9080_PCISR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.32.exp/include/_regs_PLX9080.h	4;"	d
 PLX9080_PCISR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/timing_tcp_driver/include/_regs_PLX9080.h	4;"	d
 PLX9080_PCISR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/transponder/include/_regs_PLX9080.h	4;"	d
 PLX9080_PCISR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_backup/include/_regs_PLX9080.h	4;"	d
-PLX9080_PCISR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/include/_regs_PLX9080.h	4;"	d
 PLX9080_PCISVID	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.31/include/_regs_PLX9080.h	18;"	d
 PLX9080_PCISVID	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.32.exp/include/_regs_PLX9080.h	18;"	d
 PLX9080_PCISVID	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/timing_tcp_driver/include/_regs_PLX9080.h	18;"	d
 PLX9080_PCISVID	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/transponder/include/_regs_PLX9080.h	18;"	d
 PLX9080_PCISVID	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_backup/include/_regs_PLX9080.h	18;"	d
-PLX9080_PCISVID	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/include/_regs_PLX9080.h	18;"	d
 PLX9080_PMC	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.31/include/_regs_PLX9080.h	28;"	d
 PLX9080_PMC	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.32.exp/include/_regs_PLX9080.h	28;"	d
 PLX9080_PMC	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/timing_tcp_driver/include/_regs_PLX9080.h	28;"	d
 PLX9080_PMC	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/transponder/include/_regs_PLX9080.h	28;"	d
 PLX9080_PMC	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_backup/include/_regs_PLX9080.h	28;"	d
-PLX9080_PMC	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/include/_regs_PLX9080.h	28;"	d
 PLX9080_PMCAPID	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.31/include/_regs_PLX9080.h	26;"	d
 PLX9080_PMCAPID	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.32.exp/include/_regs_PLX9080.h	26;"	d
 PLX9080_PMCAPID	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/timing_tcp_driver/include/_regs_PLX9080.h	26;"	d
 PLX9080_PMCAPID	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/transponder/include/_regs_PLX9080.h	26;"	d
 PLX9080_PMCAPID	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_backup/include/_regs_PLX9080.h	26;"	d
-PLX9080_PMCAPID	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/include/_regs_PLX9080.h	26;"	d
 PLX9080_PMCSR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.31/include/_regs_PLX9080.h	29;"	d
 PLX9080_PMCSR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.32.exp/include/_regs_PLX9080.h	29;"	d
 PLX9080_PMCSR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/timing_tcp_driver/include/_regs_PLX9080.h	29;"	d
 PLX9080_PMCSR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/transponder/include/_regs_PLX9080.h	29;"	d
 PLX9080_PMCSR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_backup/include/_regs_PLX9080.h	29;"	d
-PLX9080_PMCSR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/include/_regs_PLX9080.h	29;"	d
 PLX9080_PMDATA	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.31/include/_regs_PLX9080.h	30;"	d
 PLX9080_PMDATA	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.32.exp/include/_regs_PLX9080.h	30;"	d
 PLX9080_PMDATA	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/timing_tcp_driver/include/_regs_PLX9080.h	30;"	d
 PLX9080_PMDATA	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/transponder/include/_regs_PLX9080.h	30;"	d
 PLX9080_PMDATA	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_backup/include/_regs_PLX9080.h	30;"	d
-PLX9080_PMDATA	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/include/_regs_PLX9080.h	30;"	d
 PLX9080_PMNEXT	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.31/include/_regs_PLX9080.h	27;"	d
 PLX9080_PMNEXT	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.32.exp/include/_regs_PLX9080.h	27;"	d
 PLX9080_PMNEXT	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/timing_tcp_driver/include/_regs_PLX9080.h	27;"	d
 PLX9080_PMNEXT	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/transponder/include/_regs_PLX9080.h	27;"	d
 PLX9080_PMNEXT	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_backup/include/_regs_PLX9080.h	27;"	d
-PLX9080_PMNEXT	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/include/_regs_PLX9080.h	27;"	d
 PLX9080_PROT_AREA	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.31/include/_regs_PLX9080.h	45;"	d
 PLX9080_PROT_AREA	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.32.exp/include/_regs_PLX9080.h	45;"	d
 PLX9080_PROT_AREA	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/timing_tcp_driver/include/_regs_PLX9080.h	45;"	d
 PLX9080_PROT_AREA	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/transponder/include/_regs_PLX9080.h	45;"	d
 PLX9080_PROT_AREA	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_backup/include/_regs_PLX9080.h	45;"	d
-PLX9080_PROT_AREA	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/include/_regs_PLX9080.h	45;"	d
 PLX9080_PVPDAD	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.31/include/_regs_PLX9080.h	36;"	d
 PLX9080_PVPDAD	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.32.exp/include/_regs_PLX9080.h	36;"	d
 PLX9080_PVPDAD	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/timing_tcp_driver/include/_regs_PLX9080.h	36;"	d
 PLX9080_PVPDAD	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/transponder/include/_regs_PLX9080.h	36;"	d
 PLX9080_PVPDAD	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_backup/include/_regs_PLX9080.h	36;"	d
-PLX9080_PVPDAD	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/include/_regs_PLX9080.h	36;"	d
 PLX9080_PVPDATA	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.31/include/_regs_PLX9080.h	37;"	d
 PLX9080_PVPDATA	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.32.exp/include/_regs_PLX9080.h	37;"	d
 PLX9080_PVPDATA	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/timing_tcp_driver/include/_regs_PLX9080.h	37;"	d
 PLX9080_PVPDATA	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/transponder/include/_regs_PLX9080.h	37;"	d
 PLX9080_PVPDATA	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_backup/include/_regs_PLX9080.h	37;"	d
-PLX9080_PVPDATA	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/include/_regs_PLX9080.h	37;"	d
 PLX9080_PVPDID	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.31/include/_regs_PLX9080.h	34;"	d
 PLX9080_PVPDID	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.32.exp/include/_regs_PLX9080.h	34;"	d
 PLX9080_PVPDID	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/timing_tcp_driver/include/_regs_PLX9080.h	34;"	d
 PLX9080_PVPDID	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/transponder/include/_regs_PLX9080.h	34;"	d
 PLX9080_PVPDID	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_backup/include/_regs_PLX9080.h	34;"	d
-PLX9080_PVPDID	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/include/_regs_PLX9080.h	34;"	d
 PLX9080_PVPD_NEXT	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.31/include/_regs_PLX9080.h	35;"	d
 PLX9080_PVPD_NEXT	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.32.exp/include/_regs_PLX9080.h	35;"	d
 PLX9080_PVPD_NEXT	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/timing_tcp_driver/include/_regs_PLX9080.h	35;"	d
 PLX9080_PVPD_NEXT	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/transponder/include/_regs_PLX9080.h	35;"	d
 PLX9080_PVPD_NEXT	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_backup/include/_regs_PLX9080.h	35;"	d
-PLX9080_PVPD_NEXT	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/include/_regs_PLX9080.h	35;"	d
 PLX9080_QBAR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.31/include/_regs_PLX9080.h	102;"	d
 PLX9080_QBAR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.32.exp/include/_regs_PLX9080.h	102;"	d
 PLX9080_QBAR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/timing_tcp_driver/include/_regs_PLX9080.h	102;"	d
 PLX9080_QBAR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/transponder/include/_regs_PLX9080.h	102;"	d
 PLX9080_QBAR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_backup/include/_regs_PLX9080.h	102;"	d
-PLX9080_QBAR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/include/_regs_PLX9080.h	102;"	d
 PLX9080_QSR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.31/include/_regs_PLX9080.h	111;"	d
 PLX9080_QSR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.32.exp/include/_regs_PLX9080.h	111;"	d
 PLX9080_QSR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/timing_tcp_driver/include/_regs_PLX9080.h	111;"	d
 PLX9080_QSR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/transponder/include/_regs_PLX9080.h	111;"	d
 PLX9080_QSR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_backup/include/_regs_PLX9080.h	111;"	d
-PLX9080_QSR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/include/_regs_PLX9080.h	111;"	d
 PLX9656_BIGEND	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.31/include/_regs_PLX9656.h	43;"	d
 PLX9656_BIGEND	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.32.exp/include/_regs_PLX9656.h	43;"	d
 PLX9656_BIGEND	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc316_tcp_driver/include/_regs_PLX9656.h	43;"	d
@@ -6539,7 +6439,8 @@ PULSE_LENGTH	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/u
 PULSE_LENGTH	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/include/timing_defs.h	2;"	d
 P_BIT	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/transponder/_decodestate.c	15;"	d	file:
 P_BIT	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_backup/_decodestate.c	15;"	d	file:
-P_BIT	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/_decodestate.c	15;"	d	file:
+P_BIT	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/main.cpp	60;"	d	file:
+P_BIT	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/tx_data.cpp	13;"	d	file:
 P_bit	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/ddsserver_tcp_driver/_decodestate.c	12;"	d	file:
 P_bit	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/ddsserver_tcp_driver/include/dds_defs.h	6;"	d
 P_bit	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/tsg/maketsg.c	105;"	d	file:
@@ -6738,9 +6639,9 @@ RXFE_ADDRESS	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/b
 RXFE_ADDRESS	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/dio_tcp_driver/include/plx_defines.h	37;"	d
 RXFE_ADDRESS	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/phasing_matrix_utils/include/plx_defines.h	37;"	d
 RXFE_ADDRESS	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/rxfe_build_table/include/plx_defines.h	38;"	d
-RXFREQ	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/main.cpp	64;"	d	file:
+RXFREQ	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/main.cpp	65;"	d	file:
 RXRATE	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_backup/main.cpp	67;"	d	file:
-RXRATE	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/main.cpp	63;"	d	file:
+RXRATE	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/main.cpp	64;"	d	file:
 RX_BEAM_PRIORITY	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/include/priority.h	2;"	d
 RX_FREQ_PRIORITY	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/include/priority.h	4;"	d
 RX_OFFSET	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/timing_tcp_driver/include/timing_defs.h	8;"	d
@@ -7273,7 +7174,8 @@ SYNTH_CLOCK	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/bc
 SZ_HEADER	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.2/kernel/alloc.c	51;"	d	file:
 S_BIT	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/transponder/_decodestate.c	14;"	d	file:
 S_BIT	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_backup/_decodestate.c	14;"	d	file:
-S_BIT	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/_decodestate.c	14;"	d	file:
+S_BIT	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/main.cpp	59;"	d	file:
+S_BIT	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/tx_data.cpp	12;"	d	file:
 S_RDA_data	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/include/gc314FS.h	/^struct S_RDA_data {$/;"	s
 S_SUPPORTED	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.2/simd/mips_ps.c	26;"	d	file:
 S_bit	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/tsg/maketsg.c	101;"	d	file:
@@ -7304,7 +7206,6 @@ Site_INI	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/serve
 Site_INI	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/timing_tcp_driver/main.c	/^dictionary *Site_INI;$/;"	v
 Site_INI	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/transponder/main.cpp	/^dictionary *Site_INI;$/;"	v
 Site_INI	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_backup/main.cpp	/^dictionary *Site_INI;$/;"	v
-Site_INI	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/main.cpp	/^dictionary *Site_INI;$/;"	v
 Stack-alignment-on-x86	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.2/doc/html/Stack-alignment-on-x86.html	/^<a name="Stack-alignment-on-x86"><\/a>$/;"	a
 StateMonad	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.2/genfft/monads.ml	1;"	M
 Stats	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.2/genfft/algsimp.ml	1;"	M
@@ -7497,7 +7398,8 @@ TRIGREAL_IS_LONG_DOUBLE	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar
 TRTimes	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/include/control_program.h	/^struct TRTimes {$/;"	s
 TR_BIT	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/transponder/_decodestate.c	13;"	d	file:
 TR_BIT	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_backup/_decodestate.c	13;"	d	file:
-TR_BIT	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/_decodestate.c	13;"	d	file:
+TR_BIT	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/main.cpp	58;"	d	file:
+TR_BIT	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/tx_data.cpp	11;"	d	file:
 TSGFree	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/tsg/maketsg.c	/^void TSGFree(struct TSGbuf *ptr) {$/;"	f
 TSGWrBuf	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/tsg/maketsg.c	/^void TSGWrBuf(struct TSGbuf *tsg,$/;"	f
 TSG_INV_DUTY_CYCLE	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/tsg/include/tsg.h	13;"	d
@@ -7559,9 +7461,9 @@ TW_NEXT	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3
 TW_NEXT	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.2/kernel/ifftw.h	/^enum { TW_COS = 0, TW_SIN = 1, TW_CEXP = 2, TW_NEXT = 3, $/;"	e	enum:__anon160
 TW_SIN	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.2/kernel/ifftw.h	/^enum { TW_COS = 0, TW_SIN = 1, TW_CEXP = 2, TW_NEXT = 3, $/;"	e	enum:__anon160
 TXBW	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc214_tcp_driver/filter.c	5;"	d	file:
-TXFREQ	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/main.cpp	62;"	d	file:
+TXFREQ	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/main.cpp	63;"	d	file:
 TXRATE	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_backup/main.cpp	66;"	d	file:
-TXRATE	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/main.cpp	61;"	d	file:
+TXRATE	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/main.cpp	62;"	d	file:
 TX_BEAM_PRIORITY	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/include/priority.h	1;"	d
 TX_FREQ_PRIORITY	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/include/priority.h	3;"	d
 TX_OFFSET	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/timing_tcp_driver/include/timing_defs.h	10;"	d
@@ -7954,7 +7856,8 @@ XSPU_FFTW	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw
 XSPU_FFTW	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.2/cell/spufftw-embed.S	/^XSPU_FFTW:$/;"	l
 X_BIT	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/transponder/_decodestate.c	12;"	d	file:
 X_BIT	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_backup/_decodestate.c	12;"	d	file:
-X_BIT	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/_decodestate.c	12;"	d	file:
+X_BIT	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/main.cpp	57;"	d	file:
+X_BIT	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/tx_data.cpp	10;"	d	file:
 X_bit	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/ddsserver_tcp_driver/_decodestate.c	11;"	d	file:
 X_bit	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/ddsserver_tcp_driver/include/dds_defs.h	5;"	d
 X_bit	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/tsg/maketsg.c	104;"	d	file:
@@ -8056,7 +7959,6 @@ _config_STX_FLASH	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/
 _config_STX_FLASH	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.32.exp/include/_config_STX_FLASH.2004.11.21.c	/^int _config_STX_FLASH(char *BASE1, int write_FPGA, int print){$/;"	f
 _convolve	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/transponder/convolve.cpp	/^int _convolve(std::vector<std::complex<float> >& signal, const std::vector<std::complex<float> >& taps){$/;"	f
 _convolve	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_backup/convolve.cpp	/^void _convolve($/;"	f
-_convolve	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/convolve.cpp	/^void _convolve($/;"	f
 _copy_chuck	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc316_tcp_driver/include/gc314FS_defines.h	/^typedef struct _copy_chuck{ $/;"	s
 _create_DMA_buff	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc214_tcp_driver/_create_DMA_buff.c	/^int _create_DMA_buff(unsigned long *virtual_addr, unsigned long *physical_addr, size_t length){$/;"	f
 _create_DMA_buff	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.31/include/_create_DMA_buff.c	/^int _create_DMA_buff(unsigned long *virtual_addr, unsigned long *physical_addr, size_t length){$/;"	f
@@ -8070,7 +7972,6 @@ _decodestate	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/d
 _decodestate	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/timing_tcp_driver/_decodestate.c	/^int _decodestate(int r,int c,char state){$/;"	f
 _decodestate	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/transponder/_decodestate.c	/^int _decodestate(int r,int c,char state){$/;"	f
 _decodestate	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_backup/_decodestate.c	/^int _decodestate(int r,int c,char state){$/;"	f
-_decodestate	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/_decodestate.c	/^int _decodestate(int r,int c,char state){$/;"	f
 _details	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/iniparser3.0b/html/iniparser_8h.html	/^<hr><a name="_details"><\/a><h2>Detailed Description<\/h2>$/;"	a
 _devctl_msg	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.31/main.c	/^typedef union _devctl_msg {$/;"	u	file:
 _devctl_msg	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.32.exp/main.c	/^typedef union _devctl_msg {$/;"	u	file:
@@ -8455,6 +8356,7 @@ alist_dump_file	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ro
 all_zero	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.2/libbench2/verify-lib.c	/^static int all_zero(C *a, int n)$/;"	f	file:
 alloca	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.2/kernel/ifftw.h	115;"	d
 alloca	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.2/kernel/ifftw.h	119;"	d
+allocate_pulseseq_mem	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/tx_data.cpp	/^void tx_data::allocate_pulseseq_mem(size_t index){$/;"	f	class:tx_data
 almost_equal	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.2/genfft/number.ml	/^let almost_equal (N a) (N b) = (sqr (a -\/ b)) <=\/ epsilonsq2$/;"	v
 almost_equal_cnum	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.2/genfft/number.ml	/^let almost_equal_cnum (xr, xi) (yr, yi) =$/;"	v
 alpha	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/transponder/main.cpp	/^float alpha = 0;$/;"	v
@@ -9273,6 +9175,8 @@ bb_rate	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_d
 bb_rate	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/tx_data.cpp	/^    float bb_rate, rf_rate; \/\/baseband and rf sample rates$/;"	m	class:tx_data	file:
 bb_samp_rate	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/include/txrx_data.hpp	/^    float bb_samp_rate, rf_samp_rate;$/;"	m	class:tx_data
 bb_samp_rate	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/tx_data.cpp	/^    float bb_samp_rate, rf_samp_rate;$/;"	m	class:tx_data	file:
+bb_vec	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/include/txrx_data.hpp	/^    std::vector<std::complex<float> > bb_vec;$/;"	m	class:tx_data
+bb_vec	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/tx_data.cpp	/^    std::vector<std::complex<float> > bb_vec;$/;"	m	class:tx_data	file:
 bcsi	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.2/rdft/direct-r2c.c	/^     stride brs, bcsr, bcsi;$/;"	m	struct:__anon78	file:
 bcsr	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.2/rdft/direct-r2c.c	/^     stride brs, bcsr, bcsi;$/;"	m	struct:__anon78	file:
 beam_table_1	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/include/control_program.h	/^     char beam_table_1[256];$/;"	m	struct:SiteSettings
@@ -9896,10 +9800,11 @@ cleanup	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3
 cleanup	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.2/kernel/ifftw.h	/^     void (*cleanup)(printer *p);$/;"	m	struct:printer_s
 cleanup	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.2/tests/fftw-bench.c	/^void cleanup(void)$/;"	f
 cleanup_threads	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.2/threads/api.c	/^void X(cleanup_threads)(void)$/;"	f
+clear_freqs	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/tx_data.cpp	/^void tx_data::clear_freqs(){$/;"	f	class:tx_data
 clear_frequency_request	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/server/main.c	/^int clear_frequency_request;$/;"	v
 client	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/include/txrx_data.hpp	/^    struct ControlPRM client;$/;"	m	class:rx_data	typeref:struct:rx_data::ControlPRM
 client	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/include/txrx_data.hpp	/^    struct ControlPRM client;$/;"	m	class:tx_data	typeref:struct:tx_data::ControlPRM
-client	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/rx_data.cpp	/^    struct ControlPRM  client;$/;"	m	class:rx_data	typeref:struct:rx_data::ControlPRM	file:
+client	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/rx_data.cpp	/^    struct ControlPRM client;$/;"	m	class:rx_data	typeref:struct:rx_data::ControlPRM	file:
 client	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/tx_data.cpp	/^    struct ControlPRM client;$/;"	m	class:tx_data	typeref:struct:tx_data::ControlPRM	file:
 clients	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/include/txrx_data.hpp	/^    std::vector<ControlPRM> clients;$/;"	m	class:rx_data
 clients	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/include/txrx_data.hpp	/^    std::vector<ControlPRM> clients;$/;"	m	class:tx_data
@@ -10420,6 +10325,7 @@ conv	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.
 conv	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.2/genfft/conv.mli	/^val conv : int -> Complex.signal -> int -> Complex.signal -> Complex.signal$/;"	v
 conv	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.2/genfft/fft.ml	/^    let conv = dft (-1) n fft_ab1 in$/;"	v
 conv1	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.2/genfft/fft.ml	/^    let conv1 = dft (-1) n fft_ab1 $/;"	v
+convolve	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/convolve.cpp	/^void convolve($/;"	f
 coord_lock	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/server/main.c	/^pthread_mutex_t controlprogram_list_lock,ros_state_lock,coord_lock,exit_lock;$/;"	v
 coord_lock_buffer	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/server/main.c	/^char *controlprogram_list_lock_buffer=NULL,*exit_lock_buffer=NULL,*coord_lock_buffer=NULL;$/;"	v
 coordination_handler	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/server/coordination_handler.c	/^void *coordination_handler(struct ControlProgram *control_program)$/;"	f
@@ -12288,10 +12194,7 @@ get_rf_vec_ptrs	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ro
 get_rf_vec_ptrs	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/txrx_classes.cpp	/^int16_t** tx_data::get_rf_vec_ptrs(size_t radar){$/;"	f	class:tx_data
 get_sat_stat	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gps_tcp_driver/_refresh_state.c	/^int get_sat_stat(int sv[6], float signal[6]){$/;"	f
 get_sat_stat	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gps_usrp_driver/_refresh_state.c	/^int get_sat_stat(int sv[6], float signal[6]){$/;"	f
-get_seq_code_ptr	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/tx_data.cpp	/^unsigned char* tx_data::get_seq_code_ptr(size_t index){$/;"	f	class:tx_data
-get_seq_len	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/tx_data.cpp	/^size_t tx_data::get_seq_len(size_t index){$/;"	f	class:tx_data
-get_seq_ptr	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/tx_data.cpp	/^struct TSGbuf* tx_data::get_seq_ptr(size_t index){$/;"	f	class:tx_data
-get_seq_rep_ptr	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/tx_data.cpp	/^unsigned char* tx_data::get_seq_rep_ptr(size_t index){$/;"	f	class:tx_data
+get_seqbuf_len	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/tx_data.cpp	/^size_t tx_data::get_seqbuf_len(size_t index){$/;"	f	class:tx_data
 get_software_time	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/bc635_gps_tcp_driver/_get_software_time.c	/^int get_software_time(int *sec, int *nsec, struct DEV_reg  *DEVreg, int locked){$/;"	f
 get_software_time	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gps_tcp_driver/_get_software_time.c	/^int get_software_time(int *sec, int *nsec, int BASE1){$/;"	f
 get_software_time	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gps_usrp_driver/_get_software_time.c	/^int get_software_time(int *sec, int *nsec, int BASE1){$/;"	f
@@ -12300,6 +12203,7 @@ get_state	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gps_
 get_state	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gps_usrp_driver/_refresh_state.c	/^void * get_state(){$/;"	f
 get_time	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.2/libbench2/timer.c	/^static mytime get_time(void)$/;"	f	file:
 get_transpose_vec	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.2/rdft/vrank3-transpose.c	/^static void get_transpose_vec(const problem_rdft *p, int dim2, INT *vl,INT *vs)$/;"	f	file:
+get_tsg_ptr	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/tx_data.cpp	/^struct TSGbuf* tx_data::get_tsg_ptr(size_t index){$/;"	f	class:tx_data
 getchr	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.2/kernel/ifftw.h	/^     int (*getchr)(scanner *sc);$/;"	m	struct:scanner_s
 getchr_file	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.2/api/import-wisdom-from-file.c	/^static int getchr_file(scanner * sc_)$/;"	f	file:
 getchr_generic	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.2/api/import-wisdom.c	/^static int getchr_generic(scanner * s_)$/;"	f	file:
@@ -13486,8 +13390,8 @@ int08	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gps_tcp_
 int08	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gps_usrp_driver/include/_prog_conventions.h	4;"	d
 int08	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/timing_tcp_driver/include/_prog_conventions.h	7;"	d
 int08	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/transponder/include/_prog_conventions.h	7;"	d
+int08	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_backup/_prog_conventions.h	7;"	d
 int08	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_backup/include/_prog_conventions.h	7;"	d
-int08	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/include/_prog_conventions.h	7;"	d
 int16	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc214_tcp_driver/include/_prog_conventions.h	5;"	d
 int16	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.31/include/_prog_conventions.h	5;"	d
 int16	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.32.exp/include/_prog_conventions.h	5;"	d
@@ -13497,8 +13401,8 @@ int16	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/include/
 int16	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/include/rtypes.h	/^typedef short int16;$/;"	t
 int16	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/timing_tcp_driver/include/_prog_conventions.h	8;"	d
 int16	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/transponder/include/_prog_conventions.h	8;"	d
+int16	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_backup/_prog_conventions.h	8;"	d
 int16	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_backup/include/_prog_conventions.h	8;"	d
-int16	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/include/_prog_conventions.h	8;"	d
 int32	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc214_tcp_driver/include/_prog_conventions.h	6;"	d
 int32	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.31/include/_prog_conventions.h	6;"	d
 int32	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.32.exp/include/_prog_conventions.h	6;"	d
@@ -13508,8 +13412,8 @@ int32	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/include/
 int32	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/include/rtypes.h	/^typedef int int32;$/;"	t
 int32	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/timing_tcp_driver/include/_prog_conventions.h	9;"	d
 int32	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/transponder/include/_prog_conventions.h	9;"	d
+int32	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_backup/_prog_conventions.h	9;"	d
 int32	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_backup/include/_prog_conventions.h	9;"	d
-int32	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/include/_prog_conventions.h	9;"	d
 int64	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/include/rtypes.h	/^      typedef double int64;$/;"	t
 int64	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/include/rtypes.h	/^      typedef long int64;$/;"	t
 int64	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/include/rtypes.h	/^      typedef long long int64;$/;"	t
@@ -13530,7 +13434,6 @@ int_thread_id	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/
 int_thread_id	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gps_usrp_driver/main.c	/^pthread_t int_thread_id, refresh_thread_id;$/;"	v
 interleave_zero	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.2/genfft/trig.ml	/^let interleave_zero input = fun i -> $/;"	v
 interpolate_and_multiply	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_backup/tx_mix_upsample.cpp	/^void interpolate_and_multiply($/;"	f
-interpolate_and_multiply	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/tx_mix_upsample.cpp	/^void interpolate_and_multiply($/;"	f
 interpolation_byte0	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/ddsserver_tcp_driver/include/ics660b.h	/^  uint32_t interpolation_byte0;$/;"	m	struct:dc60m_registers
 interpolation_byte1	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/ddsserver_tcp_driver/include/ics660b.h	/^  uint32_t interpolation_byte1;$/;"	m	struct:dc60m_registers
 interpolation_gain	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/ddsserver_tcp_driver/include/ics660b.h	/^  uint32_t interpolation_gain;$/;"	m	struct:dc60m_registers
@@ -14276,6 +14179,7 @@ makeNum	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3
 makePlus	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.2/genfft/littlesimp.mli	/^val makePlus : Expr.expr list -> Expr.expr$/;"	v
 makeTimes	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.2/genfft/littlesimp.mli	/^val makeTimes : Expr.expr * Expr.expr -> Expr.expr$/;"	v
 makeUminus	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.2/genfft/littlesimp.mli	/^val makeUminus : Expr.expr -> Expr.expr$/;"	v
+make_bb_vecs	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/tx_data.cpp	/^void tx_data::make_bb_vecs(int32_t trise){$/;"	f	class:tx_data
 make_bytwiddle	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.2/genfft/twiddle.ml	/^let make_bytwiddle sign use_complex_arith g f i =$/;"	v
 make_constant	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.2/genfft/variable.mli	/^val make_constant : Unique.unique -> string -> variable$/;"	v
 make_dct	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.2/genfft/trig.ml	/^let make_dct scale nshift trig =$/;"	v
@@ -14285,6 +14189,7 @@ make_memoizer	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/
 make_options	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.2/tests/check.pl	/^sub make_options {$/;"	s
 make_temporary	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.2/genfft/variable.ml	/^let make_temporary =$/;"	v
 make_temporary	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.2/genfft/variable.mli	/^val make_temporary : unit -> variable$/;"	v
+make_tr_times	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/tx_data.cpp	/^void tx_data::make_tr_times(struct TRTimes* tr_times){$/;"	f	class:tx_data
 make_transposer	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.2/genfft/algsimp.ml	/^  let make_transposer parent_table =$/;"	v
 make_twiddles	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.2/cell/dft-direct-cell.c	/^static R *make_twiddles(enum wakefulness wakefulness,$/;"	f	file:
 make_unit	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.2/genfft/dag.ml	/^  let make_unit _ = () in$/;"	v
@@ -14384,7 +14289,6 @@ max_list	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-
 max_seq_count	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/timing_tcp_driver/main.c	/^int		max_seq_count, xfercount, totransfer;$/;"	v
 max_seq_count	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/transponder/main.cpp	/^int		max_seq_count=0, xfercount=0, totransfer=0;$/;"	v
 max_seq_count	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_backup/main.cpp	/^int		max_seq_count=0, xfercount=0, totransfer=0;$/;"	v
-max_seq_count	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/main.cpp	/^int		max_seq_count=0, xfercount=0, totransfer=0;$/;"	v
 maxcnt	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.2/kernel/alloc.c	/^     int maxcnt;$/;"	m	struct:mstat	file:
 maxnbuf_ndx	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.2/dft/buffered.c	/^     int maxnbuf_ndx;$/;"	m	struct:__anon138	file:
 maxnbuf_ndx	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.2/rdft/buffered.c	/^     int maxnbuf_ndx;$/;"	m	struct:__anon97	file:
@@ -15146,6 +15050,8 @@ okp_t1f	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3
 okp_t1fu	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.2/dft/simd/t.c	/^static int okp_t1fu(const ct_desc *d,$/;"	f	file:
 okp_t2b	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.2/dft/simd/t.c	/^static int okp_t2b(const ct_desc *d,$/;"	f	file:
 okp_t2f	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.2/dft/simd/t.c	/^static int okp_t2f(const ct_desc *d,$/;"	f	file:
+old_index	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/include/txrx_data.hpp	/^    int old_index;$/;"	m	class:tx_data
+old_index	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/tx_data.cpp	/^    int old_index;$/;"	m	class:tx_data	file:
 oldincludedir	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.2/Makefile	/^oldincludedir = \/usr\/include$/;"	m
 oldincludedir	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.2/api/Makefile	/^oldincludedir = \/usr\/include$/;"	m
 oldincludedir	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.2/cell/Makefile	/^oldincludedir = \/usr\/include$/;"	m
@@ -15199,7 +15105,9 @@ op	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.2/
 op	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.2/cell/fftw-cell.h	/^     enum spu_op op;$/;"	m	struct:spu_context	typeref:enum:spu_context::spu_op
 op	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.2/kernel/ifftw.h	/^     unsigned char op;$/;"	m	struct:__anon161
 opcnt	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.2/kernel/ifftw.h	/^} opcnt;$/;"	t	typeref:struct:__anon143
+opentcpsock	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/socket_utils.cpp	/^int opentcpsock(char *hostip, int port){$/;"	f
 opentcpsock	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/utils.c	/^int opentcpsock(char *hostip, int port){$/;"	f
+openunixsock	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/socket_utils.cpp	/^int openunixsock(char *hostip, int port){$/;"	f
 openunixsock	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/utils.c	/^int openunixsock(char *hostip, int port){$/;"	f
 ophyssz	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.2/libbench2/bench-user.h	/^     int iphyssz, ophyssz;$/;"	m	struct:__anon23
 ops	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.2/dft/codelet-dft.h	/^     opcnt ops;$/;"	m	struct:ct_desc_s
@@ -15293,16 +15201,16 @@ our_malloc16	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/f
 out	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.2/libbench2/bench-user.h	/^     void *in, *out;$/;"	m	struct:__anon23
 out16	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/timing_tcp_driver/include/_prog_conventions.h	13;"	d
 out16	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/transponder/include/_prog_conventions.h	13;"	d
+out16	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_backup/_prog_conventions.h	13;"	d
 out16	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_backup/include/_prog_conventions.h	13;"	d
-out16	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/include/_prog_conventions.h	13;"	d
 out32	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/timing_tcp_driver/include/_prog_conventions.h	14;"	d
 out32	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/transponder/include/_prog_conventions.h	14;"	d
+out32	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_backup/_prog_conventions.h	14;"	d
 out32	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_backup/include/_prog_conventions.h	14;"	d
-out32	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/include/_prog_conventions.h	14;"	d
 out8	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/timing_tcp_driver/include/_prog_conventions.h	12;"	d
 out8	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/transponder/include/_prog_conventions.h	12;"	d
+out8	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_backup/_prog_conventions.h	12;"	d
 out8	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_backup/include/_prog_conventions.h	12;"	d
-out8	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/include/_prog_conventions.h	12;"	d
 outclkcntrl	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc214_tcp_driver/include/gc4016.h	/^   char outclkcntrl;    \/* 0x01 *\/ $/;"	m	struct:GC4016Global
 outformat	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc214_tcp_driver/include/gc4016.h	/^   char outformat;      \/* 0x49 *\/$/;"	m	struct:GC4016Global
 outframecntrl	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc214_tcp_driver/include/gc4016.h	/^   char outframecntrl;  \/* 0xc7 *\/$/;"	m	struct:GC4016Global
@@ -15875,8 +15783,12 @@ psdir	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2
 psingle	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.2/simd/mips_ps.h	/^typedef float psingle __attribute__ ((mode (DF)));$/;"	t
 psingle	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.2/simd/mips_ps.h	/^typedef float psingle __attribute__ ((vector_size(8)));$/;"	t
 pstring	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.2/libbench2/bench-user.h	/^     char *pstring;$/;"	m	struct:__anon23
-pulseseq_ptrs	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/include/txrx_data.hpp	/^    struct TSGbuf* pulseseq_ptrs;$/;"	m	class:tx_data	typeref:struct:tx_data::TSGbuf
+pulseseq_codes	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/include/txrx_data.hpp	/^    std::vector<unsigned char> pulseseq_codes[4];$/;"	m	class:tx_data
+pulseseq_codes	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/tx_data.cpp	/^    std::vector<unsigned char> pulseseq_codes[4];$/;"	m	class:tx_data	file:
+pulseseq_reps	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/include/txrx_data.hpp	/^    std::vector<unsigned char> pulseseq_reps[4];$/;"	m	class:tx_data
+pulseseq_reps	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/tx_data.cpp	/^    std::vector<unsigned char> pulseseq_reps[4];$/;"	m	class:tx_data	file:
 pulseseqs	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/include/global_server_variables.h	/^     struct TSGbuf *pulseseqs[MAX_SEQS]; \/\/array of pulseseq pointers$/;"	m	struct:ControlState	typeref:struct:ControlState::TSGbuf
+pulseseqs	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/include/txrx_data.hpp	/^    struct TSGbuf pulseseqs[4];$/;"	m	class:tx_data	typeref:struct:tx_data::TSGbuf
 pulseseqs	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/tx_data.cpp	/^    struct TSGbuf pulseseqs[4];$/;"	m	class:tx_data	typeref:struct:tx_data::TSGbuf	file:
 putchr	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.2/kernel/ifftw.h	/^     void (*putchr)(printer *p, char c);$/;"	m	struct:printer_s
 putchr_cnt	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.2/api/export-wisdom-to-string.c	/^static void putchr_cnt(printer * p_, char c)$/;"	f	file:
@@ -16159,6 +16071,7 @@ readtcp	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gps_us
 ready	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.2/threads/threads.c	/^     os_sem_t ready;$/;"	m	struct:worker	file:
 ready	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/include/global_server_variables.h	/^     char ready;$/;"	m	struct:ControlState
 ready_client	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/rx_data.cpp	/^void rx_data::ready_client(struct ControlPRM client){$/;"	f	class:rx_data
+ready_client	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/tx_data.cpp	/^void tx_data::ready_client(struct ControlPRM* client){$/;"	f	class:tx_data
 ready_flag	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/server/main.c	/^pthread_cond_t ready_flag;$/;"	v
 ready_state_pointer	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/server/main.c	/^int *ready_state_pointer;$/;"	v
 real	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.2/genfft/complex.ml	/^let real (CE (a, b)) = CE (a, makeNum Number.zero)$/;"	v
@@ -16205,6 +16118,7 @@ recv_and_hold	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/
 recv_clr_freq	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_backup/recv_clr_freq.cpp	/^int recv_clr_freq($/;"	f
 recv_clr_freq	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/recv_clr_freq.cpp	/^int recv_clr_freq($/;"	f
 recv_comm_lock	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/server/main.c	/^pthread_mutex_t dds_comm_lock,timing_comm_lock,gps_comm_lock,timing_comm_lock,recv_comm_lock,dio_comm_lock;$/;"	v
+recv_data	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/socket_utils.cpp	/^int recv_data(int fd,void *buf,size_t buflen)$/;"	f
 recv_data	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/utils.c	/^int recv_data(int fd,void *buf,size_t buflen)$/;"	f
 recv_mix_to_buffer	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_backup/recv_mix_to_buffer.cpp	/^void recv_mix_to_buffer($/;"	f
 recv_mix_to_buffer	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/recv_mix_to_buffer.cpp	/^void recv_mix_to_buffer($/;"	f
@@ -16386,7 +16300,6 @@ reg_nam	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3
 register_client	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/rx_data.cpp	/^void rx_data::register_client(struct ControlPRM new_client){$/;"	f	class:rx_data
 register_client	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/tx_data.cpp	/^void tx_data::register_client(struct ControlPRM new_client){$/;"	f	class:tx_data
 register_radar_channel	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/server/client_handler.c	/^int register_radar_channel(struct ControlProgram *control_program,int radar,int channel)$/;"	f
-register_seq	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/tx_data.cpp	/^void tx_data::register_seq(size_t index, struct TSGbuf* pulseseq){$/;"	f	class:tx_data
 register_solver	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.2/kernel/ifftw.h	/^     void (*register_solver)(planner *ego, solver *s);$/;"	m	struct:__anon157
 register_solver	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.2/kernel/planner.c	/^static void register_solver(planner *ego, solver *s)$/;"	f	file:
 registers_h	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc214_tcp_driver/include/registers.h	19;"	d
@@ -16526,11 +16439,11 @@ rx	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_dri
 rx	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc316_tcp_driver/_iofuncs.c	/^	int rx;$/;"	m	union:_devctl_msg	file:
 rx_all_freqs	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/include/txrx_data.hpp	/^    std::vector<float> rx_all_freqs; \/\/Vectors of all receive frequencies$/;"	m	class:rx_data
 rx_all_freqs	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/rx_data.cpp	/^    std::vector<float> rx_all_freqs; \/\/Vectors of all receive frequencies$/;"	m	class:rx_data	file:
-rx_bb_client_ptrs	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/include/txrx_data.hpp	/^    std::vector<float**> rx_bb_client_ptrs;  \/\/rx_bb_client_ptrs[nclients]$/;"	m	class:rx_data
+rx_bb_client_ptrs	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/include/txrx_data.hpp	/^    std::vector<std::vector<float**> > rx_bb_client_ptrs;  \/\/rx_bb_client_ptrs[nclients]$/;"	m	class:rx_data
 rx_bb_client_ptrs	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/rx_data.cpp	/^    std::vector<std::vector<float**> > rx_bb_client_ptrs;  \/\/rx_bb_client_ptrs[radar][channel]$/;"	m	class:rx_data	file:
-rx_bb_vec_ptrs	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/include/txrx_data.hpp	/^    std::vector<std::vector<float*> > rx_bb_vec_ptrs;  \/\/rx_bb_vec_ptrs[nclients][nants]$/;"	m	class:rx_data
+rx_bb_vec_ptrs	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/include/txrx_data.hpp	/^    std::vector<std::vector<std::vector<float*> > > rx_bb_vec_ptrs;  \/\/rx_bb_vec_ptrs[nclients][nants]$/;"	m	class:rx_data
 rx_bb_vec_ptrs	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/rx_data.cpp	/^    std::vector<std::vector<std::vector<float*> > > rx_bb_vec_ptrs;  \/\/rx_bb_vec_ptrs[radar][channel][num_ants_per_radar]$/;"	m	class:rx_data	file:
-rx_bb_vecs	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/include/txrx_data.hpp	/^    std::vector<std::vector<std::vector<std::complex<float> > > > rx_bb_vecs[2]; \/\/baseband data, rx_bb_vecs[2][nclients][nants][nbbsamp$/;"	m	class:rx_data
+rx_bb_vecs	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/include/txrx_data.hpp	/^    std::vector<std::vector<std::vector<std::vector<std::complex<float> > > > > rx_bb_vecs[2]; \/\/baseband data, rx_bb_vecs[2][nclients][nants][nbbsamp$/;"	m	class:rx_data
 rx_bb_vecs	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/rx_data.cpp	/^    std::vector<std::vector<std::vector<std::vector<std::complex<float> > > > > rx_bb_vecs[2]; \/\/baseband data, rx_bb_vecs[2][radar][channel][ant][nbbsamps]$/;"	m	class:rx_data	file:
 rx_beamform	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/rx_beamform.cpp	/^void rx_beamform($/;"	f
 rx_clrfreq_rval	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_backup/main.cpp	/^int rx_clrfreq_rval=0;$/;"	v
@@ -16538,13 +16451,14 @@ rx_clrfreq_rval	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ro
 rx_data	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/include/txrx_data.hpp	/^class rx_data{$/;"	c
 rx_data	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/rx_data.cpp	/^class rx_data{$/;"	c	file:
 rx_data	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/rx_data.cpp	/^rx_data::rx_data(size_t nradars, size_t nants, float rxfreq, float rfrate){$/;"	f	class:rx_data
+rx_freq_offs	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/include/txrx_data.hpp	/^    std::vector<std::vector<float> > rx_freq_offs; \/\/Vectors of receive frequencies, one vector for each radar$/;"	m	class:rx_data
 rx_freq_offs	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/rx_data.cpp	/^    std::vector<std::vector<float> > rx_freq_offs; \/\/Vectors of receive frequencies, one vector for each radar$/;"	m	class:rx_data	file:
 rx_freqs	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/include/txrx_data.hpp	/^    std::vector<std::vector<float> > rx_freqs; \/\/Vectors of receive frequencies, one vector for each radar$/;"	m	class:rx_data
 rx_freqs	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/rx_data.cpp	/^    std::vector<std::vector<float> > rx_freqs; \/\/Vectors of receive frequencies, one vector for each radar$/;"	m	class:rx_data	file:
 rx_mix_downsample	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_backup/extras/rx_mix_downsample.cpp	/^void rx_mix_downsample($/;"	f
 rx_rel_freqs	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/include/txrx_data.hpp	/^    std::vector<float> rx_rel_freqs; \/\/Vectors of all receive frequencies$/;"	m	class:rx_data
 rx_rel_freqs	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/rx_data.cpp	/^    std::vector<float> rx_rel_freqs; \/\/Vectors of all receive frequencies$/;"	m	class:rx_data	file:
-rx_rf_vec_ptrs	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/include/txrx_data.hpp	/^    std::vector<int16_t*> rx_rf_vec_ptrs;$/;"	m	class:rx_data
+rx_rf_vec_ptrs	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/include/txrx_data.hpp	/^    std::vector<std::vector<int16_t*> > rx_rf_vec_ptrs;$/;"	m	class:rx_data
 rx_rf_vec_ptrs	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/rx_data.cpp	/^    std::vector<std::vector<int16_t*> > rx_rf_vec_ptrs; $/;"	m	class:rx_data	file:
 rx_rf_vecs	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/include/txrx_data.hpp	/^    std::vector<std::vector<std::complex<int16_t> > > rx_rf_vecs[2]; \/\/rf data, rx_rf_vecs[2][nants][nrfsamps]$/;"	m	class:rx_data
 rx_rf_vecs	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/rx_data.cpp	/^    std::vector<std::vector<std::complex<int16_t> > > rx_rf_vecs[2]; \/\/rf data, rx_rf_vecs[2][nants][nrfsamps]$/;"	m	class:rx_data	file:
@@ -16658,13 +16572,17 @@ search_bandwidth	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/r
 sec	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.2/genfft/complex.ml	/^let sec n m =$/;"	v
 sec	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.2/genfft/complex.mli	/^val sec : int -> int -> expr$/;"	v
 select_chip	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/ics660_drv/select_chip.c	/^int select_chip(uint32_t mod_control_reg,uint32_t chip)$/;"	f
+send_data	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/socket_utils.cpp	/^int send_data(int fd,void  *buf,size_t buflen)$/;"	f
 send_data	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/utils.c	/^int send_data(int fd,void  *buf,size_t buflen)$/;"	f
+seq_buf	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/include/txrx_data.hpp	/^    std::vector<unsigned char> seq_buf[4];$/;"	m	class:tx_data
+seq_buf	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/tx_data.cpp	/^    std::vector<unsigned char> seq_buf[4];$/;"	m	class:tx_data	file:
 sequentially	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.2/genfft/schedule.ml	/^let rec sequentially = function$/;"	v
 sequentially	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.2/genfft/schedule.mli	/^val sequentially : Expr.assignment list -> schedule$/;"	v
 serial_mux_control	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.31/include/_regs_GC4016.h	/^	char	serial_mux_control;$/;"	m	struct:GC4016_reg_vals
 serial_mux_control	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.32.exp/include/_regs_GC4016.h	/^	char	serial_mux_control;$/;"	m	struct:GC4016_reg_vals
 serial_mux_control	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc316_tcp_driver/include/_regs_GC4016.h	/^	char	serial_mux_control;$/;"	m	struct:GC4016_reg_vals
 sermuxcntrl	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc214_tcp_driver/include/gc4016.h	/^   char sermuxcntrl;    \/* 0xe4 *\/$/;"	m	struct:GC4016Global
+server_unixsocket	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/socket_utils.cpp	/^int server_unixsocket(char *hostip,int port){$/;"	f
 server_unixsocket	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/utils.c	/^int server_unixsocket(char *hostip,int port){$/;"	f
 setCFIR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc214_tcp_driver/filter.c	/^float setCFIR(int *cfircoeffs,float freq_in,float Fpass,float Fstop){$/;"	f
 setPFIR	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc214_tcp_driver/filter.c	/^float setPFIR(int *pfircoeffs,float freq_in,float Fpass,float Fstop,int matched){$/;"	f
@@ -17451,6 +17369,8 @@ tcpsocket	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/bc63
 tcpsocket	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/dio_tcp_driver/_tcpsocket.c	/^int tcpsocket(int port){$/;"	f
 tcpsocket	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gps_tcp_driver/_tcpsocket.c	/^int tcpsocket(int port){$/;"	f
 tcpsocket	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gps_usrp_driver/_tcpsocket.c	/^int tcpsocket(int port){$/;"	f
+tcpsocket	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/socket_utils.cpp	/^int tcpsocket(int port){$/;"	f
+tcpsocket	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/tcpsocket.cpp	/^int tcpsocket(int port){$/;"	f
 tcpupdate	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gps_tcp_driver/include/_display_structure.h	/^	int	tcpupdate;$/;"	m	struct:display_struct
 tcpupdate	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gps_usrp_driver/include/_display_structure.h	/^	int	tcpupdate;$/;"	m	struct:display_struct
 tcpupdate	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/include/global_server_variables.h	/^	int	tcpupdate;$/;"	m	struct:GPSStatus
@@ -17734,11 +17654,12 @@ totalsz	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3
 totransfer	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/timing_tcp_driver/main.c	/^int		max_seq_count, xfercount, totransfer;$/;"	v
 totransfer	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/transponder/main.cpp	/^int		max_seq_count=0, xfercount=0, totransfer=0;$/;"	v
 totransfer	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_backup/main.cpp	/^int		max_seq_count=0, xfercount=0, totransfer=0;$/;"	v
-totransfer	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/main.cpp	/^int		max_seq_count=0, xfercount=0, totransfer=0;$/;"	v
 tr_event	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/timing_tcp_driver/main.c	/^int tr_event=0, scope_event=0;$/;"	v
 tr_event	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/transponder/main.cpp	/^int tr_event=0, scope_event=0;$/;"	v
 tr_event	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_backup/main.cpp	/^int tr_event=0, scope_event=0;$/;"	v
 tr_event	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/main.cpp	/^int tr_event=0, scope_event=0;$/;"	v
+tr_times_durations	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/tx_data.cpp	/^    std::vector<uint32_t> tr_times_durations;$/;"	m	class:tx_data	file:
+tr_times_starts	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/tx_data.cpp	/^    std::vector<uint32_t> tr_times_starts;$/;"	m	class:tx_data	file:
 trans_length	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/ddsserver_tcp_driver/include/ics660b.h	/^  int trans_length;$/;"	m	struct:ics660_registers
 transcendent	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.2/genfft/expr.ml	/^type transcendent = I | MULTI_A | MULTI_B | CONJ$/;"	t
 transcendent	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.2/genfft/expr.mli	/^type transcendent = I | MULTI_A | MULTI_B | CONJ$/;"	t
@@ -18125,7 +18046,6 @@ tx_data	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_d
 tx_freqs	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/include/txrx_data.hpp	/^    std::vector<std::vector<float> > tx_freqs; \/\/Vectors of transmit frequencies, one vector for each radar$/;"	m	class:tx_data
 tx_freqs	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/tx_data.cpp	/^    std::vector<std::vector<float> > tx_freqs; \/\/Vectors of transmit frequencies, one vector for each radar$/;"	m	class:tx_data	file:
 tx_mix_upsample	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_backup/tx_mix_upsample.cpp	/^int tx_mix_upsample($/;"	f
-tx_mix_upsample	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/tx_mix_upsample.cpp	/^int tx_mix_upsample($/;"	f
 tx_rf_fronts	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/include/txrx_data.hpp	/^    std::vector<int16_t*> tx_rf_fronts;$/;"	m	class:tx_data
 tx_rf_fronts	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/tx_data.cpp	/^    std::vector<int16_t*> tx_rf_fronts;$/;"	m	class:tx_data	file:
 tx_rf_vecs	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/include/txrx_data.hpp	/^    std::vector<std::vector<std::complex<int16_t> > > tx_rf_vecs; \/\/rf data, one vector for each antenna$/;"	m	class:tx_data
@@ -18157,8 +18077,8 @@ uint08	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gps_tcp
 uint08	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gps_usrp_driver/include/_prog_conventions.h	1;"	d
 uint08	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/timing_tcp_driver/include/_prog_conventions.h	4;"	d
 uint08	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/transponder/include/_prog_conventions.h	4;"	d
+uint08	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_backup/_prog_conventions.h	4;"	d
 uint08	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_backup/include/_prog_conventions.h	4;"	d
-uint08	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/include/_prog_conventions.h	4;"	d
 uint16	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc214_tcp_driver/include/_prog_conventions.h	2;"	d
 uint16	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.31/include/_prog_conventions.h	2;"	d
 uint16	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.32.exp/include/_prog_conventions.h	2;"	d
@@ -18167,8 +18087,8 @@ uint16	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/include
 uint16	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/include/rtypes.h	/^      typedef unsigned short uint16;$/;"	t
 uint16	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/timing_tcp_driver/include/_prog_conventions.h	5;"	d
 uint16	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/transponder/include/_prog_conventions.h	5;"	d
+uint16	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_backup/_prog_conventions.h	5;"	d
 uint16	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_backup/include/_prog_conventions.h	5;"	d
-uint16	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/include/_prog_conventions.h	5;"	d
 uint32	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc214_tcp_driver/include/_prog_conventions.h	3;"	d
 uint32	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.31/include/_prog_conventions.h	3;"	d
 uint32	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/gc314FS_driver.1.32.exp/include/_prog_conventions.h	3;"	d
@@ -18177,8 +18097,8 @@ uint32	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/include
 uint32	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/include/rtypes.h	/^      typedef unsigned long uint32;$/;"	t
 uint32	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/timing_tcp_driver/include/_prog_conventions.h	6;"	d
 uint32	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/transponder/include/_prog_conventions.h	6;"	d
+uint32	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_backup/_prog_conventions.h	6;"	d
 uint32	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_backup/include/_prog_conventions.h	6;"	d
-uint32	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/include/_prog_conventions.h	6;"	d
 uint64	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/include/rtypes.h	/^      typedef unsigned double uint64;$/;"	t
 uint64	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/include/rtypes.h	/^      typedef unsigned long long uint64;$/;"	t
 uint64	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/include/rtypes.h	/^      typedef unsigned long uint64;$/;"	t
@@ -18274,6 +18194,7 @@ unity	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2
 unlock1	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/bc635_gps_tcp_driver/include/bc635_registers.h	/^        unsigned long unlock1;$/;"	m	struct:DEV_reg
 unlock2	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/bc635_gps_tcp_driver/include/bc635_registers.h	/^        unsigned long unlock2;$/;"	m	struct:DEV_reg
 unmake_worker	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.2/threads/threads.c	/^static void unmake_worker(struct worker *q)$/;"	f	file:
+unpack_pulseseq	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/tx_data.cpp	/^void tx_data::unpack_pulseseq(size_t index){$/;"	f	class:tx_data
 unparse	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.2/genfft/variable.ml	/^let unparse = function$/;"	v
 unparse	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.2/genfft/variable.mli	/^val unparse : variable -> string$/;"	v
 unparse_annotated	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.2/genfft/c.mli	/^val unparse_annotated : bool -> Annotate.annotated_schedule -> string$/;"	v
@@ -18600,7 +18521,6 @@ x77	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.2
 xfercount	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/timing_tcp_driver/main.c	/^int		max_seq_count, xfercount, totransfer;$/;"	v
 xfercount	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/transponder/main.cpp	/^int		max_seq_count=0, xfercount=0, totransfer=0;$/;"	v
 xfercount	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_backup/main.cpp	/^int		max_seq_count=0, xfercount=0, totransfer=0;$/;"	v
-xfercount	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/usrp_driver/main.cpp	/^int		max_seq_count=0, xfercount=0, totransfer=0;$/;"	v
 xi	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.2/cell/fftw-cell.h	/^     unsigned long long xi, xo;$/;"	m	struct:dft_context
 xm	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.2/api/mapflags.c	/^     unsigned x, xm;$/;"	m	struct:__anon46	file:
 xo	/home/radar/SuperDARN_MSI_ROS/qnx/root/operational_radar_code/ros/fftw-3.2.2/cell/fftw-cell.h	/^     unsigned long long xi, xo;$/;"	m	struct:dft_context

@@ -75,7 +75,7 @@ int verbose=10;
 int double_buf=1;
 int configured=1;
 int		writingFIFO=0, dma_count=0, under_flag=0,empty_flag=0,IRQ, intid;
-int		max_seq_count=0, xfercount=0, totransfer=0;
+//int		max_seq_count=0, xfercount=0, totransfer=0;
 uintptr_t	mmap_io_ptr_dio;
 unsigned int	virtual_addr[1], physical_addr[1];
 struct sigevent interruptevent;
@@ -124,16 +124,14 @@ int main(){
     // DECLARE AND INITIALIZE ANY NECESSARY VARIABLES
     int     maxclients=MAX_RADARS*MAX_CHANNELS+1;
     struct  ControlPRM  clients[maxclients], client;
-    struct  TSGbuf *pulseseqs[MAX_RADARS][MAX_CHANNELS][MAX_SEQS];
+    //struct  TSGbuf *pulseseqs[MAX_RADARS][MAX_CHANNELS][MAX_SEQS];
     struct  CLRFreqPRM clrfreq_parameters;
     //struct  TSGprm *tsgparams[MAX_RADARS][MAX_CHANNELS][MAX_SEQS];
-	//unsigned int	*seq_buf[MAX_RADARS][MAX_CHANNELS];
-	char* seq_buf[MAX_RADARS][MAX_CHANNELS];
-    int seq_count[MAX_RADARS][MAX_CHANNELS];
-    int old_pulse_index[MAX_RADARS][MAX_CHANNELS];
+    //int seq_count[MAX_RADARS][MAX_CHANNELS];
+    //int old_pulse_index[MAX_RADARS][MAX_CHANNELS];
     int ready_index[MAX_RADARS][MAX_CHANNELS];
 	//unsigned int	*master_buf;
-	char* master_buf;
+	//char* master_buf;
     int old_seq_id=-10;
     int new_seq_id=-1;
 	int old_beam=-1;
@@ -155,11 +153,9 @@ int main(){
     fd_set rfds,efds;
 
 	//counter and temporary variables
-	int	i,j,r,c,buf,index,offset_pad;
-	int	dds_offset,rx_offset,tx_offset;
-        int     scope_start,dds_trigger,rx_trigger;
-	int	step;
-	int	tempcode;
+    //int offset_pad, rx_offset, dds_offset, tx_offset;
+    //int scope_start, dds_trigger, rx_trigger;
+	int	i,r,c,buf,index;
     struct timeval t0,t6;
     struct timeval t1;
     unsigned long elapsed;
@@ -358,7 +354,6 @@ int main(){
     }
 
 
-   unsigned long counter;
 
    signal(SIGINT, graceful_cleanup);
    signal(SIGTERM, graceful_cleanup);
@@ -375,25 +370,13 @@ int main(){
    //if (verbose > 1 ) std::cout << "Tx Offset: " << tx_offset <<
    //"DDS Offset: " << dds_offset << " RX Offset: " << rx_offset << "\n";
 
-    max_seq_count=0;
+    //max_seq_count=0;
 	if (verbose > 1) std::cout << "Zeroing arrays\n";
-	for (r=0;r<MAX_RADARS;r++){
-	    for (c=0;c<MAX_CHANNELS;c++){
-	        if (verbose > 1) std::cout << r << " " << c << "\n";
-            ready_index[r][c]=-1; 
-            old_pulse_index[r][c]=-1; 
-            //seq_buf[r][c]=(unsigned int*) malloc(4*MAX_TIME_SEQ_LEN);
-            seq_buf[r][c]=(char*) malloc(4*MAX_TIME_SEQ_LEN);
-	        for (i=0;i<MAX_SEQS;i++) {
-                pulseseqs[r][c][i]=NULL;
-            }
-        } 
-    }
     bad_transmit_times.length=0;
     bad_transmit_times.start_usec=(uint32_t*) malloc(sizeof(unsigned int)*MAX_PULSES);
     bad_transmit_times.duration_usec=(uint32_t*) malloc(sizeof(unsigned int)*MAX_PULSES);
 
-    master_buf=(char*) malloc(MAX_TIME_SEQ_LEN*sizeof(int32_t));
+    //master_buf=(char*) malloc(MAX_TIME_SEQ_LEN*sizeof(int32_t));
 
 	clock_gettime(CLOCK_REALTIME, &cpu_stop);
 	float elapsed_setup = 1e-9*(cpu_stop.tv_nsec-cpu_start.tv_nsec) + 
@@ -495,38 +478,22 @@ int main(){
                     std::cerr << "Error in recv data. " << strerror(errno) << std::endl;
                 }
 		        if (verbose > 1) std::cout << "Requested index: " << r << " " << c << " " << index << "\n";
-		        //if (verbose > 1) std::cout << "Attempting Free on pulseseq: " << pulseseqs[r][c][index];
-                //if (pulseseqs[r][c][index]!=NULL) {
-                //    if (pulseseqs[r][c][index]->rep!=NULL){
-				//        free(pulseseqs[r][c][index]->rep);
-                //        pulseseqs[r][c][index]->rep=NULL;
-                //    }
-                //    if (pulseseqs[r][c][index]->code!=NULL){
-                //        free(pulseseqs[r][c][index]->code);
-                //        pulseseqs[r][c][index]->code=NULL;
-                //    }
-                //    free(pulseseqs[r][c][index]);
-                //    pulseseqs[r][c][index]=NULL;
-                //}
-		        //if (verbose > 1) std::cout << "Done Free - Attempting Malloc\n";	
-                //pulseseqs[r][c][index]=(TSGbuf*) malloc(sizeof(struct TSGbuf));
-		        //if (verbose > 1) std::cout << "Finished malloc\n";
-                if (recv_data(msgsock, tx.get_seq_ptr(index), sizeof(struct TSGbuf)) <= 0){
+                if (recv_data(msgsock, tx.get_tsg_ptr(index), sizeof(struct TSGbuf)) <= 0){
                     std::cerr << "Error in recv data. " << strerror(errno) << std::endl;
                 }
                 tx.allocate_pulseseq_mem(index);
 
-                if (recv_data(msgsock, tx.get_seq_ptr(index)->rep,
-                    sizeof(unsigned char)*tx.get_seq_ptr(index)->len) <= 0){
+                if (recv_data(msgsock, tx.get_tsg_ptr(index)->rep,
+                    sizeof(unsigned char)*tx.get_tsg_ptr(index)->len) <= 0){
                         std::cerr << "Error in recv data. " << strerror(errno) << std::endl;
                 }
-                if (recv_data(msgsock, tx.get_seq_ptr(index)->code,
-                    sizeof(unsigned char)*tx.get_seq_ptr(index)->len) <= 0){
+                if (recv_data(msgsock, tx.get_tsg_ptr(index)->code,
+                    sizeof(unsigned char)*tx.get_tsg_ptr(index)->len) <= 0){
                         std::cerr << "Error in recv data. " << strerror(errno) << std::endl;
                 }
 			    //if (verbose > 1) std::cout << "Pulseseq length: " << pulseseqs[r][c][index]->len << "\n";
                 old_seq_id=-10;
-                old_pulse_index[r][c]=-1;
+                //old_pulse_index[r][c]=-1;
                 new_seq_id=-1;
                 if (send_data(msgsock, &msg, sizeof(struct DriverMsg)) <= 0){
                     std::cerr << "Error in send data. " << strerror(errno) << std::endl;
@@ -534,14 +501,13 @@ int main(){
                 break;
 
 		      case TIMING_CtrlProg_END:
-		        //rval=recv_data(msgsock,&client,sizeof(struct ControlPRM));
                 if (recv_data(msgsock, &client,sizeof(struct ControlPRM)) <= 0){
                     std::cerr << "Error in recv data. " << strerror(errno) << std::endl;
                 }
 		        if (verbose > 0) printf("A client is done. Radar: %i, Channel: %i\n", client.radar-1, client.channel-1);
                 r=client.radar-1;
                 c=client.channel-1;
-                tx.unregister_client(r,c);
+                //tx.unregister_client(r,c);
                 rx.unregister_client(r,c);
                 msg.status=0;
                 if (send_data(msgsock, &msg, sizeof(struct DriverMsg)) <= 0){
@@ -584,41 +550,11 @@ int main(){
                 index=client.current_pulseseq_index; 
 
                 tx.unpack_pulseseq(index);
-                //if (index!=old_pulse_index[r][c]){
-			    //    if (verbose > -1) std::cout << "Need to unpack pulseseq " << r << " " << c << " " << index << "\n";
-			    //    if (verbose > -1) std::cout << "Pulseseq length: " << tx.get_seq_ptr(index)->len << "\n";
-                //
-			    //// unpack the timing sequence
-			    //    seq_count[r][c]=0;
-                //    //step=(int)((double)pulseseqs[r][c][index]->step/(double)STATE_TIME+0.5);
-                //    step=(int)((double)tx.get_seq_ptr(index)->step/(double)STATE_TIME+0.5);
-                //    std::cout << "STEP: " << step << std::endl;
-                //            
-                //    //If DDS or RX Offset is negative pad the seq_buf iwith the maximum negative offset
-                //    //offset_pad=(int)((double)MIN(dds_offset,rx_offset)/((double)STATE_TIME+0.5))-2;
-                //    offset_pad=0;
-			    //    if (verbose > -1) std::cout << "offset pad: " << offset_pad << "\n";	
-                //    for(int i=0;i>offset_pad;i--) {
-                //      seq_buf[r][c][seq_count[r][c]]=0;
-                //      seq_count[r][c]++;
-                //    }
-			    //    //tx.get_seq_code_ptr(index);
-			    //    //for(int i=0;i<pulseseqs[r][c][index]->len;i++){
-			    //    for(int i=0;i<tx.get_seq_ptr(index)->len;i++){
-			    //        for( j=0;j<step*(tx.get_seq_rep_ptr(index))[i];j++){
-			    //            //seq_buf[r][c][seq_count[r][c]]=tempcode;
-			    //            seq_buf[r][c][seq_count[r][c]]=(tx.get_seq_ptr(index)->code)[i];
-			    //            seq_count[r][c]++;
-			    //        }
-			    //    }
-                //}
-	            //if (verbose > 1) std::cout << "Timing Card seq length: " << seq_count[r][c] << " state step: " <<
-				//STATE_TIME*1e-6 << " time: " << STATE_TIME*1e-6*seq_count[r][c] << "\n";
 
                 if (numclients >= maxclients) msg.status=-2;
 		        if (verbose > 1) std::cout << "\nclient ready\n";
                 numclients=numclients % maxclients;
-                old_pulse_index[r][c]=index;
+                //old_pulse_index[r][c]=index;
                 if (send_data(msgsock, &msg, sizeof(struct DriverMsg)) <= 0){
                     std::cerr << "Error in send data. " << strerror(errno) << std::endl;
                 }
@@ -628,8 +564,8 @@ int main(){
                 gettimeofday(&t0,NULL);
 			    if(verbose > 1 ) std::cout << "Setup Timing Card for next trigger\n";
                     msg.status=0;
-		        if (verbose > 1) std::cout << "Max Seq length: " << max_seq_count <<
-					 " Num clients: " << numclients << "\n";	
+		        //if (verbose > 1) std::cout << "Max Seq length: " << max_seq_count <<
+				//	 " Num clients: " << numclients << "\n";	
                 new_seq_id=-1;
 			    new_beam=client.tbeam;
 	            for(int i=0; i<numclients; i++){
@@ -663,141 +599,25 @@ int main(){
 							    std::endl << std::endl;
 			        }
                     if (verbose > -1) std::cout << "Calculating Master sequence " << old_seq_id << " " << new_seq_id << "\n";
-                    max_seq_count=0;
+                    //max_seq_count=0;
 
-				    tx_osr = round(TXRATE * ((float)STATE_TIME*1e-6));
+                    tx.make_tr_times(&bad_transmit_times);
 
-                    //if (verbose > -1){
-				    //    std::cout << "tx rate: " << usrp->get_tx_rate() << "\n";
-				    //    std::cout << "bb rate: " << 1/(STATE_TIME*1e-6) << "\n";
-				    //    std::cout << "creating tx vecs.\n osr: " << tx_osr << "\n";
+                    //    /* Handle Scope Sync Signal logic */
+                    //    if ((master_buf[i] & S_BIT)==S_BIT) { // Scope signal logic on
+                    //        if (scope_event==0) { 
+                    //            if (verbose > 1 ) std::cout << "Scope Sync sample start: " << i << " " << master_buf[i] << "\n";
+                    //            scope_start=i;
+                    //        }
+                    //        scope_event=1;
+                    //    }
+                    //    else {
+                    //        if (scope_event==1 && verbose > 1){
+                    //            std::cout << "Scope Sync sample end: " << i << " " << master_buf[i] << "\n";
+                    //        }
+                    //        scope_event=0;
+                    //    }
                     //}
-
-					//tx_rf_vecs.push_back(std::vector<sc16>(tx_osr*max_seq_count,0));
-
-                    tx_bb_vecs.resize(tx.get_num_radars());
-                    std::cout << "number of radars: " << tx.get_num_radars() << std::endl;
-                    //for (int iclient=0; iclient<numclients; iclient++) {
-                    if (numclients > tx.get_num_radars()){
-                        numclients = tx.get_num_radars();
-                    }
-                    //for (int iradar=0; iradar<tx.get_num_radars(); iradar++) {
-                    for (int iradar=0; iradar<1; iradar++) {
-                        int iclient=0;
-                        r=clients[iclient].radar-1;
-                        c=clients[iclient].channel-1;
-                        //if (seq_count[r][c]>=max_seq_count) max_seq_count=seq_count[r][c];
-                        max_seq_count = tx.get_seqbuf_len(index);
-		        	    if (verbose > 1) std::cout << "Max Seq length: " << max_seq_count << "\n";
-                        counter=0;
-			            if (verbose > 1) std::cout << "Merging Client Seq " <<  iclient << 
-			        		"into Master Seq " << r << " " << c << 
-			        		"length: " << seq_count[r][c] << "\n";
-                        tx_bb_vecs[iclient].clear();
-                        tx_bb_vecs[iclient].resize(max_seq_count,0);
-                        if (verbose) std::cout << "max_seq_count: " << max_seq_count << std::endl;
-                        if (iclient==0) {
-                            printf("Initializing master buffer\n");
-			                //for (j=0;j<seq_count[r][c];j++) {
-			                //    if ((seq_buf[r][c][j] & X_BIT) == X_BIT){
-			                //        if ((seq_buf[r][c][j] & P_BIT) == P_BIT){
-                            //            tx_bb_vecs[iclient][j] = std::complex<float>(-1,0);
-                            //        }
-                            //        else {
-			                //            tx_bb_vecs[iclient][j] = (std::complex<float>(1,0));
-                            //        }
-                            //    }
-                       	    //    master_buf[j]=seq_buf[r][c][j];
-			                //}
-                            //counter++;
-			                for (j=0;j<tx.get_seqbuf_len(index);j++) {
-			                    if (((tx.get_seqbuf_ptr(index))[j] & X_BIT) == X_BIT){
-			                        if (((tx.get_seqbuf_ptr(index))[j] & P_BIT) == P_BIT){
-                                        tx_bb_vecs[iclient][j] = std::complex<float>(-1,0);
-                                    }
-                                    else {
-			                            tx_bb_vecs[iclient][j] = (std::complex<float>(1,0));
-                                    }
-                                }
-                       	        //master_buf[j]=seq_buf[r][c][j];
-                       	        master_buf[j]=(tx.get_seqbuf_ptr(index))[j];
-			                }
-                            counter++;
-                        }
-                        else {
-                            printf("Appending master buffer\n");
-			                for (j=0;j<seq_count[r][c];j++) {
-			                    if ((seq_buf[r][c][j] & X_BIT) == X_BIT){
-			                        if ((seq_buf[r][c][j] & P_BIT) == P_BIT){
-                                        tx_bb_vecs[iclient][j] = std::complex<float>(-1,0);
-                                    }
-                                    else {
-			                            tx_bb_vecs[iclient][j] = (std::complex<float>(1,0));
-                                    }
-                                }
-                       	        master_buf[j]|=seq_buf[r][c][j];
-			                }
-                        }
-                    }
-                        	  
-                    if (verbose > 1 ) std::cout << "Total Tr: " << counter << "\n";
-
-                    bad_transmit_times.length=0;
-                    tr_event=0; 
-                    scope_event=0; 
-                    scope_start=-1;
-                    dds_trigger=0;
-                    rx_trigger=0;
-
-                    /* Handle logic bit timing */
-			        for(int i=0;i<max_seq_count;i++){
-                        /* Handle Tx-Rx Signal logic */
-                        if ((master_buf[i] & TR_BIT)==TR_BIT) { // TR gate logic on
-                            /* JDS: use tx as AM gate for mimic recv sample for external freq gen */
-                            //if(tx_offset > 0) {
-                            //  temp=tx_offset/STATE_TIME;
-                            //  master_buf[i+temp]|= 0x04 ; 
-                            //}
-                            if (tr_event==0) { 
-                              bad_transmit_times.length++;
-                              if (verbose > 1 ) std::cout << "Master TR sample start: " << i << " " << master_buf[i] << "\n";
-
-                              if (bad_transmit_times.length > 0 && bad_transmit_times.length < MAX_PULSES){ 
-                                (bad_transmit_times.start_usec)[bad_transmit_times.length-1]=i*STATE_TIME;
-                                (bad_transmit_times.duration_usec)[bad_transmit_times.length-1]=STATE_TIME;
-                              }
-                              else {
-                                std::cerr << "Error in number of transmit pulses\n";
-                                exit(EXIT_FAILURE);
-                              } 
-                            } 
-                            else {
-                                (bad_transmit_times.duration_usec)[bad_transmit_times.length-1]+=STATE_TIME;
-                            }
-                            tr_event=1;
-                        }
-                        else { // TR gate logic off
-                            if(tr_event==1 && verbose > 1){
-                                std::cout << "Master TR sample end: " << i << " " << master_buf[i] << "\n";
-                            }
-                            tr_event=0;
-                        }
-
-                        /* Handle Scope Sync Signal logic */
-                        if ((master_buf[i] & S_BIT)==S_BIT) { // Scope signal logic on
-                            if (scope_event==0) { 
-                                if (verbose > 1 ) std::cout << "Scope Sync sample start: " << i << " " << master_buf[i] << "\n";
-                                scope_start=i;
-                            }
-                            scope_event=1;
-                        }
-                        else {
-                            if (scope_event==1 && verbose > 1){
-                                std::cout << "Scope Sync sample end: " << i << " " << master_buf[i] << "\n";
-                            }
-                            scope_event=0;
-                        }
-                    }
 
                     /* The following is leftover from the old timing card code.  Might be useful reference
                      * if we want to add other logic signals besides scope-sync and tr gate */
@@ -823,46 +643,7 @@ int main(){
                       //master_buf[rx_trigger]|=0x8000;                            
                     }
                     
-	                if (verbose > 1) std::cout << "seq length: " << max_seq_count << " state step: " <<
-			    	  STATE_TIME*1e-6 << " time: " << (STATE_TIME*1E-6*max_seq_count) << "\n";
-
-			        if (verbose > 1) std::cout << "Max Seq Count: " << max_seq_count << "\n";
-                    if (verbose > 1) std::cout << "END FIFO Stamps\n";
                     */
-
-                    //std::cout << client.trise << std::endl;
-                    /*Calculate taps for Gaussian filter*/
-			        //alpha = 32*(9.86/(2e-8*client.trise)) / (0.8328*usrp->get_rx_rate());
-			        //std::cout << "alpha: " << alpha << std::endl;
-			        //for (i=0; i<filter_table_len; i++){
-			        //	filter_table[i] = pow(alpha/3.14,0.5)*pow(M_E, 
-			        //		-1*(alpha)*pow((((float)i-(filter_table_len-1)/2)/filter_table_len),2))/filter_table_len;
-			        //}
-                    //for (int iclient=0; iclient<numclients; iclient++){
-                      //std::cout << "num tx clients: " << tx.get_num_clients() << std::endl;
-                    //for (int iclient=0; iclient<1; iclient++){
-                    //    filter_taps.resize(25e3/clients[iclient].trise);
-                    //    filter_taps.assign(filter_taps.size(),
-                    //        std::complex<float>(clients[iclient].trise/25.e3/(float)tx.get_num_clients(),0));
-                    //    //for (int j=0; j<tx_bb_vecs[iclient].size(); j++){
-                    //    //    if (tx_bb_vecs[iclient][j] != std::complex<float>(0,0) && j%10 == 0) 
-                    //    //        std::cout << iclient << " " << j << " " << tx_bb_vecs[iclient][j] << std::endl;
-                    //    //}
-                    //    //std::cout << filter_taps.size() << std::endl;
-			        //    convolve(&tx_bb_vecs[iclient].front(), 
-                    //        tx_bb_vecs[iclient].size(), 
-                    //        &filter_taps.front(),
-                    //        filter_taps.size());
-                    //}
-                    // Add the same pulse sequence for each client.  Not ideal, but works
-                    // if you assume every client's got the same pulse sequence
-                    //for (int iclient=0; iclient<numclients; iclient++){ 
-                    //    tx.add_pulse_seq(
-                    //        clients[iclient].radar-1,
-                    //        clients[iclient].channel-1, 
-                    //        (float) 1e3*clients[iclient].tfreq, 
-                    //        tx_bb_vecs[0]);
-                    //}
 			    }
 
 			    if (new_beam != old_beam) { //Re-calculate the RF sample vectors for new beam direction.  BB samples are the same.
@@ -878,8 +659,9 @@ int main(){
                     rx_process_threads.join_all(); //Make sure rx processing is done so that we have exclusive access to the GPU
 
                     clock_gettime(CLOCK_MONOTONIC, &tx0);
-                    tx.set_rf_vec_size(tx_osr*max_seq_count);
-                    for (int iradar=0; iradar<tx.get_num_radars(); iradar++){ //Deal with each radar at the site
+				    tx_osr = round(TXRATE * ((float)STATE_TIME*1e-6));
+                    tx.set_rf_vec_size(tx_osr*tx.get_seqbuf_len(index));
+                    for (size_t iradar=0; iradar<tx.get_num_radars(); iradar++){ //Deal with each radar at the site
                         std::cout << "Radar " << iradar << 
                             " number of channels: " << tx.get_num_clients(iradar) << std::endl;
 
@@ -1029,7 +811,7 @@ int main(){
             case TIMING_POSTTRIGGER:
                 //receive_threads.join_all();
                 //nactiveclients=numclients;
-                tx.clear_freqs();
+                tx.clear_channel_list();
                 numclients=0;
                 if (verbose > 1) std::cout << "Post trigger.  Un-readying all clients\n\n";
                 for (r=0;r<MAX_RADARS;r++){

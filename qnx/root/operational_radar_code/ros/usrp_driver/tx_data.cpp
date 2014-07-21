@@ -11,11 +11,15 @@ extern int verbose;
 #define TR_BIT 0x02 //TR bit
 #define S_BIT 0x80 //Scope sync
 #define P_BIT 0x10 //Phase bit.  0 for 0 degrees, 1 for 180 degrees
+#define MAX_PULSES 100 
 
 class tx_data{
     struct TSGbuf pulseseqs[4];
     std::vector<unsigned char> pulseseq_reps[4];
     std::vector<unsigned char> pulseseq_codes[4];
+
+    std::vector<uint32_t> tr_times_starts;
+    std::vector<uint32_t> tr_times_durations;
 
     int old_index;
     std::vector<unsigned char> seq_buf[4];
@@ -39,25 +43,19 @@ class tx_data{
     public:
     tx_data(size_t nradars, size_t nants, float center_freq, float rf_samp_rate);
     ~tx_data();
-    void add_client();
-    void add_client(size_t radar);
-    void register_client(struct ControlPRM new_client);
     void ready_client(struct ControlPRM* client);
 
-    struct TSGbuf* get_seq_ptr(size_t index);
+    struct TSGbuf* get_tsg_ptr(size_t index);
     void allocate_pulseseq_mem(size_t index);
 
     void unpack_pulseseq(size_t index);
-    unsigned char* get_seqbuf_ptr(size_t index);
     size_t get_seqbuf_len(size_t index);
 
     void make_bb_vecs(int32_t trise);
+    void make_tr_times(struct TRTimes* tr_times);
     //void add_freq(size_t radar, size_t channel, float freq);
-    void clear_freqs();
+    void clear_channel_list();
 
-    void unregister_client(size_t radar, size_t channel);
-    void drop_client();
-    void drop_client(size_t radar);
     void add_pulse_seq(size_t channel, float freq, std::vector<std::complex<float> >& bb_vec);
     void add_pulse_seq(size_t radar, size_t channel, float freq, std::vector<std::complex<float> >& bb_vec);
     size_t get_num_ants(); //Get number of antennas
@@ -88,27 +86,11 @@ tx_data::tx_data(size_t nradars, size_t nants, float center_freq, float rf_samp_
 
 tx_data::~tx_data(){} //Don't need to free memory here--trust that memory allocated to vectors is freed when the vectors fall out of scope
 
-void tx_data::add_client(){
-    tx_freqs[0].resize(tx_freqs[0].size()+1);
-}
-
-void tx_data::add_client(size_t radar){
-    tx_freqs[radar].resize(tx_freqs[radar].size()+1);
-}
-
-void tx_data::register_client(struct ControlPRM new_client){
-    tx_freqs[new_client.radar-1].resize(tx_freqs[new_client.radar-1].size()+1);
-    radmap.push_back(new_client.radar-1);
-    chanmap.push_back(new_client.channel-1);
-}
-
 void tx_data::ready_client(struct ControlPRM* client){
     tx_freqs[client->radar-1].push_back(1e3*client->tfreq);
-    //radmap.push_back(new_client.radar-1);
-    //chanmap.push_back(new_client.channel-1);
 }
 
-struct TSGbuf* tx_data::get_seq_ptr(size_t index){
+struct TSGbuf* tx_data::get_tsg_ptr(size_t index){
     return &pulseseqs[index];
 }
 
@@ -122,12 +104,6 @@ void tx_data::allocate_pulseseq_mem(size_t index){
 
 void tx_data::unpack_pulseseq(size_t index){
     if (index!=old_index){
-        //if (verbose > -1) std::cout << "Need to unpack pulseseq " << r << " " << c << " " << inde
-        //if (verbose > -1) std::cout << "Pulseseq length: " << tx.get_seq_ptr(index)->len << "\n";
-    
-        // unpack the timing sequence
-        //seq_count[r][c]=0;
-        //step=(int)((double)pulseseqs[r][c][index]->step/(double)STATE_TIME+0.5);
         int step=(int)((double)pulseseqs[index].step/(double)STATE_TIME+0.5);
                 
         //If DDS or RX Offset is negative pad the seq_buf with the maximum negative offset
@@ -136,27 +112,17 @@ void tx_data::unpack_pulseseq(size_t index){
         if (verbose > -1) std::cout << "offset pad: " << offset_pad << "\n";  
         for(int i=0;i>offset_pad;i--) {
           seq_buf[index].push_back(0);
-          //seq_count[r][c]++;
         }
         for (int i=0; i<pulseseqs[index].len; i++){
             for (int j=0; j<step*pulseseqs[index].rep[i]; j++){
                 seq_buf[index].push_back(pulseseqs[index].code[i]);
-                //seq_count[index]++;
             }
         }
         old_index=index;
     }
 }
 
-unsigned char* tx_data::get_seqbuf_ptr(size_t index){
-    //std::cout << "tx_data::get_seq_ptr " << "step : " << pulseseqs[index].step << std::endl;
-    //std::cout << "tx_data::get_seq_ptr " << "length : " << pulseseqs[index].len << std::endl;
-    return &seq_buf[index].front();
-}
-
 size_t tx_data::get_seqbuf_len(size_t index){
-    //std::cout << "tx_data::get_seq_ptr " << "step : " << pulseseqs[index].step << std::endl;
-    //std::cout << "tx_data::get_seq_ptr " << "length : " << pulseseqs[index].len << std::endl;
     return seq_buf[index].size();
 }
 
@@ -180,6 +146,13 @@ void tx_data::make_bb_vecs(int32_t trise){
     std::complex<float> temp;
     size_t signal_len = rawsignal.size();
     size_t taps_len = taps.size();
+
+    /*Calculate taps for Gaussian filter. This is reference code for future use..*/
+    //alpha = 32*(9.86/(2e-8*client.trise)) / (0.8328*usrp->get_rx_rate());
+    ////std::cout << "alpha: " << alpha << std::endl;
+    ////for (i=0; i<filter_table_len; i++){
+    ////  filter_table[i] = pow(alpha/3.14,0.5)*pow(M_E, 
+    ////      -1*(alpha)*pow((((float)i-(filter_table_len-1)/2)/filter_table_len),2))/filter_table_len;
     
     for (size_t i=0; i<taps_len/2; i++){
             temp = std::complex<float>(0,0);
@@ -207,67 +180,49 @@ void tx_data::make_bb_vecs(int32_t trise){
             bb_vec[i] = temp;
             //if (i 5 == 0 ) std::cout << i << " " << temp << std::endl;
     }
-    for (size_t i=0; i<bb_vec.size(); i+=50){
-        std::cout << i << " " << bb_vec[i] << std::endl;
-    }
 }
 
-//void tx_data::add_freq(size_t radar, size_t channel, float freq){
-//    tx_freqs[radar].push_back(freq);
-//}
+void tx_data::make_tr_times(struct TRTimes* tr_times){
+    int tr_event = 0;
+    tr_times->length = 0;
+    tr_times_starts.clear();
+    tr_times_durations.clear();
+    for (size_t i=0; i<seq_buf[old_index].size(); i++){
+        if ((seq_buf[old_index][i] & TR_BIT) == TR_BIT){
+            if (tr_event==0){
+                std::cout << "TR sample start: " << i << std::endl;
+                tr_times->length++;
+                if (tr_times->length > 0 && tr_times->length < MAX_PULSES){
+                    tr_times_starts.push_back(i*STATE_TIME);
+                    tr_times_durations.push_back(STATE_TIME);
+                }
+                else {
+                    std::cerr << "Error in number of transmit pulses!\n\n";
+                    exit(EXIT_FAILURE);
+                }
+            }
+            else {
+                tr_times_durations[tr_times->length-1] += STATE_TIME;
+            }
+            tr_event = 1;
+        }
+        else {
+            if (tr_event == 1 && verbose > 1){
+                std::cout << "TR sample end: " << i << std::endl;
+            }
+            tr_event = 0;
+        }
+    }
+    tr_times->start_usec = &tr_times_starts.front();
+    tr_times->duration_usec = &tr_times_durations.front();
+}
 
-void tx_data::clear_freqs(){
-    // Clear frequency list for each radar
+
+void tx_data::clear_channel_list(){
+    // Clear the frequency list for each radar
     for (int irad=0; irad<tx_freqs.size(); irad++){
         tx_freqs[irad].clear();
     }
-}
-
-
-void tx_data::unregister_client(size_t radar, size_t channel){
-    if (verbose > 2) std::cout << "TX_DATA: UNREGISTER_CLIENT: radar: " << radar << " channel: " << channel << std::endl;
-    size_t ichan=0;
-    for (size_t i=0; i<radmap.size(); i++){
-        if (radmap[i] == radar && chanmap[i] == channel){
-            tx_freqs[radar].erase(tx_freqs[radar].begin()+ichan);
-            radmap.erase(radmap.begin()+i);
-            chanmap.erase(chanmap.begin()+i);
-            break;
-        }
-        if (radmap[i] == radar){
-            ichan++;
-        }
-    }
-    //tx_freqs[radar].resize(tx_freqs[radar].size()+1);
-    //radmap.push_back(radar);
-    //chanmap.push_back(channel);
-}
-
-void tx_data::drop_client(){
-    tx_freqs[0].resize(tx_freqs[0].size()-1);
-}
-
-void tx_data::drop_client(size_t radar){
-    tx_freqs[radar].resize(tx_freqs[radar].size()-1);
-}
-
-void tx_data::add_pulse_seq(size_t channel, float freq, std::vector<std::complex<float> >& bb_vec){
-    //if (channel==0){
-    //    tx_bb_vecs[0] = bb_vec;
-    //}
-    tx_freqs[0][channel] = freq;
-}
-
-void tx_data::add_pulse_seq(size_t radar, size_t channel, float freq, std::vector<std::complex<float> >& bb_vec){
-    for (size_t i=0; i<num_radars; i++){
-        if (i != radar && tx_bb_vecs[i].size() != bb_vec.size()){
-           tx_bb_vecs[i].resize(bb_vec.size(), 0);
-        }
-        if (channel==0){
-            tx_bb_vecs[radar] = bb_vec; //Add the new vector of baseband values to the vector of clients for that radar
-        }
-    }
-    tx_freqs[radar][channel] = freq;
 }
 
 

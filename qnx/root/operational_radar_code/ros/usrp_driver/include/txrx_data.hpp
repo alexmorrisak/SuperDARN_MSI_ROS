@@ -28,27 +28,19 @@ class tx_data{
     public:
     tx_data(size_t nradars, size_t nants, float center_freq, float rf_samp_rate);
     ~tx_data();
-    void add_client();
-    void add_client(size_t radar);
-    void register_client(struct ControlPRM new_client);
     void ready_client(struct ControlPRM* new_client);
 
-    struct TSGbuf* get_seq_ptr(size_t index);
+    struct TSGbuf* get_tsg_ptr(size_t index);
     void allocate_pulseseq_mem(size_t index);
 
     void unpack_pulseseq(size_t index);
-    unsigned char* get_seqbuf_ptr(size_t index);
     size_t get_seqbuf_len(size_t index);
 
     void make_bb_vecs(int32_t trise);
+    void make_tr_times(struct TRTimes* tr_times);
     //void add_freq(size_t radar, size_t channel, float freq);
-    void clear_freqs();
+    void clear_channel_list();
 
-    void unregister_client(size_t radar, size_t channel);
-    void drop_client();
-    void drop_client(size_t radar);
-    void add_pulse_seq(size_t channel, float freq, std::vector<std::complex<float> >& bb_vec);
-    void add_pulse_seq(size_t radar, size_t channel, float freq, std::vector<std::complex<float> >& bb_vec);
     size_t get_num_ants(); //Get number of antennas
     size_t get_num_radars(); //Get number of radars
     size_t get_num_clients(); //Get total number of clients for all radars
