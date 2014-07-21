@@ -451,18 +451,14 @@ int main(){
            if ( FD_ISSET(msgsock,&rfds) && rval>0 ) {
             if (verbose>1) std::cout << "Socket data is ready to be read\n";
 		    if (verbose > 1) std::cout << msgsock << " Recv Msg\n";
-            if (recv_data(msgsock, &msg, sizeof(struct DriverMsg)) <= 0){
-                std::cerr << "Error in recv data. " << strerror(errno) << std::endl;
-            }
+            recv_data(msgsock, &msg, sizeof(struct DriverMsg));
             datacode=msg.type;
 		    if (verbose > 1) std::cout << "\nmsg code is " <<  datacode << "\n";
 		   switch( datacode ){
 		      case TIMING_REGISTER_SEQ:
 		        if (verbose > 0) std::cout << "\nRegister new sequence for usrp driver\n";
 		        msg.status=0;
-                if (recv_data(msgsock, &client, sizeof(struct ControlPRM)) <= 0){
-                    std::cerr << "Error in recv data. " << strerror(errno) << std::endl;
-                }
+                recv_data(msgsock, &client, sizeof(struct ControlPRM));
                 r=client.radar-1; 
                 c=client.channel-1; 
 
@@ -474,45 +470,31 @@ int main(){
 			    if (verbose > 1) std::cout << "Radar: " << client.radar <<
 				    " Channel: " << client.channel << " Beamnum: " << client.tbeam <<
 				    " Status: " << msg.status << "\n";
-                if (recv_data(msgsock, &index, sizeof(index)) <= 0){
-                    std::cerr << "Error in recv data. " << strerror(errno) << std::endl;
-                }
+                recv_data(msgsock, &index, sizeof(index));
 		        if (verbose > 1) std::cout << "Requested index: " << r << " " << c << " " << index << "\n";
-                if (recv_data(msgsock, tx.get_tsg_ptr(index), sizeof(struct TSGbuf)) <= 0){
-                    std::cerr << "Error in recv data. " << strerror(errno) << std::endl;
-                }
+                recv_data(msgsock, tx.get_tsg_ptr(index), sizeof(struct TSGbuf));
                 tx.allocate_pulseseq_mem(index);
 
-                if (recv_data(msgsock, tx.get_tsg_ptr(index)->rep,
-                    sizeof(unsigned char)*tx.get_tsg_ptr(index)->len) <= 0){
-                        std::cerr << "Error in recv data. " << strerror(errno) << std::endl;
-                }
-                if (recv_data(msgsock, tx.get_tsg_ptr(index)->code,
-                    sizeof(unsigned char)*tx.get_tsg_ptr(index)->len) <= 0){
-                        std::cerr << "Error in recv data. " << strerror(errno) << std::endl;
-                }
+                recv_data(msgsock, tx.get_tsg_ptr(index)->rep,
+                    sizeof(unsigned char)*tx.get_tsg_ptr(index)->len);
+                recv_data(msgsock, tx.get_tsg_ptr(index)->code,
+                    sizeof(unsigned char)*tx.get_tsg_ptr(index)->len);
 			    //if (verbose > 1) std::cout << "Pulseseq length: " << pulseseqs[r][c][index]->len << "\n";
                 old_seq_id=-10;
                 //old_pulse_index[r][c]=-1;
                 new_seq_id=-1;
-                if (send_data(msgsock, &msg, sizeof(struct DriverMsg)) <= 0){
-                    std::cerr << "Error in send data. " << strerror(errno) << std::endl;
-                }
+                send_data(msgsock, &msg, sizeof(struct DriverMsg));
                 break;
 
 		      case TIMING_CtrlProg_END:
-                if (recv_data(msgsock, &client,sizeof(struct ControlPRM)) <= 0){
-                    std::cerr << "Error in recv data. " << strerror(errno) << std::endl;
-                }
+                recv_data(msgsock, &client,sizeof(struct ControlPRM));
 		        if (verbose > 0) printf("A client is done. Radar: %i, Channel: %i\n", client.radar-1, client.channel-1);
                 r=client.radar-1;
                 c=client.channel-1;
                 //tx.unregister_client(r,c);
                 rx.unregister_client(r,c);
                 msg.status=0;
-                if (send_data(msgsock, &msg, sizeof(struct DriverMsg)) <= 0){
-                    std::cerr << "Error in send data. " << strerror(errno) << std::endl;
-                }
+                send_data(msgsock, &msg, sizeof(struct DriverMsg));
                 old_seq_id=-10;
                 new_seq_id=-1;
                 break;
@@ -521,10 +503,7 @@ int main(){
                 //numclients = 0;
 		        if (verbose > 1) printf("\nAsking to set up timing info for client that is ready %i\n",numclients);
                 msg.status=0;
-		        //rval=recv_data(msgsock,&client,sizeof(struct ControlPRM));
-                if (recv_data(msgsock, &client,sizeof(struct ControlPRM)) <= 0){
-                    std::cerr << "Error in recv data. " << strerror(errno) << std::endl;
-                }
+                recv_data(msgsock, &client,sizeof(struct ControlPRM));
                 r=client.radar-1; 
                 c=client.channel-1; 
 
@@ -555,9 +534,7 @@ int main(){
 		        if (verbose > 1) std::cout << "\nclient ready\n";
                 numclients=numclients % maxclients;
                 //old_pulse_index[r][c]=index;
-                if (send_data(msgsock, &msg, sizeof(struct DriverMsg)) <= 0){
-                    std::cerr << "Error in send data. " << strerror(errno) << std::endl;
-                }
+                send_data(msgsock, &msg, sizeof(struct DriverMsg));
                 break; 
 
             case TIMING_PRETRIGGER:
@@ -700,20 +677,12 @@ int main(){
                 if (verbose > 2){
                     std::cout << "bad_transmit_times.length: " <<  bad_transmit_times.length << std::endl;
                 }
-                if (send_data(msgsock, &bad_transmit_times.length, sizeof(bad_transmit_times.length)) <= 0){
-                    std::cerr << "Error in send data. " << strerror(errno) << std::endl;
-                }
-                if (send_data(msgsock, bad_transmit_times.start_usec, sizeof(uint32_t)*bad_transmit_times.length) <= 0){
-                    std::cerr << "Error in send data. " << strerror(errno) << std::endl;
-                }
-                if (send_data(msgsock, bad_transmit_times.duration_usec, sizeof(uint32_t)*bad_transmit_times.length) <= 0){
-                    std::cerr << "Error in send data. " << strerror(errno) << std::endl;
-                }
+                send_data(msgsock, &bad_transmit_times.length, sizeof(bad_transmit_times.length));
+                send_data(msgsock, bad_transmit_times.start_usec, sizeof(uint32_t)*bad_transmit_times.length);
+                send_data(msgsock, bad_transmit_times.duration_usec, sizeof(uint32_t)*bad_transmit_times.length);
 			    msg.status=0;
                 if (verbose > 1)  std::cout << "Ending Pretrigger Setup\n";
-                if (send_data(msgsock, &msg, sizeof(struct DriverMsg)) <= 0){
-                    std::cerr << "Error in send data. " << strerror(errno) << std::endl;
-                }
+                send_data(msgsock, &msg, sizeof(struct DriverMsg));
 
                 gettimeofday(&t6,NULL);
                 elapsed=(t6.tv_sec-t0.tv_sec)*1E6;
@@ -771,9 +740,7 @@ int main(){
                 //tx_threads.join_all();
                 //receive_threads.join_all();
 
-                if (send_data(msgsock, &msg, sizeof(struct DriverMsg)) <= 0){
-                    std::cerr << "Error in send data. " << strerror(errno) << std::endl;
-                }
+                send_data(msgsock, &msg, sizeof(struct DriverMsg));
 
                 gettimeofday(&t6,NULL);
                 elapsed=(t6.tv_sec-t0.tv_sec)*1E6;
@@ -789,9 +756,7 @@ int main(){
                 msg.status=0;
                 if (verbose > 1) std::cout << "Read msg struct from tcp socket!\n";
                 if (verbose > 1 ) std::cout << "End Timing Card GPS trigger\n";
-                if (send_data(msgsock, &msg, sizeof(struct DriverMsg)) <= 0){
-                    std::cerr << "Error in send data. " << strerror(errno) << std::endl;
-                }
+                send_data(msgsock, &msg, sizeof(struct DriverMsg));
                 break;
 
 		    case TIMING_WAIT:
@@ -802,15 +767,11 @@ int main(){
                 //dead_flag=0;
                 
                 if (verbose > 1)  std::cout << "Ending Wait \n\n";
-                if (send_data(msgsock, &msg, sizeof(struct DriverMsg)) <= 0){
-                    std::cerr << "Error in send data. " << strerror(errno) << std::endl;
-                }
+                send_data(msgsock, &msg, sizeof(struct DriverMsg));
 
 			    break;
 
             case TIMING_POSTTRIGGER:
-                //receive_threads.join_all();
-                //nactiveclients=numclients;
                 tx.clear_channel_list();
                 numclients=0;
                 if (verbose > 1) std::cout << "Post trigger.  Un-readying all clients\n\n";
@@ -819,9 +780,7 @@ int main(){
                         ready_index[r][c]=-1;
                     }
                 }
-                if (send_data(msgsock, &msg, sizeof(struct DriverMsg)) <= 0){
-                    std::cerr << "Error in send data. " << strerror(errno) << std::endl;
-                }
+                send_data(msgsock, &msg, sizeof(struct DriverMsg));
                 break;
 
             case RECV_GET_DATA:
@@ -849,13 +808,9 @@ int main(){
 			    	if (verbose>1) printf("Status okay!!\n");
 			    }
 
-                if (recv_data(msgsock, &client,sizeof(struct ControlPRM)) <= 0){
-                    std::cerr << "Error in recv data. " << strerror(errno) << std::endl;
-                }
+                recv_data(msgsock, &client,sizeof(struct ControlPRM));
                 if (rval < 1) std::cerr << "\n!!!\n\nRVAL: " << rval << "\n\n" << std::endl;
-                if (send_data(msgsock, &rx_status_flag, sizeof(int)) <= 0){
-                    std::cerr << "Error in send data. " << strerror(errno) << std::endl;
-                }
+                send_data(msgsock, &rx_status_flag, sizeof(int));
 
 			    if (verbose>1)std::cout << "Client asking for rx samples (Radar,Channel): " <<
 			    	client.radar << " " << client.channel << std::endl;
@@ -963,21 +918,13 @@ int main(){
 			        std::cout << "r: " << r << "\tc: " << c << std::endl;
 			      }
 			      shm_memory=1; // Flag used to indicate to client if shared memory (mmap()) is used. 1 for yes.
-                  if (send_data(msgsock, &shm_memory, sizeof(shm_memory)) <= 0){
-                      std::cerr << "Error in send data. " << strerror(errno) << std::endl;
-                  }
+                  send_data(msgsock, &shm_memory, sizeof(shm_memory));
 			      frame_offset=0;  // The GC316 cards normally produce rx data w/ a header of length 2 samples. 0 for usrp.
-                  if (send_data(msgsock, &frame_offset, sizeof(frame_offset)) <= 0){
-                      std::cerr << "Error in send data. " << strerror(errno) << std::endl;
-                  }
+                  send_data(msgsock, &frame_offset, sizeof(frame_offset));
 			      dma_buffer=0; // Flag used to indicate to client if DMA tranfer is used. 1 for yes.
-                  if (send_data(msgsock, &dma_buffer, sizeof(dma_buffer)) <= 0){
-                      std::cerr << "Error in send data. " << strerror(errno) << std::endl;
-                  }
+                  send_data(msgsock, &dma_buffer, sizeof(dma_buffer));
 			      //nrx_samples=client.number_of_samples;
-                  if (send_data(msgsock, &client.number_of_samples, sizeof(client.number_of_samples)) <= 0){
-                      std::cerr << "Error in send data. " << strerror(errno) << std::endl;
-                  }
+                  send_data(msgsock, &client.number_of_samples, sizeof(client.number_of_samples));
 			      
 			      if(IMAGING==0){
                     if(verbose > 1 ) std::cout << "Using shared memory addresses..: " << 
@@ -986,9 +933,7 @@ int main(){
 			      if (verbose>1)std::cout << "Send data to client successful" << std::endl;
 			      msg.status = rx_status_flag;
 			    }
-                if (send_data(msgsock, &msg, sizeof(struct DriverMsg)) <= 0){
-                    std::cerr << "Error in send data. " << strerror(errno) << std::endl;
-                }
+                send_data(msgsock, &msg, sizeof(struct DriverMsg));
                 rx_status_flag=0;
                 gettimeofday(&t6,NULL);
                 elapsed=(t6.tv_sec-t0.tv_sec)*1E6;
@@ -1012,14 +957,8 @@ int main(){
 			    rx_process_threads.join_all();
 
 			    if(verbose > 1) std::cout << "Doing clear frequency search!!!" << std::endl;
-			    //rval=recv_data(msgsock,&clrfreq_parameters,sizeof(struct CLRFreqPRM));
-                if (recv_data(msgsock, &clrfreq_parameters,sizeof(struct CLRFreqPRM)) <= 0){
-                    std::cerr << "Error in recv data. " << strerror(errno) << std::endl;
-                }
-			    //rval=recv_data(msgsock,&client,sizeof(struct ControlPRM));
-                if (recv_data(msgsock, &client,sizeof(struct ControlPRM)) <= 0){
-                    std::cerr << "Error in recv data. " << strerror(errno) << std::endl;
-                }
+                recv_data(msgsock, &clrfreq_parameters,sizeof(struct CLRFreqPRM));
+                recv_data(msgsock, &client,sizeof(struct ControlPRM));
                 //printf("RECV_CLRFREQ for radar %i channel %i",client.radar, client.channel);
 			    if (verbose) printf("Doing clear frequency search for radar %d, channel %d\n",client.radar,client.channel);
 			    nave=0;
@@ -1091,12 +1030,8 @@ int main(){
 			    pwr2 = &pwr[(int)unusable_sideband];
 
 			    if(verbose > 0 ) printf("Send clrfreq data back\n");
-                            if (send_data(msgsock, &clrfreq_parameters, sizeof(struct CLRFreqPRM)) <= 0){
-                                std::cerr << "Error in send data. " << strerror(errno) << std::endl;
-                            }
-                            if (send_data(msgsock, &usable_bandwidth, sizeof(int)) <= 0){
-                                std::cerr << "Error in send data. " << strerror(errno) << std::endl;
-                            }
+                            send_data(msgsock, &clrfreq_parameters, sizeof(struct CLRFreqPRM));
+                            send_data(msgsock, &usable_bandwidth, sizeof(int));
                             if(verbose > 1 ) {
 			    	printf("  final values\n");
                             	printf("  start: %d\n",clrfreq_parameters.start);
@@ -1107,12 +1042,8 @@ int main(){
                 //for (int i=0; i<usable_bandwidth; i++){
                 //    std::cout << pwr2[i] << std::endl;
                 //}
-                if (send_data(msgsock, pwr2, sizeof(double)*usable_bandwidth) <= 0){
-                    std::cerr << "Error in send data. " << strerror(errno) << std::endl;
-                }
-                if (send_data(msgsock, &msg, sizeof(struct DriverMsg)) <= 0){
-                    std::cerr << "Error in send data. " << strerror(errno) << std::endl;
-                }
+                send_data(msgsock, pwr2, sizeof(double)*usable_bandwidth);
+                send_data(msgsock, &msg, sizeof(struct DriverMsg));
 
 			    //clr_fd = fopen("/tmp/clr_data.txt","a+");
 			    //for(int i=0;i<usable_bandwidth;i++){
