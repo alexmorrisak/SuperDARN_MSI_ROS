@@ -14,7 +14,7 @@
 #define S_BIT 0x80 //Scope sync
 #define P_BIT 0x10 //Phase bit.  0 for 0 degrees, 1 for 180 degrees
 
-int _decodestate(int r,int c,char state){
+int decodestate(int r,int c,char state){
 
 	int code;
 	code=0;
