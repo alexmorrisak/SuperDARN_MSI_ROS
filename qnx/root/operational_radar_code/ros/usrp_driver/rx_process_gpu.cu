@@ -509,26 +509,26 @@ void rx_process_gpu(
     they might not be.  Take care of that here if you like*/
 
     /* Frequency roll-off filter */
-    //for (int ifreq=0; ifreq<nfreqs; ifreq++){
-    //    for (int i=0;i<ntaps1;i++){
-    //            double x = 8*(2*M_PI*((float)i/ntaps1) - M_PI);
-    //            filter_taps1[ifreq][i][0] = 0.1*(0.54-0.46*cos((2*M_PI*((float)(i)+0.5))/ntaps1))
-    //            	*sin(x)/(x);
-    //            filter_taps1[ifreq][i][1] = 0.;
-    //    }
-    //    filter_taps1[ifreq][ntaps1/2][0]=0.1*1.; //handle the divide-by-zero condition
-    //}
-
-    /* Matched filter */
     for (int ifreq=0; ifreq<nfreqs; ifreq++){
         for (int i=0;i<ntaps1;i++){
-                filter_taps1[ifreq][i][0] = 0.;
+                double x = 8*(2*M_PI*((float)i/ntaps1) - M_PI);
+                filter_taps1[ifreq][i][0] = 0.1*(0.54-0.46*cos((2*M_PI*((float)(i)+0.5))/ntaps1))
+                	*sin(x)/(x);
                 filter_taps1[ifreq][i][1] = 0.;
         }
-        for (int i=ntaps1/2-dmrate1/2; i<ntaps1/2+dmrate1/2; i++){
-            filter_taps1[ifreq][i][0] = 4./dmrate1;
-        }
+        filter_taps1[ifreq][ntaps1/2][0]=0.1*1.; //handle the divide-by-zero condition
     }
+
+    /* Matched filter */
+    //for (int ifreq=0; ifreq<nfreqs; ifreq++){
+    //    for (int i=0;i<ntaps1;i++){
+    //            filter_taps1[ifreq][i][0] = 0.;
+    //            filter_taps1[ifreq][i][1] = 0.;
+    //    }
+    //    for (int i=ntaps1/2-dmrate1/4; i<ntaps1/2+dmrate1/4; i++){
+    //        filter_taps1[ifreq][i][0] = 4./dmrate1;
+    //    }
+    //}
 
     if (debug>1){
         printf("filter_taps1:\n");

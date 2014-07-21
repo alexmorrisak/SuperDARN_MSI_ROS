@@ -2,7 +2,7 @@
 #include <complex>
 #include <vector>
 
-void _convolve(
+void convolve(
     std::complex<float>* signal, 
     unsigned int signal_len,
     std::complex<float>* taps, 

@@ -43,7 +43,7 @@
 	#include "_regs_PLX9080.h"
 	#include "iniparser.h"
 	//#include "tcpsocket.h"
-	#include "decodestate.h"
+	//#include "decodestate.h"
 #ifdef __cplusplus
 	}
 #endif
@@ -64,7 +64,7 @@
 #define RXFREQ 12e6
 
 #define MIMO 1
-#define NUNITS 1
+#define NUNITS 2
 
 #define NRADARS 2
 
@@ -619,11 +619,11 @@ int main(){
                       seq_buf[r][c][seq_count[r][c]]=0;
                       seq_count[r][c]++;
                     }
-			        tx.get_seq_code_ptr(index);
+			        //tx.get_seq_code_ptr(index);
 			        //for(int i=0;i<pulseseqs[r][c][index]->len;i++){
 			        for(int i=0;i<tx.get_seq_ptr(index)->len;i++){
 			            //tempcode=_decodestate(r,c,(pulseseqs[r][c][index]->code)[i]);	
-			            tempcode=_decodestate(r,c,(tx.get_seq_ptr(index)->code)[i]);	
+			            tempcode=decodestate(r,c,(tx.get_seq_ptr(index)->code)[i]);	
 			            //for( j=0;j<step*(pulseseqs[r][c][index]->rep)[i];j++){
 			            for( j=0;j<step*(tx.get_seq_rep_ptr(index))[i];j++){
 			                seq_buf[r][c][seq_count[r][c]]=tempcode;
@@ -848,7 +848,7 @@ int main(){
                         //        std::cout << iclient << " " << j << " " << tx_bb_vecs[iclient][j] << std::endl;
                         //}
                         //std::cout << filter_taps.size() << std::endl;
-			            _convolve(&tx_bb_vecs[iclient].front(), 
+			            convolve(&tx_bb_vecs[iclient].front(), 
                             tx_bb_vecs[iclient].size(), 
                             &filter_taps.front(),
                             filter_taps.size());

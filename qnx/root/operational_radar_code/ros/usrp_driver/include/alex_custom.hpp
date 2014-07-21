@@ -1,4 +1,5 @@
-void _convolve(
+int decodestate(int r, int c, char state);
+void convolve(
     std::complex<float>* signal,
     unsigned int signal_len,
     std::complex<float>* taps,
