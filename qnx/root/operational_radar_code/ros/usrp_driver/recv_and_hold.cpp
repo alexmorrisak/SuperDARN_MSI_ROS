@@ -56,7 +56,7 @@ void recv_and_hold(
     usrp->set_command_time(start_time);
     usrp->set_gpio_attr("TXA","OUT",0x40,0x40);
 
-    usrp->set_command_time(start_time+200e-9);
+    usrp->set_command_time(start_time+1e-6);
     usrp->set_gpio_attr("TXA","OUT",0x00,0x40);
 
 

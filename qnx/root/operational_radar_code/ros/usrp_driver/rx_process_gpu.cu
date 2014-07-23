@@ -223,7 +223,7 @@ void rx_process_gpu(
     //std::vector<float> center_freqs, // center frequencies
     //std::vector<float> bws // bandwidth of each center frequency
 ){
-    int debug = 1;
+    int debug = 0;
     struct timespec t0, t1;
     struct timespec tick, tock;
     float elapsed_t, elapsed_proc_t;

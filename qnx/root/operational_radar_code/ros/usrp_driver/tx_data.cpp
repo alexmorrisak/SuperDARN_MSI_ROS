@@ -35,10 +35,12 @@ class tx_data{
     std::vector<std::vector<std::complex<int16_t> > > tx_rf_vecs; //rf data, one vector for each antenna
     std::vector<int16_t*> tx_rf_fronts;
     std::vector<std::vector<float> > tx_freqs; //Vectors of transmit frequencies, one vector for each radar
+    std::vector<std::vector<float> > time_delays; //Time delay between two adjacent transmit antennas. One vector for each radar
     size_t num_ants, num_radars, num_ants_per_radar;
     std::vector<size_t> radmap, chanmap;
     float bb_samp_rate, rf_samp_rate;
     float center_freq;
+    float samp_rate;
 
     public:
     tx_data(size_t nradars, size_t nants, float center_freq, float rf_samp_rate);
@@ -53,24 +55,23 @@ class tx_data{
 
     void make_bb_vecs(int32_t trise);
     void make_tr_times(struct TRTimes* tr_times);
+    void allocate_rf_vec_mem();
     //void add_freq(size_t radar, size_t channel, float freq);
     void clear_channel_list();
 
-    void add_pulse_seq(size_t channel, float freq, std::vector<std::complex<float> >& bb_vec);
-    void add_pulse_seq(size_t radar, size_t channel, float freq, std::vector<std::complex<float> >& bb_vec);
     size_t get_num_ants(); //Get number of antennas
     size_t get_num_ants_per_radar();
     size_t get_num_radars(); //Get number of radars
-    size_t get_num_clients(); //Get total number of clients for all radars
-    size_t get_num_clients(size_t radar); //Get number of clients for that radar
+    size_t get_num_channels(); //Get total number of clients for all radars
+    size_t get_num_channels(size_t radar); //Get number of clients for that radar
     size_t get_num_bb_samples(); //Get number of bb samples.  It is and must be the same for all radar channels!
     size_t get_num_rf_samples(); //Get number of rf samples.  It is and must be the same for all antenna channels!
     float* get_bb_vec_ptr(size_t radar);
-    void set_rf_vec_size(size_t nrf_samples); //Allocate memory for rf vectors
     void zero_rf_vec(size_t radar); //Allocate memory for rf vectors
     void set_rf_vec_ptrs(std::vector<std::complex<int16_t> *>* rf_vec_ptrs);
     int16_t** get_rf_vec_ptrs(size_t radar);
     float* get_freqs(size_t radar);
+    float* get_time_delays(size_t radar);
 };
 
 tx_data::tx_data(size_t nradars, size_t nants, float center_freq, float rf_samp_rate){
@@ -79,8 +80,10 @@ tx_data::tx_data(size_t nradars, size_t nants, float center_freq, float rf_samp_
     num_ants_per_radar = nants/nradars;
     tx_bb_vecs.resize(nradars);
     tx_freqs.resize(nradars);
+    time_delays.resize(nradars);
     tx_rf_vecs.resize(nants);
 
+    samp_rate = rf_samp_rate;
     old_index = -10;
 }
 
@@ -88,6 +91,7 @@ tx_data::~tx_data(){} //Don't need to free memory here--trust that memory alloca
 
 void tx_data::ready_client(struct ControlPRM* client){
     tx_freqs[client->radar-1].push_back(1e3*client->tfreq);
+    time_delays[client->radar-1].push_back(10*(16/2-client->tbeam)); //10 ns per antenna per beam
 }
 
 struct TSGbuf* tx_data::get_tsg_ptr(size_t index){
@@ -217,11 +221,20 @@ void tx_data::make_tr_times(struct TRTimes* tr_times){
     tr_times->duration_usec = &tr_times_durations.front();
 }
 
+void tx_data::allocate_rf_vec_mem(){
+    int tx_osr = round(samp_rate*(float)STATE_TIME*1e-6);
+    size_t nsamps = (tx_osr*seq_buf[old_index].size());
+    for (size_t i=0; i<tx_rf_vecs.size(); i++){
+        tx_rf_vecs[i].resize(nsamps);
+    }
+}
+
 
 void tx_data::clear_channel_list(){
     // Clear the frequency list for each radar
     for (int irad=0; irad<tx_freqs.size(); irad++){
         tx_freqs[irad].clear();
+        time_delays[irad].clear();
     }
 }
 
@@ -238,14 +251,14 @@ size_t tx_data::get_num_ants_per_radar(){
     return num_ants_per_radar;
 }
 
-size_t tx_data::get_num_clients(){
+size_t tx_data::get_num_channels(){
     size_t nchans=0;
     for (int i=0; i<num_radars; i++)
         nchans += tx_freqs[i].size();
     return nchans;
 }
 
-size_t tx_data::get_num_clients(size_t radar){
+size_t tx_data::get_num_channels(size_t radar){
     return tx_freqs[radar].size();
 }
 
@@ -262,19 +275,6 @@ float* tx_data::get_bb_vec_ptr(size_t radar){
     //return (float*) &tx_bb_vecs[radar].front();
     return (float*) &bb_vec.front();
 }
-
-void tx_data::set_rf_vec_size(size_t nrf_samples){
-    for (size_t i=0; i<tx_rf_vecs.size(); i++){
-        tx_rf_vecs[i].resize(nrf_samples);
-    }
-}
-
-//void tx_data::ready_client(int seq_length, float bb_samp_rate){
-//    size_t nrf_samples = seq_length * rf_samp_rate / bb_samp_rate;
-//    for (size_t i=0; i<tx_rf_vecs.size(); i++){
-//        tx_rf_vecs[i].resize(nrf_samples);
-//    }
-//}
 
 void tx_data::zero_rf_vec(size_t radar){
     for (size_t i=radar*(num_ants_per_radar); i<(radar+1)*(num_ants_per_radar); i++){
@@ -301,4 +301,8 @@ int16_t** tx_data::get_rf_vec_ptrs(size_t radar){
 
 float* tx_data::get_freqs(size_t radar){
     return (float*) &tx_freqs[radar].front();
+}
+
+float* tx_data::get_time_delays(size_t radar){
+    return (float*) &time_delays[radar].front();
 }

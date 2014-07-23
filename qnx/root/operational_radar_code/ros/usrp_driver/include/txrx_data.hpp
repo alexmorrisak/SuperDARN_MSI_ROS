@@ -19,10 +19,12 @@ class tx_data{
     std::vector<std::vector<std::complex<int16_t> > > tx_rf_vecs; //rf data, one vector for each antenna
     std::vector<int16_t*> tx_rf_fronts;
     std::vector<std::vector<float> > tx_freqs; //Vectors of transmit frequencies, one vector for each radar
+    std::vector<std::vector<float> > time_delays;
     size_t num_ants, num_radars, num_ants_per_radar;
     std::vector<size_t> radmap, chanmap;
     float bb_samp_rate, rf_samp_rate;
     float center_freq;
+    float samp_rate;
     //std::vector<size_t> nclients; //List of number of clients attached to each radar
 
     public:
@@ -38,24 +40,23 @@ class tx_data{
 
     void make_bb_vecs(int32_t trise);
     void make_tr_times(struct TRTimes* tr_times);
+    void allocate_rf_vec_mem();
     //void add_freq(size_t radar, size_t channel, float freq);
     void clear_channel_list();
 
     size_t get_num_ants(); //Get number of antennas
+    size_t get_num_ants_per_radar();
     size_t get_num_radars(); //Get number of radars
-    size_t get_num_clients(); //Get total number of clients for all radars
-    size_t get_num_clients(size_t radar); //Get number of clients for that radar
+    size_t get_num_channels(); //Get total number of clients for all radars
+    size_t get_num_channels(size_t radar); //Get number of clients for that radar
     size_t get_num_bb_samples(); //Get number of bb samples.  It is and must be the same for all radar channels!
     size_t get_num_rf_samples(); //Get number of rf samples.  It is and must be the same for all antenna channels!
-    size_t get_num_ants_per_radar();
-    float* get_bb_vec_ptr(); //Get pointer to bb vector
     float* get_bb_vec_ptr(size_t radar);
-    void set_rf_vec_size(size_t nrf_samples); //Allocate memory for rf vectors
-    void ready_client(int seq_len, float bb_samp_rate);
     void zero_rf_vec(size_t radar); //Allocate memory for rf vectors
     void set_rf_vec_ptrs(std::vector<std::complex<int16_t> *>* rf_vec_ptrs);
     int16_t** get_rf_vec_ptrs(size_t radar);
     float* get_freqs(size_t radar);
+    float* get_time_delays(size_t radar);
 };
 
 class rx_data{
@@ -87,18 +88,16 @@ class rx_data{
     rx_data(size_t nradars, size_t nants, float rxfreq, float rfrate);
     ~rx_data();
     //void add_client(size_t nsamples, float freq, float bandwidth);
-    void register_client(struct ControlPRM new_client);
-    void unregister_client(size_t radar, size_t channel);
-    void ready_client(struct ControlPRM client);
-    void drop_client();
-    void drop_client(size_t radar);
+    void ready_client(struct ControlPRM* client);
+    void reset_swing_buf();
+    void clear_channel_list();
     size_t get_num_rxfreqs();
     size_t get_num_ants(); //Get number of antennas
     size_t get_num_radars(); //Get number of radars
-    size_t get_num_clients(); //Get total number of clients for all radars
+    //size_t get_num_clients(); //Get total number of clients for all radars
     size_t get_num_clients(size_t radar); //Get number of clients for that radar
-    float* get_freqs(); //Get pointer to rx frequencies
     float* get_freqs(size_t radar);
+    //void set_freqs(std::vector<std::vector<float> >* rx_freqs);
     size_t get_num_bb_samples(); //Get number of bb samples.  It is and must be the same for all clients!
     size_t get_num_rf_samples(); //Get number of rf samples.  It is and must be the same for all antenna channels!
     size_t get_num_ants_per_radar();

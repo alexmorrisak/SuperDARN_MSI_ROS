@@ -27,11 +27,11 @@
 #include <boost/format.hpp>
 
 //Added by Alex for signal processing
-#include <alex_custom.hpp>
-#include <txrx_data.hpp>
+#include "alex_custom.hpp"
+#include "txrx_data.hpp"
 #include <math.h>
-#include <cuda_prog.h>
-#include <socket_utils.hpp>
+#include "cuda_prog.h"
+#include "socket_utils.hpp"
 
 #ifdef __cplusplus
 	extern "C" {
@@ -124,14 +124,8 @@ int main(){
     // DECLARE AND INITIALIZE ANY NECESSARY VARIABLES
     int     maxclients=MAX_RADARS*MAX_CHANNELS+1;
     struct  ControlPRM  clients[maxclients], client;
-    //struct  TSGbuf *pulseseqs[MAX_RADARS][MAX_CHANNELS][MAX_SEQS];
     struct  CLRFreqPRM clrfreq_parameters;
-    //struct  TSGprm *tsgparams[MAX_RADARS][MAX_CHANNELS][MAX_SEQS];
-    //int seq_count[MAX_RADARS][MAX_CHANNELS];
-    //int old_pulse_index[MAX_RADARS][MAX_CHANNELS];
     int ready_index[MAX_RADARS][MAX_CHANNELS];
-	//unsigned int	*master_buf;
-	//char* master_buf;
     int old_seq_id=-10;
     int new_seq_id=-1;
 	int old_beam=-1;
@@ -179,6 +173,7 @@ int main(){
 	std::vector<fc32> filter_taps;//filter taps for baseband filtering of tx signal
     std::vector<std::vector<fc32> > tx_bb_vecs;
 	std::vector<sc16 *> tx_vec_ptrs;
+    std::vector<std::vector<float> > rx_freq_vec; //rx_freq_vec[nradars][nchannels]
 
 	std::vector<sc16 *> rx_vec_ptrs;
     std::vector<std::complex<float>* > bb_vec_ptrs;
@@ -198,11 +193,12 @@ int main(){
     //tx_data tx(1, 1, TXFREQ, TXRATE);
     //rx_data rx(1,2,RXFREQ, RXRATE);
     /* Example dual-site radar configuration, non-imaging*/
-    tx_data tx(2, 2, TXFREQ, TXRATE);
-    rx_data rx(2,4,RXFREQ, RXRATE);
+    //tx_data tx(2, 2, TXFREQ, TXRATE);
+    //rx_data rx(2,4,RXFREQ, RXRATE);
     /* For testing*/
-    //tx_data tx(1, NUNITS, TXFREQ, TXRATE);
-    //rx_data rx(1, 2*NUNITS, RXFREQ, RXRATE);
+    tx_data tx(1, NUNITS, TXFREQ, TXRATE);
+    rx_data rx(1, 2*NUNITS, RXFREQ, RXRATE);
+    rx_freq_vec.resize(1);
 
 	// Swing buffered.
 	unsigned int iseq=0;
@@ -463,7 +459,7 @@ int main(){
                 c=client.channel-1; 
 
                 if (verbose>1) std::cout << "Registering rx client radar " << r << " channel " << c << std::endl;
-                rx.register_client(client);
+                //rx.register_client(client);
                 if (verbose>1) std::cout << "Registering tx client\n";
                 //tx.register_client(client);
 
@@ -492,7 +488,7 @@ int main(){
                 r=client.radar-1;
                 c=client.channel-1;
                 //tx.unregister_client(r,c);
-                rx.unregister_client(r,c);
+                //rx.unregister_client(r,c);
                 msg.status=0;
                 send_data(msgsock, &msg, sizeof(struct DriverMsg));
                 old_seq_id=-10;
@@ -507,7 +503,8 @@ int main(){
                 r=client.radar-1; 
                 c=client.channel-1; 
 
-                rx.ready_client(client);
+                //rx.ready_client(cient);
+                rx.ready_client(&client);
                 tx.ready_client(&client);
                 
                 if ((ready_index[r][c]>=0) && (ready_index[r][c] <maxclients) ) {
@@ -522,8 +519,8 @@ int main(){
 			    if (verbose > 1) std::cout << "Radar: " << client.radar << " Channel: " << client.channel <<
 					" Beamnum: " << client.tbeam << " Status: " << msg.status << "\n";
 
-                time_delays.resize(tx.get_num_clients());
-                for (size_t i=0; i< tx.get_num_clients(); i++)
+                time_delays.resize(tx.get_num_channels());
+                for (size_t i=0; i< tx.get_num_channels(); i++)
 			        time_delays[i] = 10 * (16/2-client.tbeam); // 10 ns per antenna per beam
 
                 index=client.current_pulseseq_index; 
@@ -533,18 +530,16 @@ int main(){
                 if (numclients >= maxclients) msg.status=-2;
 		        if (verbose > 1) std::cout << "\nclient ready\n";
                 numclients=numclients % maxclients;
-                //old_pulse_index[r][c]=index;
                 send_data(msgsock, &msg, sizeof(struct DriverMsg));
                 break; 
 
             case TIMING_PRETRIGGER:
                 gettimeofday(&t0,NULL);
 			    if(verbose > 1 ) std::cout << "Setup Timing Card for next trigger\n";
-                    msg.status=0;
-		        //if (verbose > 1) std::cout << "Max Seq length: " << max_seq_count <<
-				//	 " Num clients: " << numclients << "\n";	
+                msg.status=0;
                 new_seq_id=-1;
 			    new_beam=client.tbeam;
+
 	            for(int i=0; i<numclients; i++){
                     r=clients[i].radar-1;
                     c=clients[i].channel-1;
@@ -552,8 +547,8 @@ int main(){
                     if (verbose > 1) std::cout << i << " " <<
                         new_seq_id << " " << clients[i].current_pulseseq_index << "\n";
                 }
-                if (verbose > 1) std::cout << "Timing Driver: " << new_seq_id << " " << old_seq_id << "\n";
 
+                if (verbose > 1) std::cout << "new, old sequence id's: " << new_seq_id << " " << old_seq_id << "\n";
 
                 tx.make_bb_vecs(clients[0].trise);
                 if ((new_seq_id!=old_seq_id) | (new_beam != old_beam)) // A new integration period is happening so set iseq to zero
@@ -578,6 +573,7 @@ int main(){
                     if (verbose > -1) std::cout << "Calculating Master sequence " << old_seq_id << " " << new_seq_id << "\n";
                     //max_seq_count=0;
 
+                    rx.reset_swing_buf();
                     tx.make_tr_times(&bad_transmit_times);
 
                     //    /* Handle Scope Sync Signal logic */
@@ -636,17 +632,21 @@ int main(){
                     rx_process_threads.join_all(); //Make sure rx processing is done so that we have exclusive access to the GPU
 
                     clock_gettime(CLOCK_MONOTONIC, &tx0);
-				    tx_osr = round(TXRATE * ((float)STATE_TIME*1e-6));
-                    tx.set_rf_vec_size(tx_osr*tx.get_seqbuf_len(index));
-                    for (size_t iradar=0; iradar<tx.get_num_radars(); iradar++){ //Deal with each radar at the site
+                    tx.allocate_rf_vec_mem();
+                    /* Process the waveforms for each radar*/
+                    for (size_t iradar=0; iradar<tx.get_num_radars(); iradar++){
                         std::cout << "Radar " << iradar << 
-                            " number of channels: " << tx.get_num_clients(iradar) << std::endl;
+                            " number of channels: " << tx.get_num_channels(iradar) << std::endl;
 
-                        if (tx.get_num_clients(iradar) == 0){ 
+                        if (tx.get_num_channels(iradar) == 0){ 
                             tx.zero_rf_vec(iradar);
                             continue;
                         }
                         if(verbose>1)std::cout << "about to enter tx_process_gpu\n";
+                        for (int i=0; i<tx.get_num_channels(iradar); i++){
+                            std::cout << "time delay " << i << ": " << 
+                                (tx.get_time_delays(iradar))[i] << std::endl;
+                        }
 				        tx_process_gpu(
                             tx.get_bb_vec_ptr(iradar),
                             tx.get_rf_vec_ptrs(iradar),
@@ -655,8 +655,9 @@ int main(){
 				        	usrp->get_tx_freq(),
                             TXRATE,
                             tx.get_freqs(iradar), // List of center frequencies for this radar
-				        	&time_delays.front(), // Vector of beam-forming-related time delays
-                            tx.get_num_clients(iradar), // Number of channels for this radar
+                            tx.get_time_delays(iradar),
+                            //&time_delays.front(),
+                            tx.get_num_channels(iradar), // Number of channels for this radar
                             tx.get_num_ants_per_radar()); //number of antennas per radar
                     }
 
@@ -719,7 +720,7 @@ int main(){
                     rx.set_rf_vec_ptrs(&rx_vec_ptrs);
                     tx.set_rf_vec_ptrs(&tx_vec_ptrs);
 
-			        uhd::time_spec_t start_time = usrp->get_time_now() + 0.01;
+			        uhd::time_spec_t start_time = usrp->get_time_now() + 0.05;
                     gettimeofday(&t1,NULL);
 		            receive_threads.create_thread(boost::bind(recv_and_hold,
                         &bad_transmit_times,
@@ -773,6 +774,8 @@ int main(){
 
             case TIMING_POSTTRIGGER:
                 tx.clear_channel_list();
+                //rx.set_freqs(&rx_freq_vec);
+                rx.clear_channel_list();
                 numclients=0;
                 if (verbose > 1) std::cout << "Post trigger.  Un-readying all clients\n\n";
                 for (r=0;r<MAX_RADARS;r++){
@@ -818,15 +821,16 @@ int main(){
 			    r = client.radar-1; c = client.channel-1;
 	
                 if (verbose > 2){
-                    std::cout << r << " " << c << std::endl;
-                    std::cout << rx.get_rf_dptr(r) << std::endl;
-                    std::cout << rx.get_bb_dptr(r) << std::endl;
-                    std::cout << rx.get_num_rf_samples() << std::endl;
-                    std::cout << rx.get_num_bb_samples() << std::endl;
-                    std::cout << rx.get_num_clients(r) << std::endl;
-                    std::cout << rx.get_num_ants_per_radar() << std::endl;
-                    std::cout << (float) RXRATE << std::endl;
-                    std::cout << (float) client.baseband_samplerate << std::endl;
+                    std::cout << "radar: " << r << " channel: " << c << "\n";
+                    std::cout << "bb_dptr: " << rx.get_bb_dptr(r) << std::endl;
+                    std::cout << "rf dptr: " << rx.get_rf_dptr(r) << std::endl;
+                    std::cout << "nrf_samples: " << rx.get_num_rf_samples() << std::endl;
+                    std::cout << "nbb_samples: " << rx.get_num_bb_samples() << std::endl;
+                    std::cout << "nchannels: " << rx.get_num_clients(r) << std::endl;
+                    std::cout << "nants per radar: " << rx.get_num_ants_per_radar() << std::endl;
+                    std::cout << "high sample rate: " << (float) RXRATE << std::endl;
+                    std::cout << "low sample rate: " << (float) client.baseband_samplerate << std::endl;
+                    std::cout << "frequency offsets: ";
                     for (size_t i=0; i<rx.get_num_clients(r); i++){
                         std::cout << (rx.get_freqs(r))[i] << std::endl;
                     }
@@ -839,9 +843,11 @@ int main(){
                         rx.get_num_rf_samples(),
                         rx.get_num_bb_samples(),
 			        	rx.get_num_clients(r),
+                        //rx_freq_vec[r].size(),
 			        	rx.get_num_ants_per_radar(),
 			        	(float) RXRATE,
 			        	(float) client.baseband_samplerate,
+                        //&rx_freq_vec[r].front()));
                         rx.get_freqs(r)));
                 }
                 
