@@ -93,12 +93,13 @@ void tx_process_gpu(
     size_t nchannels, // number of beam directions and/or center frequency channels
     size_t nants // number of antennas
 ){
-   printf("Entering tx_process_gpu\n");
+   int debug = 0;
+   if (debug) printf("Entering tx_process_gpu\n");
    float mixer_freqs[nchannels];
    float phase_delays[nchannels];
 
    //Calculate mixer frequencies
-   printf("calculating mixer freqs\n");
+   if (debug) printf("calculating mixer freqs\n");
    for(size_t c=0; c<nchannels; c++){
     mixer_freqs[c] = 2*M_PI*(center_freqs[c] - usrp_center_freq) / usrp_samp_rate;
    }
@@ -106,19 +107,19 @@ void tx_process_gpu(
    //Calculate phase delays
    for(size_t c=0; c<nchannels; c++){
     float rad_phase = fmod(2*M_PI*1e-9*time_delays[c]*center_freqs[c], 2*M_PI);
-    printf("rad_phase: %f\n", rad_phase);
+    if (debug) printf("rad_phase: %f\n", rad_phase);
     phase_delays[c] = rad_phase;
    }
 
    // Allocate memory for input vectors and copy data to GPU
-   printf("allocating input samples\n");
+   if (debug) printf("allocating input samples\n");
    float* bbvec_d; 
    cudaMalloc((void**)&bbvec_d, 2*(nbb_samples+1)*sizeof(float));
    cudaMemset(bbvec_d, 0, 2*(nbb_samples+1)*sizeof(float));
    cudaMemcpy(bbvec_d, input_bb, 2*nbb_samples*sizeof(float), cudaMemcpyHostToDevice);
 
    // Allocate memory for output vectors and their pointers
-   printf("allocating output sample memory\n");
+   if (debug) printf("allocating output sample memory\n");
    int16_t** rfvecptrs_d;
    int16_t* rfvecs_d[nants];
    int16_t* rfvecs_h[nants];
@@ -140,18 +141,18 @@ void tx_process_gpu(
    cudaMemcpy(pds_d, phase_delays, nchannels*sizeof(float), cudaMemcpyHostToDevice);
 
    //Launch Kernel
-   printf("Launching kernel\n");
+   if (debug) printf("Launching kernel\n");
    dim3 dimGrid(nbb_samples, nants, 1);
    dim3 dimBlock(nrf_samples/nbb_samples, nchannels, 1);
    interpolate_and_multiply<<<dimGrid,dimBlock>>>(bbvec_d, rfvecptrs_d, mxrs_d, pds_d);
 
-   printf("copy back\n");
+   if (debug) printf("copy back\n");
    //Copy output data back to host and free memory
    for (int i=0; i<nants; i++){
     cudaMemcpy(outputs_rf[i], rfvecs_d[i], 2*nrf_samples*sizeof(int16_t), cudaMemcpyDeviceToHost);
     cudaFree(rfvecs_d[i]);
    }
-   printf("free\n");
+   if (debug) printf("free\n");
 
    //Free other device memory
    cudaFree(rfvecptrs_d);

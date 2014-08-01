@@ -131,7 +131,7 @@ size_t tx_data::get_seqbuf_len(size_t index){
 }
 
 void tx_data::make_bb_vecs(int32_t trise){
-    std::vector<float> taps((size_t)(25e3/trise), trise/25.e3/4);
+    std::vector<float> taps((size_t)(25e3/trise), trise/25.e3/2);
     std::vector<std::complex<float> > rawsignal(seq_buf[old_index].size());
 
     bb_vec.resize(seq_buf[old_index].size(),0);
@@ -194,7 +194,7 @@ void tx_data::make_tr_times(struct TRTimes* tr_times){
     for (size_t i=0; i<seq_buf[old_index].size(); i++){
         if ((seq_buf[old_index][i] & TR_BIT) == TR_BIT){
             if (tr_event==0){
-                std::cout << "TR sample start: " << i << std::endl;
+                if (verbose) std::cout << "TR sample start: " << i << std::endl;
                 tr_times->length++;
                 if (tr_times->length > 0 && tr_times->length < MAX_PULSES){
                     tr_times_starts.push_back(i*STATE_TIME);
@@ -212,7 +212,7 @@ void tx_data::make_tr_times(struct TRTimes* tr_times){
         }
         else {
             if (tr_event == 1 && verbose > 1){
-                std::cout << "TR sample end: " << i << std::endl;
+                if (verbose) std::cout << "TR sample end: " << i << std::endl;
             }
             tr_event = 0;
         }
