@@ -14,9 +14,6 @@ void rx_beamform(
     std::vector<std::complex<float> >* beamform_main,
     std::vector<std::complex<float> >* beamform_back);
 void recv_and_hold(
-    //unsigned int* trtimes,
-    //unsigned int* trdurations,
-    //unsigned int npulses,
     struct TRTimes* trtimes,
     uhd::usrp::multi_usrp::sptr usrp,
     uhd::rx_streamer::sptr rx_stream,
@@ -46,8 +43,10 @@ void recv_to_buffer(
 int recv_clr_freq(
     uhd::usrp::multi_usrp::sptr usrp,
     uhd::rx_streamer::sptr rx_stream,
-    int bandwidth,
-    int naverages,
+    size_t span,
+    size_t bandwidth,
+    size_t nave,
+    double time_delay,
     double *pwr);
 int tx_mix_upsample(
     std::vector<std::complex<float> >*input_bb,//input vector (same tx sequence for all antennas)

@@ -45,7 +45,7 @@ void rx_beamform(
     std::vector<std::complex<float> >* beamform_main,
     std::vector<std::complex<float> >* beamform_back)
 {
-    int debug=10;
+    int debug=0;
     /* Full Imaging Configuration*/
     if (nants_main==16 && nants_back==4){
         if (debug) printf("Using Full imaging configuration\n");

@@ -118,7 +118,9 @@ int rx_thread_status=0;
 int rx_clrfreq_rval=0;
 int usable_bandwidth,N,start,end;
 double search_bandwidth,unusable_sideband;
-double *pwr=NULL,*pwr2=NULL;
+//double *pwr=NULL,*pwr2=NULL;
+std::vector<double> pwr;
+std::vector<double> pwr2;
 FILE *clr_fd;
 int main(){
     // DECLARE AND INITIALIZE ANY NECESSARY VARIABLES
@@ -199,7 +201,7 @@ int main(){
 	// Swing buffered.
 	unsigned int iseq=0;
 
-    std::vector<float> time_delays;//,pd;
+    double time_delay;
 
 	//variables to be used as arguments to setup the usrp device(s)
 	std::string args, txsubdev, rxsubdev;
@@ -515,9 +517,9 @@ int main(){
 			    if (verbose > 1) std::cout << "Radar: " << client.radar << " Channel: " << client.channel <<
 					" Beamnum: " << client.tbeam << " Status: " << msg.status << "\n";
 
-                time_delays.resize(tx.get_num_channels());
-                for (size_t i=0; i< tx.get_num_channels(); i++)
-			        time_delays[i] = 10 * (16/2-client.tbeam); // 10 ns per antenna per beam
+                //time_delays.resize(tx.get_num_channels());
+                //for (size_t i=0; i< tx.get_num_channels(); i++)
+			    //    time_delays[i] = 10 * (16/2-client.tbeam); // 10 ns per antenna per beam
 
                 index=client.current_pulseseq_index; 
 
@@ -647,7 +649,6 @@ int main(){
                             TXRATE,
                             tx.get_freqs(iradar), // List of center frequencies for this radar
                             tx.get_time_delays(iradar),
-                            //&time_delays.front(),
                             tx.get_num_channels(iradar), // Number of channels for this radar
                             tx.get_num_ants_per_radar()); //number of antennas per radar
                     }
@@ -962,8 +963,8 @@ int main(){
 			    //Set the rx center frequency
 			    //Set the rx sample rate
 			    for(int chan = 0; chan < nrx_antennas; chan++) {
-			            usrp->set_rx_freq(center, chan);
-			            usrp->set_rx_rate(1000*N, chan);
+			            usrp->set_rx_freq(1e3*center, chan);
+			            usrp->set_rx_rate(1e6, chan);
 			    	    //N = (int) (usrp->get_rx_rate() / 1000);
 			    if(verbose>-1) std::cout << "Actual RX rate for clr freq search: " << N << " kHz\n";
 			    }
@@ -988,20 +989,34 @@ int main(){
                     printf("Malloc fftw_complex arrays %d\n",N);
 			    }
 
-                if(pwr!=NULL) {free(pwr);pwr=NULL;}
-                pwr = (double*) malloc(N*sizeof(double));
-			    for(int i=0;i<N;i++)
-			    	pwr[i]=0.;
+                //if(pwr!=NULL) {free(pwr);pwr=NULL;}
+                //pwr = (double*) malloc(N*sizeof(double));
+                pwr.clear();
+                pwr2.clear();
+                pwr.resize(N,0);
+                pwr2.resize(usable_bandwidth,0);
+			    //for(int i=0;i<N;i++)
+			    //	pwr[i]=0.;
                 //if(pwr2!=NULL) {free(pwr2);pwr2=NULL;}
                 //pwr2 = (double*) malloc(N*sizeof(double));
 
 			    if(verbose>1)std::cout << "starting clr freq search\n";
+                std::cout << "beam direction: " << client.tbeam << std::endl;
+                std::cout << "beam direction: " << client.filter_bandwidth << std::endl;
+                time_delay = 10*(16/2-client.tbeam);
 
                 //usrp->set_rx_freq(1e3*center);
                 //usrp->set_rx_rate(1e3*center);
-			    rx_clrfreq_rval= recv_clr_freq(usrp,rx_stream,search_bandwidth,clrfreq_parameters.nave,pwr);
+			    rx_clrfreq_rval= recv_clr_freq(
+                    usrp,
+                    rx_stream,
+                    usable_bandwidth,
+                    (int) client.filter_bandwidth/1e3,
+                    clrfreq_parameters.nave,
+                    10,
+                    &pwr2.front());
 	
-			    pwr2 = &pwr[(int)unusable_sideband];
+			    //pwr2 = &pwr[(int)unusable_sideband];
 
 			    if(verbose > 0 ) printf("Send clrfreq data back\n");
                             send_data(msgsock, &clrfreq_parameters, sizeof(struct CLRFreqPRM));
@@ -1016,7 +1031,7 @@ int main(){
                 //for (int i=0; i<usable_bandwidth; i++){
                 //    std::cout << pwr2[i] << std::endl;
                 //}
-                send_data(msgsock, pwr2, sizeof(double)*usable_bandwidth);
+                send_data(msgsock, &pwr2.front(), sizeof(double)*usable_bandwidth);
                 send_data(msgsock, &msg, sizeof(struct DriverMsg));
 
 			    //clr_fd = fopen("/tmp/clr_data.txt","a+");
@@ -1026,7 +1041,7 @@ int main(){
                             //  }
                             //fclose(clr_fd);
 
-                if(pwr!=NULL) {free(pwr);pwr=NULL;}
+                //if(pwr!=NULL) {free(pwr);pwr=NULL;}
 			    /* The following free causes crash because pwr2 is in use by the arby_server.
 			    Does arby_server free() this pointer?  Or is this a memory leak? (AFM)*/
                             //if(pwr2!=NULL) {free(pwr2);pwr2=NULL;}
