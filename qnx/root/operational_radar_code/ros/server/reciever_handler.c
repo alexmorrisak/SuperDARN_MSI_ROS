@@ -20,10 +20,9 @@
 #define MAX_SAMPLES 262144
 
 extern int recvsock;
-extern int timingsock;
+extern int usrpsock;
 extern int verbose;
-extern pthread_mutex_t recv_comm_lock, thread_list_lock;
-extern pthread_mutex_t timing_comm_lock;
+extern pthread_mutex_t recv_comm_lock, thread_list_lock, usrp_comm_lock;
 extern int *ready_state_pointer;
 extern struct Thread_List_Item *controlprogram_threads;
 extern struct BlackList *blacklist;
@@ -53,22 +52,21 @@ int compare_structs(const void *a, const void *b){
 void *receiver_rxfe_settings(void *arg) {
 
   struct DriverMsg msg;
-  memset(&msg, 0, sizeof(msg));
   struct SiteSettings *site_settings;
 
   site_settings=arg;
-  pthread_mutex_lock(&timing_comm_lock);
+  pthread_mutex_lock(&recv_comm_lock);
 //  printf("RECV_rxfe_settins\n");
   if (site_settings!=NULL) {
     msg.type=RECV_RXFE_SETTINGS;
     msg.status=1;
-    send_data(recvsock, &msg, sizeof(struct DriverMsg));
-    send_data(recvsock, &site_settings->ifmode, sizeof(site_settings->ifmode));
-    send_data(recvsock, &site_settings->rf_settings, sizeof(struct RXFESettings));
-    send_data(recvsock, &site_settings->if_settings, sizeof(struct RXFESettings));
-    recv_data(recvsock, &msg, sizeof(struct DriverMsg));                                    
+    if (recvsock>0) send_data(recvsock, &msg, sizeof(struct DriverMsg));
+    if (recvsock>0) send_data(recvsock, &site_settings->ifmode, sizeof(site_settings->ifmode));
+    if (recvsock>0) send_data(recvsock, &site_settings->rf_settings, sizeof(struct RXFESettings));
+    if (recvsock>0) send_data(recvsock, &site_settings->if_settings, sizeof(struct RXFESettings));
+    if (recvsock>0) recv_data(recvsock, &msg, sizeof(struct DriverMsg));                                    
   }                                                                                        
-  pthread_mutex_unlock(&timing_comm_lock);
+  pthread_mutex_unlock(&recv_comm_lock);
 }                                                           
 
 void receiver_assign_frequency(struct ControlProgram *arg){
@@ -702,34 +700,33 @@ void receiver_exit(void *arg)
 void *receiver_end_controlprogram(struct ControlProgram *arg)
 {
   struct DriverMsg msg;
-  pthread_mutex_lock(&timing_comm_lock);
+  pthread_mutex_lock(&recv_comm_lock);
   if (arg!=NULL) {
      if (arg->state->pulseseqs[arg->parameters->current_pulseseq_index]!=NULL) {
        msg.type=RECV_CtrlProg_END;
        msg.status=1;
-       send_data(recvsock, &msg, sizeof(struct DriverMsg));
-       send_data(recvsock, arg->parameters, sizeof(struct ControlPRM));
+       if (recvsock>0) send_data(recvsock, &msg, sizeof(struct DriverMsg));
+       if (recvsock>0) send_data(recvsock, arg->parameters, sizeof(struct ControlPRM));
      }
   }
-  pthread_mutex_unlock(&timing_comm_lock);
+  pthread_mutex_unlock(&recv_comm_lock);
   pthread_exit(NULL);
 };
 
 void *receiver_ready_controlprogram(struct ControlProgram *arg)
 {
   struct DriverMsg msg;
-  memset(&msg,0,sizeof(msg));
-  pthread_mutex_lock(&timing_comm_lock);
+  pthread_mutex_lock(&recv_comm_lock);
   if (arg!=NULL) {
      if (arg->state->pulseseqs[arg->parameters->current_pulseseq_index]!=NULL) {
        msg.type=RECV_CtrlProg_READY;
        msg.status=1;
-       send_data(recvsock, &msg, sizeof(struct DriverMsg));
-       send_data(recvsock, arg->parameters, sizeof(struct ControlPRM));
-       recv_data(recvsock, &msg, sizeof(struct DriverMsg));
+       if (recvsock>0) send_data(recvsock, &msg, sizeof(struct DriverMsg));
+       if (recvsock>0) send_data(recvsock, arg->parameters, sizeof(struct ControlPRM));
+       if (recvsock>0) recv_data(recvsock, &msg, sizeof(struct DriverMsg));
      } 
   }
-  pthread_mutex_unlock(&timing_comm_lock);
+  pthread_mutex_unlock(&recv_comm_lock);
   pthread_exit(NULL);
 };
 
@@ -737,16 +734,13 @@ void *receiver_pretrigger(void *arg)
 {
   int rval;
   struct DriverMsg msg;
-  memset(&msg,0,sizeof(msg));
-  pthread_mutex_lock(&timing_comm_lock);
+  pthread_mutex_lock(&recv_comm_lock);
 
    msg.type=RECV_PRETRIGGER;
    msg.status=1;
-   send_data(recvsock, &msg, sizeof(struct DriverMsg));
-   printf("RECV_PRETRIGGER: recvsock: %i\n", recvsock);
-   rval=recv_data(recvsock, &msg, sizeof(struct DriverMsg));
-   if (rval<=0) {printf("\nERROR in recv_data()\n%s!!\n\n",strerror(errno));}
-   pthread_mutex_unlock(&timing_comm_lock);
+   if (recvsock>0) send_data(recvsock, &msg, sizeof(struct DriverMsg));
+   if (recvsock>0) recv_data(recvsock, &msg, sizeof(struct DriverMsg));
+   pthread_mutex_unlock(&recv_comm_lock);
    pthread_exit(NULL);
 
 };
@@ -754,13 +748,13 @@ void *receiver_pretrigger(void *arg)
 void *receiver_posttrigger(void *arg)
 {
   struct DriverMsg msg;
-  pthread_mutex_lock(&timing_comm_lock);
+  pthread_mutex_lock(&recv_comm_lock);
 
    msg.type=RECV_POSTTRIGGER;
    msg.status=1;
-   send_data(recvsock, &msg, sizeof(struct DriverMsg));
-   recv_data(recvsock, &msg, sizeof(struct DriverMsg));
-   pthread_mutex_unlock(&timing_comm_lock);
+   if (recvsock>0) send_data(recvsock, &msg, sizeof(struct DriverMsg));
+   if (recvsock>0) recv_data(recvsock, &msg, sizeof(struct DriverMsg));
+   pthread_mutex_unlock(&recv_comm_lock);
    pthread_exit(NULL);
 };
 
@@ -796,7 +790,8 @@ void *receiver_controlprogram_get_data(struct ControlProgram *arg)
           usleep(1);
         }
       } 
-      pthread_mutex_lock(&timing_comm_lock);
+      pthread_mutex_lock(&usrp_comm_lock);
+      pthread_mutex_lock(&recv_comm_lock);
       collection_count++;
       if (error_flag==0) {
         arg->data->samples=arg->parameters->number_of_samples;
@@ -809,10 +804,12 @@ void *receiver_controlprogram_get_data(struct ControlProgram *arg)
         msg.type=RECV_GET_DATA;
         msg.status=1;
         printf("Entering RECV_GET_DATA radar %i channel %i\n", arg->parameters->radar, arg->parameters->channel);
-        send_data(timingsock, &msg, sizeof(struct DriverMsg));
-        send_data(timingsock, arg->parameters, sizeof(struct ControlPRM));
-        rval = recv_data(timingsock,&arg->data->status,sizeof(arg->data->status));
-        if (rval<=0) {printf("\nERROR in recv_data()\n%s!!\n\n",strerror(errno));}
+        if (usrpsock>0) send_data(usrpsock, &msg, sizeof(struct DriverMsg));
+        if (recvsock>0) send_data(recvsock, &msg, sizeof(struct DriverMsg));
+        if (usrpsock>0) send_data(usrpsock, arg->parameters, sizeof(struct ControlPRM));
+        if (recvsock>0) send_data(recvsock, arg->parameters, sizeof(struct ControlPRM));
+        if (usrpsock>0) recv_data(usrpsock,&arg->data->status,sizeof(arg->data->status));
+        if (recvsock>0) recv_data(recvsock,&arg->data->status,sizeof(arg->data->status));
       } else {
         arg->data->status=error_flag;
         arg->data->samples=0;
@@ -820,27 +817,21 @@ void *receiver_controlprogram_get_data(struct ControlProgram *arg)
       printf("arg->data->status: %i, rval: %i\n", arg->data->status, rval);
       if (arg->data->status==0 & rval>0) {
         printf("RECV: GET_DATA: status good\n");
-        //printf("rval: %i\n",rval);
-        rval=recv_data(timingsock,&arg->data->shm_memory,sizeof(arg->data->shm_memory));
-        if (rval<=0) {printf("\nERROR in recv_data()\n%s!!\n\n",strerror(errno));}
-        printf("shm_memory %i rval: %i\n", arg->data->shm_memory, rval);
-        rval=recv_data(timingsock,&arg->data->frame_header,sizeof(arg->data->frame_header));
-        if (rval<=0) {printf("\nERROR in recv_data()\n%s!!\n\n",strerror(errno));}
-        printf("frame_header %i rval: %i\n", arg->data->frame_header, rval);
-        rval=recv_data(timingsock,&arg->data->bufnum,sizeof(arg->data->bufnum));
-        if (rval<=0) {printf("\nERROR in recv_data()\n%s!!\n\n",strerror(errno));}
-        printf("bufnum %i rval: %i\n", arg->data->bufnum, rval);
-        rval=recv_data(timingsock,&arg->data->samples,sizeof(arg->data->samples));
-        if (rval<=0) {printf("\nERROR in recv_data()\n%s!!\n\n",strerror(errno));}
-        printf("samples %i rval: %i\n", arg->data->samples, rval);
-        //rval=recv_data(timingsock,&arg->main_address,sizeof(arg->main_address));
-        //rval=recv_data(timingsock,&arg->main,sizeof(arg->main));
-        //printf("main_address %u rval: %i\n", arg->main_address, rval);
-        printf("main_address %u rval: %i\n", arg->main, rval);
-        //rval=recv_data(timingsock,&arg->back_address,sizeof(arg->back_address));
-        //rval=recv_data(timingsock,&arg->back,sizeof(arg->back));
-        //printf("back_address %u rval: %i\n", arg->back_address, rval);
-        printf("back_address %u rval: %i\n", arg->back, rval);
+        if (usrpsock>0) recv_data(usrpsock,&arg->data->shm_memory,sizeof(arg->data->shm_memory));
+        if (recvsock>0) recv_data(recvsock,&arg->data->shm_memory,sizeof(arg->data->shm_memory));
+
+        if (usrpsock>0) recv_data(usrpsock,&arg->data->frame_header,sizeof(arg->data->frame_header));
+        if (recvsock>0) recv_data(recvsock,&arg->data->frame_header,sizeof(arg->data->frame_header));
+
+        if (usrpsock>0) recv_data(usrpsock,&arg->data->bufnum,sizeof(arg->data->bufnum));
+        if (recvsock>0) recv_data(recvsock,&arg->data->bufnum,sizeof(arg->data->bufnum));
+
+        if (usrpsock>0) recv_data(usrpsock,&arg->data->samples,sizeof(arg->data->samples));
+        if (recvsock>0) rval=recv_data(recvsock,&arg->data->samples,sizeof(arg->data->samples));
+        //
+        //rval=recv_data(recvsock,&arg->main_address,sizeof(arg->main_address));
+        //
+        //rval=recv_data(recvsock,&arg->back_address,sizeof(arg->back_address));
         printf("RECV: GET_DATA: data recv'd\n");
         r=arg->parameters->radar-1;
         c=arg->parameters->channel-1;
@@ -917,12 +908,13 @@ void *receiver_controlprogram_get_data(struct ControlProgram *arg)
       printf("size of struct DriverMsg: %i\n", sizeof(struct DriverMsg));
       if (error_flag==0) {
         printf("RECV: GET_DATA: recv RosMsg\n");
-        rval=recv_data(timingsock, &msg, sizeof(struct DriverMsg));
-        if (rval<=0) {printf("\nERROR in recv_data()\n%s!!\n\n",strerror(errno));}
+        if (usrpsock>0) recv_data(usrpsock, &msg, sizeof(struct DriverMsg));
+        //rval=recv_data(recvsock, &msg, sizeof(struct DriverMsg));
       }
       //printf("RECV: GET_DATA: unlock comm lock\n");
-      //rval=recv_data(timingsock, &msg, sizeof(struct DriverMsg));
-      pthread_mutex_unlock(&timing_comm_lock);
+      //rval=recv_data(usrpsock, &msg, sizeof(struct DriverMsg));
+      pthread_mutex_unlock(&usrp_comm_lock);
+      pthread_mutex_unlock(&recv_comm_lock);
     }
   }
   pthread_exit(NULL);
@@ -946,7 +938,8 @@ void *receiver_clrfreq(struct ControlProgram *arg)
 
 //  fprintf(stdout,"CLRFREQ: %d %d\n",arg->parameters->radar-1,arg->parameters->channel-1);
 //  fprintf(stdout," FFT FREQ: %d %d\n",arg->clrfreqsearch.start,arg->clrfreqsearch.end);
-  pthread_mutex_lock(&timing_comm_lock);
+  pthread_mutex_lock(&usrp_comm_lock);
+  pthread_mutex_lock(&recv_comm_lock);
   gettimeofday(&t0,NULL);
 
   /* Check to see if Clr search request falls within full scan parameters */
@@ -1005,23 +998,23 @@ void *receiver_clrfreq(struct ControlProgram *arg)
     msg.type=RECV_CLRFREQ;
     msg.status=1;
     printf("sending message to rxsocket\n");
-    send_data(timingsock, &msg, sizeof(struct DriverMsg));
-    send_data(timingsock, &arg->clrfreqsearch, sizeof(struct CLRFreqPRM));
-    send_data(timingsock, arg->parameters, sizeof(struct ControlPRM));
+    if (usrpsock>0) send_data(usrpsock, &msg, sizeof(struct DriverMsg));
+    if (usrpsock>0) send_data(usrpsock, &arg->clrfreqsearch, sizeof(struct CLRFreqPRM));
+    if (usrpsock>0) send_data(usrpsock, arg->parameters, sizeof(struct ControlPRM));
     printf("sent message to rxsocket\n");
-    recv_data(timingsock, &arg->clrfreqsearch, sizeof(struct CLRFreqPRM));
+    if (usrpsock>0) recv_data(usrpsock, &arg->clrfreqsearch, sizeof(struct CLRFreqPRM));
     printf("got data from rxsocket\n");
     if(verbose > 1 ) fprintf(stdout,"  final search parameters\n");  
     if(verbose > 1 ) fprintf(stdout,"  start: %d\n",arg->clrfreqsearch.start);        
     if(verbose > 1 ) fprintf(stdout,"  end: %d\n",arg->clrfreqsearch.end);    
     if(verbose > 1 ) fprintf(stdout,"  nave:  %d\n",arg->clrfreqsearch.nave); 
-    recv_data(timingsock, &arg->state->N, sizeof(int));
+    if (usrpsock>0) recv_data(usrpsock, &arg->state->N, sizeof(int));
     if(verbose > 1 ) fprintf(stdout,"  N:  %d\n",arg->state->N); 
     if(pwr!=NULL) free(pwr); 
     pwr=NULL;
     pwr = (double*) malloc(sizeof(double) * arg->state->N);
-    recv_data(timingsock, pwr, sizeof(double)*arg->state->N);
-    recv_data(timingsock, &msg, sizeof(struct DriverMsg));
+    if (usrpsock>0) recv_data(usrpsock, pwr, sizeof(double)*arg->state->N);
+    if (usrpsock>0) recv_data(usrpsock, &msg, sizeof(struct DriverMsg));
     centre=(arg->clrfreqsearch.end+arg->clrfreqsearch.start)/2;
     bandwidth=arg->state->N;
     start=centre-arg->state->N/2;
@@ -1054,7 +1047,8 @@ void *receiver_clrfreq(struct ControlProgram *arg)
   //printf(" Start Freq: %lf\n",arg->state->fft_array[0].freq);
   if (pwr!=NULL) free(pwr);
   pwr=NULL;
-  pthread_mutex_unlock(&timing_comm_lock);
+  pthread_mutex_unlock(&usrp_comm_lock);
+  pthread_mutex_unlock(&recv_comm_lock);
   pthread_exit(NULL);
 
 }

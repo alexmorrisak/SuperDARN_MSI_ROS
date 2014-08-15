@@ -32,6 +32,9 @@ int diosock=-1;
 char *timinghostip=TIMING_HOST_IP;
 int timingport=TIMING_HOST_PORT;
 int timingsock=-1;
+char *usrphostip=TIMING_HOST_IP;
+int usrpport=TIMING_HOST_PORT;
+int usrpsock=-1;
 char *gpshostip=GPS_HOST_IP;
 int gpsport=GPS_HOST_PORT;
 int gpssock=-1;
@@ -45,7 +48,7 @@ int recvsock=-1;
 /* Thread Management Global Variables */
 struct Thread_List_Item *controlprogram_threads;
 pthread_mutex_t controlprogram_list_lock,ros_state_lock,coord_lock,exit_lock;
-pthread_mutex_t dds_comm_lock,timing_comm_lock,gps_comm_lock,timing_comm_lock,recv_comm_lock,dio_comm_lock;
+pthread_mutex_t dds_comm_lock,timing_comm_lock,gps_comm_lock,timing_comm_lock,recv_comm_lock,dio_comm_lock,usrp_comm_lock;
 pthread_mutex_t thread_list_lock,settings_lock;
 pthread_cond_t ready_flag;
 pthread_t timeout_thread=NULL;
@@ -136,6 +139,8 @@ void graceful_cleanup(int signum)
   close(diosock);   
   fprintf(stderr,"Closing timing socket: %d\n",timingsock);
   close(timingsock);   
+  fprintf(stderr,"Closing usrp socket: %d\n",usrpsock);
+  close(usrpsock);   
   fprintf(stderr,"Closing RECV socket: %d\n",recvsock);
   close(recvsock);   
   fprintf(stderr,"Closing DDS socket: %d\n",ddssock);
@@ -146,6 +151,7 @@ void graceful_cleanup(int signum)
   pthread_mutex_destroy(&coord_lock);
   pthread_mutex_destroy(&exit_lock);
   pthread_mutex_destroy(&timing_comm_lock);
+  pthread_mutex_destroy(&usrp_comm_lock);
   pthread_mutex_destroy(&dds_comm_lock);
   pthread_mutex_destroy(&gps_comm_lock);
   pthread_mutex_destroy(&dio_comm_lock);
@@ -246,7 +252,7 @@ int main()
   pthread_mutex_init(&coord_lock, NULL);
   pthread_mutex_init(&exit_lock, NULL);
   pthread_mutex_init(&ros_state_lock, NULL);
-  pthread_mutex_init(&timing_comm_lock, NULL);
+  pthread_mutex_init(&usrp_comm_lock, NULL);
   pthread_mutex_init(&dds_comm_lock, NULL);
   pthread_mutex_init(&dio_comm_lock, NULL);
   pthread_mutex_init(&gps_comm_lock, NULL);
@@ -393,12 +399,18 @@ int main()
 //    graceful_socket_cleanup(1);
   } else  if (verbose>0) fprintf(stderr,"RECV Socket %d\n",recvsock);
   if (verbose>0) fprintf(stderr,"Opening Timing Socket\n");
-  timingsock=opentcpsock(timinghostip, timingport);
-  //timingsock=openunixsock("/tmp/rostiming", 0);
+  //timingsock=opentcpsock(timinghostip, timingport);
+  timingsock=openunixsock("/tmp/rostiming", 0);
   if (timingsock < 0) {
     if (verbose>0) fprintf(stderr,"Timing Socket failure %d\n",timingsock);
 //    graceful_socket_cleanup(1);
   } else  if (verbose>0) fprintf(stderr,"Timing Socket %d\n",timingsock);
+  if (verbose>0) fprintf(stderr,"Opening USRP Socket\n");
+  usrpsock=opentcpsock(usrphostip, usrpport);
+  if (usrpsock < 0) {
+    if (verbose>0) fprintf(stderr,"USRP Socket failure %d\n",usrpsock);
+//    graceful_socket_cleanup(1);
+  } else  if (verbose>0) fprintf(stderr,"USRP Socket %d\n",usrpsock);
   if (verbose>0) fprintf(stderr,"Opening GPS Socket\n");
   //gpssock=opentcpsock(gpshostip, gpsport);
   gpssock=openunixsock("rosgps", 0);
