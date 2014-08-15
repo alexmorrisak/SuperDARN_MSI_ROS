@@ -701,15 +701,19 @@ void *receiver_end_controlprogram(struct ControlProgram *arg)
 {
   struct DriverMsg msg;
   pthread_mutex_lock(&recv_comm_lock);
+  pthread_mutex_lock(&usrp_comm_lock);
   if (arg!=NULL) {
      if (arg->state->pulseseqs[arg->parameters->current_pulseseq_index]!=NULL) {
        msg.type=RECV_CtrlProg_END;
        msg.status=1;
        if (recvsock>0) send_data(recvsock, &msg, sizeof(struct DriverMsg));
+       if (usrpsock>0) send_data(usrpsock, &msg, sizeof(struct DriverMsg));
        if (recvsock>0) send_data(recvsock, arg->parameters, sizeof(struct ControlPRM));
+       if (usrpsock>0) send_data(usrpsock, arg->parameters, sizeof(struct ControlPRM));
      }
   }
   pthread_mutex_unlock(&recv_comm_lock);
+  pthread_mutex_unlock(&usrp_comm_lock);
   pthread_exit(NULL);
 };
 

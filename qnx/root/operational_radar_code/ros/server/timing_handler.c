@@ -7,17 +7,14 @@
 #include <errno.h>
 #include <string.h>
 
-extern int timingsock;
-extern int usrpsock;
+extern int timingsock, usrpsock;
 extern pthread_mutex_t timing_comm_lock, usrp_comm_lock;
 
 extern int verbose;
 extern struct TRTimes bad_transmit_times;
-extern uint32_t* start_usec;
 void *timing_ready_controlprogram(struct ControlProgram *arg)
 {
   struct DriverMsg msg;
-  memset(&msg, 0, sizeof(msg));
   pthread_mutex_lock(&timing_comm_lock);
   pthread_mutex_lock(&usrp_comm_lock);
    if (arg!=NULL) {
@@ -37,7 +34,7 @@ void *timing_ready_controlprogram(struct ControlProgram *arg)
    pthread_exit(NULL);
 };
 
-void *timing_end_controlprogram(struct ControlProgram *control_program)
+void *timing_end_controlprogram(void *arg)
 {
   struct DriverMsg msg;
   pthread_mutex_lock(&timing_comm_lock);
@@ -45,20 +42,14 @@ void *timing_end_controlprogram(struct ControlProgram *control_program)
   msg.type=TIMING_CtrlProg_END;
   msg.status=1;
   if (timingsock>0) send_data(timingsock, &msg, sizeof(struct DriverMsg));
-  if (usrpsock>0) send_data(usrpsock, &msg, sizeof(struct DriverMsg));
-  if (timingsock>0) send_data(timingsock, control_program->parameters, sizeof(struct ControlPRM));
-  if (usrpsock>0) send_data(usrpsock, control_program->parameters, sizeof(struct ControlPRM));
-  if (timingsock>0) recv_data(timingsock, &msg, sizeof(struct DriverMsg));
-  if (usrpsock>0) recv_data(usrpsock, &msg, sizeof(struct DriverMsg));
   pthread_mutex_unlock(&timing_comm_lock);
   pthread_mutex_unlock(&usrp_comm_lock);
-   pthread_exit(NULL);
+  pthread_exit(NULL);
 };
 
 void *timing_register_seq(struct ControlProgram *control_program)
 {
   struct DriverMsg msg;
-  memset(&msg,0,sizeof(msg));
   int index;
   pthread_mutex_lock(&timing_comm_lock);
   pthread_mutex_lock(&usrp_comm_lock);
@@ -93,7 +84,6 @@ void *timing_pretrigger(void *arg)
   //uint32_t* start_usec;
   rval=0;
   struct DriverMsg msg;
-  memset(&msg,0,sizeof(msg));
   pthread_mutex_lock(&timing_comm_lock);
   pthread_mutex_lock(&usrp_comm_lock);
   msg.type=TIMING_PRETRIGGER;
@@ -115,10 +105,8 @@ void *timing_pretrigger(void *arg)
   if (bad_transmit_times.length>0) {
     //printf("TIMING: PRETRIGGER: Mallocs start\n");
     bad_transmit_times.start_usec=(uint32_t*) malloc(sizeof(uint32_t)*bad_transmit_times.length);
-    memset(bad_transmit_times.start_usec, 0, sizeof(uint32_t)*bad_transmit_times.length);
     if (bad_transmit_times.start_usec==NULL) printf("ERROR in malloc!!\n");
     bad_transmit_times.duration_usec=(uint32_t*) malloc(sizeof(uint32_t)*bad_transmit_times.length);
-    memset(bad_transmit_times.duration_usec, 0, sizeof(uint32_t)*bad_transmit_times.length);
     if (bad_transmit_times.duration_usec==NULL) printf("ERROR in malloc!!\n");
     //printf("TIMING: PRETRIGGER: Mallocs end\n");
   } else {
@@ -176,7 +164,6 @@ void *timing_trigger(int trigger_type)
 void *timing_wait(void *arg)
 {
   struct DriverMsg msg;
-  memset(&msg, 0, sizeof(msg));
   pthread_mutex_lock(&timing_comm_lock);
   pthread_mutex_lock(&usrp_comm_lock);
   msg.type=TIMING_WAIT;
