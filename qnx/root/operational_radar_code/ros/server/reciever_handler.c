@@ -732,7 +732,6 @@ void *receiver_ready_controlprogram(struct ControlProgram *arg)
 
 void *receiver_pretrigger(void *arg)
 {
-  int rval;
   struct DriverMsg msg;
   pthread_mutex_lock(&recv_comm_lock);
 
@@ -764,7 +763,7 @@ void *receiver_controlprogram_get_data(struct ControlProgram *arg)
   struct DriverMsg msg;
   struct timeval t0,t1,t3;
   char *timestr;
-  int rval,ready_state;
+  int ready_state;
   char shm_device[80];
   int shm_fd;
   int r,c,b;
@@ -814,8 +813,8 @@ void *receiver_controlprogram_get_data(struct ControlProgram *arg)
         arg->data->status=error_flag;
         arg->data->samples=0;
       }      
-      printf("arg->data->status: %i, rval: %i\n", arg->data->status, rval);
-      if (arg->data->status==0 & rval>0) {
+      printf("arg->data->status: %i\n", arg->data->status);
+      if (arg->data->status==0 ) {
         printf("RECV: GET_DATA: status good\n");
         if (usrpsock>0) recv_data(usrpsock,&arg->data->shm_memory,sizeof(arg->data->shm_memory));
         if (recvsock>0) recv_data(recvsock,&arg->data->shm_memory,sizeof(arg->data->shm_memory));
@@ -827,11 +826,11 @@ void *receiver_controlprogram_get_data(struct ControlProgram *arg)
         if (recvsock>0) recv_data(recvsock,&arg->data->bufnum,sizeof(arg->data->bufnum));
 
         if (usrpsock>0) recv_data(usrpsock,&arg->data->samples,sizeof(arg->data->samples));
-        if (recvsock>0) rval=recv_data(recvsock,&arg->data->samples,sizeof(arg->data->samples));
+        if (recvsock>0) recv_data(recvsock,&arg->data->samples,sizeof(arg->data->samples));
         //
-        //rval=recv_data(recvsock,&arg->main_address,sizeof(arg->main_address));
+        //recv_data(recvsock,&arg->main_address,sizeof(arg->main_address));
         //
-        //rval=recv_data(recvsock,&arg->back_address,sizeof(arg->back_address));
+        //recv_data(recvsock,&arg->back_address,sizeof(arg->back_address));
         printf("RECV: GET_DATA: data recv'd\n");
         r=arg->parameters->radar-1;
         c=arg->parameters->channel-1;
@@ -851,8 +850,8 @@ void *receiver_controlprogram_get_data(struct ControlProgram *arg)
 	  int errorint;
           if (shm_fd == -1) {errorint = errno; fprintf(stderr,"shm_open error\n");}
 	  //fprintf(stderr, "error number: %d\n",errorint);              
-          //rval = ftruncate(shm_fd,MAX_SAMPLES*4);
-          rval = ftruncate(shm_fd,arg->data->samples * sizeof(uint32_t));
+          //ftruncate(shm_fd,MAX_SAMPLES*4);
+          ftruncate(shm_fd,arg->data->samples * sizeof(uint32_t));
           arg->main=mmap(0,sizeof(unsigned int)*arg->data->samples,PROT_READ,MAP_SHARED,shm_fd,0);
           //arg->main=mmap(0,MAX_SAMPLES*4,PROT_READ,MAP_SHARED,shm_fd,0);
             //for (i=0; i<arg->data->samples; i++){
@@ -862,8 +861,8 @@ void *receiver_controlprogram_get_data(struct ControlProgram *arg)
           sprintf(shm_device,"/receiver_back_%d_%d_%d",r,c,b);
 	      printf("device: %s\n", shm_device);
           shm_fd=shm_open(shm_device,O_RDONLY,S_IRUSR | S_IWUSR);
-          //rval = ftruncate(shm_fd,MAX_SAMPLES*4);
-          rval = ftruncate(shm_fd,arg->data->samples * sizeof(uint32_t));
+          //ftruncate(shm_fd,MAX_SAMPLES*4);
+          ftruncate(shm_fd,arg->data->samples * sizeof(uint32_t));
           arg->back=mmap(0,sizeof(unsigned int)*arg->data->samples,PROT_READ,MAP_SHARED,shm_fd,0);
           //arg->back=mmap(0,MAX_SAMPLES*4,PROT_READ,MAP_SHARED,shm_fd,0);
             //for (i=0; i<arg->data->samples; i++){
@@ -909,10 +908,10 @@ void *receiver_controlprogram_get_data(struct ControlProgram *arg)
       if (error_flag==0) {
         printf("RECV: GET_DATA: recv RosMsg\n");
         if (usrpsock>0) recv_data(usrpsock, &msg, sizeof(struct DriverMsg));
-        //rval=recv_data(recvsock, &msg, sizeof(struct DriverMsg));
+        //recv_data(recvsock, &msg, sizeof(struct DriverMsg));
       }
       //printf("RECV: GET_DATA: unlock comm lock\n");
-      //rval=recv_data(usrpsock, &msg, sizeof(struct DriverMsg));
+      //recv_data(usrpsock, &msg, sizeof(struct DriverMsg));
       pthread_mutex_unlock(&usrp_comm_lock);
       pthread_mutex_unlock(&recv_comm_lock);
     }
