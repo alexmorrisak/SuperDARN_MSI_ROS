@@ -922,7 +922,7 @@ control_program);
             gettimeofday(&t0,NULL);
             pthread_mutex_lock(&controlprogram_list_lock);
             recv_data(socket,&control_program->clrfreqsearch, sizeof(struct CLRFreqPRM)); // requested search parameters
-            if (verbose > -1 )printf("Client: Requst CLRSearch: %d %d\n",control_program->clrfreqsearch.start,control_program->clrfreqsearch.end);
+            if (verbose > 1 )printf("Client: Requst CLRSearch: %d %d\n",control_program->clrfreqsearch.start,control_program->clrfreqsearch.end);
             if ( (r < 0) || (c < 0)) {
               msg.status=-1;
             } else {
@@ -937,7 +937,7 @@ control_program);
             send_data(socket, &msg, sizeof(struct ROSMsg));
             pthread_mutex_unlock(&controlprogram_list_lock);
             gettimeofday(&t1,NULL);
-            if (verbose > -1) {
+            if (verbose > 1) {
               elapsed=(t1.tv_sec-t0.tv_sec)*1E6;
               elapsed+=(t1.tv_usec-t0.tv_usec);
               if (verbose > 1 ) printf("Client:  CLR Elapsed Microseconds: %ld\n",elapsed);
