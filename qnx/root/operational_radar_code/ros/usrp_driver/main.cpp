@@ -65,7 +65,7 @@
 #define RXFREQ 12e6
 
 #define MIMO 1
-#define NUNITS 2
+#define NUNITS 1
 
 #define NRADARS 2
 
@@ -195,8 +195,8 @@ int main(){
     //tx_data tx(2, 2, TXFREQ, TXRATE);
     //rx_data rx(2,4,RXFREQ, RXRATE);
     /* For testing*/
-    tx_data tx(1, NUNITS, TXFREQ, TXRATE);
-    rx_data rx(1, 2*NUNITS, RXFREQ, RXRATE);
+    tx_data tx(1, 1, TXFREQ, TXRATE);
+    rx_data rx(1, 2, RXFREQ, RXRATE);
 
 	// Swing buffered.
 	unsigned int iseq=0;
@@ -208,7 +208,7 @@ int main(){
 	args = "addr0=192.168.10.2, addr1=192.168.10.3";
 	if(NUNITS==1)
 	args = "addr0=192.168.10.2";
-	txsubdev = "A:A";
+	txsubdev = "A:AB";
 	rxsubdev = "A:A A:B"; //Use two rx channels per daughterboard
 	//rxsubdev = "A:A"; //Use one rx channel per daughterboard
 
@@ -855,7 +855,7 @@ int main(){
                 if (verbose>1)std::cout << "set_bb_vec_ptrs: " << r << " " << c << std::endl;
 
                 /* Set the pointers to vectors of baseband samples
-                 * If double_buf is non-zero, then the function will create
+                 * If double_buf flag is non-zero, then the function will create
                  * pointers to the samples created by the LAST pulse sequence.
                  * This allows the driver to collect samples for the current pulse
                  * sequence and process samples for the previous pulse sequence 

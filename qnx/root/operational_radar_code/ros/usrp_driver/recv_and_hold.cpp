@@ -11,7 +11,8 @@
 #include <math.h>
 #include <control_program.h>
 
-#define NTHREADS 2
+#define SYNC_PINS 0x42
+#define TR_PINS 0x04
 
 extern int verbose;
 
@@ -45,19 +46,20 @@ void recv_and_hold(
 
     //usleep(100000);
 
-    usrp->set_gpio_attr("TXA","CTRL",0x0,0x40);
-    usrp->set_gpio_attr("TXA","DDR",0x40,0x40);
-    usrp->set_gpio_attr("TXA","CTRL",0x0,0x20);
-    usrp->set_gpio_attr("TXA","DDR",0x20,0x20);
+    //usrp->set_gpio_attr("TXA","CTRL",0x0,0x01 << 6);
+    usrp->set_gpio_attr("TXA","CTRL",0x0,SYNC_PINS);
+    usrp->set_gpio_attr("TXA","DDR",SYNC_PINS,SYNC_PINS);
+    usrp->set_gpio_attr("TXA","CTRL",0x0,TR_PINS);
+    usrp->set_gpio_attr("TXA","DDR",TR_PINS,TR_PINS);
 
     usrp->issue_stream_cmd(stream_cmd);
 
     usrp->set_command_time(start_time+100e-9);
     usrp->set_command_time(start_time);
-    usrp->set_gpio_attr("TXA","OUT",0x40,0x40);
+    usrp->set_gpio_attr("TXA","OUT",SYNC_PINS, SYNC_PINS);
 
     usrp->set_command_time(start_time+1e-6);
-    usrp->set_gpio_attr("TXA","OUT",0x00,0x40);
+    usrp->set_gpio_attr("TXA","OUT",0x00,SYNC_PINS);
 
 
     //std::cout << "Printing out TR logic signals\n";
@@ -68,10 +70,10 @@ void recv_and_hold(
     for (int i=0; i<trtimes->length; i++){
         //usrp->set_command_time(uhd::time_spec_t(start_time.get_real_secs()+1e-6*trtimes[i]));
         usrp->set_command_time(uhd::time_spec_t(start_time.get_real_secs()+1e-6*trtimes->start_usec[i]));
-        usrp->set_gpio_attr("TXA","OUT",0x20,0x20);
+        usrp->set_gpio_attr("TXA","OUT",TR_PINS,TR_PINS);
 
         usrp->set_command_time(start_time+1e-6*(trtimes->start_usec[i]+trtimes->duration_usec[i]));
-        usrp->set_gpio_attr("TXA","OUT",0x00,0x20);
+        usrp->set_gpio_attr("TXA","OUT",0x00,TR_PINS);
     }
         
 
