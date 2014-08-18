@@ -208,7 +208,7 @@ int main(){
 	args = "addr0=192.168.10.2, addr1=192.168.10.3";
 	if(NUNITS==1)
 	args = "addr0=192.168.10.2";
-	txsubdev = "A:AB";
+	txsubdev = "A:B";
 	rxsubdev = "A:A A:B"; //Use two rx channels per daughterboard
 	//rxsubdev = "A:A"; //Use one rx channel per daughterboard
 

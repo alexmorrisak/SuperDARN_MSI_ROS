@@ -11,8 +11,8 @@
 #include <math.h>
 #include <control_program.h>
 
-#define SYNC_PINS 0x42
-#define TR_PINS 0x04
+#define SYNC_PINS 0x101
+#define TR_PINS 0x040
 
 extern int verbose;
 

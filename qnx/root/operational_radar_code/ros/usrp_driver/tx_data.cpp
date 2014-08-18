@@ -131,7 +131,7 @@ size_t tx_data::get_seqbuf_len(size_t index){
 }
 
 void tx_data::make_bb_vecs(int32_t trise){
-    std::vector<float> taps((size_t)(25e3/trise), trise/25.e3/2);
+    std::vector<float> taps((size_t)(25e3/trise), trise/25.e3);
     std::vector<std::complex<float> > rawsignal(seq_buf[old_index].size());
 
     bb_vec.resize(seq_buf[old_index].size(),0);

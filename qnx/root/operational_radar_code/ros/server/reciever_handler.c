@@ -450,9 +450,9 @@ void receiver_assign_frequency(struct ControlProgram *arg){
      		while (thread_list!=NULL) {
        			controlprogram=thread_list->data;
 			if(controlprogram!=arg) {                   
-           		if (verbose>1) fprintf(stderr,"  %d %d :: Checking Control Program :: %p  :: %d %d\n",
-                       		arg->parameters->radar,arg->parameters->channel,controlprogram,
-                       		controlprogram->parameters->radar,controlprogram->parameters->channel);
+           		//if (verbose>1) fprintf(stderr,"  %d %d :: Checking Control Program :: %p  :: %d %d\n",
+                //       		arg->parameters->radar,arg->parameters->channel,controlprogram,
+                //       		controlprogram->parameters->radar,controlprogram->parameters->channel);
        				if(controlprogram->active!=0) {
          			//if (controlprogram->parameters->priority < arg->parameters->priority){
            				if (blacklist_count < (Max_Control_THREADS+*blacklist_count_pointer)) {  
