@@ -61,6 +61,7 @@ int *ready_state_pointer;
 struct tx_status txstatus[MAX_RADARS];
 int txread[MAX_RADARS];
 struct SiteSettings site_settings;
+struct USRPSettings usrp_settings;
 struct GPSStatus gpsstatus;
 struct TRTimes bad_transmit_times;
 uint32_t* start_usec;
@@ -147,6 +148,12 @@ void graceful_cleanup(int signum)
   close(ddssock);   
   fprintf(stderr,"Closing GPS socket: %d\n",gpssock);
   close(gpssock);   
+  if(usrp_settings.enabled) {
+    fprintf(stderr,"Closing usrp socket: %d\n",usrpsock);
+    close(usrpsock);   
+    pthread_mutex_destroy(&usrp_comm_lock);
+  }
+
   pthread_mutex_destroy(&controlprogram_list_lock);
   pthread_mutex_destroy(&coord_lock);
   pthread_mutex_destroy(&exit_lock);
@@ -258,6 +265,8 @@ int main()
   pthread_mutex_init(&gps_comm_lock, NULL);
   pthread_mutex_init(&recv_comm_lock, NULL);
   pthread_cond_init (&ready_flag, NULL);
+  if(usrp_settings.enabled) 
+    pthread_mutex_init(&usrp_comm_lock, NULL);
 
 /*
  * Init State Variables
@@ -357,6 +366,11 @@ int main()
   site_settings.if_settings.att2=0;
   site_settings.if_settings.att3=0;
   site_settings.rf_settings.att4=0;
+  usrp_settings.enabled=0;
+  usrp_settings.use_for_timing=0;
+  usrp_settings.use_for_dds=0;
+  usrp_settings.use_for_dio=0;
+  usrp_settings.use_for_recv=0;
 
   rc = pthread_create(&thread, NULL, (void *) &settings_parse_ini_file,(void *)&site_settings);
   pthread_join(thread,NULL);
@@ -365,6 +379,15 @@ int main()
   rc = pthread_create(&thread, NULL, (void *) &settings_rxfe_update_if,(void *)&site_settings.if_settings);
   pthread_join(thread,NULL);
   fprintf(stdout,"Configured IF Enable flag : %d\n",site_settings.ifmode);
+
+  rc = pthread_create(&thread, NULL, (void *) &settings_parse_ini_usrp,(void *)&usrp_settings);
+  pthread_join(thread,NULL);
+  fprintf(stdout,"Is USRP Enabled : %d\n",usrp_settings.enabled);
+  fprintf(stdout,"  USRP timing : %d\n",usrp_settings.use_for_timing);
+  fprintf(stdout,"  USRP dio    : %d\n",usrp_settings.use_for_dio);
+  fprintf(stdout,"  USRP dds    : %d\n",usrp_settings.use_for_dds);
+  fprintf(stdout,"  USRP recv   : %d\n",usrp_settings.use_for_recv);
+
 /*
  * Set up the signal handling
 
@@ -405,12 +428,13 @@ int main()
     if (verbose>0) fprintf(stderr,"Timing Socket failure %d\n",timingsock);
 //    graceful_socket_cleanup(1);
   } else  if (verbose>0) fprintf(stderr,"Timing Socket %d\n",timingsock);
-  if (verbose>0) fprintf(stderr,"Opening USRP Socket\n");
-  usrpsock=opentcpsock(usrphostip, usrpport);
-  if (usrpsock < 0) {
-    if (verbose>0) fprintf(stderr,"USRP Socket failure %d\n",usrpsock);
-//    graceful_socket_cleanup(1);
-  } else  if (verbose>0) fprintf(stderr,"USRP Socket %d\n",usrpsock);
+  if(usrp_settings.enabled) {
+    usrpsock=opentcpsock(usrphostip, usrpport);
+    if (usrpsock < 0) {
+      if (verbose>0) fprintf(stderr,"USRP Socket failure %d\n",usrpsock);
+//      graceful_socket_cleanup(1);
+    } else  if (verbose>0) fprintf(stderr,"USRP Socket %d\n",usrpsock);
+  }
   if (verbose>0) fprintf(stderr,"Opening GPS Socket\n");
   //gpssock=opentcpsock(gpshostip, gpsport);
   gpssock=openunixsock("rosgps", 0);

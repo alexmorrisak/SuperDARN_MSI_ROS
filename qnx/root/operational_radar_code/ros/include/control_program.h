@@ -66,6 +66,16 @@ struct RXFESettings {
      uint32_t att3;    //  2  db Attenuator 
      uint32_t att4;    //  4  db Attenuator
 };
+
+struct USRPSettings {
+     char enabled;	
+     char use_for_timing;	
+     char use_for_dds;	
+     char use_for_recv;	
+     char use_for_dio;	
+     char host[256];
+     uint8_t port;
+};
 /*
 struct ChannelStatus {
      int32 active;

@@ -8,6 +8,7 @@
 #include <string.h>
 
 extern int timingsock, usrpsock;
+extern struct USRPSettings usrp_settings;
 extern pthread_mutex_t timing_comm_lock, usrp_comm_lock;
 
 extern int verbose;
@@ -16,21 +17,27 @@ void *timing_ready_controlprogram(struct ControlProgram *arg)
 {
   struct DriverMsg msg;
   pthread_mutex_lock(&timing_comm_lock);
-  pthread_mutex_lock(&usrp_comm_lock);
+  if(usrp_settings.use_for_timing) 
+    pthread_mutex_lock(&usrp_comm_lock);
    if (arg!=NULL) {
      if (arg->state->pulseseqs[arg->parameters->current_pulseseq_index]!=NULL) {
        msg.type=TIMING_CtrlProg_READY;
        msg.status=1;
-       if (timingsock > 0) send_data(timingsock, &msg, sizeof(struct DriverMsg));
-       if (usrpsock > 0) send_data(usrpsock, &msg, sizeof(struct DriverMsg));
-       if (timingsock>0) send_data(timingsock, arg->parameters, sizeof(struct ControlPRM));
-       if (usrpsock>0) send_data(usrpsock, arg->parameters, sizeof(struct ControlPRM));
-       if (timingsock>0) recv_data(timingsock, &msg, sizeof(struct DriverMsg));
-       if (usrpsock>0) recv_data(usrpsock, &msg, sizeof(struct DriverMsg));
+       send_data(timingsock, &msg, sizeof(struct DriverMsg));
+       send_data(timingsock, arg->parameters, sizeof(struct ControlPRM));
+       recv_data(timingsock, &msg, sizeof(struct DriverMsg));
+       if(usrp_settings.use_for_timing) {
+         msg.type=TIMING_CtrlProg_READY;
+         msg.status=1;
+         send_data(usrpsock, &msg, sizeof(struct DriverMsg));
+         send_data(usrpsock, arg->parameters, sizeof(struct ControlPRM));
+         recv_data(usrpsock, &msg, sizeof(struct DriverMsg));
+       }
      } 
    }
-   pthread_mutex_unlock(&timing_comm_lock);
-   pthread_mutex_unlock(&usrp_comm_lock);
+  if(usrp_settings.use_for_timing) 
+    pthread_mutex_unlock(&usrp_comm_lock);
+  pthread_mutex_unlock(&timing_comm_lock);
    pthread_exit(NULL);
 };
 
@@ -41,9 +48,13 @@ void *timing_end_controlprogram(void *arg)
   pthread_mutex_lock(&usrp_comm_lock);
   msg.type=TIMING_CtrlProg_END;
   msg.status=1;
-  if (timingsock>0) send_data(timingsock, &msg, sizeof(struct DriverMsg));
+  send_data(timingsock, &msg, sizeof(struct DriverMsg));
+  if(usrp_settings.use_for_timing){ 
+    pthread_mutex_lock(&usrp_comm_lock);
+    send_data(usrpsock, &msg, sizeof(struct DriverMsg));
+    pthread_mutex_unlock(&usrp_comm_lock);
+  }
   pthread_mutex_unlock(&timing_comm_lock);
-  pthread_mutex_unlock(&usrp_comm_lock);
   pthread_exit(NULL);
 };
 
@@ -68,12 +79,23 @@ void *timing_register_seq(struct ControlProgram *control_program)
     sizeof(unsigned char)*control_program->state->pulseseqs[index]->len); // requested pulseseq
   if (usrpsock>0) send_data(usrpsock,control_program->state->pulseseqs[index]->rep, 
     sizeof(unsigned char)*control_program->state->pulseseqs[index]->len); // requested pulseseq
-  if (timingsock>0) send_data(timingsock,control_program->state->pulseseqs[index]->code, 
+  recv_data(timingsock, &msg, sizeof(struct DriverMsg));
+  if(usrp_settings.use_for_timing){ 
+    pthread_mutex_lock(&usrp_comm_lock);
+    msg.type=TIMING_REGISTER_SEQ;
+    msg.status=1;
+    send_data(usrpsock, &msg, sizeof(struct DriverMsg));
+    send_data(usrpsock, control_program->parameters, sizeof(struct ControlPRM));
+    index=control_program->parameters->current_pulseseq_index;
+    send_data(usrpsock, &index, sizeof(index)); //requested index
+    send_data(usrpsock,control_program->state->pulseseqs[index], sizeof(struct TSGbuf)); // requested pulseseq
+    send_data(usrpsock,control_program->state->pulseseqs[index]->rep, 
     sizeof(unsigned char)*control_program->state->pulseseqs[index]->len); // requested pulseseq
-  if (usrpsock>0) send_data(usrpsock,control_program->state->pulseseqs[index]->code, 
+    send_data(usrpsock,control_program->state->pulseseqs[index]->code, 
     sizeof(unsigned char)*control_program->state->pulseseqs[index]->len); // requested pulseseq
-  if (timingsock>0) recv_data(timingsock, &msg, sizeof(struct DriverMsg));
-  if (usrpsock>0) recv_data(usrpsock, &msg, sizeof(struct DriverMsg));
+    recv_data(usrpsock, &msg, sizeof(struct DriverMsg));
+    pthread_mutex_unlock(&usrp_comm_lock);
+  }
   pthread_mutex_unlock(&timing_comm_lock);
   pthread_mutex_unlock(&usrp_comm_lock);
   pthread_exit(NULL);
@@ -113,22 +135,39 @@ void *timing_pretrigger(void *arg)
     bad_transmit_times.start_usec=NULL;
     bad_transmit_times.duration_usec=NULL;
   }
-  //printf("TIMING: PRETRIGGER: recv start usec object %i\n",rval);
-  if (timingsock>0) rval=recv_data(timingsock, (uint32_t*)bad_transmit_times.start_usec, sizeof(uint32_t)*bad_transmit_times.length);
-  if (usrpsock>0) rval=recv_data(usrpsock, (uint32_t*)bad_transmit_times.start_usec, sizeof(uint32_t)*bad_transmit_times.length);
-  if (rval<=0) {printf("\nERROR in recv_data()\n%s!!\n\n",strerror(errno));}
+  //printf("TIMING: PRETRIGGER: recv start usec object\n");
+  recv_data(timingsock, bad_transmit_times.start_usec, sizeof(unsigned int)*bad_transmit_times.length);
+  //printf("TIMING: PRETRIGGER: recv duration usec object\n");
+  recv_data(timingsock, bad_transmit_times.duration_usec, sizeof(unsigned int)*bad_transmit_times.length);
+  //printf("TIMING: PRETRIGGER: recv msg\n");
+  recv_data(timingsock, &msg, sizeof(struct DriverMsg));
 
-  //printf("TIMING: PRETRIGGER: recv duration usec object %i\n", rval);
-  if (timingsock>0) rval=recv_data(timingsock, (uint32_t*)bad_transmit_times.duration_usec, sizeof(uint32_t)*bad_transmit_times.length);
-  if (usrpsock>0) rval=recv_data(usrpsock, (uint32_t*)bad_transmit_times.duration_usec, sizeof(uint32_t)*bad_transmit_times.length);
-  //send_data(timingsock, &rval,sizeof(int));
-  //send_data(usrpsock, &rval,sizeof(int));
-  //printf("TIMING: PRETRIGGER: recv msg %i\n",rval);
-  if (timingsock>0) rval=recv_data(timingsock, &msg, sizeof(struct DriverMsg));
-  if (usrpsock>0) rval=recv_data(usrpsock, &msg, sizeof(struct DriverMsg));
-  if (rval<=0) {printf("\nERROR in recv_data()!!%s\n\n",strerror(errno));}
+  if(usrp_settings.use_for_timing){ 
+    pthread_mutex_lock(&usrp_comm_lock);
+    msg.type=TIMING_PRETRIGGER;
+    msg.status=1;
+    send_data(usrpsock, &msg, sizeof(struct DriverMsg));
+    if(bad_transmit_times.start_usec!=NULL) free(bad_transmit_times.start_usec);
+    if(bad_transmit_times.duration_usec!=NULL) free(bad_transmit_times.duration_usec);
+    bad_transmit_times.start_usec=NULL;
+    bad_transmit_times.duration_usec=NULL;
+    recv_data(usrpsock, &bad_transmit_times.length, sizeof(bad_transmit_times.length));
+    if (bad_transmit_times.length>0) {
+      bad_transmit_times.start_usec=malloc(sizeof(unsigned int)*bad_transmit_times.length);
+      bad_transmit_times.duration_usec=malloc(sizeof(unsigned int)*bad_transmit_times.length);
+    } else {
+      bad_transmit_times.start_usec=NULL;
+      bad_transmit_times.duration_usec=NULL;
+    }
+    //printf("TIMING: PRETRIGGER: recv start usec object\n");
+    recv_data(usrpsock, bad_transmit_times.start_usec, sizeof(unsigned int)*bad_transmit_times.length);
+    //printf("TIMING: PRETRIGGER: recv duration usec object\n");
+    recv_data(usrpsock, bad_transmit_times.duration_usec, sizeof(unsigned int)*bad_transmit_times.length);
+    //printf("TIMING: PRETRIGGER: recv msg\n");
+    recv_data(usrpsock, &msg, sizeof(struct DriverMsg));
+    pthread_mutex_unlock(&usrp_comm_lock);
+  }
 
-  printf("TIMING: PRETRIGGER: done recv msg %i\n",rval);
   pthread_mutex_unlock(&timing_comm_lock);
   pthread_mutex_unlock(&usrp_comm_lock);
   printf("TIMING: PRETRIGGER: exit\n");
@@ -152,10 +191,16 @@ void *timing_trigger(int trigger_type)
       break;
   }
   msg.status=1;
-  if (timingsock>0) send_data(timingsock, &msg, sizeof(struct DriverMsg));
-  if (usrpsock>0) send_data(usrpsock, &msg, sizeof(struct DriverMsg));
-  if (timingsock>0) recv_data(timingsock, &msg, sizeof(struct DriverMsg));
-  if (usrpsock>0) recv_data(usrpsock, &msg, sizeof(struct DriverMsg));
+  send_data(timingsock, &msg, sizeof(struct DriverMsg));
+  recv_data(timingsock, &msg, sizeof(struct DriverMsg));
+
+  if(usrp_settings.use_for_timing){ 
+    pthread_mutex_lock(&usrp_comm_lock);
+    msg.status=1;
+    send_data(usrpsock, &msg, sizeof(struct DriverMsg));
+    recv_data(usrpsock, &msg, sizeof(struct DriverMsg));
+    pthread_mutex_unlock(&usrp_comm_lock);
+  }
   pthread_mutex_unlock(&timing_comm_lock);
   pthread_mutex_unlock(&usrp_comm_lock);
   pthread_exit(NULL);
@@ -168,10 +213,17 @@ void *timing_wait(void *arg)
   pthread_mutex_lock(&usrp_comm_lock);
   msg.type=TIMING_WAIT;
   msg.status=1;
-  if (timingsock>0) send_data(timingsock, &msg, sizeof(struct DriverMsg));
-  if (usrpsock>0) send_data(usrpsock, &msg, sizeof(struct DriverMsg));
-  if (timingsock>0) recv_data(timingsock, &msg, sizeof(struct DriverMsg));
-  if (usrpsock>0) recv_data(usrpsock, &msg, sizeof(struct DriverMsg));
+  send_data(timingsock, &msg, sizeof(struct DriverMsg));
+  recv_data(timingsock, &msg, sizeof(struct DriverMsg));
+
+  if(usrp_settings.use_for_timing){ 
+    pthread_mutex_lock(&usrp_comm_lock);
+    msg.type=TIMING_WAIT;
+    msg.status=1;
+    send_data(usrpsock, &msg, sizeof(struct DriverMsg));
+    recv_data(usrpsock, &msg, sizeof(struct DriverMsg));
+    pthread_mutex_unlock(&usrp_comm_lock);
+  }
   pthread_mutex_unlock(&timing_comm_lock);
   pthread_mutex_unlock(&usrp_comm_lock);
   pthread_exit(NULL);
@@ -184,10 +236,16 @@ void *timing_posttrigger(void *arg)
 
    msg.type=TIMING_POSTTRIGGER;
    msg.status=1;
-   if (timingsock>0) send_data(timingsock, &msg, sizeof(struct DriverMsg));
-   if (usrpsock>0) send_data(usrpsock, &msg, sizeof(struct DriverMsg));
-   if (timingsock>0) recv_data(timingsock, &msg, sizeof(struct DriverMsg));
-   if (usrpsock>0) recv_data(usrpsock, &msg, sizeof(struct DriverMsg));
+   send_data(timingsock, &msg, sizeof(struct DriverMsg));
+   recv_data(timingsock, &msg, sizeof(struct DriverMsg));
+   if(usrp_settings.use_for_timing){ 
+     pthread_mutex_lock(&usrp_comm_lock);
+     msg.type=TIMING_POSTTRIGGER;
+     msg.status=1;
+     send_data(usrpsock, &msg, sizeof(struct DriverMsg));
+     recv_data(usrpsock, &msg, sizeof(struct DriverMsg));
+     pthread_mutex_unlock(&usrp_comm_lock);
+   }
    pthread_mutex_unlock(&timing_comm_lock);
    pthread_mutex_unlock(&usrp_comm_lock);
    pthread_exit(NULL);
