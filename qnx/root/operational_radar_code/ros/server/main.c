@@ -140,8 +140,6 @@ void graceful_cleanup(int signum)
   close(diosock);   
   fprintf(stderr,"Closing timing socket: %d\n",timingsock);
   close(timingsock);   
-  fprintf(stderr,"Closing usrp socket: %d\n",usrpsock);
-  close(usrpsock);   
   fprintf(stderr,"Closing RECV socket: %d\n",recvsock);
   close(recvsock);   
   fprintf(stderr,"Closing DDS socket: %d\n",ddssock);
@@ -259,7 +257,6 @@ int main()
   pthread_mutex_init(&coord_lock, NULL);
   pthread_mutex_init(&exit_lock, NULL);
   pthread_mutex_init(&ros_state_lock, NULL);
-  pthread_mutex_init(&usrp_comm_lock, NULL);
   pthread_mutex_init(&dds_comm_lock, NULL);
   pthread_mutex_init(&dio_comm_lock, NULL);
   pthread_mutex_init(&gps_comm_lock, NULL);

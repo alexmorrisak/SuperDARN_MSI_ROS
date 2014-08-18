@@ -59,9 +59,9 @@
 #define S_BIT 0x80 //Scope sync
 #define P_BIT 0x10 //Phase bit.  0 for 0 degrees, 1 for 180 degrees
 
-#define TXRATE 5e6
+#define TXRATE 10e6
 #define TXFREQ 12e6
-#define RXRATE 5e6
+#define RXRATE 10e6
 #define RXFREQ 12e6
 
 #define MIMO 1
@@ -159,6 +159,7 @@ int main(){
 	// function-specific message variables
     int     numclients=0;
     struct  DriverMsg msg;
+    uint64_t dummy_variable = 0;
 
 	// timing related variables
 	struct	timespec cpu_start, cpu_stop;
@@ -208,7 +209,7 @@ int main(){
 	args = "addr0=192.168.10.2, addr1=192.168.10.3";
 	if(NUNITS==1)
 	args = "addr0=192.168.10.2";
-	txsubdev = "A:B";
+	txsubdev = "A:A";
 	rxsubdev = "A:A A:B"; //Use two rx channels per daughterboard
 	//rxsubdev = "A:A"; //Use one rx channel per daughterboard
 
@@ -900,6 +901,8 @@ int main(){
                 send_data(msgsock, &dma_buffer, sizeof(dma_buffer));
 			    //nrx_samples=client.number_of_samples;
                 send_data(msgsock, &client.number_of_samples, sizeof(client.number_of_samples));
+                //send_data(msgsock, &dummy_variable, sizeof(dummy_variable));
+                //send_data(msgsock, &dummy_variable, sizeof(dummy_variable));
 			    
 			    if(IMAGING==0){
                   if(verbose > 1 ) std::cout << "Using shared memory addresses..: " << 
