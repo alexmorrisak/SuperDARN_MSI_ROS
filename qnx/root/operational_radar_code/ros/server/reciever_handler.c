@@ -784,8 +784,6 @@ void *receiver_controlprogram_get_data(struct ControlProgram *arg)
   unsigned long wait_elapsed;
   double error_percent=0;
   int error_flag;
-  pthread_mutex_lock(&recv_comm_lock);
-  pthread_mutex_lock(&usrp_comm_lock);
 
   error_flag=0;
   if (collection_count==ULONG_MAX) {
@@ -799,13 +797,15 @@ void *receiver_controlprogram_get_data(struct ControlProgram *arg)
         gettimeofday(&t3,NULL);
         wait_elapsed=(t3.tv_sec-t0.tv_sec)*1E6;
         wait_elapsed+=t3.tv_usec-t0.tv_usec;
-        if(wait_elapsed > 10*1E6) {
+        if(wait_elapsed > 30*1E6) {
           error_flag=-101; 
           break;  
         } else {
           usleep(1);
         }
       } 
+      pthread_mutex_lock(&recv_comm_lock);
+      pthread_mutex_lock(&usrp_comm_lock);
       collection_count++;
       if (error_flag==0) {
         r=arg->parameters->radar-1;
@@ -1029,10 +1029,10 @@ void *receiver_controlprogram_get_data(struct ControlProgram *arg)
 
       //fprintf(stdout,"error_flag: %i\n", error_flag);
       //fprintf(stdout,"size of struct DriverMsg: %i\n", sizeof(struct DriverMsg));
+    pthread_mutex_unlock(&usrp_comm_lock);
+    pthread_mutex_unlock(&recv_comm_lock);
     }
   }
-  pthread_mutex_unlock(&usrp_comm_lock);
-  pthread_mutex_unlock(&recv_comm_lock);
   pthread_exit(NULL);
 };
 
