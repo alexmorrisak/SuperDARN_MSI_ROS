@@ -89,7 +89,7 @@ int server_unixsocket(char *hostip,int port){
     }
 
     saun.sun_family = AF_UNIX;
-    sprintf(path,"%s",hostip);
+    sprintf(path,"%s_%d",hostip,port);
 
     strcpy(saun.sun_path, path);
     fprintf(stdout,"Unix Path: %s\n",path);
@@ -126,8 +126,7 @@ int openunixsock(char *hostip, int port){
           exit(1);
         }
 	saun.sun_family=AF_UNIX;
-	sprintf(path,"%s",hostip);
-        fprintf(stderr,"Sock Path: %s\n",path);
+	sprintf(path,"%s_%d",hostip,port);
         strcpy(saun.sun_path, path);
         //unlink(path);
         len = sizeof(saun.sun_family) + strlen(saun.sun_path);

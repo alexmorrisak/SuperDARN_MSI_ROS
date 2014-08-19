@@ -718,8 +718,8 @@ void *receiver_end_controlprogram(struct ControlProgram *arg)
        }
      }
   }
-  pthread_mutex_unlock(&recv_comm_lock);
   pthread_mutex_unlock(&usrp_comm_lock);
+  pthread_mutex_unlock(&recv_comm_lock);
   pthread_exit(NULL);
 };
 
@@ -784,9 +784,10 @@ void *receiver_controlprogram_get_data(struct ControlProgram *arg)
   unsigned long wait_elapsed;
   double error_percent=0;
   int error_flag;
-  error_flag=0;
-  pthread_mutex_lock(&usrp_comm_lock);
   pthread_mutex_lock(&recv_comm_lock);
+  pthread_mutex_lock(&usrp_comm_lock);
+
+  error_flag=0;
   if (collection_count==ULONG_MAX) {
     error_count=0;
     collection_count=0;
@@ -838,7 +839,7 @@ void *receiver_controlprogram_get_data(struct ControlProgram *arg)
       }      
       printf("arg->data->status: %i\n", arg->data->status);
       if (arg->data->status==0 ) {
-        //printf("RECV: GET_DATA: status good\n");
+        if (verbose > 0 ) fprintf(stdout,"RECV: GET_DATA: status good\n");
         if (recvsock>0) {
           recv_data(recvsock,&arg->data->shm_memory,sizeof(arg->data->shm_memory));
           recv_data(recvsock,&arg->data->frame_header,sizeof(arg->data->frame_header));
@@ -886,36 +887,41 @@ void *receiver_controlprogram_get_data(struct ControlProgram *arg)
               close(shm_fd);
               break;
             case 2: // Send Samples over socket to SHM Memory location
+              if (verbose > 0 ) {
+                fprintf(stdout,"RECV: GET_DATA: set up sample space\n");
+                fprintf(stdout,"  existing arg->main: %p\n",arg->main);
+                fprintf(stdout,"  existing  arg->back: %p\n",arg->back);
+                fprintf(stdout,"  existing arg->mmap_length: %ld\n",(long) arg->mmap_length);
+              }
               if(arg->main!=NULL) munmap(arg->main,arg->mmap_length);
               if(arg->back!=NULL) munmap(arg->back,arg->mmap_length);
               arg->main=NULL;
               arg->back=NULL;
               arg->mmap_length=sizeof(uint32_t)*arg->data->samples;
-
-              sprintf(shm_device,"/receiver_main_%d_%d_%d",r,c,b);
-	          printf("device: %s\n", shm_device);
-              shm_fd=shm_open(shm_device,O_RDONLY,S_IRUSR | S_IWUSR);
-              if (shm_fd == -1) {fprintf(stderr,"shm_open error\n");}
-              ftruncate(shm_fd,arg->mmap_length);
-              arg->main=mmap(0,arg->mmap_length,PROT_READ,MAP_SHARED,shm_fd,0);
-              close(shm_fd);
-
-              sprintf(shm_device,"/receiver_back_%d_%d_%d",r,c,b);
-	          printf("device: %s\n", shm_device);
-              shm_fd=shm_open(shm_device,O_RDONLY,S_IRUSR | S_IWUSR);
-              if (shm_fd == -1) {fprintf(stderr,"shm_open error\n");}
-              ftruncate(shm_fd,arg->mmap_length);
-              arg->main=mmap(0,arg->mmap_length,PROT_READ,MAP_SHARED,shm_fd,0);
-              close(shm_fd);
-
-              //arg->main=mmap(0,arg->mmap_length,PROT_READ|PROT_WRITE,MAP_ANONYMOUS,-1,0);
-              //arg->back=mmap(0,arg->mmap_length,PROT_READ|PROT_WRITE,MAP_ANONYMOUS,-1,0);
-              recv_data(recvsock, arg->main,sizeof(uint32_t)*arg->data->samples);
-              recv_data(recvsock, arg->back,sizeof(uint32_t)*arg->data->samples);
+              arg->main=mmap(0,arg->mmap_length,PROT_READ|PROT_WRITE,MAP_PRIVATE|MAP_ANONYMOUS,-1,0);
+              if ((int64_t)arg->main==-1) {
+                perror("main mmap error: ");
+              }
+              arg->back=mmap(0,arg->mmap_length,PROT_READ|PROT_WRITE,MAP_PRIVATE|MAP_ANONYMOUS,-1,0);
+              if ((int64_t)arg->back==-1) {
+                perror("back mmap error: ");
+              }
+              if (verbose > 0 ) {
+                fprintf(stdout,"  new       arg->main: %p\n",arg->main);
+                fprintf(stdout,"  new       arg->back: %p\n",arg->back);
+                fprintf(stdout,"  new       arg->mmap_length: %ld\n",(long) arg->mmap_length);
+                fprintf(stdout,"  transfer bytes: %ld\n",sizeof(int32_t)*arg->data->samples);
+              }
+              recv_data(recvsock,arg->main,sizeof(int32_t)*arg->data->samples);
+              recv_data(recvsock,arg->back,sizeof(int32_t)*arg->data->samples);
+              if (verbose > 0 ) 
+                fprintf(stdout,"RECV: GET_DATA: data transfered\n");
               break;
           }
+          recv_data(recvsock, &msg, sizeof(struct DriverMsg));
         }
-        if (usrp_settings.use_for_recv && (usrpsock>0)) {
+        if (usrp_settings.use_for_recv && (usrpsock>0) ) {
+
           recv_data(usrpsock,&arg->data->shm_memory,sizeof(arg->data->shm_memory));
           recv_data(usrpsock,&arg->data->frame_header,sizeof(arg->data->frame_header));
           recv_data(usrpsock,&arg->data->bufnum,sizeof(arg->data->bufnum));
@@ -972,50 +978,41 @@ void *receiver_controlprogram_get_data(struct ControlProgram *arg)
               close(shm_fd);
               break;
             case 2: // Send Samples over socket to SHM Memory location
-              //if(arg->main!=NULL) munmap(arg->main,arg->mmap_length);
-              //if(arg->back!=NULL) munmap(arg->back,arg->mmap_length);
-              if(arg->main!=NULL) free(arg->main);
-              if(arg->back!=NULL) free(arg->back);
-              //free(arg->main);
-              //free(arg->back);
+              if (verbose > 0 ) {
+                fprintf(stdout,"RECV: GET_DATA: set up sample space\n");
+                fprintf(stdout,"  existing arg->main: %p\n",arg->main);
+                fprintf(stdout,"  existing  arg->back: %p\n",arg->back);
+                fprintf(stdout,"  existing arg->mmap_length: %ld\n",(long) arg->mmap_length);
+              }
+              if(arg->main!=NULL) munmap(arg->main,arg->mmap_length);
+              if(arg->back!=NULL) munmap(arg->back,arg->mmap_length);
               arg->main=NULL;
               arg->back=NULL;
               arg->mmap_length=sizeof(uint32_t)*arg->data->samples;
-              printf("mmap_length: %i", arg->mmap_length);
-              //arg->main=mmap(0,arg->mmap_length,PROT_READ|PROT_WRITE,MAP_ANONYMOUS,-1,0);
-              //arg->back=mmap(0,arg->mmap_length,PROT_READ|PROT_WRITE,MAP_ANONYMOUS,-1,0);
-              //for (i=0; i<arg->mmap_length; i++){
-              //  printf("%i\n", (arg->main)[i]);
-              //}
-              arg->main=(uint32_t*) malloc(sizeof(uint32_t)*arg->data->samples);
-              arg->back=(uint32_t*) malloc(sizeof(uint32_t)*arg->data->samples);
-
-              //sprintf(shm_device,"/receiver_main_%d_%d_%d",r,c,b);
-	          //printf("device: %s\n", shm_device);
-              //shm_fd=shm_open(shm_device,O_RDONLY,S_IRUSR | S_IWUSR);
-              //if (shm_fd == -1) {fprintf(stderr,"shm_open error\n");}
-              //ftruncate(shm_fd,arg->mmap_length);
-              //arg->main=mmap(0,arg->mmap_length,PROT_READ,MAP_SHARED,shm_fd,0);
-              //close(shm_fd);
-
-              //sprintf(shm_device,"/receiver_back_%d_%d_%d",r,c,b);
-	          //printf("device: %s\n", shm_device);
-              //shm_fd=shm_open(shm_device,O_RDONLY,S_IRUSR | S_IWUSR);
-              //if (shm_fd == -1) {fprintf(stderr,"shm_open error\n");}
-              //ftruncate(shm_fd,arg->mmap_length);
-              //arg->main=mmap(0,arg->mmap_length,PROT_READ,MAP_SHARED,shm_fd,0);
-              //close(shm_fd);
-
-              printf("About to collect %i samples over tcp\n", arg->data->samples);
-              recv_data(usrpsock,arg->main,sizeof(uint32_t)*arg->data->samples);
-              recv_data(usrpsock,arg->back,sizeof(uint32_t)*arg->data->samples);
-              printf("Collected %i samples over tcp\n", arg->data->samples);
-              for (i=0; i<arg->data->samples; i++){
-                printf("%i\n", arg->main[i]);
+              arg->main=mmap(0,arg->mmap_length,PROT_READ|PROT_WRITE,MAP_PRIVATE|MAP_ANONYMOUS,-1,0);
+              if ((int64_t)arg->main==-1) {
+                perror("main mmap error: ");
               }
+              arg->back=mmap(0,arg->mmap_length,PROT_READ|PROT_WRITE,MAP_PRIVATE|MAP_ANONYMOUS,-1,0);
+              if ((int64_t)arg->back==-1) {
+                perror("back mmap error: ");
+              }
+              if (verbose > 0 ) {
+                fprintf(stdout,"  new       arg->main: %p\n",arg->main);
+                fprintf(stdout,"  new       arg->back: %p\n",arg->back);
+                fprintf(stdout,"  new       arg->mmap_length: %ld\n",(long) arg->mmap_length);
+                fprintf(stdout,"  transfer bytes: %ld\n",sizeof(int32_t)*arg->data->samples);
+              }
+              recv_data(usrpsock,arg->main,sizeof(int32_t)*arg->data->samples);
+              recv_data(usrpsock,arg->back,sizeof(int32_t)*arg->data->samples);
+              if (verbose > 0 ) 
+                fprintf(stdout,"RECV: GET_DATA: data transfered\n");
               break;
           }
+          recv_data(usrpsock, &msg, sizeof(struct DriverMsg));
         }
+        if (verbose > 0 ) 
+                fprintf(stdout,"RECV: GET_DATA: end of status good\n");
         //fprintf(stdout,"error_flag: %i\n", error_flag);
       } 
       else { //error occurred
@@ -1032,19 +1029,10 @@ void *receiver_controlprogram_get_data(struct ControlProgram *arg)
 
       //fprintf(stdout,"error_flag: %i\n", error_flag);
       //fprintf(stdout,"size of struct DriverMsg: %i\n", sizeof(struct DriverMsg));
-      if (error_flag==0) {
-        if (recvsock>0) {
-          recv_data(recvsock, &msg, sizeof(struct DriverMsg));
-        }
-        if (usrp_settings.use_for_recv && (usrpsock>0) ) {
-          recv_data(usrpsock, &msg, sizeof(struct DriverMsg));
-        }
-      }
     }
   }
-  pthread_mutex_unlock(&recv_comm_lock);
   pthread_mutex_unlock(&usrp_comm_lock);
-  printf("GET_DATA done\n");
+  pthread_mutex_unlock(&recv_comm_lock);
   pthread_exit(NULL);
 };
 
@@ -1194,8 +1182,8 @@ void *receiver_clrfreq(struct ControlProgram *arg)
   //printf(" Start Freq: %lf\n",arg->state->fft_array[0].freq);
   if (pwr!=NULL) free(pwr);
   pwr=NULL;
-  pthread_mutex_unlock(&recv_comm_lock);
   pthread_mutex_unlock(&usrp_comm_lock);
+  pthread_mutex_unlock(&recv_comm_lock);
   pthread_exit(NULL);
 
 }

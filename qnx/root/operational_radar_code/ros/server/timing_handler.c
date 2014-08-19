@@ -115,7 +115,7 @@ void *timing_pretrigger(void *arg)
   if (timingsock > 0){
     msg.type=TIMING_PRETRIGGER;
     msg.status=1;
-    printf("TIMING: PRETRIGGER: Entering pretrigger\nSend msg\n");
+    //printf("TIMING: PRETRIGGER: Entering pretrigger\nSend msg\n");
     send_data(timingsock, &msg, sizeof(struct DriverMsg));
     //printf("TIMING: PRETRIGGER: free %p %p\n",bad_transmit_times.start_usec,bad_transmit_times.duration_usec);
     if(bad_transmit_times.start_usec!=NULL) free(bad_transmit_times.start_usec);
