@@ -465,12 +465,12 @@ void receiver_assign_frequency(struct ControlProgram *arg){
 							if(minimum_separation > controlprogram->state->rx_sideband ) {
            							blacklist[blacklist_count].start=controlprogram->state->best_assigned_freq-minimum_separation;
            							blacklist[blacklist_count].end=controlprogram->state->best_assigned_freq+minimum_separation;
-           							blacklist[blacklist_count].program=(unsigned int)controlprogram;
+           							blacklist[blacklist_count].program=(uint64_t)controlprogram;
 
 							} else {
            							blacklist[blacklist_count].start=controlprogram->state->best_assigned_freq-controlprogram->state->rx_sideband;
            							blacklist[blacklist_count].end=controlprogram->state->best_assigned_freq+controlprogram->state->rx_sideband;
-           							blacklist[blacklist_count].program=(unsigned int)controlprogram;
+           							blacklist[blacklist_count].program=(uint64_t)controlprogram;
 							}
            						if (verbose>1) fprintf(stderr,"  %d %d :: Adding blacklist :: %d %d :  %d %d\n",
                        						arg->parameters->radar,arg->parameters->channel,
@@ -807,11 +807,13 @@ void *receiver_controlprogram_get_data(struct ControlProgram *arg)
       } 
       collection_count++;
       if (error_flag==0) {
+        r=arg->parameters->radar-1;
+        c=arg->parameters->channel-1;
         arg->data->samples=arg->parameters->number_of_samples;
         printf("munmap on main and back\n");
-        if(arg->main!=NULL) munmap(arg->main,sizeof(unsigned int)*arg->data->samples);
+        if(arg->main!=NULL) munmap(arg->main,sizeof(uint32_t)*arg->data->samples);
         //if(arg->main!=NULL) munmap(arg->main,MAX_SAMPLES*4);
-        if(arg->back!=NULL) munmap(arg->back,sizeof(unsigned int)*arg->data->samples);
+        if(arg->back!=NULL) munmap(arg->back,sizeof(uint32_t)*arg->data->samples);
         //if(arg->back!=NULL) munmap(arg->back,MAX_SAMPLES*4);
 
         if (recvsock>0) {
@@ -829,7 +831,8 @@ void *receiver_controlprogram_get_data(struct ControlProgram *arg)
           recv_data(usrpsock,&arg->data->status,sizeof(arg->data->status));
           printf("GET_DATA status: %i\n", arg->data->status);
         }
-      } else {
+      }
+      else {
         arg->data->status=error_flag;
         arg->data->samples=0;
       }      
@@ -837,83 +840,185 @@ void *receiver_controlprogram_get_data(struct ControlProgram *arg)
       if (arg->data->status==0 ) {
         //printf("RECV: GET_DATA: status good\n");
         if (recvsock>0) {
-          printf("Getting data from receiver card\n");
           recv_data(recvsock,&arg->data->shm_memory,sizeof(arg->data->shm_memory));
           recv_data(recvsock,&arg->data->frame_header,sizeof(arg->data->frame_header));
           recv_data(recvsock,&arg->data->bufnum,sizeof(arg->data->bufnum));
           recv_data(recvsock,&arg->data->samples,sizeof(arg->data->samples));
-          recv_data(recvsock,&arg->main_address,sizeof(arg->main_address));
-          recv_data(recvsock,&arg->back_address,sizeof(arg->back_address));
+          b=arg->data->bufnum;
+          /* Note:
+ 	   *   main_address and back address are  uint64_t 
+ 	  */    
+          switch(arg->data->shm_memory) {
+            case 0: // DMA Memory access
+              recv_data(recvsock,&arg->main_address,sizeof(arg->main_address));
+              recv_data(recvsock,&arg->back_address,sizeof(arg->back_address));
+#ifdef __QNX__
+              //fprintf(stdout,"RECV: GET_DATA: set up DMA memory space\n");
+              arg->mmap_length=sizeof(uint32_t)*arg->data->samples;
+              arg->main =mmap( 0, arg->mmap_length, 
+                        PROT_READ|PROT_NOCACHE, MAP_PHYS, NOFD, 
+                            arg->main_address+sizeof(uint32_t)*arg->data->frame_header);
+              arg->back =mmap( 0, arg->mmap_length, 
+                        PROT_READ|PROT_NOCACHE, MAP_PHYS, NOFD, 
+                        arg->back_address+sizeof(uint32_t)*arg->data->frame_header);
+#else
+              fprintf(stderr,"RECV: GET_DATA: Direct DMA not supported on this OS\n");
+              arg->main=NULL;
+              arg->back=NULL;
+#endif
+              break;
+            case 1: // SHM Memory access
+              printf("RECV: GET_DATA: set up shm memory space\n");
+              arg->mmap_length=sizeof(uint32_t)*arg->data->samples;
+              sprintf(shm_device,"/receiver_main_%d_%d_%d",r,c,b);
+	      printf("device: %s\n", shm_device);
+              printf("opening device\n");
+              shm_fd=shm_open(shm_device,O_RDONLY,S_IRUSR | S_IWUSR);
+              if (shm_fd == -1) {fprintf(stderr,"shm_open error\n");}
+              ftruncate(shm_fd,arg->mmap_length);
+              arg->main=mmap(0,arg->mmap_length,PROT_READ,MAP_SHARED,shm_fd,0);
+              close(shm_fd);
+              sprintf(shm_device,"/receiver_back_%d_%d_%d",r,c,b);
+	      printf("device: %s\n", shm_device);
+              shm_fd=shm_open(shm_device,O_RDONLY,S_IRUSR | S_IWUSR);
+              ftruncate(shm_fd,arg->data->samples * sizeof(uint32_t));
+              arg->back=mmap(0,arg->mmap_length,PROT_READ,MAP_SHARED,shm_fd,0);
+              close(shm_fd);
+              break;
+            case 2: // Send Samples over socket to SHM Memory location
+              if(arg->main!=NULL) munmap(arg->main,arg->mmap_length);
+              if(arg->back!=NULL) munmap(arg->back,arg->mmap_length);
+              arg->main=NULL;
+              arg->back=NULL;
+              arg->mmap_length=sizeof(uint32_t)*arg->data->samples;
+
+              sprintf(shm_device,"/receiver_main_%d_%d_%d",r,c,b);
+	          printf("device: %s\n", shm_device);
+              shm_fd=shm_open(shm_device,O_RDONLY,S_IRUSR | S_IWUSR);
+              if (shm_fd == -1) {fprintf(stderr,"shm_open error\n");}
+              ftruncate(shm_fd,arg->mmap_length);
+              arg->main=mmap(0,arg->mmap_length,PROT_READ,MAP_SHARED,shm_fd,0);
+              close(shm_fd);
+
+              sprintf(shm_device,"/receiver_back_%d_%d_%d",r,c,b);
+	          printf("device: %s\n", shm_device);
+              shm_fd=shm_open(shm_device,O_RDONLY,S_IRUSR | S_IWUSR);
+              if (shm_fd == -1) {fprintf(stderr,"shm_open error\n");}
+              ftruncate(shm_fd,arg->mmap_length);
+              arg->main=mmap(0,arg->mmap_length,PROT_READ,MAP_SHARED,shm_fd,0);
+              close(shm_fd);
+
+              //arg->main=mmap(0,arg->mmap_length,PROT_READ|PROT_WRITE,MAP_ANONYMOUS,-1,0);
+              //arg->back=mmap(0,arg->mmap_length,PROT_READ|PROT_WRITE,MAP_ANONYMOUS,-1,0);
+              recv_data(recvsock, arg->main,sizeof(uint32_t)*arg->data->samples);
+              recv_data(recvsock, arg->back,sizeof(uint32_t)*arg->data->samples);
+              break;
+          }
         }
-        if (usrp_settings.use_for_recv && (usrpsock>0) ) {
-          printf("Getting data from usrp\n");
+        if (usrp_settings.use_for_recv && (usrpsock>0)) {
           recv_data(usrpsock,&arg->data->shm_memory,sizeof(arg->data->shm_memory));
           recv_data(usrpsock,&arg->data->frame_header,sizeof(arg->data->frame_header));
           recv_data(usrpsock,&arg->data->bufnum,sizeof(arg->data->bufnum));
           recv_data(usrpsock,&arg->data->samples,sizeof(arg->data->samples));
-          //recv_data(usrpsock,&arg->main_address,sizeof(arg->main_address));
-          //recv_data(usrpsock,&arg->back_address,sizeof(arg->back_address));
-        }
-        //printf("RECV: GET_DATA: data recv'd\n");
-        r=arg->parameters->radar-1;
-        c=arg->parameters->channel-1;
-        b=arg->data->bufnum;
+          //printf("RECV: GET_DATA: data recv'd\n");
+          r=arg->parameters->radar-1;
+          c=arg->parameters->channel-1;
+          b=arg->data->bufnum;
 
-        printf("RECV: GET_DATA: samples %d\n",arg->data->samples);
-        printf("RECV: GET_DATA: frame header %d\n",arg->data->frame_header);
-        printf("RECV: GET_DATA: shm flag %d\n",arg->data->shm_memory);
-      printf("error_flag: %i\n", error_flag);
-        if(arg->data->shm_memory) {
-          printf("RECV: GET_DATA: set up shm memory space\n");
-
-          sprintf(shm_device,"/receiver_main_%d_%d_%d",r,c,b);
-	      printf("device: %s\n", shm_device);
-          printf("opening device\n");
-          shm_fd=shm_open(shm_device,O_RDONLY,S_IRUSR | S_IWUSR);
-	      int errorint;
-          if (shm_fd == -1) {errorint = errno; fprintf(stderr,"shm_open error\n");}
-          //ftruncate(shm_fd,MAX_SAMPLES*4);
-          ftruncate(shm_fd,arg->data->samples * sizeof(uint32_t));
-          arg->main=mmap(0,sizeof(unsigned int)*arg->data->samples,PROT_READ,MAP_SHARED,shm_fd,0);
-          //arg->main=mmap(0,MAX_SAMPLES*4,PROT_READ,MAP_SHARED,shm_fd,0);
-            //for (i=0; i<arg->data->samples; i++){
-            //    printf("%i %i\n", i, arg->main[i]);
-            //}
-          close(shm_fd);
-          sprintf(shm_device,"/receiver_back_%d_%d_%d",r,c,b);
-	      printf("device: %s\n", shm_device);
-          shm_fd=shm_open(shm_device,O_RDONLY,S_IRUSR | S_IWUSR);
-          //ftruncate(shm_fd,MAX_SAMPLES*4);
-          ftruncate(shm_fd,arg->data->samples * sizeof(uint32_t));
-          arg->back=mmap(0,sizeof(unsigned int)*arg->data->samples,PROT_READ,MAP_SHARED,shm_fd,0);
-          //arg->back=mmap(0,MAX_SAMPLES*4,PROT_READ,MAP_SHARED,shm_fd,0);
-            //for (i=0; i<arg->data->samples; i++){
-            //    printf("%i %i\n", i, arg->back[i]);
-            //}
-          close(shm_fd);
-          //printf("RECV: GET_DATA: end set up shm memory space\n");
-
-        } else {
+          printf("RECV: GET_DATA: samples %d\n",arg->data->samples);
+          printf("RECV: GET_DATA: frame header %d\n",arg->data->frame_header);
+          printf("RECV: GET_DATA: shm flag %d\n",arg->data->shm_memory);
+          printf("error_flag: %i\n", error_flag);
+          b=arg->data->bufnum;
+          /* Note:
+ 	      *  main_address and back address are  uint64_t 
+ 	      */    
+          switch(arg->data->shm_memory) {
+            case 0: // DMA Memory access
+              recv_data(usrpsock,&arg->main_address,sizeof(arg->main_address));
+              recv_data(usrpsock,&arg->back_address,sizeof(arg->back_address));
 #ifdef __QNX__
-          //printf("RECV: GET_DATA: set up non-shm memory space\n");
-          arg->main =mmap( 0, sizeof(unsigned int)*arg->data->samples, 
+              //fprintf(stdout,"RECV: GET_DATA: set up DMA memory space\n");
+              arg->mmap_length=sizeof(uint32_t)*arg->data->samples;
+              arg->main =mmap( 0, arg->mmap_length, 
                         PROT_READ|PROT_NOCACHE, MAP_PHYS, NOFD, 
-                            //arg->main_address+sizeof(unsigned int)*arg->data->frame_header);
-                            arg->main+sizeof(unsigned int)*arg->data->frame_header);
-//                            arg->main_address);
-          arg->back =mmap( 0, sizeof(unsigned int)*arg->data->samples, 
+                        arg->main_address+sizeof(uint32_t)*arg->data->frame_header);
+              arg->back =mmap( 0, arg->mmap_length, 
                         PROT_READ|PROT_NOCACHE, MAP_PHYS, NOFD, 
-                        //arg->back_address+sizeof(unsigned int)*arg->data->frame_header);
-                        arg->back+sizeof(unsigned int)*arg->data->frame_header);
-//                            arg->back_address);
+                        arg->back_address+sizeof(uint32_t)*arg->data->frame_header);
 #else
-          arg->main=NULL;
-          arg->back=NULL;
+              fprintf(stderr,"RECV: GET_DATA: Direct DMA not supported on this OS\n");
+              arg->main=NULL;
+              arg->back=NULL;
 #endif
-          //printf("RECV: GET_DATA: end set up non-shm memory space\n");
-        }
+              break;
+            case 1: // SHM Memory access
+              printf("RECV: GET_DATA: set up shm memory space\n");
+              arg->mmap_length=sizeof(uint32_t)*arg->data->samples;
+              sprintf(shm_device,"/receiver_main_%d_%d_%d",r,c,b);
+	      printf("device: %s\n", shm_device);
+              printf("opening device\n");
+              shm_fd=shm_open(shm_device,O_RDONLY,S_IRUSR | S_IWUSR);
+	      int errorint;
+              if (shm_fd == -1) {errorint = errno; fprintf(stderr,"shm_open error\n");}
+              ftruncate(shm_fd,arg->data->samples * sizeof(uint32_t));
+              arg->main=mmap(0,arg->mmap_length,PROT_READ,MAP_SHARED,shm_fd,0);
+              close(shm_fd);
+              sprintf(shm_device,"/receiver_back_%d_%d_%d",r,c,b);
+	      printf("device: %s\n", shm_device);
+              shm_fd=shm_open(shm_device,O_RDONLY,S_IRUSR | S_IWUSR);
+              ftruncate(shm_fd,arg->data->samples * sizeof(uint32_t));
+              arg->back=mmap(0,arg->mmap_length,PROT_READ,MAP_SHARED,shm_fd,0);
+              close(shm_fd);
+              break;
+            case 2: // Send Samples over socket to SHM Memory location
+              //if(arg->main!=NULL) munmap(arg->main,arg->mmap_length);
+              //if(arg->back!=NULL) munmap(arg->back,arg->mmap_length);
+              if(arg->main!=NULL) free(arg->main);
+              if(arg->back!=NULL) free(arg->back);
+              //free(arg->main);
+              //free(arg->back);
+              arg->main=NULL;
+              arg->back=NULL;
+              arg->mmap_length=sizeof(uint32_t)*arg->data->samples;
+              printf("mmap_length: %i", arg->mmap_length);
+              //arg->main=mmap(0,arg->mmap_length,PROT_READ|PROT_WRITE,MAP_ANONYMOUS,-1,0);
+              //arg->back=mmap(0,arg->mmap_length,PROT_READ|PROT_WRITE,MAP_ANONYMOUS,-1,0);
+              //for (i=0; i<arg->mmap_length; i++){
+              //  printf("%i\n", (arg->main)[i]);
+              //}
+              arg->main=(uint32_t*) malloc(sizeof(uint32_t)*arg->data->samples);
+              arg->back=(uint32_t*) malloc(sizeof(uint32_t)*arg->data->samples);
 
-      } else { //error occurred
+              //sprintf(shm_device,"/receiver_main_%d_%d_%d",r,c,b);
+	          //printf("device: %s\n", shm_device);
+              //shm_fd=shm_open(shm_device,O_RDONLY,S_IRUSR | S_IWUSR);
+              //if (shm_fd == -1) {fprintf(stderr,"shm_open error\n");}
+              //ftruncate(shm_fd,arg->mmap_length);
+              //arg->main=mmap(0,arg->mmap_length,PROT_READ,MAP_SHARED,shm_fd,0);
+              //close(shm_fd);
+
+              //sprintf(shm_device,"/receiver_back_%d_%d_%d",r,c,b);
+	          //printf("device: %s\n", shm_device);
+              //shm_fd=shm_open(shm_device,O_RDONLY,S_IRUSR | S_IWUSR);
+              //if (shm_fd == -1) {fprintf(stderr,"shm_open error\n");}
+              //ftruncate(shm_fd,arg->mmap_length);
+              //arg->main=mmap(0,arg->mmap_length,PROT_READ,MAP_SHARED,shm_fd,0);
+              //close(shm_fd);
+
+              printf("About to collect %i samples over tcp\n", arg->data->samples);
+              recv_data(usrpsock,arg->main,sizeof(uint32_t)*arg->data->samples);
+              recv_data(usrpsock,arg->back,sizeof(uint32_t)*arg->data->samples);
+              printf("Collected %i samples over tcp\n", arg->data->samples);
+              for (i=0; i<arg->data->samples; i++){
+                printf("%i\n", arg->main[i]);
+              }
+              break;
+          }
+        }
+        //fprintf(stdout,"error_flag: %i\n", error_flag);
+      } 
+      else { //error occurred
         error_count++;
         error_percent=(double)error_count/(double)collection_count*100.0;
         arg->data->samples=0;
@@ -925,10 +1030,9 @@ void *receiver_controlprogram_get_data(struct ControlProgram *arg)
         fflush(stderr);
       }
 
-      printf("error_flag: %i\n", error_flag);
-      printf("size of struct DriverMsg: %i\n", sizeof(struct DriverMsg));
+      //fprintf(stdout,"error_flag: %i\n", error_flag);
+      //fprintf(stdout,"size of struct DriverMsg: %i\n", sizeof(struct DriverMsg));
       if (error_flag==0) {
-        //printf("RECV: GET_DATA: recv RosMsg\n");
         if (recvsock>0) {
           recv_data(recvsock, &msg, sizeof(struct DriverMsg));
         }
@@ -936,8 +1040,6 @@ void *receiver_controlprogram_get_data(struct ControlProgram *arg)
           recv_data(usrpsock, &msg, sizeof(struct DriverMsg));
         }
       }
-      //printf("RECV: GET_DATA: unlock comm lock\n");
-      //recv_data(usrpsock, &msg, sizeof(struct DriverMsg));
     }
   }
   pthread_mutex_unlock(&recv_comm_lock);

@@ -174,9 +174,10 @@ void *timing_pretrigger(void *arg)
   pthread_exit(NULL);
 };
 
-void *timing_trigger(int trigger_type)
+void *timing_trigger(int *ttp)
 {
   struct DriverMsg msg;
+  int trigger_type = *ttp;
   pthread_mutex_lock(&timing_comm_lock);
   pthread_mutex_lock(&usrp_comm_lock);
   if (timingsock>0){
@@ -196,7 +197,7 @@ void *timing_trigger(int trigger_type)
     recv_data(timingsock, &msg, sizeof(struct DriverMsg));
   }
 
-  if(usrp_settings.use_for_timing){ 
+  if(usrp_settings.use_for_timing && usrpsock > 0){ 
     switch(trigger_type) {
       case 0:
         msg.type=TIMING_TRIGGER;

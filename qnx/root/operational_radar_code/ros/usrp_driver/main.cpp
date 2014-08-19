@@ -893,7 +893,8 @@ int main(){
 			             		"\tChannel: " << client.channel << std::endl;
 			      std::cout << "r: " << r << "\tc: " << c << std::endl;
 			    }
-			    shm_memory=1; // Flag used to indicate to client if shared memory (mmap()) is used. 1 for yes.
+			    shm_memory=1; // Flag used to indicate to client if shared memory (mmap()) is used.
+			    shm_memory=2; // Flag used to indicate to client if shared memory (mmap()) is used.
                 send_data(msgsock, &shm_memory, sizeof(shm_memory));
 			    frame_offset=0;  // The GC316 cards normally produce rx data w/ a header of length 2 samples. 0 for usrp.
                 send_data(msgsock, &frame_offset, sizeof(frame_offset));
@@ -901,6 +902,11 @@ int main(){
                 send_data(msgsock, &dma_buffer, sizeof(dma_buffer));
 			    //nrx_samples=client.number_of_samples;
                 send_data(msgsock, &client.number_of_samples, sizeof(client.number_of_samples));
+                if (shm_memory==2){
+                    printf("Sending data. %i\n", client.number_of_samples);
+                    send_data(msgsock, shared_main_addresses[r][c][0], sizeof(uint32_t)*client.number_of_samples);
+                    send_data(msgsock, shared_back_addresses[r][c][0], sizeof(uint32_t)*client.number_of_samples);
+                }
                 //send_data(msgsock, &dummy_variable, sizeof(dummy_variable));
                 //send_data(msgsock, &dummy_variable, sizeof(dummy_variable));
 			    
