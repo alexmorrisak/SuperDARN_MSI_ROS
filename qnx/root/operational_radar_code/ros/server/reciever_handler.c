@@ -942,6 +942,7 @@ void *receiver_controlprogram_get_data(struct ControlProgram *arg)
   }
   pthread_mutex_unlock(&recv_comm_lock);
   pthread_mutex_unlock(&usrp_comm_lock);
+  printf("GET_DATA done\n");
   pthread_exit(NULL);
 };
 

@@ -59,9 +59,9 @@
 #define S_BIT 0x80 //Scope sync
 #define P_BIT 0x10 //Phase bit.  0 for 0 degrees, 1 for 180 degrees
 
-#define TXRATE 10e6
+#define TXRATE 5e6
 #define TXFREQ 12e6
-#define RXRATE 10e6
+#define RXRATE 5e6
 #define RXFREQ 12e6
 
 #define MIMO 1

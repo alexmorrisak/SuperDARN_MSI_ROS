@@ -257,6 +257,7 @@ int main()
   pthread_mutex_init(&coord_lock, NULL);
   pthread_mutex_init(&exit_lock, NULL);
   pthread_mutex_init(&ros_state_lock, NULL);
+  pthread_mutex_init(&timing_comm_lock, NULL);
   pthread_mutex_init(&dds_comm_lock, NULL);
   pthread_mutex_init(&dio_comm_lock, NULL);
   pthread_mutex_init(&gps_comm_lock, NULL);

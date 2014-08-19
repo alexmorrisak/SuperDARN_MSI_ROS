@@ -237,7 +237,7 @@ void rx_process_gpu(
         
     int ntaps0 = 2*dmrate0; //The coarse filter length is 2x the decimation rate
     int ntaps1 = 8*dmrate1; //The fine filter length is 8x the decimation rate
-    if (ntaps0 * nfreqs > 1024 || ntaps1 * nfreqs > 1024) {
+    if (ntaps0 * nfreqs > 2*1024 || ntaps1 * nfreqs > 2*1024) {
         fprintf(stderr,"Error! GPU resources exceeded. "
             "Consider reducing the number of frequency channels or "
             "recompiling the CUDA code with different block size\n Exiting..\n");

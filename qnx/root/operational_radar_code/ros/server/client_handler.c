@@ -758,6 +758,7 @@ control_program);
                 send_data(socket, &msg, sizeof(struct ROSMsg));
               } else {
                 msg.status=status;
+                printf("CLIENT_HANDLER: get_data()\n");
                 rc = pthread_create(&thread, NULL,(void *)&receiver_controlprogram_get_data,(void *) control_program);
                 pthread_join(thread,NULL);
                 send_data(socket, control_program->data, sizeof(struct DataPRM));
