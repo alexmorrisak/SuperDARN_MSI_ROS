@@ -589,11 +589,12 @@ int main(int argc, char **argv){
                   close(shm_fd);
                   for (i=0;i<MAX_SAMPLES;i++) {
                     I= (uint16_t) i % 16;
+                    //I= 10;
                     Q= (uint16_t) ((16*r) + (c % 16));
                     IQ = ( I & 0xFFFF)+(((uint32_t) Q) << 16);
-                    main_test_data[r][c][0][i]= IQ+32 ;	
-		    back_test_data[r][c][0][i]= IQ+64;	
-		    aux_test_data[r][c][0][i]=  IQ+128;	
+                    main_test_data[r][c][0][i]= IQ+32;	
+		            back_test_data[r][c][0][i]= IQ;//+64;	
+		            aux_test_data[r][c][0][i]=  IQ;//+128;	
                     //fprintf(stdout,"i: %u  I: %x Q: %x IQ: %x\n",i,(unsigned int)( (uint32_t) I & 0xFFFF)+128,(unsigned int)( (uint32_t) Q << 16),(unsigned int)IQ+128);
                   } 
               }

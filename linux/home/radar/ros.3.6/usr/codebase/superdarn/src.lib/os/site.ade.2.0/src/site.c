@@ -1062,8 +1062,8 @@ usleep(usecs);
         nsamp=(int)dprm.samples;
         for(n=0;n<(nsamp);n++){
           rdata.main[n] = ~rdata.main[n] + 1; /*Not sure why need to calculate 2's complement to get the correct values..(AFM)*/
-          Q=((rdata.main)[n] & 0xffff0000) >> 16;
-          I=(rdata.main)[n] & 0x0000ffff;
+          Q=(int16_t) ((rdata.main)[n] & 0xffff0000) >> 16;
+          I=(int16_t) (rdata.main)[n] & 0x0000ffff;
           fprintf(stderr," %7d :: %7d %7d\n",n,(unsigned int)I,(unsigned int)Q);
           /*fprintf(stderr," %7i :: %7i\n",n,(int)sqrt(I*I+Q*Q));*/
           /*fprintf(stderr," %7d :: %7x\n",n,(unsigned int) rdata.main[n]);*/
