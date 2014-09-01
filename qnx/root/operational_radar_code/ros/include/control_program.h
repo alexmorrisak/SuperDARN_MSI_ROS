@@ -75,6 +75,7 @@ struct USRPSettings {
      char use_for_dio;	
      char host[256];
      uint8_t port;
+     char use_for_channel[4][4];
 };
 /*
 struct ChannelStatus {

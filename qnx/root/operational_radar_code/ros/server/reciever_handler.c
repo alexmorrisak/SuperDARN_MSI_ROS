@@ -699,22 +699,26 @@ void receiver_exit(void *arg)
 
 void *receiver_end_controlprogram(struct ControlProgram *arg)
 {
-  struct DriverMsg msg;
+  struct DriverMsg msg,rmsg;
+  int r,c;
   pthread_mutex_lock(&recv_comm_lock);
   pthread_mutex_lock(&usrp_comm_lock);
   if (arg!=NULL) {
+     r=arg->parameters->radar-1;
+     c=arg->parameters->channel-1;
      if (arg->state->pulseseqs[arg->parameters->current_pulseseq_index]!=NULL) {
-       if (recvsock>0) {
+       if (recvsock>0  && !usrp_settings.use_for_channel[r][c]) {
          msg.type=RECV_CtrlProg_END;
          msg.status=1;
          send_data(recvsock, &msg, sizeof(struct DriverMsg));
          send_data(recvsock, arg->parameters, sizeof(struct ControlPRM));
        }
-       if (usrp_settings.use_for_recv && (usrpsock>0) ) {
+       if ( usrpsock>0 ) {
          msg.type=RECV_CtrlProg_END;
          msg.status=1;
          send_data(usrpsock, &msg, sizeof(struct DriverMsg));
          send_data(usrpsock, arg->parameters, sizeof(struct ControlPRM));
+         recv_data(usrpsock, &rmsg, sizeof(struct DriverMsg));
        }
      }
   }
@@ -801,7 +805,7 @@ void *receiver_controlprogram_get_data(struct ControlProgram *arg)
         gettimeofday(&t3,NULL);
         wait_elapsed=(t3.tv_sec-t0.tv_sec)*1E6;
         wait_elapsed+=t3.tv_usec-t0.tv_usec;
-        if(wait_elapsed > 30*1E6) {
+        if(wait_elapsed > 10*1E6) {
           error_flag=-101; 
           break;  
         } else {
@@ -812,47 +816,48 @@ void *receiver_controlprogram_get_data(struct ControlProgram *arg)
       pthread_mutex_lock(&usrp_comm_lock);
       collection_count++;
       if (error_flag==0) {
+        arg->data->status=-1;
         r=arg->parameters->radar-1;
         c=arg->parameters->channel-1;
         arg->data->samples=arg->parameters->number_of_samples;
-<<<<<<< HEAD
-        printf("munmap on main and back\n");
-        if(arg->main!=NULL) munmap(arg->main,sizeof(uint32_t)*arg->data->samples);
-=======
         if(arg->main!=NULL) munmap(arg->main,sizeof(unsigned int)*arg->data->samples);
->>>>>>> adak-devel
         //if(arg->main!=NULL) munmap(arg->main,MAX_SAMPLES*4);
-        if(arg->back!=NULL) munmap(arg->back,sizeof(uint32_t)*arg->data->samples);
+        if(arg->back!=NULL) munmap(arg->back,sizeof(unsigned int)*arg->data->samples);
         //if(arg->back!=NULL) munmap(arg->back,MAX_SAMPLES*4);
-
-        if (recvsock>0) {
+        fprintf(stdout,"Use usrp for: %d %d :: %d\n",r,c,usrp_settings.use_for_channel[r][c]); 
+        if (recvsock>0  && !usrp_settings.use_for_channel[r][c]) {
+          fprintf(stdout,"Using gc3xx for : %d %d :: send msg\n",r,c); 
           msg.type=RECV_GET_DATA;
           msg.status=1;
           send_data(recvsock, &msg, sizeof(struct DriverMsg));
           send_data(recvsock, arg->parameters, sizeof(struct ControlPRM));
           recv_data(recvsock,&arg->data->status,sizeof(arg->data->status));
         }
-        if (usrp_settings.use_for_recv && (usrpsock>0) ) {
+        if ( usrp_settings.use_for_channel[r][c] && (usrpsock>0) ) {
+          fprintf(stdout,"Use usrp for: %d %d :: send msg\n",r,c); 
           msg.type=RECV_GET_DATA;
           msg.status=1;
           send_data(usrpsock, &msg, sizeof(struct DriverMsg));
           send_data(usrpsock, arg->parameters, sizeof(struct ControlPRM));
           recv_data(usrpsock,&arg->data->status,sizeof(arg->data->status));
+          if (arg->data->status==10 ) {
+            printf("Whoa, client not registered..?!\n");
+          }
+          fprintf(stdout,"Use usrp for: %d %d :: status: %d \n",r,c,arg->data->status); 
           //printf("GET_DATA status: %i\n", arg->data->status);
         }
-      }
-      else {
+      } else {
         arg->data->status=error_flag;
         arg->data->samples=0;
       }      
       //printf("arg->data->status: %i\n", arg->data->status);
       if (arg->data->status==0 ) {
         if (verbose > 0 ) fprintf(stdout,"RECV: GET_DATA: status good\n");
-        if (recvsock>0) {
-          recv_data(recvsock,&arg->data->shm_memory,sizeof(arg->data->shm_memory));
-          recv_data(recvsock,&arg->data->frame_header,sizeof(arg->data->frame_header));
-          recv_data(recvsock,&arg->data->bufnum,sizeof(arg->data->bufnum));
-          recv_data(recvsock,&arg->data->samples,sizeof(arg->data->samples));
+        if (recvsock>0  && !usrp_settings.use_for_channel[r][c] ) {
+          recv_data(recvsock,&arg->data->shm_memory,sizeof(int32_t));
+          recv_data(recvsock,&arg->data->frame_header,sizeof(int32_t));
+          recv_data(recvsock,&arg->data->bufnum,sizeof(int32_t));
+          recv_data(recvsock,&arg->data->samples,sizeof(int32_t));
           b=arg->data->bufnum;
           /* Note:
  	   *   main_address and back address are  uint64_t 
@@ -867,101 +872,6 @@ void *receiver_controlprogram_get_data(struct ControlProgram *arg)
               arg->main =mmap( 0, arg->mmap_length, 
                         PROT_READ|PROT_NOCACHE, MAP_PHYS, NOFD, 
                             arg->main_address+sizeof(uint32_t)*arg->data->frame_header);
-              arg->back =mmap( 0, arg->mmap_length, 
-                        PROT_READ|PROT_NOCACHE, MAP_PHYS, NOFD, 
-                        arg->back_address+sizeof(uint32_t)*arg->data->frame_header);
-#else
-              fprintf(stderr,"RECV: GET_DATA: Direct DMA not supported on this OS\n");
-              arg->main=NULL;
-              arg->back=NULL;
-#endif
-              break;
-            case 1: // SHM Memory access
-              printf("RECV: GET_DATA: set up shm memory space\n");
-              arg->mmap_length=sizeof(uint32_t)*arg->data->samples;
-              sprintf(shm_device,"/receiver_main_%d_%d_%d",r,c,b);
-	      printf("device: %s\n", shm_device);
-              printf("opening device\n");
-              shm_fd=shm_open(shm_device,O_RDONLY,S_IRUSR | S_IWUSR);
-              if (shm_fd == -1) {fprintf(stderr,"shm_open error\n");}
-              ftruncate(shm_fd,arg->mmap_length);
-              arg->main=mmap(0,arg->mmap_length,PROT_READ,MAP_SHARED,shm_fd,0);
-              close(shm_fd);
-              sprintf(shm_device,"/receiver_back_%d_%d_%d",r,c,b);
-	      printf("device: %s\n", shm_device);
-              shm_fd=shm_open(shm_device,O_RDONLY,S_IRUSR | S_IWUSR);
-              ftruncate(shm_fd,arg->data->samples * sizeof(uint32_t));
-              arg->back=mmap(0,arg->mmap_length,PROT_READ,MAP_SHARED,shm_fd,0);
-              close(shm_fd);
-              break;
-            case 2: // Send Samples over socket to SHM Memory location
-              if (verbose > 0 ) {
-                fprintf(stdout,"RECV: GET_DATA: set up sample space\n");
-                fprintf(stdout,"  existing arg->main: %p\n",arg->main);
-                fprintf(stdout,"  existing  arg->back: %p\n",arg->back);
-                fprintf(stdout,"  existing arg->mmap_length: %ld\n",(long) arg->mmap_length);
-              }
-              if(arg->main!=NULL) munmap(arg->main,arg->mmap_length);
-              if(arg->back!=NULL) munmap(arg->back,arg->mmap_length);
-              arg->main=NULL;
-              arg->back=NULL;
-              arg->mmap_length=sizeof(uint32_t)*arg->data->samples;
-              arg->main=mmap(0,arg->mmap_length,PROT_READ|PROT_WRITE,MAP_PRIVATE|MAP_ANONYMOUS,-1,0);
-              if ((int64_t)arg->main==-1) {
-                perror("main mmap error: ");
-              }
-              arg->back=mmap(0,arg->mmap_length,PROT_READ|PROT_WRITE,MAP_PRIVATE|MAP_ANONYMOUS,-1,0);
-              if ((int64_t)arg->back==-1) {
-                perror("back mmap error: ");
-              }
-              if (verbose > 0 ) {
-                fprintf(stdout,"  new       arg->main: %p\n",arg->main);
-                fprintf(stdout,"  new       arg->back: %p\n",arg->back);
-                fprintf(stdout,"  new       arg->mmap_length: %ld\n",(long) arg->mmap_length);
-                fprintf(stdout,"  transfer bytes: %ld\n",sizeof(int32_t)*arg->data->samples);
-              }
-              recv_data(recvsock,arg->main,sizeof(int32_t)*arg->data->samples);
-              recv_data(recvsock,arg->back,sizeof(int32_t)*arg->data->samples);
-              //for (i=0; i<arg->data->samples;i++) {
-              //  fprintf(stdout,"i: %d main: 0x%x back: 0x%x\n",
-              //    i,(unsigned int) ((uint32_t *)arg->main)[i],((uint32_t *)arg->back)[i]);
-	      //
-              //}
-              if (verbose > 0 ) 
-                fprintf(stdout,"RECV: GET_DATA: data transfered\n");
-              break;
-          }
-          recv_data(recvsock, &msg, sizeof(struct DriverMsg));
-        }
-        if (usrp_settings.use_for_recv && (usrpsock>0) ) {
-
-          recv_data(usrpsock,&arg->data->shm_memory,sizeof(arg->data->shm_memory));
-          recv_data(usrpsock,&arg->data->frame_header,sizeof(arg->data->frame_header));
-          recv_data(usrpsock,&arg->data->bufnum,sizeof(arg->data->bufnum));
-          recv_data(usrpsock,&arg->data->samples,sizeof(arg->data->samples));
-          //printf("RECV: GET_DATA: data recv'd\n");
-          r=arg->parameters->radar-1;
-          c=arg->parameters->channel-1;
-          b=arg->data->bufnum;
-
-          printf("RECV: GET_DATA: samples %d\n",arg->data->samples);
-          printf("RECV: GET_DATA: frame header %d\n",arg->data->frame_header);
-          printf("RECV: GET_DATA: shm flag %d\n",arg->data->shm_memory);
-          printf("error_flag: %i\n", error_flag);
-          b=arg->data->bufnum;
-          /* Note:
- 	      *  main_address and back address are  uint64_t 
- 	      */    
-          switch(arg->data->shm_memory) {
-            case 0: // DMA Memory access
-              recv_data(usrpsock,&arg->main_address,sizeof(arg->main_address));
-              recv_data(usrpsock,&arg->back_address,sizeof(arg->back_address));
-#ifdef __QNX__
-              //fprintf(stdout,"RECV: GET_DATA: set up DMA memory space\n");
-              arg->mmap_length=sizeof(uint32_t)*arg->data->samples;
-              arg->main =mmap( 0, arg->mmap_length, 
-                        PROT_READ|PROT_NOCACHE, MAP_PHYS, NOFD, 
-                        arg->main_address+sizeof(uint32_t)*arg->data->frame_header);
               arg->back =mmap( 0, arg->mmap_length, 
                         PROT_READ|PROT_NOCACHE, MAP_PHYS, NOFD, 
                         arg->back_address+sizeof(uint32_t)*arg->data->frame_header);
@@ -1016,25 +926,132 @@ void *receiver_controlprogram_get_data(struct ControlProgram *arg)
                 fprintf(stdout,"  new       arg->mmap_length: %ld\n",(long) arg->mmap_length);
                 fprintf(stdout,"  transfer bytes: %ld\n",sizeof(int32_t)*arg->data->samples);
               }
-              recv_data(usrpsock,arg->main,sizeof(int32_t)*arg->data->samples);
-              recv_data(usrpsock,arg->back,sizeof(int32_t)*arg->data->samples);
+              recv_data(recvsock,arg->main,sizeof(int32_t)*arg->data->samples);
+              recv_data(recvsock,arg->back,sizeof(int32_t)*arg->data->samples);
+              //for (i=0; i<arg->data->samples;i++) {
+              //  fprintf(stdout,"i: %d main: 0x%x back: 0x%x\n",
+              //    i,(unsigned int) ((uint32_t *)arg->main)[i],((uint32_t *)arg->back)[i]);
+	      //
+              //}
               if (verbose > 0 ) 
                 fprintf(stdout,"RECV: GET_DATA: data transfered\n");
               break;
           }
+          recv_data(recvsock, &msg, sizeof(struct DriverMsg));
+        }
+        if ( usrp_settings.use_for_channel[r][c] && (usrpsock>0) ) {
+          fprintf(stdout,"Use usrp for: %d %d :: status good\n",r,c); 
+
+          recv_data(usrpsock,&arg->data->shm_memory,sizeof(int32_t));
+          recv_data(usrpsock,&arg->data->frame_header,sizeof(int32_t));
+          recv_data(usrpsock,&arg->data->bufnum,sizeof(int32_t));
+          recv_data(usrpsock,&arg->data->samples,sizeof(int32_t));
+          b=arg->data->bufnum;
+          /* Note:
+ 	   *   main_address and back address are  uint64_t 
+ 	  */    
+          fprintf(stdout,"Use usrp for: %d %d :: shm memory: %d\n",r,c,arg->data->shm_memory); 
+          fprintf(stdout,"Use usrp for: %d %d :: frame header: %d\n",r,c,arg->data->frame_header); 
+          fprintf(stdout,"Use usrp for: %d %d :: bufnum: %d\n",r,c,arg->data->bufnum); 
+          fprintf(stdout,"Use usrp for: %d %d :: samples: %d\n",r,c,arg->data->samples); 
+          arg->data->shm_memory=2;
+ 
+          switch(arg->data->shm_memory) {
+            case 0: // DMA Memory access
+              recv_data(usrpsock,&arg->main_address,sizeof(arg->main_address));
+              recv_data(usrpsock,&arg->back_address,sizeof(arg->back_address));
+#ifdef __QNX__
+              //fprintf(stdout,"RECV: GET_DATA: set up DMA memory space\n");
+              arg->mmap_length=sizeof(uint32_t)*arg->data->samples;
+              arg->main =mmap( 0, arg->mmap_length, 
+                        PROT_READ|PROT_NOCACHE, MAP_PHYS, NOFD, 
+                            arg->main_address+sizeof(uint32_t)*arg->data->frame_header);
+              arg->back =mmap( 0, arg->mmap_length, 
+                        PROT_READ|PROT_NOCACHE, MAP_PHYS, NOFD, 
+                        arg->back_address+sizeof(uint32_t)*arg->data->frame_header);
+#else
+              fprintf(stderr,"RECV: GET_DATA: Direct DMA not supported on this OS\n");
+              arg->main=NULL;
+              arg->back=NULL;
+#endif
+              break;
+            case 1: // SHM Memory access
+              printf("RECV: GET_DATA: set up shm memory space\n");
+              arg->mmap_length=sizeof(uint32_t)*arg->data->samples;
+              sprintf(shm_device,"/receiver_main_%d_%d_%d",r,c,b);
+	      printf("device: %s\n", shm_device);
+              printf("opening device\n");
+              shm_fd=shm_open(shm_device,O_RDONLY,S_IRUSR | S_IWUSR);
+	      int errorint;
+              if (shm_fd == -1) {errorint = errno; fprintf(stderr,"shm_open error\n");}
+              ftruncate(shm_fd,arg->data->samples * sizeof(uint32_t));
+              arg->main=mmap(0,arg->mmap_length,PROT_READ,MAP_SHARED,shm_fd,0);
+              close(shm_fd);
+              sprintf(shm_device,"/receiver_back_%d_%d_%d",r,c,b);
+	      printf("device: %s\n", shm_device);
+              shm_fd=shm_open(shm_device,O_RDONLY,S_IRUSR | S_IWUSR);
+              ftruncate(shm_fd,arg->data->samples * sizeof(uint32_t));
+              arg->back=mmap(0,arg->mmap_length,PROT_READ,MAP_SHARED,shm_fd,0);
+              close(shm_fd);
+              break;
+            case 2: // Send Samples over socket to SHM Memory location
+              if(arg->main!=NULL) munmap(arg->main,arg->mmap_length);
+              if(arg->back!=NULL) munmap(arg->back,arg->mmap_length);
+              arg->main=NULL;
+              arg->back=NULL;
+              arg->mmap_length=0;
+              
+              arg->mmap_length=sizeof(uint32_t)*arg->data->samples;
+              arg->main=mmap(0,arg->mmap_length,PROT_READ|PROT_WRITE,MAP_PRIVATE|MAP_ANONYMOUS,-1,0);
+              if ((int64_t)arg->main==-1) {
+                perror("main mmap error: ");
+              }
+              arg->back=mmap(0,arg->mmap_length,PROT_READ|PROT_WRITE,MAP_PRIVATE|MAP_ANONYMOUS,-1,0);
+              if ((int64_t)arg->back==-1) {
+                perror("back mmap error: ");
+              }
+              recv_data(usrpsock,arg->main,sizeof(int32_t)*arg->data->samples);
+              recv_data(usrpsock,arg->back,sizeof(int32_t)*arg->data->samples);
+             
+              fprintf(stdout,"  Use usrp for: %d %d :: main ::  %p\n",r,c,arg->main); 
+              fprintf(stdout,"  Use usrp for: %d %d :: back ::  %p\n",r,c,arg->back); 
+              fprintf(stdout,"  Use usrp for: %d %d :: length ::  %d\n",r,c,arg->mmap_length); 
+              fprintf(stdout,"  Use usrp for: %d %d :: samples: %d\n",r,c,arg->data->samples); 
+              fprintf(stdout,"  Use usrp for: %d %d :: end sample transfer\n",r,c); 
+              break;
+          }
           recv_data(usrpsock, &msg, sizeof(struct DriverMsg));
+          fprintf(stdout,"Use usrp for: %d %d :: end sample transfer\n",r,c); 
         }
         if (verbose > 0 ) 
                 fprintf(stdout,"RECV: GET_DATA: end of status good\n");
-        //fprintf(stdout,"error_flag: %i\n", error_flag);
+
       } else { //error occurred
-        if (recvsock>0) recv_data(recvsock, &msg, sizeof(struct DriverMsg));
-        if (usrp_settings.use_for_recv && (usrpsock>0) ) recv_data(usrpsock, &msg, sizeof(struct DriverMsg));
+        if (recvsock>0  && !usrp_settings.use_for_channel[r][c]){
+          printf("receiving message on error\n");
+          recv_data(recvsock, &msg, sizeof(struct DriverMsg));
+        }
+        if (usrp_settings.use_for_channel[r][c] && (usrpsock>0) ){
+          fprintf(stdout,"Use usrp for: %d %d :: error occurred\n",r,c); 
+          //recv_data(usrpsock,&arg->data->shm_memory,sizeof(int32_t));
+          //recv_data(usrpsock,&arg->data->frame_header,sizeof(int32_t));
+          //recv_data(usrpsock,&arg->data->bufnum,sizeof(int32_t));
+          //recv_data(usrpsock,&arg->data->samples,sizeof(int32_t));
+          fprintf(stdout,"  Use usrp for: %d %d :: shm memory: %d\n",r,c,arg->data->shm_memory); 
+          fprintf(stdout,"  Use usrp for: %d %d :: frame header: %d\n",r,c,arg->data->frame_header); 
+          fprintf(stdout,"  Use usrp for: %d %d :: bufnum: %d\n",r,c,arg->data->bufnum); 
+          fprintf(stdout,"  Use usrp for: %d %d :: samples: %d\n",r,c,arg->data->samples); 
+          printf("receiving message on error\n");
+          recv_data(usrpsock, &msg, sizeof(struct DriverMsg));
+        }
         error_count++;
         error_percent=(double)error_count/(double)collection_count*100.0;
         arg->data->samples=0;
+        if(arg->main!=NULL) munmap(arg->main,arg->mmap_length);
+        if(arg->back!=NULL) munmap(arg->back,arg->mmap_length);
         arg->main=NULL;
         arg->back=NULL;
+        arg->mmap_length=0;
         gettimeofday(&t1,NULL);
         fprintf(stderr,"RECV::GET_DATA: Bad Status: %d Time: %s",arg->data->status,ctime(&t1.tv_sec));
         fprintf(stderr,"  Collected: %ld  Errors: %ld  Percentage: %lf\n",collection_count,error_count,error_percent);
@@ -1056,7 +1073,7 @@ void *receiver_clrfreq(struct ControlProgram *arg)
   struct timeval t0;
   struct CLRFreqPRM clrfreq_parameters;
   unsigned long wait_elapsed;
-  int i,j,r,bandwidth,index,min_index,max_index,radars,length;
+  int i,j,c,r,bandwidth,index,min_index,max_index,radars,length;
   int temp1,temp2;
   int i_min[MAX_CHANNELS*MAX_RADARS];
   double m_min[MAX_CHANNELS*MAX_RADARS];
@@ -1065,11 +1082,13 @@ void *receiver_clrfreq(struct ControlProgram *arg)
   double *pwr=NULL;
   int start,end,centre,acount;
   int clr_needed=0;
-  pthread_mutex_lock(&recv_comm_lock);
-  pthread_mutex_lock(&usrp_comm_lock);
 
 //  fprintf(stdout,"CLRFREQ: %d %d\n",arg->parameters->radar-1,arg->parameters->channel-1);
 //  fprintf(stdout," FFT FREQ: %d %d\n",arg->clrfreqsearch.start,arg->clrfreqsearch.end);
+  r=arg->parameters->radar-1;
+  c=arg->parameters->channel-1;
+  pthread_mutex_lock(&recv_comm_lock);
+  pthread_mutex_lock(&usrp_comm_lock);
   gettimeofday(&t0,NULL);
 
   /* Check to see if Clr search request falls within full scan parameters */
@@ -1123,8 +1142,7 @@ void *receiver_clrfreq(struct ControlProgram *arg)
     break;   
 */
    case 1:
-    if (recvsock>0) {
-      r=arg->parameters->radar-1;
+    if (recvsock>0  && !usrp_settings.use_for_channel[r][c]) {
       msg.type=RECV_CLRFREQ;
       msg.status=1;
       send_data(recvsock, &msg, sizeof(struct DriverMsg));
@@ -1143,8 +1161,7 @@ void *receiver_clrfreq(struct ControlProgram *arg)
       recv_data(recvsock, pwr, sizeof(double)*arg->state->N);
       recv_data(recvsock, &msg, sizeof(struct DriverMsg));
     }
-    if (usrp_settings.use_for_recv && (usrpsock>0) ) {
-      r=arg->parameters->radar-1;
+    if ( usrp_settings.use_for_channel[r][c] && (usrpsock>0) ) {
       msg.type=RECV_CLRFREQ;
       msg.status=1;
       printf("Starting recv_clr_freq\n");

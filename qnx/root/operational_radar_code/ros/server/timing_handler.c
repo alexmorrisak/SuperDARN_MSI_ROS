@@ -38,6 +38,7 @@ void *timing_ready_controlprogram(struct ControlProgram *arg)
         msg.status=1;
         send_data(usrpsock, &msg, sizeof(struct DriverMsg));
         send_data(usrpsock, arg->parameters, sizeof(struct ControlPRM));
+        printf("almeister: readying radar %i channel %i\n", arg->parameters->radar, arg->parameters->channel);
         recv_data(usrpsock, &msg, sizeof(struct DriverMsg));
       } 
     }
@@ -86,11 +87,14 @@ void *timing_register_seq(struct ControlProgram *control_program)
     send_data(usrpsock, control_program->parameters, sizeof(struct ControlPRM));
     index=control_program->parameters->current_pulseseq_index;
     send_data(usrpsock, &index, sizeof(index)); //requested index
-    send_data(usrpsock,control_program->state->pulseseqs[index], sizeof(struct TSGbuf)); // requested pulseseq
+    //send_data(usrpsock,control_program->state->pulseseqs[index], sizeof(struct TSGbuf)); // requested pulseseq
+    send_data(usrpsock,&(control_program->state->pulseseqs[index]->index), sizeof(int32_t));
+    send_data(usrpsock,&(control_program->state->pulseseqs[index]->len), sizeof(int32_t));
+    send_data(usrpsock,&(control_program->state->pulseseqs[index]->step), sizeof(int32_t));
     send_data(usrpsock,control_program->state->pulseseqs[index]->rep, 
-    sizeof(unsigned char)*control_program->state->pulseseqs[index]->len); // requested pulseseq
+        sizeof(unsigned char)*control_program->state->pulseseqs[index]->len); // requested pulseseq
     send_data(usrpsock,control_program->state->pulseseqs[index]->code, 
-    sizeof(unsigned char)*control_program->state->pulseseqs[index]->len); // requested pulseseq
+        sizeof(unsigned char)*control_program->state->pulseseqs[index]->len); // requested pulseseq
     recv_data(usrpsock, &msg, sizeof(struct DriverMsg));
   }
   pthread_mutex_unlock(&usrp_comm_lock);

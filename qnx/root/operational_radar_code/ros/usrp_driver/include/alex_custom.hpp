@@ -43,6 +43,7 @@ void recv_to_buffer(
 int recv_clr_freq(
     uhd::usrp::multi_usrp::sptr usrp,
     uhd::rx_streamer::sptr rx_stream,
+    size_t center,
     size_t span,
     size_t bandwidth,
     size_t nave,

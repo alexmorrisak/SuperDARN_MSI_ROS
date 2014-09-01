@@ -186,9 +186,8 @@ struct BlackList {
 
 
 struct DriverMsg {
-     char type;
-     int status;
-
+     int32_t type;
+     int32_t status;
 };
 
 #define DEFAULT_FREQ 13000

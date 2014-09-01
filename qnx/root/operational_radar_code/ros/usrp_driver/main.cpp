@@ -65,7 +65,8 @@
 #define RXFREQ 12e6
 
 #define MIMO 1
-#define NUNITS 1
+#define EXT 1
+#define NUNITS 2
 
 #define NRADARS 2
 
@@ -151,7 +152,7 @@ int main(){
 	//counter and temporary variables
     //int offset_pad, rx_offset, dds_offset, tx_offset;
     //int scope_start, dds_trigger, rx_trigger;
-	int	i,r,c,buf,index;
+	int32_t	i,r,c,buf,index;
     struct timeval t0,t6;
     struct timeval t1;
     unsigned long elapsed;
@@ -193,11 +194,11 @@ int main(){
     //tx_data tx(1, 1, TXFREQ, TXRATE);
     //rx_data rx(1,2,RXFREQ, RXRATE);
     /* Example dual-site radar configuration, non-imaging*/
-    //tx_data tx(2, 2, TXFREQ, TXRATE);
-    //rx_data rx(2,4,RXFREQ, RXRATE);
+    tx_data tx(2, 2, TXFREQ, TXRATE);
+    rx_data rx(2,4,RXFREQ, RXRATE);
     /* For testing*/
-    tx_data tx(1, 1, TXFREQ, TXRATE);
-    rx_data rx(1, 2, RXFREQ, RXRATE);
+    //tx_data tx(1, 1, TXFREQ, TXRATE);
+    //rx_data rx(1, 2, RXFREQ, RXRATE);
 
 	// Swing buffered.
 	unsigned int iseq=0;
@@ -207,8 +208,9 @@ int main(){
 	//variables to be used as arguments to setup the usrp device(s)
 	std::string args, txsubdev, rxsubdev;
 	args = "addr0=192.168.10.2, addr1=192.168.10.3";
+	//args = "addr0=192.168.10.3, addr1=192.168.10.2";
 	if(NUNITS==1)
-	args = "addr0=192.168.10.2";
+	    args = "addr0=192.168.10.2";
 	txsubdev = "A:A";
 	rxsubdev = "A:A A:B"; //Use two rx channels per daughterboard
 	//rxsubdev = "A:A"; //Use one rx channel per daughterboard
@@ -235,12 +237,43 @@ int main(){
 	UHD_ASSERT_THROW(usrp->get_num_mboards() == NUNITS);
 	
 	if (NUNITS==1){
-		std::cout << "using single usrp unit..\n";
-		usrp->set_clock_source("internal");
-		usrp->set_time_now(uhd::time_spec_t(0.0));
+        if (EXT == 0){
+		    std::cout << "using single usrp unit with internal clock reference\n";
+		    usrp->set_clock_source("internal");
+		    usrp->set_time_now(uhd::time_spec_t(0.0));
+        }
+        if (EXT == 1){
+		    std::cout << "Using single usrp unit with external clock reference\n";
+			usrp->set_clock_source("external", 0);
+
+            /*Poll the usrp, waiting for the a PPS signal to occur */
+            const uhd::time_spec_t last_pps_time = usrp->get_time_last_pps();
+            while (last_pps_time == usrp->get_time_last_pps()) {
+                usleep(5e4);
+            }
+            /* Now that a PPS has occured, we have 
+             * almost one full second to sync all the devices */
+			usrp->set_time_next_pps(uhd::time_spec_t(0.0), 0);
+			
+			//Sleep a bit while the USRP's lock to the external reference
+			boost::this_thread::sleep(boost::posix_time::milliseconds(1100));
+        }
 	}
 	else{
 		if (MIMO==1){
+            if (EXT == 1){
+		        std::cout << "Using multiple usrp units with external clock reference\n";
+		    	usrp->set_clock_source("external", 0);
+
+                /*Poll the usrp, waiting for the a PPS signal to occur */
+                const uhd::time_spec_t last_pps_time = usrp->get_time_last_pps();
+                while (last_pps_time == usrp->get_time_last_pps()) {
+                    usleep(5e4);
+                }
+		    	usrp->set_time_next_pps(uhd::time_spec_t(0.0), 0);
+		    	//Sleep a bit while the USRP locks to the external reference
+		    	boost::this_thread::sleep(boost::posix_time::milliseconds(1100));
+            }
 			std::cout << "Using MIMO configuration.. The cable is plugged in right?!!\n";
 			//make mboard 1 a slave over the MIMO Cable
 			usrp->set_clock_source("mimo", 1);
@@ -319,9 +352,11 @@ int main(){
 	std::cout << boost::format("Using Device: %s") % usrp->get_pp_string() << std::endl;
 
     //Create shared memory location(s) for baseband rx samples
-    //This memory is shared with the radarshell process for transferring rx data
+    //This memory is shared with the arbyserver process for transferring rx data
 	for(r=0;r<MAX_RADARS;r++){
         for(c=0;c<MAX_CHANNELS;c++){
+            ready_index[r][c]=-1;
+
             sprintf(shm_device,"/receiver_main_%d_%d_%d",r,c,0);
             shm_unlink(shm_device);
             shm_fd=shm_open(shm_device,O_RDWR|O_CREAT,S_IRUSR | S_IWUSR);
@@ -396,6 +431,9 @@ int main(){
 	int32_t dma_buffer;
 	//int32_t nrx_samples;
 	int32_t shm_memory;
+    int32_t bufsize;
+    int nclients;
+    printf("Sizeof DriverMsg: %i\n", sizeof(struct DriverMsg));
 	while(true){
         rval=1;
 		//printf("sock: %i \n", sock);
@@ -432,7 +470,14 @@ int main(){
            if (rval == -1) perror("select()");
            //rval=recv(msgsock, &buf, sizeof(int), MSG_PEEK); 
            if (recv(msgsock, &buf, sizeof(int), MSG_PEEK) <= 0){
-               std::cerr << "Error in recv data. " << strerror(errno) << std::endl;
+               if (errno == EPIPE){
+                    std::cout << "Client disconnected.  Closing..\n";
+                    break;
+               }
+               else {
+                    std::cerr << "Error in recv data. " << strerror(errno) << std::endl;
+                    break;
+               }
            }
            if (verbose>1) std::cout << msgsock << " PEEK Recv Msg " << rval << "\n";
 		   if (rval==0) {
@@ -465,15 +510,22 @@ int main(){
 			    if (verbose > 1) std::cout << "Radar: " << client.radar <<
 				    " Channel: " << client.channel << " Beamnum: " << client.tbeam <<
 				    " Status: " << msg.status << "\n";
-                recv_data(msgsock, &index, sizeof(index));
+                recv_data(msgsock, &index, sizeof(int32_t));
+                printf("index: %i\n", index);
 		        if (verbose > 1) std::cout << "Requested index: " << r << " " << c << " " << index << "\n";
-                recv_data(msgsock, tx.get_tsg_ptr(index), sizeof(struct TSGbuf));
+                recv_data(msgsock, &(tx.get_tsg_ptr(index)->index), sizeof(int32_t));
+                printf("tsg index: %i\n", tx.get_tsg_ptr(index)->index);
+                recv_data(msgsock, &(tx.get_tsg_ptr(index)->len), sizeof(int32_t));
+                printf("tsg len: %i\n", tx.get_tsg_ptr(index)->len);
+                recv_data(msgsock, &(tx.get_tsg_ptr(index)->step), sizeof(int32_t));
+                printf("tsg step: %i\n", tx.get_tsg_ptr(index)->step);
                 tx.allocate_pulseseq_mem(index);
 
-                recv_data(msgsock, tx.get_tsg_ptr(index)->rep,
+                recv_data(msgsock, (void*)tx.get_tsg_ptr(index)->rep,
                     sizeof(unsigned char)*tx.get_tsg_ptr(index)->len);
-                recv_data(msgsock, tx.get_tsg_ptr(index)->code,
+                recv_data(msgsock, (void*) tx.get_tsg_ptr(index)->code,
                     sizeof(unsigned char)*tx.get_tsg_ptr(index)->len);
+
 			    //if (verbose > 1) std::cout << "Pulseseq length: " << pulseseqs[r][c][index]->len << "\n";
                 old_seq_id=-10;
                 //old_pulse_index[r][c]=-1;
@@ -486,8 +538,6 @@ int main(){
 		        if (verbose > 0) printf("A client is done. Radar: %i, Channel: %i\n", client.radar-1, client.channel-1);
                 r=client.radar-1;
                 c=client.channel-1;
-                //tx.unregister_client(r,c);
-                //rx.unregister_client(r,c);
                 msg.status=0;
                 send_data(msgsock, &msg, sizeof(struct DriverMsg));
                 old_seq_id=-10;
@@ -502,10 +552,10 @@ int main(){
                 r=client.radar-1; 
                 c=client.channel-1; 
 
-                //rx.ready_client(cient);
+                std::cout << "READYING radar " << client.radar << " channel client.channel\n";
                 rx.ready_client(&client);
                 tx.ready_client(&client);
-                
+
                 if ((ready_index[r][c]>=0) && (ready_index[r][c] <maxclients) ) {
                     clients[ready_index[r][c]]=client;
                 } 
@@ -572,7 +622,7 @@ int main(){
                     if (verbose > -1) std::cout << "Calculating Master sequence " << old_seq_id << " " << new_seq_id << "\n";
                     //max_seq_count=0;
 
-                    rx.reset_swing_buf();
+                    //rx.reset_swing_buf();
                     tx.make_tr_times(&bad_transmit_times);
 
                     //    /* Handle Scope Sync Signal logic */
@@ -618,7 +668,7 @@ int main(){
                     */
 			    }
 
-			    if (new_beam != old_beam) { //Re-calculate the RF sample vectors for new beam direction.  BB samples are the same.
+			    if ( (new_beam != old_beam) || (old_seq_id != new_seq_id) ) { //Re-calculate the RF sample vectors for new beam direction.  BB samples are the same.
 			    	for(size_t chan = 0; chan < usrp->get_rx_num_channels(); chan++) {
 			    	        usrp->set_rx_rate(RXRATE, chan);
 			                usrp->set_rx_freq(RXFREQ, chan);
@@ -687,6 +737,14 @@ int main(){
                 }
                 break; 
 
+            case TIMING_GPS_TRIGGER:
+                if (verbose > 1 ) std::cout << "Setup Timing Card GPS trigger\n";
+                msg.status=0;
+                if (verbose > 1) std::cout << "Read msg struct from tcp socket!\n";
+                if (verbose > 1 ) std::cout << "End Timing Card GPS trigger\n";
+                //send_data(msgsock, &msg, sizeof(struct DriverMsg));
+                //break;
+
             case TIMING_TRIGGER:
 
                 gettimeofday(&t0,NULL);
@@ -713,11 +771,11 @@ int main(){
                     tx.set_rf_vec_ptrs(&tx_vec_ptrs);
                     rx.set_rf_vec_ptrs(&rx_vec_ptrs);
                     /* Toggle the swing buffer for the NEXT pulse sequence
-                     * The rx_data::get_num_samples(), get_rf_dptr(), get_bb_dptr(), get_num_clients(), etc
+                     * The rx_data::get_num_samples(), get_rf_dptr(), get_bb_dptr(), get_num_channels(), etc
                      * commands still point to the CURRENT pulse sequence */
                     rx.toggle_swing_buffer(); 
 
-			        uhd::time_spec_t start_time = usrp->get_time_now() + 0.005;
+			        uhd::time_spec_t start_time = usrp->get_time_now() + 0.01;
 
                     gettimeofday(&t1,NULL);
 		            receive_threads.create_thread(boost::bind(recv_and_hold,
@@ -750,31 +808,27 @@ int main(){
 
                 break;
 
-            case TIMING_GPS_TRIGGER:
-                if (verbose > 1 ) std::cout << "Setup Timing Card GPS trigger\n";
-                msg.status=0;
-                if (verbose > 1) std::cout << "Read msg struct from tcp socket!\n";
-                if (verbose > 1 ) std::cout << "End Timing Card GPS trigger\n";
-                send_data(msgsock, &msg, sizeof(struct DriverMsg));
-                break;
 
 		    case TIMING_WAIT:
 			    if(verbose > 1) std::cout << "USRP_TCP_DRIVER_WAIT: Nothing happens here.." << std::endl;
-                msg.status=0;
+                //tx_threads.join_all();
+			    //receive_threads.join_all();
+                //msg.status=0;
 
-			    if (verbose > 1) std::cout << "Read msg struct from tcp socket!\n";	
-                //dead_flag=0;
-                
-                if (verbose > 1)  std::cout << "Ending Wait \n\n";
+			    //if (verbose > 1) std::cout << "Read msg struct from tcp socket!\n";	
+                ////dead_flag=0;
+                //
+                //if (verbose > 1)  std::cout << "Ending Wait \n\n";
+                //usleep(1000);
                 send_data(msgsock, &msg, sizeof(struct DriverMsg));
 
 			    break;
 
             case TIMING_POSTTRIGGER:
-                tx.clear_channel_list();
-                rx.clear_channel_list();
                 numclients=0;
                 if (verbose > 1) std::cout << "Post trigger.  Un-readying all clients\n\n";
+                tx.clear_channel_list();
+                rx.clear_channel_list();
                 for (r=0;r<MAX_RADARS;r++){
                     for (c=0;c<MAX_CHANNELS;c++){
                         ready_index[r][c]=-1;
@@ -783,7 +837,71 @@ int main(){
                 send_data(msgsock, &msg, sizeof(struct DriverMsg));
                 break;
 
-            case RECV_GET_DATA:
+            /* Test case.  Use for sending test samples back to the arby_server */
+            /*
+            case 420:
+                recv_data(msgsock, &client,sizeof(struct ControlPRM));
+			    r=client.radar-1;
+			    c=client.channel-1;
+                if (rx.get_num_channels(r) == 0){
+                    std::cout << "No channels for this radar.\n";
+                    rx_status_flag=-1;
+                }
+                rx_status_flag=0;
+                send_data(msgsock, &rx_status_flag, sizeof(rx_status_flag));
+                printf("Sent status flag\n");
+
+
+                if (rx_status_flag ==0){
+			        shm_memory=2; // Flag used to indicate to client if shared memory (mmap()) is used.
+                    send_data(msgsock, &shm_memory, sizeof(int32_t));
+                    printf("GET_DATA: shm_mem: %i\n", shm_memory);
+			        frame_offset=0;  // The GC316 cards normally produce rx data w/ a header of length 2 samples. 0 for usrp.
+                    send_data(msgsock, &frame_offset, sizeof(int32_t));
+                    printf("GET_DATA: frame_offset: %i\n", frame_offset);
+			        dma_buffer=0; // Flag used to indicate to client if DMA tranfer is used. 1 for yes.
+                    send_data(msgsock, &dma_buffer, sizeof(int32_t));
+                    printf("GET_DATA: dma_buffer: %i\n", dma_buffer);
+			        //nrx_samples=client.number_of_samples;
+                    //client.number_of_samples = 10;
+                    send_data(msgsock, &client.number_of_samples, sizeof(int32_t));
+                    printf("GET_DATA: num samples: %i\n", client.number_of_samples);
+                    
+                    
+                    if (shm_memory==2){
+                        printf("Sending data. %i\n", client.number_of_samples);
+                        send_data(msgsock, shared_main_addresses[r][c][0], sizeof(uint32_t)*client.number_of_samples);
+                        //send_data(msgsock, shared_main_addresses[r][c][0], sizeof(uint32_t)*10);
+                        printf("Sent main data %i\n", sizeof(uint32_t)*client.number_of_samples);
+                        send_data(msgsock, shared_back_addresses[r][c][0], sizeof(uint32_t)*client.number_of_samples);
+                        //send_data(msgsock, shared_back_addresses[r][c][0], sizeof(uint32_t)*10);
+                        printf("Sent back data %i\n", sizeof(uint32_t)*client.number_of_samples);
+                    }
+                    
+                    
+			        msg.status = rx_status_flag;
+			    }
+                send_data(msgsock, &msg, sizeof(struct DriverMsg));
+                printf("Sent DriverMsg %i\n", sizeof(struct DriverMsg));
+                rx_status_flag=0;
+                gettimeofday(&t6,NULL);
+                elapsed=(t6.tv_sec-t0.tv_sec)*1E6;
+                elapsed+=(t6.tv_usec-t0.tv_usec);
+                if (verbose > 1) {
+                  std::cout << "Data sent: Elapsed Microseconds: " << elapsed << "\n";
+                }
+
+			    if(verbose>1)std::cout << "Ending RECV_GET_DATA. Elapsed time: " << std::endl;
+                gettimeofday(&t6,NULL);
+                elapsed=(t6.tv_sec-t0.tv_sec)*1E6;
+                elapsed+=(t6.tv_usec-t0.tv_usec);
+                if (verbose > 1) {
+                  std::cout << "RECV_GET_DATA Elapsed Microseconds: " << elapsed << "\n";
+                }
+			    break;
+                */
+
+            case GET_DATA:
 			    if (verbose>1) std::cout << "RECV_GET_DATA: Waiting on all threads.." << std::endl;
 
                 tx_threads.join_all();
@@ -799,23 +917,55 @@ int main(){
 			    	elapsed << " usec" << std::endl;
                 elapsed=(t6.tv_sec-t0.tv_sec)*1E6;
 
-			    if (rx_thread_status==-1){
+
+
+			    if (rx_thread_status!=0){
 			    	std::cerr << "Error, bad status from Rx thread!!\n";
-			    	rx_status_flag=-1;
+			    	rx_status_flag=1;
 			    }
 			    else {
                     rx_status_flag=0;
 			    	if (verbose>1) printf("Status okay!!\n");
 			    }
+                //rx_status_flag=-5;
 
                 recv_data(msgsock, &client,sizeof(struct ControlPRM));
 			    r=client.radar-1;
 			    c=client.channel-1;
-                if (rx.get_num_clients(r) == 0){
-                    std::cout << "No channels for this radar.\n";
-                    rx_status_flag=-1;
+                
+                if (rx.get_num_channels(r) == 0){
+                    std::cerr << "No channels for this radar.\n";
+                    rx_status_flag=10;
                 }
-                send_data(msgsock, &rx_status_flag, sizeof(int));
+                //nclients = 0;
+                //for (r=0;r<MAX_RADARS;r++){
+                //    for (c=0;c<MAX_CHANNELS;c++){
+                //        if (ready_index[r][c] >=0){
+                //            nclients += 1;
+                //        }
+                //    }
+                //}
+                if (rx_status_flag != 0){
+                    std::cerr << "Bad GET_DATA status!! " << rx_status_flag << "\t" << "radar: " << client.radar << std::endl;
+                }
+                send_data(msgsock, &rx_status_flag, sizeof(rx_status_flag));
+                printf("Sent status flag\n");
+
+
+
+                //shm_memory = 2;
+                //send_data(msgsock, &shm_memory, sizeof(int32_t));
+                //printf("GET_DATA: shm_mem: %i\n", shm_memory);
+			    //frame_offset=0;  // The GC316 cards normally produce rx data w/ a header of length 2 samples. 0 for usrp.
+                //send_data(msgsock, &frame_offset, sizeof(int32_t));
+                //printf("GET_DATA: frame_offset: %i\n", frame_offset);
+			    //dma_buffer=0; // Flag used to indicate to client if DMA tranfer is used. 1 for yes.
+                //send_data(msgsock, &dma_buffer, sizeof(int32_t));
+                //printf("GET_DATA: dma_buffer: %i\n", dma_buffer);
+			    ////nrx_samples=client.number_of_samples;
+                //send_data(msgsock, &client.number_of_samples, sizeof(int32_t));
+
+
 
 			    if (verbose>1)std::cout << "Client asking for rx samples (Radar,Channel): " <<
 			    	client.radar << " " << client.channel << std::endl;
@@ -828,13 +978,13 @@ int main(){
                     std::cout << "rf dptr: " << rx.get_rf_dptr(r) << std::endl;
                     std::cout << "nrf_samples: " << rx.get_num_rf_samples() << std::endl;
                     std::cout << "nbb_samples: " << rx.get_num_bb_samples() << std::endl;
-                    std::cout << "nchannels: " << rx.get_num_clients(r) << std::endl;
+                    std::cout << "nchannels: " << rx.get_num_channels(r) << std::endl;
                     std::cout << "nants per radar: " << rx.get_num_ants_per_radar() << std::endl;
                     std::cout << "high sample rate: " << (float) RXRATE << std::endl;
                     std::cout << "low sample rate: " << (float) client.baseband_samplerate << std::endl;
-                    std::cout << "frequency offsets: ";
-                    for (size_t i=0; i<rx.get_num_clients(r); i++){
-                        std::cout << (rx.get_freqs(r))[i] << std::endl;
+                    std::cout << "frequency offsets: \n";
+                    for (size_t i=0; i<rx.get_num_channels(r); i++){
+                        std::cout << "\t" << (rx.get_freqs(r))[i]/1e3 << " khz"<< std::endl;
                     }
                 }
                 if (verbose>1) std::cout << "About to enter rx_process_gpu()\n";
@@ -844,80 +994,91 @@ int main(){
                         rx.get_bb_dptr(r),
                         rx.get_num_rf_samples(),
                         rx.get_num_bb_samples(),
-			        	rx.get_num_clients(r),
+			        	rx.get_num_channels(r),
 			        	rx.get_num_ants_per_radar(),
 			        	(float) RXRATE,
 			        	(float) client.baseband_samplerate,
                         rx.get_freqs(r)));
                 
-                if (double_buf==0) rx_process_threads.join_all();
+                    if (double_buf==0) rx_process_threads.join_all();
 
-                if (verbose>1) printf("iseq: %i\n", iseq);
-                if (verbose>1)std::cout << "set_bb_vec_ptrs: " << r << " " << c << std::endl;
+                    if (verbose>1) printf("iseq: %i\n", iseq);
+                    if (verbose>1)std::cout << "set_bb_vec_ptrs: " << r << " " << c << std::endl;
 
-                /* Set the pointers to vectors of baseband samples
-                 * If double_buf flag is non-zero, then the function will create
-                 * pointers to the samples created by the LAST pulse sequence.
-                 * This allows the driver to collect samples for the current pulse
-                 * sequence and process samples for the previous pulse sequence 
-                 * simultaneously*/
-                rx.set_bb_vec_ptrs(r,c, &bb_vec_ptrs,double_buf);
+                    /* Set the pointers to vectors of baseband samples
+                     * If double_buf flag is non-zero, then the function will create
+                     * pointers to the samples created by the LAST pulse sequence.
+                     * This allows the driver to collect samples for the current pulse
+                     * sequence and process samples for the previous pulse sequence 
+                     * simultaneously*/
+                    rx.set_bb_vec_ptrs(r,c, &bb_vec_ptrs,double_buf);
 
-                beamform_main.resize(rx.get_num_ants_per_radar(), 1);
-                beamform_back.resize(rx.get_num_ants_per_radar(), 1);
-                rx_beamform(
-                    shared_main_addresses[r][c][0],
-			      	shared_back_addresses[r][c][0],
-                    &bb_vec_ptrs,
-                    //rx.get_num_ants_per_radar()/2,
-                    //rx.get_num_ants_per_radar()/2,
-                    1,
-                    1,
-                    rx.get_num_bb_samples(),
-                    &beamform_main,
-                    &beamform_back);
+                    beamform_main.resize(rx.get_num_ants_per_radar(), 1);
+                    beamform_back.resize(rx.get_num_ants_per_radar(), 1);
+                    rx_beamform(
+                        shared_main_addresses[r][c][0],
+			          	shared_back_addresses[r][c][0],
+                        &bb_vec_ptrs,
+                        //rx.get_num_ants_per_radar()/2,
+                        //rx.get_num_ants_per_radar()/2,
+                        1,
+                        1,
+                        rx.get_num_bb_samples(),
+                        &beamform_main,
+                        &beamform_back);
 
 
-                gettimeofday(&t1,NULL);
-                gettimeofday(&t6,NULL);
-                elapsed=(t6.tv_sec-t1.tv_sec)*1E6;
-                elapsed+=(t6.tv_usec-t1.tv_usec);
-                if (verbose > 1) {
-                  std::cout << "Data sent: Elapsed Microseconds: " << elapsed << "\n";
-                }
+                    gettimeofday(&t1,NULL);
+                    gettimeofday(&t6,NULL);
+                    elapsed=(t6.tv_sec-t1.tv_sec)*1E6;
+                    elapsed+=(t6.tv_usec-t1.tv_usec);
+                    if (verbose > 1) {
+                      std::cout << "Data sent: Elapsed Microseconds: " << elapsed << "\n";
+                    }
 
-			    iseq++;
-			    
-                if(verbose > 1 ){
-			      std::cout << "Radar: " << client.radar << 
-			             		"\tChannel: " << client.channel << std::endl;
-			      std::cout << "r: " << r << "\tc: " << c << std::endl;
-			    }
-			    shm_memory=1; // Flag used to indicate to client if shared memory (mmap()) is used.
-			    shm_memory=2; // Flag used to indicate to client if shared memory (mmap()) is used.
-                send_data(msgsock, &shm_memory, sizeof(shm_memory));
-			    frame_offset=0;  // The GC316 cards normally produce rx data w/ a header of length 2 samples. 0 for usrp.
-                send_data(msgsock, &frame_offset, sizeof(frame_offset));
-			    dma_buffer=0; // Flag used to indicate to client if DMA tranfer is used. 1 for yes.
-                send_data(msgsock, &dma_buffer, sizeof(dma_buffer));
-			    //nrx_samples=client.number_of_samples;
-                send_data(msgsock, &client.number_of_samples, sizeof(client.number_of_samples));
-                if (shm_memory==2){
-                    printf("Sending data. %i\n", client.number_of_samples);
-                    send_data(msgsock, shared_main_addresses[r][c][0], sizeof(uint32_t)*client.number_of_samples);
-                    send_data(msgsock, shared_back_addresses[r][c][0], sizeof(uint32_t)*client.number_of_samples);
-                }
-                //send_data(msgsock, &dummy_variable, sizeof(dummy_variable));
-                //send_data(msgsock, &dummy_variable, sizeof(dummy_variable));
-			    
-			    if(IMAGING==0){
-                  if(verbose > 1 ) std::cout << "Using shared memory addresses..: " << 
-			      shared_main_addresses[r][c][0] << "\t" << shared_back_addresses[r][c][0] << std::endl;
-			    }
-			    if (verbose>1)std::cout << "Send data to client successful" << std::endl;
-			    msg.status = rx_status_flag;
+			        iseq++;
+			        
+                    if(verbose > 1 ){
+			          std::cout << "Radar: " << client.radar << 
+			                 		"\tChannel: " << client.channel << std::endl;
+			          std::cout << "r: " << r << "\tc: " << c << std::endl;
+			        }
+			        shm_memory=1; // Flag used to indicate to client if shared memory (mmap()) is used.
+			        shm_memory=2; // Flag used to indicate to client if shared memory (mmap()) is used.
+                    send_data(msgsock, &shm_memory, sizeof(int32_t));
+                    printf("GET_DATA: shm_mem: %i\n", shm_memory);
+			        frame_offset=0;  // The GC316 cards normally produce rx data w/ a header of length 2 samples. 0 for usrp.
+                    send_data(msgsock, &frame_offset, sizeof(int32_t));
+                    printf("GET_DATA: frame_offset: %i\n", frame_offset);
+			        dma_buffer=0; // Flag used to indicate to client if DMA tranfer is used. 1 for yes.
+                    send_data(msgsock, &dma_buffer, sizeof(int32_t));
+                    printf("GET_DATA: dma_buffer: %i\n", dma_buffer);
+			        //nrx_samples=client.number_of_samples;
+                    send_data(msgsock, &client.number_of_samples, sizeof(int32_t));
+                    printf("GET_DATA: num samples: %i\n", client.number_of_samples);
+                    
+                    
+                    if (shm_memory==2){
+                        printf("Sending data. %i\n", client.number_of_samples);
+                        send_data(msgsock, shared_main_addresses[r][c][0], sizeof(uint32_t)*client.number_of_samples);
+                        printf("Sent main data %i\n", sizeof(uint32_t)*client.number_of_samples);
+                        send_data(msgsock, shared_back_addresses[r][c][0], sizeof(uint32_t)*client.number_of_samples);
+                        printf("Sent back data %i\n", sizeof(uint32_t)*client.number_of_samples);
+                    }
+                    
+                    
+                    //send_data(msgsock, &dummy_variable, sizeof(dummy_variable));
+                    //send_data(msgsock, &dummy_variable, sizeof(dummy_variable));
+			        
+			        if(IMAGING==0){
+                      if(verbose > 1 ) std::cout << "Using shared memory addresses..: " << 
+			          shared_main_addresses[r][c][0] << "\t" << shared_back_addresses[r][c][0] << std::endl;
+			        }
+			        if (verbose>1)std::cout << "Send data to client successful" << std::endl;
+			        msg.status = rx_status_flag;
 			    }
                 send_data(msgsock, &msg, sizeof(struct DriverMsg));
+                printf("Sent DriverMsg %i\n", sizeof(struct DriverMsg));
                 rx_status_flag=0;
                 gettimeofday(&t6,NULL);
                 elapsed=(t6.tv_sec-t0.tv_sec)*1E6;
@@ -1019,6 +1180,7 @@ int main(){
 			    rx_clrfreq_rval= recv_clr_freq(
                     usrp,
                     rx_stream,
+                    center,
                     usable_bandwidth,
                     (int) client.filter_bandwidth/1e3,
                     clrfreq_parameters.nave,

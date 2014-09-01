@@ -32,6 +32,7 @@ void spectrum_worker(
 int recv_clr_freq(
     uhd::usrp::multi_usrp::sptr usrp,
     uhd::rx_streamer::sptr rx_stream,
+    size_t center,
     size_t span_khz,
     size_t bandwidth_khz,
     size_t nave,
@@ -83,7 +84,8 @@ int recv_clr_freq(
 
     clock_gettime(CLOCK_REALTIME, &start);
     //setup streaming
-    //usrp->set_rx_freq(1e3*center_freq);
+    usrp->set_rx_freq(1.e3*center);
+    std::cout << "RX FREQ: " << usrp->get_rx_freq() << std::endl;
     //usrp->get_rx_rate(bandwidth);
     uhd::stream_cmd_t stream_cmd = uhd::stream_cmd_t::STREAM_MODE_NUM_SAMPS_AND_DONE;
     stream_cmd.num_samps = num_usrp_samples;
@@ -214,6 +216,11 @@ int recv_clr_freq(
     	pwr[fftsize/2+i]=tmp_pwr[i];
     	pwr[i]=tmp_pwr[fftsize/2+i];
     }   
+    if (debug){
+        for(size_t i=0;i<(fftsize);i++){
+            std::cout << "Pwr " << i+(usrp->get_rx_freq()/1.e3)-fftsize/2 << " " << pwr[i] << std::endl;
+        }
+     }
     //Done centering
 
     start_inx = (fftsize - span_khz) / 2;

@@ -62,6 +62,8 @@ void *coordination_handler(struct ControlProgram *control_program)
        }
        thread_list=thread_list->prev;
      }
+     printf("alex nready: %i\n", numready);
+     printf("alex ntotal: %i\n", numcontrolprograms);
      if (numready==0) {
        ready_state=0;
      } else {

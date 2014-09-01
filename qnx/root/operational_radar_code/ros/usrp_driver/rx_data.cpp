@@ -32,8 +32,8 @@ class rx_data{
     void clear_channel_list();
     size_t get_num_ants(); //Get number of antennas
     size_t get_num_radars(); //Get number of radars
-    //size_t get_num_clients(); //Get total number of clients for all radars
-    size_t get_num_clients(size_t radar); //Get number of clients for that radar
+    //size_t get_num_channels(); //Get total number of clients for all radars
+    size_t get_num_channels(size_t radar); //Get number of clients for that radar
     float* get_freqs(size_t radar);
     size_t get_num_bb_samples(); //Get number of bb samples.  It is and must be the same for all clients!
     size_t get_num_rf_samples(); //Get number of rf samples.  It is and must be the same for all antenna channels!
@@ -124,7 +124,7 @@ float* rx_data::get_freqs(size_t radar){
     return (float*) &rx_freq_offs[(buf+1)%2][radar].front();
 }
 
-size_t rx_data::get_num_clients(size_t radar){
+size_t rx_data::get_num_channels(size_t radar){
     return rx_freq_offs[(buf+1)%2][radar].size();
 }
 

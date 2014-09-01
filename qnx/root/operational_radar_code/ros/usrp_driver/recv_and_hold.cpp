@@ -11,8 +11,8 @@
 #include <math.h>
 #include <control_program.h>
 
-#define SYNC_PINS 0x101
-#define TR_PINS 0x040
+#define SYNC_PINS 0x30
+#define TR_PINS 0x048
 
 extern int verbose;
 
@@ -54,7 +54,7 @@ void recv_and_hold(
 
     usrp->issue_stream_cmd(stream_cmd);
 
-    usrp->set_command_time(start_time+100e-9);
+    usrp->set_command_time(start_time+10e-6);
     usrp->set_command_time(start_time);
     usrp->set_gpio_attr("TXA","OUT",SYNC_PINS, SYNC_PINS);
 

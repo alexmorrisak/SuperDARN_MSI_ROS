@@ -43,6 +43,7 @@ void tx_worker(
     size_t nacc_samps = 0;
     //size_t spb = 10*tx_stream->get_max_num_samps();
     size_t spb = tx_stream->get_max_num_samps()/2;
+    //size_t spb = 1000;
 
     //Now go for it!
     int ipacket =0;

@@ -264,7 +264,7 @@ void rx_process_gpu(
     [TODO: design Kaiser (beta=5) or similar window for better performance.
     See Google drive doc SuperDARN_GPU_processing]*/
     for (int i=0;i<ntaps0;i++){
-            filter_taps0[0][i][0] = 1./ntaps0; //I-component is rectangle function
+            filter_taps0[0][i][0] = 200./ntaps0; //I-component is rectangle function
             //filter_taps0[0][i][0] = (0.54-0.46*cos((2*M_PI*((float)(i)+0.5))/ntaps0));
             filter_taps0[0][i][1] = 0; //Q-component is zero
     }
