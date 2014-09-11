@@ -57,7 +57,7 @@ void rx_beamform(
                 temp_main[1] += (*bb_vec_ptrs)[iant][isamp].real() * (*beamform_main)[iant].imag() +
                     (*bb_vec_ptrs)[iant][isamp].imag() * (*beamform_main)[iant].real();
             }
-            client_main[isamp] = ((uint32_t) (temp_main[0] << 16) & 0xffff0000) | ((uint32_t) temp_main[1] & 0x0000ffff);
+            client_main[isamp] = ((uint32_t) (temp_main[1] << 16) & 0xffff0000) | ((uint32_t) temp_main[0] & 0x0000ffff);
 
             int16_t temp_back[2] = {0,0};
             for (size_t iant=16; iant<20; iant++){
@@ -66,7 +66,7 @@ void rx_beamform(
                 temp_back[1] += (*bb_vec_ptrs)[iant][isamp].real() * (*beamform_back)[iant].imag() +
                     (*bb_vec_ptrs)[iant][isamp].imag() * (*beamform_back)[iant].real();
             }
-            client_back[isamp] = ((uint32_t) (temp_back[0] << 16) & 0xffff0000) | ((uint32_t) temp_back[1] & 0x0000ffff);
+            client_back[isamp] = ((uint32_t) (temp_back[1] << 16) & 0xffff0000) | ((uint32_t) temp_back[0] & 0x0000ffff);
             if (debug) printf("Sample %i: (%i, %i)\t(%i, %i)\n", isamp, temp_main[0], temp_main[1], temp_back[0], temp_back[1]);
         }
     }
@@ -77,12 +77,12 @@ void rx_beamform(
             int16_t temp_main[2] = {0,0};
             temp_main[0] += (*bb_vec_ptrs)[0][isamp].real();
             temp_main[1] += (*bb_vec_ptrs)[0][isamp].imag();
-            client_main[isamp] = ((uint32_t) (temp_main[0] << 16) & 0xffff0000) | ((uint32_t) temp_main[1] & 0x0000ffff);
+            client_main[isamp] = ((uint32_t) (temp_main[1] << 16) & 0xffff0000) | ((uint32_t) temp_main[0] & 0x0000ffff);
 
             int16_t temp_back[2] = {0,0};
             temp_back[0] += (*bb_vec_ptrs)[1][isamp].real();
             temp_back[1] += (*bb_vec_ptrs)[1][isamp].imag();
-            client_back[isamp] = ((uint32_t) (temp_back[0] << 16) & 0xffff0000) | ((uint32_t) temp_back[1] & 0x0000ffff);
+            client_back[isamp] = ((uint32_t) (temp_back[1] << 16) & 0xffff0000) | ((uint32_t) temp_back[0] & 0x0000ffff);
             if (debug) printf("Sample %i: (%i, %i)\t(%i, %i)\n", isamp, temp_main[0], temp_main[1], temp_back[0], temp_back[1]);
         }
     }
@@ -99,7 +99,7 @@ void rx_beamform(
                     0.2*(*bb_vec_ptrs)[iant][isamp].real() * (*beamform_main)[iant].imag() +
                     0.2*(*bb_vec_ptrs)[iant][isamp].imag() * (*beamform_main)[iant].real();
             }
-            client_main[isamp] = ((uint32_t) (temp_main[0] << 16) & 0xffff0000) | ((uint32_t) temp_main[1] & 0x0000ffff);
+            client_main[isamp] = ((uint32_t) (temp_main[1] << 16) & 0xffff0000) | ((uint32_t) temp_main[0] & 0x0000ffff);
 
             int16_t temp_back[2] = {0,0};
             for (size_t iant=0; iant<nants_back; iant++){
@@ -108,7 +108,7 @@ void rx_beamform(
                 temp_back[1] += (*bb_vec_ptrs)[iant][isamp].real() * (*beamform_main)[iant].imag() +
                     (*bb_vec_ptrs)[iant][isamp].imag() * (*beamform_main)[iant].real();
             }
-            client_back[isamp] = ((uint32_t) (temp_back[0] << 16) & 0xffff0000) | ((uint32_t) temp_back[1] & 0x0000ffff);
+            client_back[isamp] = ((uint32_t) (temp_back[1] << 16) & 0xffff0000) | ((uint32_t) temp_back[0] & 0x0000ffff);
             if (debug) printf("Sample %i: (%i, %i)\t(%i, %i)\n", isamp, temp_main[0], temp_main[1], temp_back[0], temp_back[1]);
         }
     }
