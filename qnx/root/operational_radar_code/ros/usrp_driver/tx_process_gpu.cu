@@ -30,7 +30,7 @@ Current known limitations:
 __global__ void interpolate_and_multiply(
     float* indata, 
     int16_t** outdata, 
-    float* radfreqs, 
+    double* radfreqs, 
     float* phase_delays
 ){
     /*Declare shared memory array for samples.
@@ -95,7 +95,7 @@ void tx_process_gpu(
 ){
    int debug = 0;
    if (debug) printf("Entering tx_process_gpu\n");
-   float mixer_freqs[nchannels];
+   double mixer_freqs[nchannels];
    float phase_delays[nchannels];
 
    //Calculate mixer frequencies
@@ -131,9 +131,9 @@ void tx_process_gpu(
    cudaMemcpy(rfvecptrs_d, rfvecs_h, nants*sizeof(int16_t*), cudaMemcpyHostToDevice);
 
    // Allocate memory for mixer frequencies and copy data to GPU
-   float* mxrs_d; 
-   cudaMalloc((void**)&mxrs_d, nchannels*sizeof(float));
-   cudaMemcpy(mxrs_d, mixer_freqs, nchannels*sizeof(float), cudaMemcpyHostToDevice);
+   double* mxrs_d; 
+   cudaMalloc((void**)&mxrs_d, nchannels*sizeof(double));
+   cudaMemcpy(mxrs_d, mixer_freqs, nchannels*sizeof(double), cudaMemcpyHostToDevice);
 
    // Allocate memory for phase delays (beam-forming) and copy data to GPU
    float* pds_d; 

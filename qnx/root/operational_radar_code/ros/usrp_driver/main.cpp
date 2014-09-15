@@ -131,54 +131,53 @@ int main(){
     int ready_index[MAX_RADARS][MAX_CHANNELS];
     int old_seq_id=-10;
     int new_seq_id=-1;
-	int old_beam=-1;
-	int new_beam=-1;
-	int nave=0;
-	int center=0;
-	int usable_bandwidth=0;
+    int old_beam=-1;
+    int new_beam=-1;
+    int nave=0;
+    int center=0;
+    int usable_bandwidth=0;
     struct TRTimes bad_transmit_times;
 
-	uint32_t *shared_main_addresses[MAX_RADARS][MAX_CHANNELS][MAX_INPUTS];
-	uint32_t *shared_back_addresses[MAX_RADARS][MAX_CHANNELS][MAX_INPUTS]; 
+    uint32_t *shared_main_addresses[MAX_RADARS][MAX_CHANNELS][MAX_INPUTS];
+    uint32_t *shared_back_addresses[MAX_RADARS][MAX_CHANNELS][MAX_INPUTS]; 
 	
-	char shm_device[80];
-	int shm_fd=0;
+    char shm_device[80];
+    int shm_fd=0;
 
-	//socket and message passing variables
-	char	datacode;
-	int	rval;
+    //socket and message passing variables
+    char	datacode;
+    int	rval;
     fd_set rfds,efds;
 
-	//counter and temporary variables
+    //counter and temporary variables
     //int offset_pad, rx_offset, dds_offset, tx_offset;
     //int scope_start, dds_trigger, rx_trigger;
-	int32_t	i,r,c,buf,index;
+    int32_t	i,r,c,buf,index;
     struct timeval t0,t6;
     struct timeval t1;
     unsigned long elapsed;
 
-	// function-specific message variables
+    // function-specific message variables
     int     numclients=0;
     struct  DriverMsg msg;
-    uint64_t dummy_variable = 0;
 
-	// timing related variables
-	struct	timespec cpu_start, cpu_stop;
-	struct	timespec tx0,tx1;
+    // timing related variables
+    struct	timespec cpu_start, cpu_stop;
+    struct	timespec tx0,tx1;
     float elapsed_t1;
 
-	// usrp-timing related variables
-	uhd::time_spec_t get_data_t0;
-	uhd::time_spec_t get_data_t1;
-
-	// usrp-data variables
-	typedef std::complex<int16_t> sc16;
-	typedef std::complex<float> fc32;
-	std::vector<fc32> filter_taps;//filter taps for baseband filtering of tx signal
+    // usrp-timing related variables
+    uhd::time_spec_t get_data_t0;
+    uhd::time_spec_t get_data_t1;
+    
+    // usrp-data variables
+    typedef std::complex<int16_t> sc16;
+    typedef std::complex<float> fc32;
+    std::vector<fc32> filter_taps;//filter taps for baseband filtering of tx signal
     std::vector<std::vector<fc32> > tx_bb_vecs;
-	std::vector<sc16 *> tx_vec_ptrs;
-
-	std::vector<sc16 *> rx_vec_ptrs;
+    std::vector<sc16 *> tx_vec_ptrs;
+    
+    std::vector<sc16 *> rx_vec_ptrs;
     std::vector<std::complex<float>* > bb_vec_ptrs;
 
     std::vector<std::complex<float> > beamform_main;
@@ -194,37 +193,35 @@ int main(){
     //tx_data tx(1, 1, TXFREQ, TXRATE);
     //rx_data rx(1,2,RXFREQ, RXRATE);
     /* Example dual-site radar configuration, non-imaging*/
-    tx_data tx(2, 2, TXFREQ, TXRATE);
-    rx_data rx(2,4,RXFREQ, RXRATE);
+    //tx_data tx(2, 2, TXFREQ, TXRATE);
+    //rx_data rx(2,4,RXFREQ, RXRATE);
     /* For testing*/
-    //tx_data tx(1, 1, TXFREQ, TXRATE);
-    //rx_data rx(1, 2, RXFREQ, RXRATE);
+    tx_data tx(1, 1, TXFREQ, TXRATE);
+    rx_data rx(1, 2, RXFREQ, RXRATE);
 
-	// Swing buffered.
-	unsigned int iseq=0;
+    // Swing buffered.
+    unsigned int iseq=0;
 
-    double time_delay;
-
-	//variables to be used as arguments to setup the usrp device(s)
-	std::string args, txsubdev, rxsubdev;
-	args = "addr0=192.168.10.2, addr1=192.168.10.3";
-	//args = "addr0=192.168.10.3, addr1=192.168.10.2";
-	if(NUNITS==1)
-	    args = "addr0=192.168.10.2";
-	txsubdev = "A:A";
-	rxsubdev = "A:A A:B"; //Use two rx channels per daughterboard
-	//rxsubdev = "A:A"; //Use one rx channel per daughterboard
-
-	clock_gettime(CLOCK_REALTIME, &cpu_start);
-
-	//create a usrp device
-	std::cout << std::endl;
-	std::cout << boost::format("Creating the usrp device with: %s...") % args << std::endl;
-	uhd::usrp::multi_usrp::sptr usrp = uhd::usrp::multi_usrp::make(args);
+    //variables to be used as arguments to setup the usrp device(s)
+    std::string args, txsubdev, rxsubdev;
+    args = "addr0=192.168.10.2, addr1=192.168.10.3";
+    //args = "addr0=192.168.10.3, addr1=192.168.10.2";
+    if(NUNITS==1)
+        args = "addr0=192.168.10.2";
+    txsubdev = "A:A";
+    rxsubdev = "A:A A:B"; //Use two rx channels per daughterboard
+    //rxsubdev = "A:A"; //Use one rx channel per daughterboard
     
-	//Specify daughterboard routing
-	usrp->set_tx_subdev_spec(txsubdev);
-	usrp->set_rx_subdev_spec(rxsubdev);
+    clock_gettime(CLOCK_REALTIME, &cpu_start);
+    
+    //create a usrp device
+    std::cout << std::endl;
+    std::cout << boost::format("Creating the usrp device with: %s...") % args << std::endl;
+    uhd::usrp::multi_usrp::sptr usrp = uhd::usrp::multi_usrp::make(args);
+    
+    //Specify daughterboard routing
+    usrp->set_tx_subdev_spec(txsubdev);
+    usrp->set_rx_subdev_spec(rxsubdev);
 
     int nrx_antennas = usrp->get_rx_num_channels();
     std::cout << "nrx_antennas: " << nrx_antennas << std::endl;
@@ -426,13 +423,11 @@ int main(){
 	boost::thread_group rx_process_threads;
 	boost::thread_group tx_threads;
 
-	int32_t rx_status_flag;
-	int32_t frame_offset;
-	int32_t dma_buffer;
-	//int32_t nrx_samples;
-	int32_t shm_memory;
-    int32_t bufsize;
-    int nclients;
+    int32_t rx_status_flag;
+    int32_t frame_offset;
+    int32_t dma_buffer;
+    //int32_t nrx_samples;
+    int32_t shm_memory;
     printf("Sizeof DriverMsg: %i\n", sizeof(struct DriverMsg));
 	while(true){
         rval=1;
@@ -567,10 +562,6 @@ int main(){
 
 			    if (verbose > 1) std::cout << "Radar: " << client.radar << " Channel: " << client.channel <<
 					" Beamnum: " << client.tbeam << " Status: " << msg.status << "\n";
-
-                //time_delays.resize(tx.get_num_channels());
-                //for (size_t i=0; i< tx.get_num_channels(); i++)
-			    //    time_delays[i] = 10 * (16/2-client.tbeam); // 10 ns per antenna per beam
 
                 index=client.current_pulseseq_index; 
 
@@ -1067,9 +1058,6 @@ int main(){
                     }
                     
                     
-                    //send_data(msgsock, &dummy_variable, sizeof(dummy_variable));
-                    //send_data(msgsock, &dummy_variable, sizeof(dummy_variable));
-			        
 			        if(IMAGING==0){
                       if(verbose > 1 ) std::cout << "Using shared memory addresses..: " << 
 			          shared_main_addresses[r][c][0] << "\t" << shared_back_addresses[r][c][0] << std::endl;
@@ -1173,7 +1161,6 @@ int main(){
 			    if(verbose>1)std::cout << "starting clr freq search\n";
                 std::cout << "beam direction: " << client.tbeam << std::endl;
                 std::cout << "beam direction: " << client.filter_bandwidth << std::endl;
-                time_delay = 10*(16/2-client.tbeam);
 
                 //usrp->set_rx_freq(1e3*center);
                 //usrp->set_rx_rate(1e3*center);
